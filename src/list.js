@@ -1,0 +1,101 @@
+class List extends Array {
+  static traits = { type: 'hash' }
+
+  #construct
+
+  constructor(...args) {
+
+    if (Object.hasOwn(args[0], 'items')) {
+      const opts = args.pop()
+
+      if (!Object.hasOwn(opts, 'items'))
+        throw new Error('items must be specified when creating a List')
+
+      const items = Array.isArray(opts.items) ?
+        (opts.construct ? opts.items.map(opts.construct) : opts.items) : []
+
+      super(...items)
+
+      this.loaded = true
+      this.#construct = opts.construct
+
+      return
+    }
+
+    super(...args)
+  }
+
+  load() { } // noop
+
+  exportForSave(path) {
+    return {
+      key: path,
+      type: this.constructor.traits.type,
+      value: this.reduce((acc, item, i) => {
+        return { ...acc, [item.id]: JSON.stringify({ i, json: item }) }
+      }, {})
+    }
+  }
+}
+
+class LazyList extends List {
+  static traits = { type: 'hash', lazy: true }
+
+  #path
+  #construct
+
+  constructor(...args) {
+    super(...args)
+
+    const opts = args[0]?.items ? args[0] : null
+
+    this.loaded = false
+    this.#construct = opts?.construct
+    this.#path = opts?.items?.split?.(' ')[0] || null
+  }
+
+  async load(repository) {
+    if (!repository)
+      throw new Error('Must pass a repository instance when calling .load()')
+
+    const type = this.constructor.traits.type
+    const loader = repository.loaders[type]
+
+    if (!loader)
+      throw new Error(`Cannot find loader of type: ${type} in repo`)
+
+    const items =  await loader.get(this.#path)
+
+    items.reverse()
+      .map(item => this.#construct(item))
+      .forEach(item => this.splice(0, 0, item))
+
+    this.loaded = true
+  }
+}
+
+class AppendList extends LazyList {
+  static traits = { type: 'list', lazy: true, append: true }
+  #shouldRecord
+
+  constructor(...args) {
+    super(...args)
+    this.additions = []
+  }
+
+  exportForSave(path) {
+    return {
+      key: path,
+      type: this.constructor.traits.type,
+      value: this.additions.map(JSON.stringify)
+    }
+  }
+
+  push(...args) {
+    this.additions.push(...args)
+
+    super.push(...args)
+  }
+}
+
+export { List, LazyList, AppendList }
