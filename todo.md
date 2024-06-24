@@ -9,6 +9,8 @@
     complete bullshit thing - unnecessary. Must fix - must make it simpler
   - [ ] there are tests that do `list.value.value` to access some value, this
         is not acceptable
+  - [ ] There is no testing for lists with 0 items - hence why this slipped
+        through.
 
 - [x] Instead of using arguments, use inheritance and have 3 lists
   - `List`
