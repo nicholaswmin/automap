@@ -33,8 +33,5 @@
     "ioredis": "^5.4.1",
     "object-traversal": "^1.0.1",
     "pathval": "^2.0.0"
-  },
-  "devDependencies": {
-    "ioredis-mock": "^8.9.0"
   }
 }
