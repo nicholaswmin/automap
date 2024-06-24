@@ -5,7 +5,7 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --experimental-test-coverage test/index.spec.js",
+    "test": "node --test --test-force-exit test/index.spec.js",
     "example": "node example/index.js"
   },
   "engines": {
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/nicholaswmin/automap#readme",
   "dependencies": {
     "dot-object": "^2.1.5",
+    "ioredis": "^5.4.1",
     "object-traversal": "^1.0.1",
     "pathval": "^2.0.0"
   },

@@ -1,10 +1,10 @@
 import { flatten, expand } from './map.js'
 
 class Repository {
-  constructor(Class, { redis, loaders = null }) {
+  constructor(Class, redis) {
     this.Class = Class
     this.redis = redis
-    this.loaders = loaders || {
+    this.loaders = {
       key: {
         get: key => {
           return this.redis.get(key)
