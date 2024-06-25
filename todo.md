@@ -26,7 +26,7 @@
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
       appropriate/descriptive.
-- [ ] Exiting the tests requires a `--test-force-exit` flag which is not
+- [x] Exiting the tests requires a `--test-force-exit` flag which is not
       ideal - but can live with for now.
 
 
