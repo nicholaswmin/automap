@@ -56,7 +56,7 @@ To make an object graph persistable just:
 
 - Replace [`Array`][array] with the provided `List` when defining
   list-like data.
-- The root object has `id` property set to a unique value
+- The root object has an `id` property set to a unique value
 
 ### Example
 
