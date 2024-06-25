@@ -191,14 +191,21 @@ This allows a decomposition of the innermost lists *first* so a list with
 3 levels of nesting will save 4 list hashes, and every list item will be
 saved *exactly-once*.
 
-That being said, nested lists will cause the fetching process to occur in
+### Time-complexity of nested lists
+
+Nested lists will cause the fetching process to occur in
 [quadratic-time complexity O(n^2)][qtc].
 
-In contrast, lists without any nesting at all will guarantee that the
-fetching process will occur in [constant-time complexity O(1)][const],
-regardless of how many lists you have.
+In contrast, lists without any nesting guarantee that the fetching process
+will occur in [constant-time complexity O(1)][const], regardless of
+how many lists you have.
 
-Therefore, going too crazy on nesting depth is not recommended.
+It's important to note that these time-complexity bounds involve network
+requests, which are *orders of magnitude* slower than usual algorithmic
+time-complexity problems.
+
+Therefore while nested lists are supported and as efficiently as possible,
+they are ultimately **not** recommended.
 
 ### Reason
 
