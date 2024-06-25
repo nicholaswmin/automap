@@ -452,15 +452,15 @@ Produces a test coverage report
 ## Footnotes
 
 [^1]: Redis transactions do not provide the same atomicity and isolation
-      semantics you might be used to.   
-      By definition they are atomic however the entire transaction
-      can fail if client B updates a value while it's in the process of being
-      modified by client A as part of a transaction.
+      you might be used to.    
+      By every definition they are atomic and don't allow for partial updates
+      however the entire transaction can fail if client B updates a value
+      while it's in the process of being modified by client A as part of a
+      transaction.  
       This can be fixed with a Lua script but it's not as simple as it sounds
-      because Lua scripts block the entire thread for all clients.   
+      because Lua scripts block the entire Redis thread for all clients.   
       To minimise the chances of this happening, don't modify the lists
-      outside of this module since you most likely won't be using a
-      transation when doing so.
+      outside of this module.
 
 [^2]: This is the result of using `Array.sort` using numerical comparators,
       which Node.js most likely implements using [Quicksort][qs]
