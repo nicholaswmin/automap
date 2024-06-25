@@ -272,8 +272,8 @@ your services are running relatively close-by.
 
 ### Concurrency Control
 
-This package does not implement any sort of concurrency control outside of
-attempting to maximise the atomicity of it's operations.
+This package does not implement any sort of [concurrency control][cc]
+outside of attempting to maximise the atomicity of it's operations.
 
 There's a ton of methods for implementing a concurrency-control algorithm on
 top of Redis - some are dead-simple mutex locks that don't support
@@ -501,3 +501,4 @@ Produces a test coverage report
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
+[cc]: https://en.wikipedia.org/wiki/Concurrency_control
