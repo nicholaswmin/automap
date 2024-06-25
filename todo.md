@@ -4,10 +4,10 @@
 
 ## Critical
 
-- [ ] There is a bug which causes empty lists to be passed on to `save()`.
-  - [ ] The `map.js` code is a code smell - that whole `nodeList` thing is a
+- [x] There is a bug which causes empty lists to be passed on to `save()`.
+  - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
     complete bullshit thing - unnecessary. Must fix - must make it simpler
-  - [ ] there are tests that do `list.value.value` to access some value, this
+  - [x] there are tests that do `list.value.value` to access some value, this
         is not acceptable
   - [ ] There is no testing for lists with 0 items - hence why this slipped
         through.
