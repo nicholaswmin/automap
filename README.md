@@ -1,3 +1,5 @@
+[![test-workflow][test-workflow-badge]][ci-test]
+
 # automap
 tiny and schemaless Redis ORM-"ish" microframework [WIP]
 
@@ -235,15 +237,6 @@ Redis JSON is not a native datatype in Redis.
 A lot of managed cloud Redis providers do not allow it's use.
 
 
-[test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
-[ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
-
-[oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
-[redis]: https://redis.io/
-[array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-[atomic]: https://en.wikipedia.org/wiki/Atomicity_(database_systems)
-[pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
-
 ## Test
 
 ```bash
@@ -275,8 +268,11 @@ Produces a test coverage report
 > furnished to do so.
 
 
-[redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
-[redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
-[bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
-[const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
-[qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
+[test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
+[ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
+
+[oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
+[redis]: https://redis.io/
+[array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+[atomic]: https://en.wikipedia.org/wiki/Atomicity_(database_systems)
+[pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
