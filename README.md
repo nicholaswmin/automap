@@ -1,7 +1,7 @@
 [![test-workflow][test-workflow-badge]][ci-test]
 
 # automap
-tiny and schemaless Redis ORM-"ish" microframework [WIP]
+tiny and schemaless Redis ORM-"ish" microframework
 
 Serialize an [OOP-y][oop] instance to Redis and get it back, properly
 instantiated.
