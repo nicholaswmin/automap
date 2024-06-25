@@ -84,11 +84,6 @@ class Flat {
 }
 ```
 
-> [!NOTE]
-> `List` is a direct subclass of an `Array` so they behave *exactly* the same.  
-> For example: `Array.isArray(list) // true`
->
-
 ### The `List` type
 
 The `List` type is a direct subtype of the native `Array`, therefore it
@@ -105,11 +100,10 @@ for (const item of list)
 // String '1'
 // String '2'
 
-console.log(Array.isArray(list))
-// true
+console.log(Array.isArray(list)) // true
 ```
 
-You can omit the `type` property:
+... you can omit the `type` property:
 
 ```js
 
@@ -123,23 +117,23 @@ for (let i = 0; i < list.length; i++)
 // Number 3
 ```
 
-Or just use it like a regular `Array`:
+... or just use it like a regular `Array`:
 
 ```js
 const array = new List(1, 2, 3)
 
 const two = array.find(num => num === 2)
 
-console.log(two)
+console.log(two) // 2
 ```
 
 ### Lazy Loading
 
-The module exports a `LazyList` which is identical to a `List`,
-except that it's contents are *not* fetched automatically.
+Sometimes you won't need to load the contents of a list initially.  
+You might want to load it's contents later or none at all.
 
-Instead, you need to explicitly call `list.load()` when, and if, you need
-it.
+In that case, use a `LazyList` instead of a `List`.
+
 
 ```js
 import { LazyList } from 'automap'
@@ -152,7 +146,7 @@ class Building {
 }
 ```
 
-and then:
+... and load its contents by calling `list.load()`:
 
 ```js
 const building = await repo.fetch('kensington')
