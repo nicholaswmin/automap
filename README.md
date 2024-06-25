@@ -49,8 +49,7 @@ for (let flat of building.flats)
 
 ## Defining models
 
-This package is not an ORM so there's no schema definition.   
-You use your own object-graphs.
+This package is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
