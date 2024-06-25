@@ -313,7 +313,8 @@ this is nothing special but you should note the following...
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
 > You could assemble a structure that takes literal *years* to fetch
-> instead of milliseconds.
+> instead of milliseconds or at the very least skew the response times
+> towards entirely unacceptably values.
 
 #### Flat lists
 
