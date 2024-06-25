@@ -4,6 +4,22 @@
 
 Efficiently store complex object graphs in Redis
 
+- [Usage](#usage)
+- [Defining models](#defining-models)
+  * [Basic](#example-1)
+  * [Lazy loading](#lazy-loading)
+  * [The List type](#the-list-type)
+- [Data structure](#redis-data-structure)
+- [Reason](#reason)
+- [Atomicity](#atomicity)
+- [Time complexity](#time-complexity)
+  * [Flat lists](#flat-lists)
+  * [Nested lists](#nested-lists)
+- [Do you *really* need this?](#where-this-is-unnecessary)
+  * [Why not Redis JSON](#why-not-redis-json)
+  * [Alternatives](#alternatives)
+- [Running tests and test coverage](#test)
+
 ## Usage
 
 This module exports a `Repository` which you set up, then call:
@@ -266,14 +282,27 @@ saved *exactly-once*.
 
 but...
 
-### Time-complexity of nested lists
+### Time-complexity
+
+> This section describes the algorithmic [time-complexity][time] of different  
+> object graph configurations but only in the context of network roundtrips.
+>
+> If you don't know what this term means, just **don't nest lists inside other lists**.   
+> You could easily assemble a structure that takes *years* to fetch instead of milliseconds.
+
+#### Flat lists
 
 Fetching object graphs which don't have lists nested inside other lists,
 is a process with a [constant-time complexity O(1)][const];
 more or less[^1].
 
-In contrast, fetching object graphs which have nested lists is a process which   
-has [quadratic-time complexity O(n^2)][qtc], at a minimum.
+There's no network roundtrip involved since it uses a Lua script which allows
+something akin to a [`hmget`][hmget], but for hashes.
+
+#### Nested lists
+
+In contrast, fetching object graphs which have nested lists is a process which
+performs in [quadratic-time complexity O(n<sup>2</sup>)][qtc], at a minimum.
 
 Note that these time complexity bounds involve network requests,
 which are *orders of magnitude* slower than a run-of-the-mill classroom time
@@ -295,9 +324,8 @@ There are some possible workarounds:
 
 - Avoid nested lists in your object graph in general.
 
-There are other workarounds to these problems that could be solved
-transparently by this package but they are avoided because they make the
-whole process too complicated and the intent of this package is to be
+There are potential workarounds to these problems but they involve
+defining schemas and the philosophy of this package is to be schema-less,
 simple and unobtrusive.
 
 ### Where this is unnecessary
@@ -326,8 +354,26 @@ Redis JSON is not a native datatype in Redis.
 
 A lot of managed cloud Redis providers do not allow it's use.
 
-It goes without saying that if you can use it then by all means,
-you should.
+It goes without saying that if you can use it then by all means, you should.
+
+### Alternatives
+
+[Redis-OM][redisom]
+
+This is a full-blown Object-Mapper which of course requires
+schema definitions. It's like an ORM but for non-relational datastores
+like Redis.
+
+Note:
+
+- This package doesn't involve defining relationship between entities so
+  it's not aiming to be an OM itself hence it's not really an "alternative"
+  but if you confused this for an OM/ORM and got disappointed, this is what you
+  should be looking at.
+
+- I have no idea how fast it is with lists. It's unlikely to be faster
+  than this package, especially when no nesting is involved but I could very
+  well be wrong.
 
 ## Test
 
@@ -370,9 +416,15 @@ Produces a test coverage report
 
 ## Footnotes
 
-[^1]: The time complexity bounds described are in the context of fetching data from a remote service (Redis).
-      As described, this package also performs a breadth-first graph traversal which is `O(V + E)` but since
-      this step does not involve any network roundtrips, it's assumed to have a negligible impact.
+[^1]: The time complexity bounds described are in the context of fetching data
+      from a remote service (Redis).
+      As described, this package also performs a breadth-first graph traversal
+      which is `O(V + E)` but since
+      this step does not involve any network roundtrips, it's assumed to have a
+      negligible impact.  
+      There is also an `Array.sort` step involved, which Node.js most
+      likely implements using [Quicksort][qs], which itself is O(n<sup>2</sup>)
+      in it's worst-case.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
@@ -387,3 +439,7 @@ Produces a test coverage report
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
+[hmget]: https://redis.io/docs/latest/commands/mget/
+[redisom]: https://github.com/redis/redis-om-node
+[qs]: https://en.wikipedia.org/wiki/Quicksort
+[time]: https://en.wikipedia.org/wiki/Time_complexity
