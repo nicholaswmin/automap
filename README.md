@@ -308,7 +308,7 @@ this is nothing special but you should note the following...
 > computations.  
 > You should assume that locally and at the very minimum, a
 > [BFS traversal][bfs] will always run for both `.save()` and `.fetch()`, with
-> an additional [Quicksort][qs] step in `.fetch`.
+> an additional [Quicksort][qs] step in `.fetch`, for every list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
