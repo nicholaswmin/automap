@@ -232,7 +232,9 @@ which are *orders of magnitude* slower than usual algorithmic time
 complexity problems.
 
 So while nested lists are supported and as efficiently as possible,
-they are **not** recommended.
+they are *not* recommended **unless** they are `LazyList` lists which
+aren't automatically fetched and therefore have no impact on the performance
+of the fetching process.
 
 ### Where this is unnecessary
 
