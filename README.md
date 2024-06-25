@@ -276,3 +276,8 @@ Produces a test coverage report
 [array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 [atomic]: https://en.wikipedia.org/wiki/Atomicity_(database_systems)
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
+[redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
+[redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
+[bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
+[const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
+[qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
