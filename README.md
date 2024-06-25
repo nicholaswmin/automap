@@ -269,9 +269,9 @@ This keeps updates performant and *always* [atomic][atomic].
 
 In contrast, fetching an object graph is not entirely atomic but since the
 update is atomic for practical reasons it's assumed to be atomic as well.  
-For reference, the number of lists doesn't impact the atomicity at all as
-long, as they are not nested. The part that breaks this guarantee is only when
-fetching the final root object.
+For reference, the number of lists doesn't impact the atomicity at all, as
+long as they are not nested.   
+The part that breaks this guarantee is only when fetching the final root object.
 
 Also note that these are extreme cases in practice so unless you're
 dealing with very high concurrency numbers, you probably won't ever experience
