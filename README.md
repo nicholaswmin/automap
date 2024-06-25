@@ -269,6 +269,20 @@ next to nothing for the time being and is just a personal guideline.
 For reference, a single Redis `GET` can run in sub-millisecond time assuming
 your services are running relatively close-by.
 
+### Concurrency Control
+
+This package does not implement any sort of concurrency control outside of
+attempting to maximise the atomicity of it's operations.
+
+There's a ton of methods for implementing a concurrency-control algorithm on
+top of Redis - some are dead-simple mutex locks that don't support
+Redis Cluster, others come ready as a library and others are so complex that
+they almost require a 4-year course in Theoretical Computer Science.
+
+Ultimately, the decision to implement concurrency control or which one should
+be used is highly dependent on the specifics of each use-case and out of scope
+of this package.
+
 ### Atomicity
 
 Each found list is decomposed into a single Redis `HSET` command.
@@ -283,14 +297,8 @@ The part that breaks this guarantee is only when fetching the final
 root object. This is fixable but currently it is not.
 
 Note that the above are extreme cases in practice so unless you're
-dealing with very high concurrency numbers, you probably won't ever experience
-an issue in this regard, at all.
-
-There's a ton of methods for implementing a concurrency-control algorithm
-on top of Redis - some are dead-simple mutex locks, others come ready
-as a library and others almost require a 4-year course in Theoretical
-Computer Science; if you have such a requirement you probably shouldn't be
-using this package though.
+dealing with highly concurrent updates on the same object-graphs,
+there's a high chance you probably won't ever notice this problem.
 
 ### Nested Lists
 
@@ -484,6 +492,7 @@ Produces a test coverage report
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 [redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
 [redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
+[redlock]: https://redis.io/docs/latest/develop/use/patterns/distributed-locks/
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
