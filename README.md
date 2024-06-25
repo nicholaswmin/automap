@@ -262,9 +262,9 @@ they can be lazy-loaded.
 
 ## Performance
 
-This package assumes that you expects a response in milliseconds; maximally
-in `10ms` but since there's no benchmarks, a sample or a controlled test
-environment this means almost nothing for the time being and is just a
+This package assumes that an acceptable response time of maximally `10ms`
+but since there's no benchmarks, a sample or a controlled test
+environment this means next to nothing for the time being and is just a
 personal guideline.
 
 ### Atomicity
