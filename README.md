@@ -52,7 +52,7 @@ import ioredis from 'ioredis' // or 'node-redis'
 import { Repository } from 'automap'
 
 // setup your repository
-const repo = new Repository(ApartmentBuilding, ioredis())
+const repo = new Repository(Building, ioredis())
 
 // create a Building with Flats
 const building = new Building({ i
