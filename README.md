@@ -265,13 +265,14 @@ These time-complexity bounds involve network requests,
 which are *orders of magnitude* slower than usual algorithmic time
 complexity problems.
 
-So while nested lists are supported and as efficiently as possible,
-they are *not* recommended
+So while nested lists are supported but they are *not* recommended.
 
 Nested `LazyList` lists won't have an impact on the initial fetching but
 they will eventually exhibit the same behaviour when you call `list.load()`
 to load their contents.
 
+There are workarounds to these problems but they make the whole process too
+complicated and the intent of this package is to be simple and unobtrusive.
 
 ### Where this is unnecessary
 
@@ -283,14 +284,14 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is an extremely simple, efficient and inherently atomic operation.
+This is a dead-simple, highly efficient and inherently atomic operation.
 
-If you don't dont expect to have big lists in your object-graphs,
-you should definitely use this method instead of this package.
+If you don't expect to have big lists in your object graphs,
+you should just use this method instead; you don't need this package at all.
 
-The additional caveat is that you cannot fetch individual list items directly
-from Redis. You would would always need to fetch and parse the entire graph
-which for some, if not most, use-cases is entirely ok.
+The small caveat is that you cannot fetch individual list items directly
+from Redis since you always need to fetch and parse the entire graph,
+which for most use-cases is entirely ok.
 
 ### Why not Redis JSON
 
