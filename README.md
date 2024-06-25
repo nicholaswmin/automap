@@ -307,8 +307,8 @@ this is nothing special but you should note the following...
 > but only in the context of network roundtrips rather than local
 > computations.  
 > You should assume that locally and at the very minimum, a
-> [BFS traversal][bfs] will always run, followed by a [Quicksort][qs],
-> for both `.save()` and `.fetch()`.
+> [BFS traversal][bfs] will always run for both `.save()` and `.fetch()`.  
+> An additional [Quicksort][qs] step occurs in `.fetch`.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
