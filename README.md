@@ -262,6 +262,11 @@ they can be lazy-loaded.
 
 ## Performance
 
+This package assumes that you expects a response in milliseconds; maximally
+in `10ms` but since there's no benchmarks, a sample or a controlled test
+environment this means almost nothing for the time being and is just a
+personal guideline.
+
 ### Atomicity
 
 Each found list is decomposed into a single Redis `HSET` command.
@@ -314,7 +319,7 @@ this is nothing special but you should note the following...
 > **avoid nesting lists inside other lists**.  
 > You could assemble a structure that takes literal *years* to fetch
 > instead of milliseconds or at the very least skew the response times
-> towards entirely unacceptably values.
+> towards entirely unacceptable values.
 
 #### Flat lists
 
