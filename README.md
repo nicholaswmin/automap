@@ -276,7 +276,7 @@ Each found list is decomposed into a single Redis `HSET` command.
 All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
-This keeps updates performant and *always* [atomic][atomic].
+This keeps updates performant and *always* [atomic][atomic][^1].
 
 In contrast, fetching an object graph is not entirely atomic.
 The part that breaks this guarantee is only when fetching the final
@@ -317,7 +317,7 @@ this is nothing special but you should note the following...
 > You should assume that locally and at the very minimum, a
 > [BFS traversal][bfs] will always run at least once for both `.save()`
 > and `.fetch()` against the entire object graph.  
-> This is followed by an additional [Quicksort][qs][^1] step in `.fetch`
+> This is followed by an additional [Quicksort][qs][^2] step in `.fetch`
 > against *every* list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
@@ -329,7 +329,7 @@ this is nothing special but you should note the following...
 #### Flat lists
 
 Object graphs which don't have lists nested inside other lists,
-are fetched in a process that runs in [constant-time O(1)][const][^2][^3].
+are fetched in a process that runs in [constant-time O(1)][const][^3][^4].
 
 There's no network roundtrip involved for each list since this package
 uses a Lua script which allows something akin to a [`mget`][mget],
@@ -451,19 +451,30 @@ Produces a test coverage report
 
 ## Footnotes
 
-[^1]: This is the result of using `Array.sort` using numerical comparators,
+[^1]: Redis transactions do not provide the same atomicity and isolation
+      semantics you might be used to.   
+      By definition they are atomic however the entire transaction
+      can fail if client B updates a value while it's in the process of being
+      modified by client A as part of a transaction.
+      This can be fixed with a Lua script but it's not as simple as it sounds
+      because Lua scripts block the entire thread for all clients.   
+      To minimise the chances of this happening, don't modify the lists
+      outside of this module since you most likely won't be using a
+      transation when doing so.
+
+[^2]: This is the result of using `Array.sort` using numerical comparators,
       which Node.js most likely implements using [Quicksort][qs]
       ; at least Chrome does so.   
       This is an `O(n<sup>2</sup>) operation in it's worst-case.
 
-[^2]: The time complexity bounds described are in the context of fetching data
+[^3]: The time complexity bounds described are in the context of fetching data
       from a remote service (Redis).
       As described, this package also performs a breadth-first graph traversal
       which is `O(V + E)` but since
       this step does not involve any network roundtrips, it's assumed to have a
       negligible impact.  
 
-[^3]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
+[^4]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
       when the request lands in Redis.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
