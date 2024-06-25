@@ -11,6 +11,11 @@ This module exports a `Repository` which you set up, then call:
 - `repository.save(object)` to save an object
 - `repository.fetch('foo')` to fetch it back
 
+
+### Example
+
+Assume you have a `Building` which contains an array of `Flats`:
+
 ```js
 import ioredis from 'ioredis' // or 'node-redis'
 import { Repository } from 'automap'
@@ -18,7 +23,7 @@ import { Repository } from 'automap'
 // setup your repository
 const repo = new Repository(Building, ioredis())
 
-// create a Building with Flats
+// create your object graph
 const building = new Building({
   id: 'kensington',
   flats: ['101', '102', '103']
