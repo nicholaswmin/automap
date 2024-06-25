@@ -256,23 +256,37 @@ but...
 
 ### Time-complexity of nested lists
 
-Lists without any nesting are fetched in
-[constant-time complexity O(1)][const][^1].
+Fetching object graphs which don't have lists nested inside other lists,
+is a process with a [constant-time complexity O(1)][const];
+more or less[^1].
 
-In contrast, nested lists have a [quadratic-time complexity O(n^2)][qtc].
+The reason is simple - the `repository` doesn't have to fetch a list only to
+find out it contains another list.
 
-These time-complexity bounds involve network requests,
-which are *orders of magnitude* slower than usual algorithmic time
-complexity problems.
+In contrast, fetching object graphs which have nested lists is a process which   
+has [quadratic-time complexity O(n^2)][qtc], at a minimum.
 
-So while nested lists are supported but they are *not* recommended.
+Note that these time complexity bounds involve network requests,
+which are *orders of magnitude* slower than a run-of-the-mill classroom time
+complexity problem.
 
-Nested `LazyList` lists won't have an impact on the initial fetching but
-they will eventually exhibit the same behaviour when you call `list.load()`
-to load their contents.
+So nested lists are supported but they are *not* recommended.
 
-There are workarounds to these problems but they make the whole process too
-complicated and the intent of this package is to be simple and unobtrusive.
+There are some possible workarounds:
+
+- Don't use a `List`. Keep the list as an `Array`. This means it won't be
+  decomposed and in some cases it might be an acceptable tradeoff.
+
+- Use a `LazyList`. They won't have an impact on the initial fetching but
+  they will eventually exhibit the same behaviour when you call `list.load()`
+  to load their contents.
+
+- Avoid nested lists in your object graph in general.
+
+There are other workarounds to these problems that could be solved
+transparently by this package but they are avoided because they make the
+whole process too complicated and the intent of this package is to be
+simple and unobtrusive.
 
 ### Where this is unnecessary
 
