@@ -128,12 +128,14 @@ console.log(building.flats)
 
 ## Redis Data Structure
 
-All keys/values saved into Redis follow a canonical and most importantly,
-human-readable format.
+All keys/values saved into Redis follow a canonical and most importantly
+*human-readable* format.
 
-The idea is that you might stop using this module altogether, or simply
-need to directly get list items from Redis; you should always have a
-crystal-clear data structure in Redis that you can easily follow.
+The idea is that you might stop using this module altogether or simply
+need to directly get list items from Redis.
+
+You should always have a simple and clear data structure in Redis
+that you can easily follow.
 
 Assuming the above example, our flats are saved under this Redis key:
 
