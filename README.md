@@ -205,7 +205,7 @@ but...
 
 ### Time-complexity of nested lists
 
-Lists without any nesting are fetched in [constant-time complexity O(1)][const].
+Lists without any nesting are fetched in [constant-time complexity O(1)][const][^1].
 
 In contrast, nested lists have a [quadratic-time complexity O(n^2)][qtc].
 
@@ -290,6 +290,12 @@ Produces a test coverage report
 > copies of the Software, and to permit persons to whom the Software is
 > furnished to do so.
 
+
+## Footnotes
+
+[^1]: The time complexity bounds described are in the context of fetching data from a remote service (Redis).
+      As described, this package also performs a breadth-first graph traversal which is `O(V + E)` but since 
+      this step does not involve any network roundtrips, it's assumed to have a negligible impact.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
