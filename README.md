@@ -16,11 +16,9 @@ This module exports a `Repository` which you set up, then call:
 Assume you have a `Building` which contains an array of `Flats`:
 
 ```js
-import ioredis from 'ioredis' // or 'node-redis'
 import { Repository } from 'automap'
 
-// setup your repository
-const repo = new Repository(Building, ioredis())
+const repo = new Repository(Building, new ioredis())
 
 // create your object graph
 const building = new Building({
@@ -32,7 +30,7 @@ await repo.save(building)
 // saved!
 ```
 
-then to fetch it back:
+and to fetch it back:
 
 ```js
 const building = await repo.fetch('kensington')
