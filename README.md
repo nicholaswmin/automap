@@ -1,10 +1,8 @@
 [![test-workflow][test-workflow-badge]][ci-test]
 
 # automap
-tiny and schemaless Redis ORM-"ish" microframework
 
-Serialize an [OOP-y][oop] instance to Redis and get it back, properly
-instantiated.
+Efficiently store complex object graphs in Redis
 
 ## Usage
 
@@ -175,41 +173,49 @@ GET building:kensington
 
 Each found list is decomposed into a single Redis `HSET` command.
 
-All `HSET` commands are then packaged into a singular, [pipelined][pipe] and
-[fully-atomic][atomic] transaction.
+All `HSET`s are then packaged into a single [pipelined][pipe] transaction
+before being sent down the wire.
+
+This keeps updates relatively performant and *always* [atomic][atomic].
 
 ### Arbitrary nesting depth
 
-This module allows an arbitrary amount of nesting of lists, so you can
+This package allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
 
-The way it works is by doing a [Breadth-First traversal][bfs] of the passed
-object-graph, then accumulating the nodes as it exits the branch;
+It does so by doing a [Breadth-First traversal][bfs] of the passed
+object-graph and then accumulating any lists as it exits the current
+traversed branch.
 
-This allows a decomposition of the innermost lists *first* which guarantees
-that a list-item can only appear in Redis, *exactly-once*; there
-is no duplication of data, regardless of nesting-level.
+This allows a decomposition of the innermost lists *first* so a list with
+3 levels of nesting will save 4 list hashes, and every list item will be
+saved *exactly-once*.
 
-That being said, nested lists are fetched in
-[Quadratic Time Complexity O(n^2)][qtc] so going too crazy on the nesting
-depth is not recommended.
+That being said, nested lists will cause the fetching process to occur in
+[quadratic-time complexity O(n^2)][qtc].
+
+In contrast, lists without any nesting at all will guarantee that the
+fetching process will occur in [constant-time complexity O(1)][const],
+regardless of how many lists you have.
+
+Therefore, going too crazy on nesting depth is not recommended.
 
 ### Reason
 
 A well-designed OOP structure can perfectly capture the semantics and flow
 of your business-logic or domain.
 
-Redis is an extremely high-performance datastore but it's API is as technical
-as it gets - it cannot capture any semantics of business logic.
+Redis is a high-performance datastore but it's API is as technical
+as it gets; it cannot capture *any* semantics of business logic.
 
 This package allows you to keep your OOP structures and use Redis for
-persistence but without incurring a mapping performance penalty; which would
-completely defeat the entire purpose of using Redis for persistence.
+persistence yet without incurring a mapping performance penalty, which would
+defeat the entire purpose of using Redis for persistence.
 
 It does so by assuming that your object-graph has lists/arrays, which can
 get big; so it decomposes those lists into manageable pieces that can be
-saved more efficiently while also allowing more flexibility into whether
-they are fetched with the rest of the object-graph.
+saved more efficiently while also allowing for flexibility into whether
+they can be lazy-loaded.
 
 
 ### Where this is unnecessary
@@ -222,13 +228,14 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is an extremely simple and efficient operation.
+This is an extremely simple, efficient and inherently atomic operation.
 
-If you don't have, and dont expect to have, big lists in your object-graphs,
-you should use this method instead of this package.
+If you don't dont expect to have big lists in your object-graphs,
+you should definitely use this method instead of this package.
 
-The additional caveat is that you cannot fetch individual list items; you
-always need to parse the entire graph which for some use-cases is entirely ok.
+The additional caveat is that you cannot fetch individual list items directly
+from Redis. You would would always need to fetch and parse the entire graph
+which for some, if not most, use-cases is entirely ok.
 
 ### Why not Redis JSON
 
