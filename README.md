@@ -223,7 +223,8 @@ but...
 
 ### Time-complexity of nested lists
 
-Lists without any nesting are fetched in [constant-time complexity O(1)][const][^1].
+Lists without any nesting are fetched in
+[constant-time complexity O(1)][const][^1].
 
 In contrast, nested lists have a [quadratic-time complexity O(n^2)][qtc].
 
