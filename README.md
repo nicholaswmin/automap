@@ -233,9 +233,12 @@ which are *orders of magnitude* slower than usual algorithmic time
 complexity problems.
 
 So while nested lists are supported and as efficiently as possible,
-they are *not* recommended **unless** they are `LazyList` lists which
-aren't automatically fetched and therefore have no impact on the performance
-of the fetching process.
+they are *not* recommended
+
+Nested `LazyList` lists won't have an impact on the initial fetching but
+they will eventually exhibit the same behaviour when you call `list.load()`
+to load their contents.
+
 
 ### Where this is unnecessary
 
