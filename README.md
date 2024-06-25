@@ -56,7 +56,7 @@ import { Repository } from 'automap'
 const repo = new Repository(Building, ioredis())
 
 // create a Building with Flats
-const building = new Building({ i
+const building = new Building({
   id: 'kensington',
   flats: ['102', '103']
 })
