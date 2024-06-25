@@ -8,7 +8,7 @@ test('AppendList', async t => {
   let list
 
   await t.test('#exportForSave', async t => {
-    let json = null
+    let result = null
 
     await t.beforeEach(t => {
       list = new AppendList({
@@ -16,40 +16,32 @@ test('AppendList', async t => {
         construct: item => new Message(item)
       })
 
-      json = list.exportForSave('sample:path')
+      result = list.exportForSave('sample:path')
     })
 
     await t.test('returns an object', t => {
-      assert.ok(json)
-      assert.strictEqual(typeof json, 'object')
-    })
-
-    await t.test('with a key property', async t => {
-      assert.ok(Object.hasOwn(json, 'key'))
-
-      await t.test('set to the passed path', t => {
-        assert.strictEqual(json.key, 'sample:path')
-      })
+      assert.ok(result)
+      assert.strictEqual(typeof result, 'object')
     })
 
     await t.test('with a type property', async t => {
-      assert.ok(Object.hasOwn(json, 'type'))
+      assert.ok(Object.hasOwn(result, 'type'))
 
       await t.test('set to "list"', t => {
-        assert.strictEqual(json.type, 'list')
+        assert.strictEqual(result.type, 'list')
       })
     })
 
     await t.test('with a value property', async t => {
-      assert.ok(Object.hasOwn(json, 'value'))
+      assert.ok(Object.hasOwn(result, 'value'))
 
       await t.test('set to an Array', t => {
-        assert.ok(Array.isArray(json.value))
+        assert.ok(Array.isArray(result.value))
       })
 
       await t.test('nothing new added to the array', async t => {
         await t.test('with no length', t => {
-          assert.strictEqual(json.value.length, 0)
+          assert.strictEqual(result.value.length, 0)
         })
       })
 
@@ -61,23 +53,23 @@ test('AppendList', async t => {
 
           list.push(message)
 
-          json = list.exportForSave('sample:path')
+          result = list.exportForSave('sample:path')
         })
 
         await t.test('has a length of 1', t => {
-          assert.strictEqual(json.value.length, 1)
+          assert.strictEqual(result.value.length, 1)
         })
 
-        await t.test('with a json string as the new element', t => {
-          assert.strictEqual(typeof json.value[0], 'string')
+        await t.test('with a result string as the new element', t => {
+          assert.strictEqual(typeof result.value[0], 'string')
         })
 
         await t.test('which is parseable', t => {
-          assert.doesNotThrow(() => JSON.parse(json.value))
+          assert.doesNotThrow(() => JSON.parse(result.value))
         })
 
         await t.test('and matches the newly passed item', t => {
-          assert.equal(json.value[0], JSON.stringify(message))
+          assert.equal(result.value[0], JSON.stringify(message))
         })
       })
     })

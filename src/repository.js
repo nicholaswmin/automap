@@ -49,7 +49,7 @@ class Repository {
 
   save(root) {
     const flat = flatten(root)
-    const transaction = flat.list.exportForSave().reduce((promise, item) => {
+    const transaction = flat.lists.reduce((promise, item) => {
       return item.type === 'list' ?
         promise.rpush(item.key, item.value) :
         promise.hset(item.key, item.value)

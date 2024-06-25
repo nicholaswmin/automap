@@ -5,7 +5,8 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --test-force-exit test/index.spec.js",
+    "test": "node --test test/index.spec.js",
+    "test-coverage": "node --test --experimental-test-coverage test/index.spec.js",
     "example": "node example/index.js"
   },
   "engines": {
