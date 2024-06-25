@@ -6,47 +6,10 @@ instantiated.
 
 ## Usage
 
-This module exports a `Repository` and a `List` class, which is a drop-in
-replacement for an [`Array`][array].
+This module exports a `Repository` which you set up, then call:
 
-When you pass an object-graph to `repository.save(object)` it:
-
-- Decomposes all the lists it finds and saves them as a
-  [Redis:Hash][redis-hash]
-- Saves the rest of the object-graph as a regular [Redis:String][redis-string]
-
-Calling: `repository.fetch(id)` will fetch everything back, then assemble
-and instantiate the object-graph exactly like you left it.
-
-### Example
-
-A `Building` which contains `Flats`:
-
-```js
-import { List } from 'automap'
-
-class Building {
-  constructor({ id, flats = [] }) {
-    this.id = id
-    this.flats = new List({ // <- Use List instead of Array (!)
-      items: flats,
-      construct: item => new Flat(item)
-    })
-  }
-}
-
-class Flat {
-  constructor({ id }) {
-    this.id = id
-  }
-
-  ringDoorbell() {
-    console.log(`Doorbell 🔔 at flat: ${this.id}`)
-  }
-}
-```
-
-and then to save it:
+- `repository.save(object)` to save an object
+- `repository.fetch('foo')` to fetch it back
 
 ```js
 import ioredis from 'ioredis' // or 'node-redis'
@@ -78,16 +41,57 @@ for (let flat of building.flats)
   // { id: '101' }, { id: '102' },...
 ```
 
-`repo.fetch` rebuilds the entire object graph using the correct type.
+> [!NOTE]
+> `repo.fetch` rebuilds the entire object graph using the correct type,
+> including any nested types.
 
-## Lazy Loading
+## Defining models
 
-The module exports a `LazyList` as well.
+This package is not an ORM so there's no schema definition.   
+You use your own object-graphs.
 
-It is identical to a `List`, except that it's contents are not fetched
-automatically.
+The only difference is that you should use a `List` instead of a regular
+`Array` to define list-like structures.
 
-Instead, you need to explicitly call `list.load()` when (and if) you need
+### Example
+
+A `Building` with `Flats`:
+
+```js
+import { List } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new List({ // <- Use List instead of Array (!)
+      items: flats,
+      construct: item => new Flat(item)
+    })
+  }
+}
+
+class Flat {
+  constructor({ id }) {
+    this.id = id
+  }
+
+  ringDoorbell() {
+    console.log(`Doorbell 🔔 at flat: ${this.id}`)
+  }
+}
+```
+
+> [!NOTE]
+> `List` is a direct subclass of an `Array` so they behave *exactly* the same.  
+> For example: `Array.isArray(list) // true`
+>
+
+### Lazy Loading
+
+The module exports a `LazyList` which is identical to a `List`,
+except that it's contents are *not* fetched automatically.
+
+Instead, you need to explicitly call `list.load()` when, and if, you need
 it.
 
 ```js
@@ -114,18 +118,18 @@ console.log(building.flats)
 
 await building.flats.load(repo)
 
-console.log(building)
+console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
-### Saving Format
+## Redis Data Structure
 
 All keys/values saved into Redis follow a canonical and most importantly,
 human-readable format.
 
-The idea is that you might stop using this module altogether
-yet you should still have a crystal-clear data structure in Redis
-that you can easily follow.
+The idea is that you might stop using this module altogether, or simply
+need to directly get list items from Redis; you should always have a
+crystal-clear data structure in Redis that you can easily follow.
 
 For example, in the above example, the flats are saved in the following hash:
 
