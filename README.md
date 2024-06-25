@@ -308,7 +308,7 @@ this is nothing special but you should note the following...
 > computations.  
 > You should assume that locally and at the very minimum, a
 > [BFS traversal][bfs] will always run for both `.save()` and `.fetch()`, with
-> an additional [Quicksort][qs][^3] step in `.fetch`, for every list.
+> an additional [Quicksort][qs][^1] step in `.fetch`, for every list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
@@ -319,7 +319,7 @@ this is nothing special but you should note the following...
 #### Flat lists
 
 Object graphs which don't have lists nested inside other lists,
-are fetched in a process that runs in [constant-time O(1)][const][^1][^2].
+are fetched in a process that runs in [constant-time O(1)][const][^2][^3].
 
 There's no network roundtrip involved for each list since this package
 uses a Lua script which allows something akin to a [`mget`][mget],
@@ -442,18 +442,20 @@ Produces a test coverage report
 
 ## Footnotes
 
-[^1]: The time complexity bounds described are in the context of fetching data
+[^1]: This is the result of using `Array.sort` using numerical comparators,
+      which Node.js most likely implements using [Quicksort][qs]
+      ; at least Chrome does so.   
+      This is an `O(n<sup>2</sup>) operation in it's worst-case.
+
+[^2]: The time complexity bounds described are in the context of fetching data
       from a remote service (Redis).
       As described, this package also performs a breadth-first graph traversal
       which is `O(V + E)` but since
       this step does not involve any network roundtrips, it's assumed to have a
       negligible impact.  
-[^2]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
+
+[^3]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
       when the request lands in Redis.
-[^3]: This is the result of using `Array.sort` using numerical comparators,
-      which Node.js most likely implements using [Quicksort][qs]
-      ; at least Chrome does so. This is an O(n<sup>2</sup>) operation in
-      it's worst-case.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
