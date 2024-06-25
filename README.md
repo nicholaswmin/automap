@@ -265,7 +265,11 @@ Each found list is decomposed into a single Redis `HSET` command.
 All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
-This keeps updates relatively performant and *always* [atomic][atomic].
+This keeps updates performant and *always* [atomic][atomic].
+
+In contrast, fetching an object graph is not entirely atomic but since the
+update is atomic for practical reasons it's assumed to be atomic as well.  
+Formally it is not.
 
 ### Nested Lists
 
@@ -284,25 +288,29 @@ but...
 
 ### Time-complexity
 
-> This section describes the algorithmic [time-complexity][time] of different  
-> object graph configurations but only in the context of network roundtrips.
+> This section describes the [algorithmic time-complexity][time] of different
+> object graph configurations,  
+> but only in the context of network roundtrips rather than local computations.  
+> Therefore the `n` factor is assumed as the average latency to Redis and back.  
 >
-> If you don't know what this term means, just **don't nest lists inside other lists**.   
-> You could easily assemble a structure that takes *years* to fetch instead of milliseconds.
+> If you don't know what these terms mean that's fine, as long as you
+> **don't nest lists inside other lists**.  
+> You could easily assemble a structure that takes literal *years* to fetch
+> instead of milliseconds.
 
 #### Flat lists
 
-Fetching object graphs which don't have lists nested inside other lists,
-is a process with a [constant-time complexity O(1)][const];
-more or less[^1].
+Object graphs which don't have lists nested inside other lists,
+are fetched in a process that runs in [constant-time O(1)][const][^1][^2].
 
-There's no network roundtrip involved since it uses a Lua script which allows
-something akin to a [`hmget`][hmget], but for hashes.
+There's no network roundtrip involved for each list since this package
+uses a Lua script which allows something akin to a [`mget`][mget],
+but for hashes.
 
 #### Nested lists
 
 In contrast, fetching object graphs which have nested lists is a process which
-performs in [quadratic-time complexity O(n<sup>2</sup>)][qtc], at a minimum.
+performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 
 Note that these time complexity bounds involve network requests,
 which are *orders of magnitude* slower than a run-of-the-mill classroom time
@@ -425,6 +433,8 @@ Produces a test coverage report
       There is also an `Array.sort` step involved, which Node.js most
       likely implements using [Quicksort][qs], which itself is O(n<sup>2</sup>)
       in it's worst-case.
+[^2]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
+      when the request lands in Redis.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
@@ -439,7 +449,7 @@ Produces a test coverage report
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
-[hmget]: https://redis.io/docs/latest/commands/mget/
+[mget]: https://redis.io/docs/latest/commands/mget/
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
