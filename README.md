@@ -306,6 +306,8 @@ but...
 > object graph configurations,  
 > but only in the context of network roundtrips rather than local
 > computations.  
+> In general you should assume that at the very minimum, a [BFS traversal][bfs]
+> will always happen on both `.save` and `.fetch`.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
