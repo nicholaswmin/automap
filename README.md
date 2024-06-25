@@ -284,6 +284,17 @@ but...
 
 ### Time-complexity
 
+> This section describes the algorithmic [time-complexity][time] of different
+> object graph configurations, but only in the context of network roundtrips.
+> 
+> There are additional steps which perform under non-constant time complexity,
+> but since they are not network requests their performance impact is assumed to
+> be negligible
+>
+> If you don't know what this term means, then just **don't nest lists inside
+> other lists** since you could potentially assemble a structure that takes
+> *years* to fetch instead of milliseconds. No really. 
+
 #### Flat lists
 
 Fetching object graphs which don't have lists nested inside other lists,
@@ -436,3 +447,4 @@ Produces a test coverage report
 [hmget]: https://redis.io/docs/latest/commands/mget/
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
+[time]: https://en.wikipedia.org/wiki/Time_complexity
