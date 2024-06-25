@@ -121,10 +121,10 @@ console.log(building.flats)
 
 ### The `List` type
 
-The `List` type is a direct subtype of the native [`Array`][array],   
-therefore it behaves *exactly* the same.
+Both provided lists - `List`/`LazyList` - are direct subtypes of
+the native [`Array`][array], therefore they behave *exactly* the same.
 
-It also provides an interface for casting to a type:
+They also provide an interface for casting to a type:
 
 ```js
 const list = new List({ type: String, from: [1, 2, 3] })
