@@ -20,7 +20,6 @@ import { Repository } from 'automap'
 
 const repo = new Repository(Building, new ioredis())
 
-// create your object graph
 const building = new Building({
   id: 'kensington',
   flats: ['101', '102', '103']
