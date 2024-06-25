@@ -267,7 +267,7 @@ there's no benchmarks, a sample or a controlled test environment this means
 next to nothing for the time being and is just a personal guideline.
 
 For reference, a single Redis `GET` can run in sub-millisecond time assuming
-your services are running relatively close-by. 
+your services are running relatively close-by.
 
 ### Atomicity
 
@@ -314,8 +314,9 @@ this is nothing special but you should note the following...
 > but only in the context of network roundtrips rather than local
 > computations.  
 > You should assume that locally and at the very minimum, a
-> [BFS traversal][bfs] will always run for both `.save()` and `.fetch()`, with
-> an additional [Quicksort][qs][^1] step in `.fetch`, for every list.
+> single [BFS traversal][bfs] will always run at least once for both `.save()`
+> and `.fetch()`, with an additional [Quicksort][qs][^1] step in `.fetch`,
+> at least once - for *every* list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
