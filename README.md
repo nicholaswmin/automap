@@ -52,9 +52,9 @@ for (let flat of building.flats)
 This package is not an ORM so there's no schema definition.   
 You use your own object-graphs.
 
-To make an object-graphs persistable just:
+To make an object graph persistable just:
 
-- Swap any [`Array`][array] with the provided `List` when defining
+- Replace [`Array`][array] with the provided `List` when defining
   list-like data.
 - The root object has `id` property set to a unique value
 
