@@ -135,19 +135,23 @@ The idea is that you might stop using this module altogether, or simply
 need to directly get list items from Redis; you should always have a
 crystal-clear data structure in Redis that you can easily follow.
 
-For example, in the above example, the flats are saved in the following hash:
+Assuming the above example, our flats are saved under this Redis key:
 
 ```
 building:kensington:flats
+```
+
+which is a [Redis Hash][redishash] with the following shape:
 
 | Field 	| Value                       	|
 |-------	|-----------------------------	|
 | 101   	| {"i":0,"json":{"id":"101"}} 	|
 | 102   	| {"i":1,"json":{"id":"102"}} 	|
 | 103   	| {"i":2,"json":{"id":"103"}} 	|
-```
 
-You can fetch a single flat in [constant-time `(O1)`][const] simply by:
+
+Therefore if you need to access an individual flat directly from Redis,
+you can simply run:
 
 ```
 HGET building:kensington:flats 101
@@ -170,6 +174,8 @@ which you can easily get by:
 ```
 GET building:kensington
 ```
+
+All of these commands occur in [constant-time `(O1)`][const].
 
 ## Notes
 
