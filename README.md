@@ -4,6 +4,24 @@
 
 Efficiently store complex object graphs in Redis
 
+- [Usage](#usage)
+- [Defining models](#defining-models)
+  * [Basic](#example-1)
+  * [Lazy loading](#lazy-loading)
+  * [The List type](#the-list-type)
+- [Data structure](#redis-data-structure)
+- [Notes](#notes)
+  * [Reason](#reason)
+  * [Atomicity](#atomicity)
+  * [Time complexity](#time-complexity)
+    + [Flat lists](#flat-lists)
+    + [Nested lists](#nested-lists)
+  * [Do you *really* need this?](#where-this-is-unnecessary)
+  * [Why not Redis JSON](#why-not-redis-json)
+  * [Alternatives](#alternatives)
+- [Test](#test)
+  * [Test coverage](#test-coverage)
+
 ## Usage
 
 This module exports a `Repository` which you set up, then call:
