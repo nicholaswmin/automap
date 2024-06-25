@@ -361,8 +361,7 @@ Common-sense workarounds:
 - Avoid nested lists in your object graph in general.
 
 There are potential workarounds to these problems but some require
-defining schemas and the philosophy of this package is to be schema-less,
-simple and unobtrusive.
+defining schemas.
 
 ### Where this is unnecessary
 
