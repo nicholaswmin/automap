@@ -99,8 +99,7 @@ const list = new List({ type: String, from: [1, 2, 3] })
 for (const item of list)
   console.log(item.constructor.name, item)
 
-// String '1'
-// String '2'
+// String '1', String '2', String '3' ...
 
 console.log(Array.isArray(list)) // true
 ```
@@ -114,9 +113,7 @@ const list = new List({ from: [1, 2, 3] })
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
 
-// Number 1
-// Number 2
-// Number 3
+// Number 1, Number 2, Number 3 ...
 ```
 
 ... or just use it like a regular `Array`:
