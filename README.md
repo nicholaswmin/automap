@@ -89,6 +89,8 @@ Instead, you need to explicitly call `list.load()` when (and if) you need
 it.
 
 ```js
+import { LazyList } from 'automap'
+
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
