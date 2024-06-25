@@ -260,9 +260,6 @@ Fetching object graphs which don't have lists nested inside other lists,
 is a process with a [constant-time complexity O(1)][const];
 more or less[^1].
 
-The reason is simple - the `repository` doesn't have to fetch a list only to
-find out it contains another list.
-
 In contrast, fetching object graphs which have nested lists is a process which   
 has [quadratic-time complexity O(n^2)][qtc], at a minimum.
 
@@ -301,7 +298,8 @@ and `JSON.parse(json)`
 This is a dead-simple, highly efficient and inherently atomic operation.
 
 If you don't expect to have big lists in your object graphs,
-you should just use this method instead; you don't need this package at all.
+you should just use this method instead;   
+you don't need this package at all.
 
 The small caveat is that you cannot fetch individual list items directly
 from Redis since you always need to fetch and parse the entire graph,
@@ -313,6 +311,8 @@ Redis JSON is not a native datatype in Redis.
 
 A lot of managed cloud Redis providers do not allow it's use.
 
+It goes without saying that if you can use it then by all means,
+you should.
 
 ## Test
 
