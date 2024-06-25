@@ -52,8 +52,11 @@ for (let flat of building.flats)
 This package is not an ORM so there's no schema definition.   
 You use your own object-graphs.
 
-The only difference is that you should use a `List` instead of a regular
-`Array` to define list-like structures.
+To make an object-graphs persistable just:
+
+- Swap any [`Array`][array] with the provided `List` when defining
+  list-like data.
+- The root object has `id` property set to a unique value
 
 ### Example
 
