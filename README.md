@@ -287,7 +287,7 @@ but...
 > This section describes the algorithmic [time-complexity][time] of different  
 > object graph configurations but only in the context of network roundtrips.
 >
-> If you don't know what this term means, just **don't nest lists inside other lists**. 
+> If you don't know what this term means, just **don't nest lists inside other lists**.   
 > You could easily assemble a structure that takes *years* to fetch instead of milliseconds.
 
 #### Flat lists
