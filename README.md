@@ -88,8 +88,8 @@ class Flat {
 
 ### The `List` type
 
-The `List` type is a direct subtype of the native `Array`, therefore it
-behaves *exactly* the same.
+The `List` type is a direct subtype of the native [`Array`][array],   
+therefore it behaves *exactly* the same.
 
 It also provides an interface for casting to a type:
 
