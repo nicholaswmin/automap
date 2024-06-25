@@ -24,32 +24,31 @@ test('#flatten()', async t => {
     beforeEach(() => {
       result = flatten(chatroom)
 
-      list = result.list
-        .find(item => item.storepath === 'chatroom:c_1:users')
+      list = result.lists.find(item => item.key === 'chatroom:c_1:users')
     })
 
     await t.test('value is an object', t => {
-      assert.strictEqual(typeof list.value.value, 'object')
+      assert.strictEqual(typeof list.value, 'object')
     })
 
     await t.test('with same number of keys as array items', t => {
-      assert.strictEqual(Object.keys(list.value.value).length, 2)
+      assert.strictEqual(Object.keys(list.value).length, 2)
     })
 
     await t.test('with keys matching the ids of the array items', t => {
-      assert.deepStrictEqual(Object.keys(list.value.value), ['u_1', 'u_2'])
+      assert.deepStrictEqual(Object.keys(list.value), ['u_1', 'u_2'])
     })
 
     await t.test('with items as json strings', t => {
-      assert.ok(typeof list.value.value.u_1.json, 'string')
-      assert.ok(typeof list.value.value.u_2.json, 'string')
+      assert.ok(typeof list.value.u_1.json, 'string')
+      assert.ok(typeof list.value.u_2.json, 'string')
     })
 
     await t.test('items have a json property', async t => {
       let parsed = null
 
       await beforeEach(() => {
-        parsed = JSON.parse(list.value.value.u_1)
+        parsed = JSON.parse(list.value.u_1)
       })
 
       await t.test('with an index property', t => {

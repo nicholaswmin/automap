@@ -21,30 +21,30 @@ test('#flatten()', async t => {
 
     let result = flatten(chatroom)
 
-    list = result.list.find(r => r.storepath === 'chatroom:c_1:messages')
+    list = result.lists.find(r => r.key === 'chatroom:c_1:messages')
   })
 
   await t.test('value has key matching the path of the list', t => {
-    assert.strictEqual(list.value.key, 'chatroom:c_1:messages')
+    assert.strictEqual(list.key, 'chatroom:c_1:messages')
   })
 
   await t.test('value has type set to "list"', t => {
-    assert.strictEqual(list.value.type, 'list')
+    assert.strictEqual(list.type, 'list')
   })
 
   await t.test('value of value is an Array', t => {
-    assert.ok(Array.isArray(list.value.value))
+    assert.ok(Array.isArray(list.value))
   })
 
   await t.test('when there is a new addition', async t => {
     await t.test('array has 1 item', t => {
-      assert.strictEqual(list.value.value.length, 1)
+      assert.strictEqual(list.value.length, 1)
     })
 
     await t.test('item matches the addition', t => {
-      const parsed = JSON.parse(list.value.value)
+      const parsed = JSON.parse(list.value)
 
-      assert.deepStrictEqual(parsed, {id: 'm_3', text: 'Hi'})
+      assert.deepStrictEqual(parsed, { id: 'm_3', text: 'Hi' })
     })
   })
 })

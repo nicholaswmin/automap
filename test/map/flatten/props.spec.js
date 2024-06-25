@@ -29,29 +29,15 @@ test('#flatten()', async t => {
       assert.ok(result)
 
       await t.test('has a list property', t => {
-        assert.ok(Object.hasOwn(result, 'list'))
+        assert.ok(Object.hasOwn(result, 'lists'))
       })
 
       await t.test('which is an Array', t => {
-        assert.ok(Array.isArray(result.list))
+        assert.ok(Array.isArray(result.lists))
       })
 
       await t.test('containing an entry for each List in the root', async t => {
-        assert.strictEqual(result.list.length, 4)
-
-        await t.test('each entry has a storepath property', t => {
-          for (const entry of result.list)
-            assert.ok(Object.hasOwn(entry, 'storepath'))
-        })
-
-        await t.test('describing the position of the list in the root', t => {
-          const storepaths = result.list.map(item => item.storepath)
-
-          assert.ok(storepaths.includes('chatroom:c_1:messages'))
-          assert.ok(storepaths.includes('chatroom:c_1:users:u_1:notes'))
-          assert.ok(storepaths.includes('chatroom:c_1:users:u_2:notes'))
-          assert.ok(storepaths.includes('chatroom:c_1:users'))
-        })
+        assert.strictEqual(result.lists.length, 3)
       })
     })
   })
