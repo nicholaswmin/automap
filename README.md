@@ -28,7 +28,7 @@ import { List } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new List({ // <-- Use List instead of Array (!)
+    this.flats = new List({ // <- Use List instead of Array (!)
       items: flats,
       construct: item => new Flat(item)
     })
@@ -58,10 +58,11 @@ const repo = new Repository(Building, ioredis())
 // create a Building with Flats
 const building = new Building({
   id: 'kensington',
-  flats: ['102', '103']
+  flats: ['101', '102', '103']
 })
 
-await repo.save(building) // saved!
+await repo.save(building)
+// saved!
 ```
 
 then to fetch it back:
@@ -70,10 +71,11 @@ then to fetch it back:
 const building = await repo.fetch('kensington')
 
 building.flats[0].ringDoorbell()
-// Doorbell 🔔 at flat: 102 !
+// Doorbell 🔔 at flat: 101 !
 
 for (let flat of building.flats)
-  console.log(flat) // { id: '101' }... { id: '102' }
+  console.log(flat)
+  // { id: '101' }, { id: '102' },...
 ```
 
 `repo.fetch` rebuilds the entire object graph using the correct type.
@@ -94,7 +96,7 @@ import { LazyList } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ // <-- Use LazyList instead of List
+    this.flats = new LazyList({ // <- Use LazyList
       items: flats,
       construct: item => new Flat(item)
     })
@@ -107,17 +109,23 @@ and then:
 ```js
 const building = await repo.fetch('kensington')
 
-console.log(building.flats) // [] (empty)
+console.log(building.flats)
+// [] (empty)
 
 await building.flats.load(repo)
 
-console.log(building) // [ Flat { id: '102' }, Flat { id: '103' }]
+console.log(building)
+// [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
 ### Saving Format
 
 All keys/values saved into Redis follow a canonical and most importantly,
 human-readable format.
+
+The idea is that you might stop using this module altogether
+yet you should still have a crystal-clear data structure in Redis
+that you can easily follow.
 
 For example, in the above example, the flats are saved in the following hash:
 
@@ -131,8 +139,7 @@ building:kensington:flats
 | 103   	| {"i":2,"json":{"id":"103"}} 	|
 ```
 
-You can easily fetch a single flat in [constant-time `(O1)`][const]
-simply by:
+You can fetch a single flat in [constant-time `(O1)`][const] simply by:
 
 ```
 HGET building:kensington:flats 101
@@ -145,7 +152,6 @@ HGETALL building:kensington:flats
 ```
 
 The `Building` itself is saved as:
-
 
 ```
 building:kensington
