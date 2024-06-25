@@ -11,7 +11,6 @@ This module exports a `Repository` which you set up, then call:
 - `repository.save(object)` to save an object
 - `repository.fetch('foo')` to fetch it back
 
-
 ### Example
 
 Assume you have a `Building` which contains an array of `Flats`:
