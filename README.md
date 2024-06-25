@@ -191,6 +191,8 @@ This allows a decomposition of the innermost lists *first* so a list with
 3 levels of nesting will save 4 list hashes, and every list item will be
 saved *exactly-once*.
 
+but...
+
 ### Time-complexity of nested lists
 
 Nested lists will cause the fetching process to occur in
