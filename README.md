@@ -269,10 +269,22 @@ This keeps updates performant and *always* [atomic][atomic].
 
 In contrast, fetching an object graph is not entirely atomic but since the
 update is atomic for practical reasons it's assumed to be atomic as well.  
+For reference, the number of lists doesn't impact the atomicity at all as
+long, as they are not nested. The part that breaks this guarantee is only when
+fetching the final root object.
 
-Formally it is not, so without a semaphore, mutex lock or any other form
-of concurrency-control between different users acting on the same data it's not
-inherently thread-safe.
+Also note that these are extreme cases in practice so unless you're
+dealing with very high concurrency numbers, you probably won't ever experience
+an issue in this regard, at all.
+
+There's a ton of methods for implementing a concurrency-control algorithm
+on top of Redis - some are dead-simple mutex locks while others almost
+require a 4-year course in Theoretical Computer Science.  
+Keep in mind that they almost always involve a trade-off in concurrency
+itself.
+
+If all this still sounds like a problem to you, you are probably looking at
+the wrong package.
 
 ### Nested Lists
 
