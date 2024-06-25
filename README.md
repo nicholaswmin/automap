@@ -313,6 +313,7 @@ this is nothing special but you should note the following...
 > object graph configurations,  
 > but only in the context of network roundtrips rather than local
 > computations.  
+>
 > You should assume that locally and at the very minimum, a
 > single [BFS traversal][bfs] will always run at least once for both `.save()`
 > and `.fetch()`, with an additional [Quicksort][qs][^1] step in `.fetch`,
