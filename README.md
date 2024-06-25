@@ -290,15 +290,15 @@ using this package though.
 This package allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
 
-It does so by doing a [Breadth-First traversal][bfs] of the passed
-object-graph and then accumulating any lists as it exits the current
+It does so by doing a [BFS traversal][bfs] of the passed object-graph then
+marking the lists which need to be mapped as it exits the currently
 traversed branch.
 
 This allows a decomposition of the innermost lists *first* so a list with
 3 levels of nesting will save 4 list hashes, and every list item will be
 saved *exactly-once*.
 
-but...
+this is nothing special but you should note the following...
 
 ### Time-complexity
 
@@ -306,8 +306,9 @@ but...
 > object graph configurations,  
 > but only in the context of network roundtrips rather than local
 > computations.  
-> You should assume that locally, at the very minimum, a
-> [BFS traversal][bfs] will always run on both `.save` and `.fetch`.
+> You should assume that locally and at the very minimum, a
+> [BFS traversal][bfs] will always run, followed by a [Quicksort][qs],
+> for both `.save()` and `.fetch()`.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
