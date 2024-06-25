@@ -1,10 +1,9 @@
-import { Paper, Board } from './paper/index.js'
-import { Repository, LazyList, rand, redis } from '../index.js'
+import { Repository, LazyList, redis } from '../index.js'
 
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ // <-- Use List instead of Array (!)
+    this.flats = new LazyList({
       items: flats,
       construct: item => new Flat(item)
     })
@@ -24,13 +23,13 @@ class Flat {
 const repo = new Repository(Building, redis())
 
 const building = new Building({
-  id: 'kensington-gardens',
+  id: 'kensington',
   flats: [{ id: '102' }, { id: '103' }]
 })
 
 await repo.save(building)
 
-const fetched = await repo.fetch({ id: 'building:kensington-gardens' })
+const fetched = await repo.fetch({ id: 'building:kensington' })
 
 await fetched.flats.load(repo)
 

@@ -7,7 +7,7 @@ instantiated.
 ## Usage
 
 This module exports a `Repository` and a `List` class, which is a drop-in
-replacement for an `Array`.
+replacement for an [`Array`][array].
 
 When you pass an object-graph to `repository.save(object)` it:
 
@@ -57,7 +57,7 @@ const repo = new Repository(Building, ioredis())
 
 // create a Building with Flats
 const building = new Building({ i
-  id: 'kensington-gardens',
+  id: 'kensington',
   flats: ['102', '103']
 })
 
@@ -67,7 +67,7 @@ await repo.save(building) // saved!
 then to fetch it back:
 
 ```js
-const building = await repo.fetch('kensington-gardens')
+const building = await repo.fetch('kensington')
 
 building.flats[0].ringDoorbell()
 // Doorbell 🔔 at flat: 102 !
@@ -105,7 +105,7 @@ class Building {
 and then:
 
 ```js
-const building = await repo.fetch('kensington-gardens')
+const building = await repo.fetch('kensington')
 
 console.log(building.flats) // [] (empty)
 
@@ -122,7 +122,7 @@ human-readable format.
 For example, in the above example, the flats are saved in the following hash:
 
 ```
-building:kensington-gardens:flats
+building:kensington:flats
 
 | Field 	| Value                       	|
 |-------	|-----------------------------	|
@@ -135,26 +135,26 @@ You can easily fetch a single flat in [constant-time `(O1)`][const]
 simply by:
 
 ```
-HGET building:kensington-gardens:flats 101
+HGET building:kensington:flats 101
 ```
 
 or fetch all the flats:
 
 ```
-HGETALL building:kensington-gardens:flats
+HGETALL building:kensington:flats
 ```
 
 The `Building` itself is saved as:
 
 
 ```
-building:kensington-gardens
+building:kensington
 ```
 
 which you can easily get by:
 
 ```
-GET building:kensington-gardens
+GET building:kensington
 ```
 
 ## Notes
@@ -188,6 +188,7 @@ depth is not recommended.
 
 [oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
 [redis]: https://redis.io/
+[array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 [atomic]: https://en.wikipedia.org/wiki/Atomicity_(database_systems)
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 
