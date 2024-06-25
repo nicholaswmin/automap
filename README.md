@@ -52,9 +52,10 @@ This package is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
-- Replace [`Array`][array] with the provided `List` when defining
-  list-like data.
-- The root object has an `id` property set to a unique value
+- Ensure you use the provided `List` type instead of an [`Array`][array]
+  when defining list-like data.
+- Ensure that at least your root object has an `id` property set to a
+  unique value. This `id` is used to fetch your item back.
 
 ### Example
 
