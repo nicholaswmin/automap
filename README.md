@@ -268,6 +268,14 @@ A lot of managed cloud Redis providers do not allow it's use.
 
 ## Test
 
+Install dependencies:
+
+```bash
+npm ci
+```
+
+then:
+
 ```bash
 npm test
 ```
