@@ -211,6 +211,18 @@ GET building:kensington
 
 All of these commands occur in [constant-time `(O1)`][const].
 
+### List items without `id`
+
+List items without an `id` property will use the `index`; their current
+position in the list, as the separator.
+
+So if the flats didn't have an `id` and they contained a list of `Persons`,
+the persons of the 1st flat would be saved under key:
+
+```
+building:kensington:flats:0:persons
+```
+
 ## Notes
 
 ### Reason
@@ -230,7 +242,7 @@ get big; so it decomposes those lists into manageable pieces that can be
 saved more efficiently while also allowing for flexibility into whether
 they can be lazy-loaded.
 
-### Atomicity
+### Atomicity?
 
 Each found list is decomposed into a single Redis `HSET` command.
 
