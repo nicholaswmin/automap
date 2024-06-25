@@ -226,7 +226,8 @@ which you can easily get by:
 GET building:kensington
 ```
 
-All of these commands occur in [constant-time `(O1)`][const].
+All of these commands occur in [constant-time `(O1)`][const], except
+`HGETALL` which is [linear-time `(On)`][linear].
 
 ### List items without `id`
 
@@ -303,12 +304,12 @@ but...
 
 > This section describes the [algorithmic time-complexity][time] of different
 > object graph configurations,  
-> but only in the context of network roundtrips rather than local computations.  
-> Therefore the `n` factor is assumed as the average latency to Redis and back.  
+> but only in the context of network roundtrips rather than local
+> computations.  
 >
-> If you don't know what these terms mean that's fine, as long as you
-> **don't nest lists inside other lists**.  
-> You could easily assemble a structure that takes literal *years* to fetch
+> If you don't know what these terms mean, that's fine, as long as you
+> **avoid nesting lists inside other lists**.  
+> You could assemble a structure that takes literal *years* to fetch
 > instead of milliseconds.
 
 #### Flat lists
@@ -329,15 +330,15 @@ Note that these time complexity bounds involve network requests,
 which are *orders of magnitude* slower than a run-of-the-mill classroom time
 complexity problem.
 
-So nested lists are supported but they are *not* recommended.
+So while nested lists are supported, they are not recommended.
 
-There are some possible workarounds:
+Common-sense workarounds:
 
 - Don't use a `List`. Keep the list as an `Array`. This means it won't be
   decomposed and in some cases it might be an acceptable tradeoff, if
   your nested lists simply contain a minimal amount of items.
-  If those are your only lists, well - then why are you reading this?
-  You don't need this package.
+  If those are your *only* lists, well - then why are you reading this?
+  [You don't need this package](#where-this-is-unnecessary).
 
 - Use a `LazyList`. They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
@@ -345,7 +346,7 @@ There are some possible workarounds:
 
 - Avoid nested lists in your object graph in general.
 
-There are potential workarounds to these problems but they involve
+There are potential workarounds to these problems but some require
 defining schemas and the philosophy of this package is to be schema-less,
 simple and unobtrusive.
 
