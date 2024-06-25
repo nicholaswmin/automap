@@ -315,9 +315,10 @@ this is nothing special but you should note the following...
 > computations.  
 >
 > You should assume that locally and at the very minimum, a
-> single [BFS traversal][bfs] will always run at least once for both `.save()`
-> and `.fetch()`, with an additional [Quicksort][qs][^1] step in `.fetch`,
-> at least once - for *every* list.
+> [BFS traversal][bfs] will always run at least once for both `.save()`
+> and `.fetch()` against the entire object graph.  
+> This is followed by an additional [Quicksort][qs][^1] step in `.fetch`
+> against *every* list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
