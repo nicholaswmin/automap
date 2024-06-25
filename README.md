@@ -199,11 +199,9 @@ but...
 
 ### Time-complexity of nested lists
 
-Fetching lists without any nesting is guarantee to always occur in
-[constant-time complexity O(1)][const].
+Lists without any nesting are fetched in [constant-time complexity O(1)][const].
 
-In contrast, nested lists will cause that same process to occur in
-[quadratic-time complexity O(n^2)][qtc].
+In contrast, nested lists have a [quadratic-time complexity O(n^2)][qtc].
 
 These time-complexity bounds involve network requests,
 which are *orders of magnitude* slower than usual algorithmic time
