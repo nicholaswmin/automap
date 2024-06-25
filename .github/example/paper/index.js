@@ -1,4 +1,4 @@
-import { List, AppendList, rand } from '../../index.js'
+import { List, AppendList, rand } from '../../../index.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {

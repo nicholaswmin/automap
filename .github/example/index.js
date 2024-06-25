@@ -1,4 +1,6 @@
-import { Repository, LazyList, redis } from '../index.js'
+import { Repository, LazyList, redis } from '../../index.js'
+
+// Model
 
 class Building {
   constructor({ id, flats = [] }) {
@@ -20,11 +22,13 @@ class Flat {
   }
 }
 
+// Usage
+
 const repo = new Repository(Building, redis())
 
 const building = new Building({
   id: 'kensington',
-  flats: [{ id: '102' }, { id: '103' }]
+  flats: ['101', '102', '103']
 })
 
 await repo.save(building)
