@@ -12,6 +12,7 @@ Efficiently store complex object graphs in Redis
 - [Data structure](#redis-data-structure)
 - [Reason](#reason)
 - [Performance](#performance)
+  * [Concurrency Control](#concurrency-control)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
