@@ -269,7 +269,9 @@ This keeps updates performant and *always* [atomic][atomic].
 
 In contrast, fetching an object graph is not entirely atomic but since the
 update is atomic for practical reasons it's assumed to be atomic as well.  
-Formally it is not.
+
+Formally it is not, so without a semaphore or mutex lock,
+it's not inherently thread-safe.
 
 ### Nested Lists
 
