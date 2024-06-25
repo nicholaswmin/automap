@@ -21,6 +21,8 @@ class Flat {
 
 // Usage
 
+// Save
+
 const repo = new Repository(Building, redis())
 
 const building = new Building({
@@ -30,17 +32,10 @@ const building = new Building({
 
 await repo.save(building)
 
+// Fetch
 const fetched = await repo.fetch({ id: 'building:kensington' })
 
+// List is lazy so we must `list.load()`
 await fetched.flats.load(repo)
 
 fetched.flats[0].ringDoorbell()
-
-const list = new List()
-console.log(list)
-
-for (let i = 0; i < list.length; i++)
-  console.log(list[i].constructor.name, list[i])
-
-// String 1995-12-20
-// String 2002-11-16
