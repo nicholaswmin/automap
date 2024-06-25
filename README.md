@@ -272,7 +272,10 @@ So nested lists are supported but they are *not* recommended.
 There are some possible workarounds:
 
 - Don't use a `List`. Keep the list as an `Array`. This means it won't be
-  decomposed and in some cases it might be an acceptable tradeoff.
+  decomposed and in some cases it might be an acceptable tradeoff, if
+  your nested lists simply contain a minimal amount of items.
+  If those are your only lists, well - then why are you reading this?
+  You don't need this package.
 
 - Use a `LazyList`. They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
