@@ -1,21 +1,22 @@
-[![test-workflow][test-workflow-badge]][ci-test]
-
 # automap
 tiny and schemaless Redis ORM-"ish" microframework [WIP]
 
-Serialize an [OOP-y][oop] instance to [Redis][redis] and get it back, properly
+Serialize an [OOP-y][oop] instance to Redis and get it back, properly
 instantiated.
 
 ## Usage
 
 This module exports a `Repository` and a `List` class, which is a drop-in
-replacement for an `Array`(subclass of an `Array`).
+replacement for an `Array`.
 
 When you pass an object-graph to `repository.save(object)` it:
 
 - Decomposes all the lists it finds and saves them as a
   [Redis:Hash][redis-hash]
 - Saves the rest of the object-graph as a regular [Redis:String][redis-string]
+
+Calling: `repository.fetch(id)` will fetch everything back, then assemble
+and instantiate the object-graph exactly like you left it.
 
 ### Example
 
@@ -67,8 +68,6 @@ then to fetch it back:
 
 ```js
 const building = await repo.fetch('kensington-gardens')
-
-console.log(building)
 
 building.flats[0].ringDoorbell()
 // Doorbell 🔔 at flat: 102 !
