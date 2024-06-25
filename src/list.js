@@ -5,7 +5,7 @@ class List extends Array {
 
   constructor(...args) {
 
-    if (Object.hasOwn(args[0], 'from')) {
+    if (args[0] && Object.hasOwn(args[0], 'from')) {
       const opts = args.pop()
 
       if (!Object.hasOwn(opts, 'from'))

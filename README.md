@@ -91,40 +91,43 @@ class Flat {
 
 ### The `List` type
 
-The `List` type is a direct subtype the native `Array` and
+The `List` type is a direct subtype of the native `Array` therefore it
 behaves *exactly* the same.
 
-It also provides an interface for casting to a type
+It also provides an interface for casting to a type:
 
 ```js
-const array = new List({
-  from: ['1995-12-20', '2002-11-16'],
-  type: Date
-})
+const array = new List({ from: ['01-01-2020', '02-02-2021'], type: Date })
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
 
-// Date 1995-12-20
-// Date 2002-11-16
+// Date Jan 01 2020 00:00:00
+// Date Feb 02 2021 00:00:00
 
 console.log(Array.isArray(list))
 // true
 ```
 
-You can omit the `type` property if you don't need to cast items
+You can omit the `type` property:
 
 ```js
 
-const list = new List({
-  from: ['1995-12-20', '2002-11-16']
-})
+const list = new List({ from: ['01-01-2020', '02-02-2021'] })
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
 
 // String 1995-12-20
 // String 2002-11-16
+```
+
+You can also ommit `items`, which creates an empty list:
+
+```js
+const list = new List()
+
+console.log(list) // []
 ```
 
 ### Lazy Loading
@@ -141,10 +144,7 @@ import { LazyList } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ // <- Use LazyList
-      items: flats,
-      construct: item => new Flat(item)
-    })
+    this.flats = new LazyList({ from: flats, type: Flat })
   }
 }
 ```

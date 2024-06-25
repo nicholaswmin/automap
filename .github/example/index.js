@@ -36,9 +36,8 @@ await fetched.flats.load(repo)
 
 fetched.flats[0].ringDoorbell()
 
-const list = new List({
-  from: ['1995-12-20', '2002-11-16']
-})
+const list = new List()
+console.log(list)
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
