@@ -91,19 +91,28 @@ class Flat {
 
 ### The `List` type
 
-The `List` type is a direct subtype of the native `Array` therefore it
+The `List` type is a direct subtype of the native `Array`, therefore it
 behaves *exactly* the same.
 
 It also provides an interface for casting to a type:
 
 ```js
-const array = new List({ from: ['01-01-2020', '02-02-2021'], type: Date })
+const list = new List({
+  type: Date,
+  from: ['01-01-2020', '02-02-2021']
+})
+
+for (const item of list)
+  console.log(item.constructor.name)
+
+// Date
+// Date
 
 for (let i = 0; i < list.length; i++)
-  console.log(list[i].constructor.name, list[i])
+  console.log(list[i])
 
-// Date Jan 01 2020 00:00:00
-// Date Feb 02 2021 00:00:00
+// Jan 01 2020 00:00:00
+// Feb 02 2021 00:00:00
 
 console.log(Array.isArray(list))
 // true
@@ -113,7 +122,9 @@ You can omit the `type` property:
 
 ```js
 
-const list = new List({ from: ['01-01-2020', '02-02-2021'] })
+const list = new List({
+  from: ['01-01-2020', '02-02-2021']
+})
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
