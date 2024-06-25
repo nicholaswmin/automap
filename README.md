@@ -68,8 +68,8 @@ class Building {
   constructor({ id, flats = [] }) {
     this.id = id
     this.flats = new List({ // <- Use List instead of Array (!)
-      from: flats,
-      type: item => new Flat(item)
+      type: Flat,
+      from: flats
     })
   }
 }
@@ -142,7 +142,7 @@ import { LazyList } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ from: flats, type: Flat })
+    this.flats = new LazyList({ type: Flat, from: flats })
   }
 }
 ```
