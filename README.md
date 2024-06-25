@@ -86,6 +86,39 @@ class Flat {
 }
 ```
 
+### Lazy Loading
+
+Sometimes you won't need to load the contents of a list initially.  
+You might want to load it's contents later or none at all.
+
+In that case, use a `LazyList` instead of a `List`.
+
+
+```js
+import { LazyList } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new LazyList({ type: Flat, from: flats })
+  }
+}
+```
+
+... and load its contents by calling `list.load()`:
+
+```js
+const building = await repo.fetch('kensington')
+
+console.log(building.flats)
+// [] (empty)
+
+await building.flats.load(repo)
+
+console.log(building.flats)
+// [ Flat { id: '101' }, Flat { id: '102' }, ...]
+```
+
 ### The `List` type
 
 The `List` type is a direct subtype of the native [`Array`][array],   
@@ -124,39 +157,6 @@ const array = new List(1, 2, 3)
 const two = array.find(num => num === 2)
 
 console.log(two) // 2
-```
-
-### Lazy Loading
-
-Sometimes you won't need to load the contents of a list initially.  
-You might want to load it's contents later or none at all.
-
-In that case, use a `LazyList` instead of a `List`.
-
-
-```js
-import { LazyList } from 'automap'
-
-class Building {
-  constructor({ id, flats = [] }) {
-    this.id = id
-    this.flats = new LazyList({ type: Flat, from: flats })
-  }
-}
-```
-
-... and load its contents by calling `list.load()`:
-
-```js
-const building = await repo.fetch('kensington')
-
-console.log(building.flats)
-// [] (empty)
-
-await building.flats.load(repo)
-
-console.log(building.flats)
-// [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
 ## Redis Data Structure
