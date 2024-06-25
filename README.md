@@ -11,10 +11,11 @@ Efficiently store complex object graphs in Redis
   * [The List type](#the-list-type)
 - [Data structure](#redis-data-structure)
 - [Reason](#reason)
-- [Atomicity](#atomicity)
-- [Time complexity](#time-complexity)
-  * [Flat lists](#flat-lists)
-  * [Nested lists](#nested-lists)
+- [Performance](#performance)
+  * [Atomicity](#atomicity)
+  * [Time complexity](#time-complexity)
+    + [Flat lists](#flat-lists)
+    + [Nested lists](#nested-lists)
 - [Do you *really* need this?](#where-this-is-unnecessary)
   * [Why not Redis JSON](#why-not-redis-json)
   * [Alternatives](#alternatives)
@@ -258,7 +259,9 @@ get big; so it decomposes those lists into manageable pieces that can be
 saved more efficiently while also allowing for flexibility into whether
 they can be lazy-loaded.
 
-### Atomicity?
+## Performance
+
+### Atomicity
 
 Each found list is decomposed into a single Redis `HSET` command.
 
@@ -267,24 +270,19 @@ before being sent down the wire.
 
 This keeps updates performant and *always* [atomic][atomic].
 
-In contrast, fetching an object graph is not entirely atomic but since the
-update is atomic for practical reasons it's assumed to be atomic as well.  
-For reference, the number of lists doesn't impact the atomicity at all, as
-long as they are not nested.   
-The part that breaks this guarantee is only when fetching the final root object.
+In contrast, fetching an object graph is not entirely atomic.
+The part that breaks this guarantee is only when fetching the final
+root object. This is fixable but currently it is not.
 
-Also note that these are extreme cases in practice so unless you're
+Note that the above are extreme cases in practice so unless you're
 dealing with very high concurrency numbers, you probably won't ever experience
 an issue in this regard, at all.
 
 There's a ton of methods for implementing a concurrency-control algorithm
-on top of Redis - some are dead-simple mutex locks while others almost
-require a 4-year course in Theoretical Computer Science.  
-Keep in mind that they almost always involve a trade-off in concurrency
-itself.
-
-If all this still sounds like a problem to you, you are probably looking at
-the wrong package.
+on top of Redis - some are dead-simple mutex locks, others come ready
+as a library and others almost require a 4-year course in Theoretical
+Computer Science; if you have such a requirement you probably shouldn't be
+using this package though.
 
 ### Nested Lists
 
