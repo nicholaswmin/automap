@@ -39,3 +39,15 @@ const fetched = await repo.fetch({ id: 'building:kensington' })
 await fetched.flats.load(repo)
 
 fetched.flats[0].ringDoorbell()
+
+
+const list = new List({
+  from: [1, 2, 3]
+})
+
+for (let i = 0; i < list.length; i++)
+  console.log(list[i].constructor.name, list[i])
+
+// Number 1
+// Number 2
+// Number 3

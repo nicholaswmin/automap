@@ -97,22 +97,13 @@ behaves *exactly* the same.
 It also provides an interface for casting to a type:
 
 ```js
-const list = new List({
-  type: Date,
-  from: ['01-01-2020', '02-02-2021']
-})
+const list = new List({ type: String, from: [1, 2, 3] })
 
 for (const item of list)
-  console.log(item.constructor.name)
+  console.log(item.constructor.name, item)
 
-// Date
-// Date
-
-for (let i = 0; i < list.length; i++)
-  console.log(list[i])
-
-// Jan 01 2020 00:00:00
-// Feb 02 2021 00:00:00
+// String '1'
+// String '2'
 
 console.log(Array.isArray(list))
 // true
@@ -122,23 +113,24 @@ You can omit the `type` property:
 
 ```js
 
-const list = new List({
-  from: ['01-01-2020', '02-02-2021']
-})
+const list = new List({ from: [1, 2, 3] })
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
 
-// String 1995-12-20
-// String 2002-11-16
+// Number 1
+// Number 2
+// Number 3
 ```
 
-You can also ommit `items`, which creates an empty list:
+Or just use it like a regular `Array`:
 
 ```js
-const list = new List()
+const array = new List(1, 2, 3)
 
-console.log(list) // []
+const two = array.find(num => num === 2)
+
+console.log(two)
 ```
 
 ### Lazy Loading
