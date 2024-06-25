@@ -192,6 +192,48 @@ That being said, nested lists are fetched in
 [Quadratic Time Complexity O(n^2)][qtc] so going too crazy on the nesting
 depth is not recommended.
 
+### Reason
+
+A well-designed OOP structure can perfectly capture the semantics and flow
+of your business-logic or domain.
+
+Redis is an extremely high-performance datastore but it's API is as technical
+as it gets - it cannot capture any semantics of business logic.
+
+This package allows you to keep your OOP structures and use Redis for
+persistence but without incurring a mapping performance penalty; which would
+completely defeat the entire purpose of using Redis for persistence.
+
+It does so by assuming that your object-graph has lists/arrays, which can
+get big; so it decomposes those lists into manageable pieces that can be
+saved more efficiently while also allowing more flexibility into whether
+they are fetched with the rest of the object-graph.
+
+
+### Where this is unnecessary
+
+A small enough object-graph can easily get away with:
+
+- `JSON.stringify(object)`
+- `SET building:kensington json`
+- `GET building:kensington`
+
+and `JSON.parse(json)`
+
+This is an extremely simple and efficient operation.
+
+If you don't have, and dont expect to have, big lists in your object-graphs,
+you should use this method instead of this package.
+
+The additional caveat is that you cannot fetch individual list items; you
+always need to parse the entire graph which for some use-cases is entirely ok.
+
+### Why not Redis JSON
+
+Redis JSON is not a native datatype in Redis.
+
+A lot of managed cloud Redis providers do not allow it's use.
+
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
