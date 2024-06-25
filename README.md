@@ -308,7 +308,7 @@ this is nothing special but you should note the following...
 > computations.  
 > You should assume that locally and at the very minimum, a
 > [BFS traversal][bfs] will always run for both `.save()` and `.fetch()`, with
-> an additional [Quicksort][qs] step in `.fetch`, for every list.
+> an additional [Quicksort][qs][^3] step in `.fetch`, for every list.
 >
 > If you don't know what these terms mean, that's fine, as long as you
 > **avoid nesting lists inside other lists**.  
@@ -448,11 +448,12 @@ Produces a test coverage report
       which is `O(V + E)` but since
       this step does not involve any network roundtrips, it's assumed to have a
       negligible impact.  
-      There is also an `Array.sort` step involved, which Node.js most
-      likely implements using [Quicksort][qs], which itself is O(n<sup>2</sup>)
-      in it's worst-case.
 [^2]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
       when the request lands in Redis.
+[^3]: This is the result of using `Array.sort` using numerical comparators,
+      which Node.js most likely implements using [Quicksort][qs]
+      ; at least Chrome does so. This is an O(n<sup>2</sup>) operation in
+      it's worst-case.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
