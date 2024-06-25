@@ -266,6 +266,9 @@ This package assumes an acceptable response time of maximally `10ms` but since
 there's no benchmarks, a sample or a controlled test environment this means
 next to nothing for the time being and is just a personal guideline.
 
+For reference, a single Redis `GET` can run in sub-millisecond time assuming
+your services are running relatively close-by. 
+
 ### Atomicity
 
 Each found list is decomposed into a single Redis `HSET` command.
