@@ -67,8 +67,8 @@ class Building {
   constructor({ id, flats = [] }) {
     this.id = id
     this.flats = new List({ // <- Use List instead of Array (!)
-      items: flats,
-      construct: item => new Flat(item)
+      from: flats,
+      type: item => new Flat(item)
     })
   }
 }
@@ -88,6 +88,44 @@ class Flat {
 > `List` is a direct subclass of an `Array` so they behave *exactly* the same.  
 > For example: `Array.isArray(list) // true`
 >
+
+### The `List` type
+
+The `List` type is a direct subtype the native `Array` and
+behaves *exactly* the same.
+
+It also provides an interface for casting to a type
+
+```js
+const array = new List({
+  from: ['1995-12-20', '2002-11-16'],
+  type: Date
+})
+
+for (let i = 0; i < list.length; i++)
+  console.log(list[i].constructor.name, list[i])
+
+// Date 1995-12-20
+// Date 2002-11-16
+
+console.log(Array.isArray(list))
+// true
+```
+
+You can omit the `type` property if you don't need to cast items
+
+```js
+
+const list = new List({
+  from: ['1995-12-20', '2002-11-16']
+})
+
+for (let i = 0; i < list.length; i++)
+  console.log(list[i].constructor.name, list[i])
+
+// String 1995-12-20
+// String 2002-11-16
+```
 
 ### Lazy Loading
 

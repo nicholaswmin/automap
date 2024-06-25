@@ -32,8 +32,8 @@ test('AppendList', async t => {
 
     await t.beforeEach(t => {
       list = new AppendList({
-        items: 'chatroom:foo:messages',
-        construct: item => new Message(item)
+        from: 'chatroom:foo:messages',
+        type: Message
       })
     })
 

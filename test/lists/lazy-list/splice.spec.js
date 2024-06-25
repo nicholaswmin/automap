@@ -12,8 +12,8 @@ test('LazyList', async t => {
 
     await t.beforeEach(t => {
       list = new LazyList({
-        items: [{ id: 'm_1', text: 'Hello' }],
-        construct: item => new Message(item)
+        from: [{ id: 'm_1', text: 'Hello' }],
+        type: Message
       })
 
       list.splice(0, 0, { id: 'm_2', text: 'World' })
@@ -33,7 +33,7 @@ test('LazyList', async t => {
 
     await t.beforeEach(t => {
       list = new LazyList({
-        items: [{ id: 'm_1', text: 'Hello' }]
+        from: [{ id: 'm_1', text: 'Hello' }]
       })
 
       list.splice(0, 1)

@@ -11,7 +11,7 @@ test('AppendList', async t => {
     await t.test('without passing a construct function', async t => {
       await t.beforeEach(t => {
         list = new AppendList({
-          items: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }]
+          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }]
         })
       })
 
@@ -28,8 +28,8 @@ test('AppendList', async t => {
     await t.test('passing a construct function', async t => {
       await t.beforeEach(t => {
         list = new AppendList({
-          items: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', name: 'World' }],
-          construct: item => new Message(item)
+          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', name: 'World' }],
+          type: Message
         })
       })
 
@@ -50,7 +50,7 @@ test('AppendList', async t => {
         assert.throws(
           () => {
             list = new List({
-              construct: item => new User(item)
+              type: User
             })
           })
       })

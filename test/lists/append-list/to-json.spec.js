@@ -12,8 +12,8 @@ test('AppendList', async t => {
 
     await t.beforeEach(t => {
       list = new AppendList({
-        items: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-        construct: item => new Message(item)
+        from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
+        type: Message
       })
 
       result = list.exportForSave('sample:path')

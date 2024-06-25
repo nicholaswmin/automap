@@ -12,7 +12,7 @@ test('LazyList', async t => {
 
     await t.beforeEach(t => {
       list = new LazyList({
-        items: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
+        from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
       })
 
       result = list.exportForSave()

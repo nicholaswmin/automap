@@ -1,23 +1,24 @@
 class List extends Array {
   static traits = { type: 'hash' }
 
-  #construct
+  #type
 
   constructor(...args) {
 
-    if (Object.hasOwn(args[0], 'items')) {
+    if (Object.hasOwn(args[0], 'from')) {
       const opts = args.pop()
 
-      if (!Object.hasOwn(opts, 'items'))
+      if (!Object.hasOwn(opts, 'from'))
         throw new Error('items must be specified when creating a List')
 
-      const items = Array.isArray(opts.items) ?
-        (opts.construct ? opts.items.map(opts.construct) : opts.items) : []
+      const items = Array.isArray(opts.from) ?
+        (opts.type ? opts.from.map(item => new opts.type(item)) : opts.from) :
+        []
 
       super(...items)
 
       this.loaded = true
-      this.#construct = opts.construct
+      this.#type = opts.type
 
       return
     }
@@ -41,16 +42,16 @@ class LazyList extends List {
   static traits = { type: 'hash', lazy: true }
 
   #path
-  #construct
+  #type
 
   constructor(...args) {
     super(...args)
 
-    const opts = args[0]?.items ? args[0] : null
+    const opts = args[0]?.from ? args[0] : null
 
     this.loaded = false
-    this.#construct = opts?.construct
-    this.#path = opts?.items?.split?.(' ')[0] || null
+    this.#type = opts?.type
+    this.#path = opts?.from?.split?.(' ')[0] || null
   }
 
   async load(repository) {
@@ -66,7 +67,7 @@ class LazyList extends List {
     const items =  await loader.get(this.#path)
 
     items.reverse()
-      .map(item => this.#construct(item))
+      .map(item => new this.#type(item))
       .forEach(item => this.splice(0, 0, item))
 
     this.loaded = true

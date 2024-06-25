@@ -12,8 +12,8 @@ test('AppendList', async t => {
 
     await t.beforeEach(t => {
       list = new AppendList({
-        items: [{ id: 'm_1', name: 'Hello' }],
-        construct: item => new Message(item)
+        from: [{ id: 'm_1', name: 'Hello' }],
+        type: Message
       })
 
       list.push({ id: 'm_2', text: 'World' })

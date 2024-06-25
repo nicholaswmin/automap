@@ -17,13 +17,13 @@ class Chatroom {
     this.id = id
 
     this.users = new List({
-      items: users,
-      construct: item => new User(item)
+      from: users,
+      type: User
     })
 
     this.messages = new AppendList({
-      items: messages,
-      construct: item => new Message(item)
+      from: messages,
+      type: Message
     })
   }
 
@@ -43,7 +43,7 @@ class User {
   constructor({ id = rand(), name = 'John', notes = [] }) {
     this.id = id
     this.name = name
-    this.notes = new List({ items: notes })
+    this.notes = new List({ from: notes })
   }
 
   sayHi() {

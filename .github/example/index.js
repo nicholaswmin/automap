@@ -1,14 +1,11 @@
-import { Repository, LazyList, redis } from '../../index.js'
+import { Repository, List, LazyList, redis } from '../../index.js'
 
 // Model
 
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({
-      items: flats,
-      construct: item => new Flat(item)
-    })
+    this.flats = new LazyList({ type: Flat, from: flats })
   }
 }
 
@@ -38,3 +35,13 @@ const fetched = await repo.fetch({ id: 'building:kensington' })
 await fetched.flats.load(repo)
 
 fetched.flats[0].ringDoorbell()
+
+const list = new List({
+  from: ['1995-12-20', '2002-11-16']
+})
+
+for (let i = 0; i < list.length; i++)
+  console.log(list[i].constructor.name, list[i])
+
+// String 1995-12-20
+// String 2002-11-16

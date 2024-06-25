@@ -12,7 +12,7 @@ test('List', async t => {
 
     await t.beforeEach(t => {
       list = new List({
-        items: [{ id: 'u_1', name: 'John' }]
+        from: [{ id: 'u_1', name: 'John' }]
       })
 
       list.push({ id: 'u_2', name: 'Steven' })

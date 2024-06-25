@@ -41,8 +41,8 @@ test('LazyList', async t => {
 
     await t.beforeEach(t => {
       list = new LazyList({
-        items: 'chatroom:foo:messages',
-        construct: item => new Message(item)
+        from: 'chatroom:foo:messages',
+        type: Message
       })
     })
 
