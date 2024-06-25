@@ -27,9 +27,8 @@ class List extends Array {
 
   load() { } // noop
 
-  exportForSave(path) {
+  exportForSave() {
     return {
-      key: path,
       type: this.constructor.traits.type,
       value: this.reduce((acc, item, i) => {
         return { ...acc, [item.id]: JSON.stringify({ i, json: item }) }
@@ -83,9 +82,8 @@ class AppendList extends LazyList {
     this.additions = []
   }
 
-  exportForSave(path) {
+  exportForSave() {
     return {
-      key: path,
       type: this.constructor.traits.type,
       value: this.additions.map(JSON.stringify)
     }

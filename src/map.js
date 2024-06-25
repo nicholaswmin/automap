@@ -48,25 +48,13 @@ const flatten = root =>  {
   })
 
   return {
-    list: new Nodelist(
-      branches.flat().map(node => node.captureValue())
-      .filter(node => node.hasItems())
-      .flat(10) // nothing special on this magic number, just ensuring its flat
-    ),
+    lists: branches.flat()
+      .map(node => node.captureValue())
+      .filter(result => Object.keys(result.value).length),
     root: {
       key: root.constructor.name.toLowerCase().trim() + ':' + root.id.trim(),
       value: JSON.stringify(root)
     }
-  }
-}
-
-class Nodelist extends Array {
-  constructor(...args) {
-    super(...args.flat())
-  }
-
-  exportForSave() {
-    return this.map(node => node.value)
   }
 }
 
@@ -92,9 +80,7 @@ class Node {
 
     dot.copy(prop, this.dotpath, result, this.#root)
 
-    this.value = result.value.exportForSave(this.storepath)
-
-    return this
+    return Object.assign({}, result.value.exportForSave(), { key: this.storepath })
   }
 
   hasItems() {
