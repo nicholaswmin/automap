@@ -292,33 +292,32 @@ above. You can skip reading them entirely.
 ### Benchmarks?
 
 This package assumes an acceptable response time is at most `20ms` and on
-average `~10ms` but since there's no benchmarks, a sample or a controlled test
-environment this means next to nothing for the time being and is just a
-personal guideline.
+average `~10ms`. If this sounds like a lot to you then this is not a
+package that can help you since those are more than OK times for the intended
+use of this package.
 
 For reference, a single Redis `GET` can run in sub-millisecond time assuming
 your services are running relatively close-by.
 
 ### Concurrency Control
 
-This package does not implement any form of [concurrency control][cc],
-at least not outside of attempting to maximise the atomicity of
-it's own operations.
+Outside of attempting to maximise the atomicity of it's own operations, there's
+zero effort in implementing any form of [concurrency control][cc]
 
 As a general rule, the Redis philosophy is to avoid strict concurrency
 controls in favour of high-performance and high-availability.
 
 ### Atomicity
 
-Each found list is decomposed into a single Redis `HSET` command.
-
-All `HSET`s are then packaged into a single [pipelined][pipe] transaction
+- Each found list is decomposed into a single Redis `HSET` command.
+- All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
 Additionally, there's a simple Lua script which allows something akin
 to a [`mget`][mget], but for hashes.
 
-These methods ensure updates are both performant and [atomic][atomic][^1].
+These methods are considered enough in ensuring updates are
+both performant and [atomic][atomic][^1].
 
 In contrast, fetching an object graph is not entirely atomic.
 The part that breaks this guarantee is only when fetching the final
@@ -329,30 +328,28 @@ root object. This is fixable but currently it is not.
 This package allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
 
-It does so by doing a [BFS traversal][bfs] of the passed object-graph then
+It does so by doing a [bfs traversal][bfs] of the passed object-graph then
 marking the lists which need to be mapped as it exits the currently
 traversed branch.
 
 This allows a decomposition of the innermost lists *first* so a list with
-3 levels of nesting will save 4 list hashes, and every list item will be
-saved *exactly-once*.
+3 levels of nesting will save 4 list hashes intead of 1 big parent hash
+with no decomposed children.
+
+So nested lists are supported and correctly decomposed.
 
 But you should note the following...
 
 ### Time-complexity
 
-> This section describes the [algorithmic time-complexity][time] of possible
-> input configurations solely in the context of network roundtrips, not
+> This section describes the [time-complexity][time] of possible input
+> configurations solely in the context of network roundtrips, not
 > local computations.
->
-> None of the mentioned complexities are actually true when viewed from any
-> other aspect but that's deemed to be almost irrelevant for the intended use
-> cases of this package.
 
 #### Flat lists
 
 Object graphs which don't have lists nested inside other lists,
-are fetched in a process that exhibits a
+are fetched in a process that exhibits an almost
 [constant-time complexity O(1)][const][^3][^4].
 
 There's no network roundtrip involved for each list; or even separate requests
@@ -364,9 +361,24 @@ an [`mget`][mget], but for hashes.
 In contrast, fetching object graphs which have nested lists is a process which
 performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 
-So while nested lists are supported, they are not recommended.
+Every nesting level increases the exponent so you can easily jump from
+O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
-Known, basic workarounds:
+Note again that these aren't going to only run high counts of local iterations,
+they are going to create full network roundtrips.
+
+Even a list with 5 items becomes prohibitively expensive at even the most
+basic nesting depth.
+
+So while nested lists are supported, they are not recommended in the slightest
+based on the naivety of the current method they are dealt with.
+
+This can be solved in better time complexity with some rudimentary
+assumptions and some slight tradeoffs, like assuming that if 1 List item has
+a List, then all of them probably do - but for now this is ignored as
+irrelevant.
+
+Other basic workarounds:
 
 - Don't use a `List`. Keep the list as an `Array`.
   This means it won't be decomposed and in some cases it might be an
@@ -379,10 +391,10 @@ Known, basic workarounds:
   they will eventually exhibit the same behaviour when you call `list.load()`
   to load their contents.
 
-- Avoid nested lists in your object graph in general.
+- Avoid nested lists in your object graph in general or just don't use this
+  package which sounds like a better solution rather than changing your
+  own structures to fit the capabilities of this package.
 
-There are more sophisticated potential workarounds to these problems but
-the ones I can guess probably require defining schemas.
 
 #### Local time complexity
 
@@ -396,9 +408,6 @@ against *every* list.
 Apart from trying to avoid egregious and obvious mistakes, there's not much
 attention paid in ensuring that local steps are as efficient as possible.
 
-So attempting to save a list with a gazillion items is probably a bad idea
-but that's probably a bad idea in general.
-
 ### Where this is unnecessary
 
 A small enough object-graph can easily get away with:
@@ -409,21 +418,15 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is what you might be doing right now, or at least it's one of the things
-you did when you first started using Redis since it's the most intuitive
-and simple operation.
+This is a simple, highly efficient and inherently atomic operation.
 
-It's not an amateurish move, in fact it's is a dead-simple, highly efficient
-and inherently atomic operation.
+If you can get away with just using this you're absolutely set
+and you should stop reading this.   
 
-There's zero point in talking about time complexities, atomicities or
-concurrency problems and whatnot if you can easily get away with this.  
-
-In this case you're absolutely set and you should stop reading this.  
 You simply don't need this package and none of the issues here apply to
-you. In some cases it's more performant that any other option.
+you.
 
-[There's a benchmark here, done by the Redis team][bench].
+In some cases it's [even faster than RedisJSON][bench].
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
@@ -438,7 +441,7 @@ that are probably specific to us; in general half the issues this package
 attempts to solve are solved out-the-box by using RedisJSON directly.
 
 So it's generally recommended to use RedisJSON directly rather
-than use this package.
+than use this package, if it's available to you.
 
 ### Known alternatives
 
@@ -511,7 +514,7 @@ Produces a test coverage report
 [^2]: This is the result of using `Array.sort` using numerical comparators,
       which Node.js most likely implements using [Quicksort][qs]
       ; at least Chrome does so.   
-      This is an `O(n<sup>2</sup>) operation in it's worst-case.
+      This is an `O(n<sup>2</sup>) operation in it's worst-case, I think.
 
 [^3]: The time complexity bounds described are in the context of fetching data
       from a remote service (Redis).
