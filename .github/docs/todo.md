@@ -29,6 +29,10 @@
 - [x] Exiting the tests requires a `--test-force-exit` flag which is not
       ideal - but can live with for now.
 
+### General
+
+- [ ] Lists must be tested against a long time period - as in a lot of
+items added - is it still adding `AppendList` items in `O(1)`?
 
 ## Next Todos
 

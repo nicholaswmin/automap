@@ -5,8 +5,8 @@ import dot from 'dot-object'
 
 import { List } from './list.js'
 
-const expand = async (root, cb) => {
-  const substitutions = []
+const expand = async (root, addItemsToSubstitutionsFn) => {
+  const subs = []
 
   traverse(root, ({ key, value, meta }) => {
     if (!value?.includes?.(':')) return
@@ -18,15 +18,17 @@ const expand = async (root, cb) => {
     if (traits.lazy)
       return
 
-    substitutions.push({ path, nodePath, traits })
+    subs.push({ path, nodePath, traits })
   })
 
-  for (const sub of substitutions) {
-    const items = await cb(sub)
+  if (subs.length) {
+    const subsWithItems = await addItemsToSubstitutionsFn(subs)
 
-    setPathValue(root, sub.nodePath, items)
+    subsWithItems.forEach(subWithItems => {
+      setPathValue(root, subWithItems.nodePath, subWithItems.items)
+    })
 
-    return expand(root, cb)
+    return expand(root, addItemsToSubstitutionsFn)
   }
 
   return root // @FIXME might be broken, dont trust this
