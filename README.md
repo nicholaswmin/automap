@@ -356,6 +356,17 @@ There's no network roundtrip involved for each list; or even separate requests
 since this package uses a small Lua script which allows something akin to
 an [`mget`][mget], but for hashes.
 
+
+```js
+// this is the script, in case this sounds interesting:
+//
+// Usage: `redis.hmgetall(3, 'hash1', 'hash2', 'hash3')`
+// `3` means you intend to get 3 hashes, then the name of each hash
+redis.defineCommand('hmgetall', {
+  lua: `local r = {} for _, v in pairs(KEYS) do r[#r+1] = redis.call('HGETALL', v) end return r`
+})
+```
+
 #### Nested lists
 
 In contrast, fetching object graphs which have nested lists is a process which
