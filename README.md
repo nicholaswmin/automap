@@ -423,7 +423,7 @@ In this case you're absolutely set and you should stop reading this.
 You simply don't need this package and none of the issues here apply to
 you. In some cases it's more performant that any other option.
 
-[There's a benchmark here, done by the Redis team][benchmark].
+[There's a benchmark here, done by the Redis team][bench].
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
