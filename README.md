@@ -286,28 +286,7 @@ In general, this package:
 - is not an object-mapper and if you were looking for one, [this one][redisom]
   is most probably what you're looking for.
 
-> This should be obvious to the 99.9% of the few people
-> that might read this, but:
->
-> The term "guarantee" here has nothing to do with "warranty" like when
-> buying a car or legal guarantees.  
-> This is an open-source package casually made for internal use
-> and published for free, under an MIT license, as agreed by the company which
-> owns the product for which it's initially made for.
->
-> I, the author, don't even plan to semver it properly, might not even support
-> it in even the most basic form and certainly not guarantee any aspects of
-> it's behaviour as legal "warranty".
->
-> For all intents and purposes, you can consider all your data thrown in
-> a volcano by default, in the rare case you did come across this, mistook it
-> for a proven good idea and used this package as your sole datastore driver.
->
-> The term "guarantee" means that it attempts to preserve the guarantees
-> provided by Redis in that context, and does so as a hard requirement.
->
-
-All sections below simply go into a bit more detail on the points listed
+All sections below simply go into a little more detail on the points listed
 above. You can skip reading them entirely.
 
 ### Benchmarks?
@@ -327,15 +306,7 @@ at least not outside of attempting to maximise the atomicity of
 it's own operations.
 
 As a general rule, the Redis philosophy is to avoid strict concurrency
-controls in favour of high-performance and high-availability.  
-Strict data consistency guarantees usually go hand-in-hand with considerable
-performance penalties, no matter how "smart" the mechanism might appear.
-
-The above theory is described in the [CAP theorem][cap] and in far
-better detail than can be described here but the overall point is that
-unless you *really know what you're doing* you should probably avoid
-implementing your own concept of concurrency control and even consider
-not implementing any such additional control at all.
+controls in favour of high-performance and high-availability.
 
 ### Atomicity
 
@@ -366,21 +337,17 @@ This allows a decomposition of the innermost lists *first* so a list with
 3 levels of nesting will save 4 list hashes, and every list item will be
 saved *exactly-once*.
 
-But ... you should note the following...
+But you should note the following...
 
 ### Time-complexity
 
 > This section describes the [algorithmic time-complexity][time] of possible
-> input configurations solely in the context of network roundtrips rather
-> than local computations.  
-> A description of `constant-time O(1)` means the number of network roundtrips
-> won't increase relative to the input in question.
+> input configurations solely in the context of network roundtrips, not
+> local computations.
 >
-> If you don't know what these terms mean that's probably just fine, but you
-> should **avoid nesting lists inside other lists** since this an easy
-> trap to fall into which could explode your response times to unexpectedly
-> high values.
->
+> None of the mentioned complexities are actually true when viewed from any
+> other aspect but that's deemed to be almost irrelevant for the intended use
+> cases of this package.
 
 #### Flat lists
 
@@ -401,7 +368,7 @@ So while nested lists are supported, they are not recommended.
 
 Known, basic workarounds:
 
-- Don't use a `List` maybe? Keep the list as an `Array`.
+- Don't use a `List`. Keep the list as an `Array`.
   This means it won't be decomposed and in some cases it might be an
   acceptable tradeoff, if your nested lists simply contain a minimal
   amount of items.
@@ -415,7 +382,7 @@ Known, basic workarounds:
 - Avoid nested lists in your object graph in general.
 
 There are more sophisticated potential workarounds to these problems but
-the ones I know require defining schemas.
+the ones I can guess probably require defining schemas.
 
 #### Local time complexity
 
@@ -425,11 +392,6 @@ and `.fetch()`, against the entire object graph.
 
 This is followed by an additional[Quicksort][qs][^2] step in `.fetch`,
 against *every* list.
-
-It's rather pointless to go in detail here since there are too many factors
-involved, some unmentioned steps should be obvious in and by themselves,
-so only the non-immediately obvious steps are mentioned and that's if
-they exhibit time complexities that are generally worse than `linear O(n)`.
 
 Apart from trying to avoid egregious and obvious mistakes, there's not much
 attention paid in ensuring that local steps are as efficient as possible.
@@ -447,33 +409,36 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is a dead-simple, highly efficient and inherently atomic operation.
+This is what you might be doing right now, or at least it's one of the things
+you did when you first started using Redis since it's the most intuitive
+and simple operation.
+
+It's not an amateurish move, in fact it's is a dead-simple, highly efficient
+and inherently atomic operation.
 
 There's zero point in talking about time complexities, atomicities or
-concurrency yada yadas if you can easily get away with this.  
-In this case you're absolutely set and you should stop reading this.
-You simply don't need this package.  
+concurrency problems and whatnot if you can easily get away with this.  
 
-In some cases this is even more performant than using Redis JSON directly,
-a [good benchmark of which can be found here][benchmark].
+In this case you're absolutely set and you should stop reading this.  
+You simply don't need this package and none of the issues here apply to
+you. In some cases it's more performant that any other option.
+
+[There's a benchmark here, done by the Redis team][benchmark].
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
-but for (probably most?) use-cases that's just entirely ok.
+but for (probably most) use-cases that's simply just a non-problem.
 
 ### Why not Redis JSON
 
-Redis JSON is not a native datatype in Redis.
+If you can use it with your provider then you probably should.
 
-A lot of managed cloud Redis providers do not allow it's use.
+We'd still build a similar mapper to this one but for our own internal reasons
+that are probably specific to us; in general half the issues this package
+attempts to solve are solved out-the-box by using RedisJSON directly.
 
-If your application cloud provider offers a fairly OK Redis service, it
-also most likely offers that service in the same network as your application
-servers which means you're locked-in to their offering if you want to ensure
-minimal amounts of overhead latency which is the make or break factor in most
-use cases looking to benefit from using Redis.
-
-It goes without saying that if you can use it then by all means, you should.
+So it's generally recommended to use RedisJSON directly rather
+than use this package.
 
 ### Known alternatives
 
