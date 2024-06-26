@@ -246,43 +246,90 @@ building:kensington:flats:0:persons
 
 ### Reason
 
-A well-designed OOP structure can perfectly capture the semantics and flow
-of your business-logic or domain.
+A well-designed OOP structure can accurately capture the semantics and flow
+of your business-logic and/or domain.
 
 Redis is a high-performance datastore but it's API is as technical
-as it gets; it cannot capture *any* semantics of business logic.
+as it gets; it cannot capture *any* semantics of business logic nor does
+it try to.
 
 This package allows you to keep your OOP structures and use Redis for
-persistence yet without incurring a mapping performance penalty, which would
-defeat the entire purpose of using Redis for persistence.
+persistence yet without incurring a considerable mapping performance penalty,
+which would defeat the entire purpose of using Redis for persistence.
 
 It does so by assuming that your object-graph has lists/arrays, which can
-get big; so it decomposes those lists into manageable pieces that can be
+get big, so it decomposes those lists into manageable pieces that can be
 saved more efficiently while also allowing for flexibility into whether
 they can be lazy-loaded.
 
+That's pretty much it.
+
 ## Performance
 
-This package assumes an acceptable response time of maximally `10ms` but since
-there's no benchmarks, a sample or a controlled test environment this means
-next to nothing for the time being and is just a personal guideline.
+Known performance issues are summarised in these bullet points.
+
+In general, this package:
+
+- has a fairly extensive testing suite but no benchmarks, at all.
+- does not implement any extra concurrency controls outside of atomic updates
+- makes a good effort to guarantee that updates are atomic
+- does not guarantee that reads are entirely atomic
+- makes a fairly OK effort to minimise the time-complexity of the steps
+  which affect the number of network roundtrips
+- makes an average-to-poor effort in minimising the time-complexity of
+  steps that only involve local computations
+- makes a good effort in exhibiting [constant-time complexity O(1)][const] when
+  lists are not nested but only in the context of network requests/roundtrips.
+- supports an arbitrary number of nesting of lists but does not recommend
+  it's use since it guarantees that that it's network request steps will
+  run at the very least in [quadratic-time O(n<sup>2</sup>)][qtc].
+- is entirely unnecessary if you can get away with stuffing your object
+  graph as a `JSON` in a single `Redis SET` operation.
+- is not an object-mapper and if you were looking for one, [this one][redisom]
+  is most probably what you're looking for.
+
+>
+> This should be obvious to the 99.9% of the few people
+> that might read this, but:
+>
+> The term "guarantee" here has nothing to do with "warranty" or legal
+> guarantees. This is an open-source package casually made for internal use
+> and published for free, under an MIT license, as agreed by the company which
+> owns the product for which it's initially made for.
+>
+> It's author, me, is unlikely to support it in even the most basic form.  
+> I don't even plan to semver it properly.
+>
+
+All sections below simply go into a bit more detail on the points listed
+above. You can skip reading them entirely.
+
+### Benchmarks?
+
+This package assumes an acceptable response time is at most `20ms` and on
+average `~10ms` but since there's no benchmarks, a sample or a controlled test
+environment this means next to nothing for the time being and is just a
+personal guideline.
 
 For reference, a single Redis `GET` can run in sub-millisecond time assuming
 your services are running relatively close-by.
 
 ### Concurrency Control
 
-This package does not implement any sort of [concurrency control][cc]
-outside of attempting to maximise the atomicity of it's operations.
+This package does not implement any form of [concurrency control][cc],
+at least not outside of attempting to maximise the atomicity of
+it's own operations.
 
-There's a ton of methods for implementing a concurrency-control algorithm on
-top of Redis - some are dead-simple mutex locks that don't support
-Redis Cluster, others come ready as a library and others are so complex that
-they almost require a 4-year course in Theoretical Computer Science.
+As a general rule, the Redis philosophy is to avoid strict concurrency
+controls in favour of high-performance and high-availability.  
+Strict data consistency guarantees usually go hand-in-hand with considerable
+performance penalties, no matter how "smart" the mechanism might appear.
 
-Ultimately, the decision to implement concurrency control or which one should
-be used is highly dependent on the specifics of each use-case and out of scope
-of this package.
+The above theory is described in the [CAP theorem][cap] and in far
+better detail than can be described here but the overall point is that
+unless you *really know what you're doing* you should probably avoid
+implementing your own concept of concurrency control and even consider
+not implementing any such additional control at all.
 
 ### Atomicity
 
@@ -291,15 +338,14 @@ Each found list is decomposed into a single Redis `HSET` command.
 All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
-This keeps updates performant and *always* [atomic][atomic][^1].
+Additionally, there's a simple Lua script which allows something akin
+to a [`mget`][mget], but for hashes.
+
+These methods ensure updates are both performant and [atomic][atomic][^1].
 
 In contrast, fetching an object graph is not entirely atomic.
 The part that breaks this guarantee is only when fetching the final
 root object. This is fixable but currently it is not.
-
-Note that the above are extreme cases in practice so unless you're
-dealing with highly concurrent updates on the same object-graphs,
-there's a high chance you probably won't ever notice this problem.
 
 ### Nested Lists
 
@@ -314,63 +360,76 @@ This allows a decomposition of the innermost lists *first* so a list with
 3 levels of nesting will save 4 list hashes, and every list item will be
 saved *exactly-once*.
 
-this is nothing special but you should note the following...
+But ... you should note the following...
 
 ### Time-complexity
 
-> This section describes the [algorithmic time-complexity][time] of different
-> object graph configurations,  
-> but only in the context of network roundtrips rather than local
-> computations.  
+> This section describes the [algorithmic time-complexity][time] of possible
+> input configurations solely in the context of network roundtrips rather
+> than local computations.  
+> A description of `constant-time O(1)` means the number of network roundtrips
+> won't increase relative to the input in question.
 >
-> You should assume that locally and at the very minimum, a
-> [BFS traversal][bfs] will always run at least once for both `.save()`
-> and `.fetch()` against the entire object graph.  
-> This is followed by an additional [Quicksort][qs][^2] step in `.fetch`
-> against *every* list.
+> If you don't know what these terms mean that's probably just fine, but you
+> should **avoid nesting lists inside other lists** since this an easy
+> trap to fall into which could explode your response times to unexpectedly
+> high values.
 >
-> If you don't know what these terms mean, that's fine, as long as you
-> **avoid nesting lists inside other lists**.  
-> You could assemble a structure that takes literal *years* to fetch
-> instead of milliseconds or at the very least skew the response times
-> towards entirely unacceptable values.
 
 #### Flat lists
 
 Object graphs which don't have lists nested inside other lists,
-are fetched in a process that runs in [constant-time O(1)][const][^3][^4].
+are fetched in a process that exhibits a
+[constant-time complexity O(1)][const][^3][^4].
 
-There's no network roundtrip involved for each list since this package
-uses a Lua script which allows something akin to a [`mget`][mget],
-but for hashes.
+There's no network roundtrip involved for each list; or even separate requests
+since this package uses a small Lua script which allows something akin to
+an [`mget`][mget], but for hashes.
 
 #### Nested lists
 
 In contrast, fetching object graphs which have nested lists is a process which
 performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 
-Note that these time complexity bounds involve network requests,
-which are *orders of magnitude* slower than a run-of-the-mill classroom time
-complexity problem.
-
 So while nested lists are supported, they are not recommended.
 
-Common-sense workarounds:
+Known, basic workarounds:
 
-- Don't use a `List`. Keep the list as an `Array`. This means it won't be
-  decomposed and in some cases it might be an acceptable tradeoff, if
-  your nested lists simply contain a minimal amount of items.
-  If those are your *only* lists, well - then why are you reading this?
-  [You don't need this package](#where-this-is-unnecessary).
+- Don't use a `List` maybe? Keep the list as an `Array`.
+  This means it won't be decomposed and in some cases it might be an
+  acceptable tradeoff, if your nested lists simply contain a minimal
+  amount of items.
+  If those are your *only* lists, well - then you should probably stop reading.
+  [You just don't need this package](#where-this-is-unnecessary).
 
-- Use a `LazyList`. They won't have an impact on the initial fetching but
+- Use a `LazyList`? They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
   to load their contents.
 
 - Avoid nested lists in your object graph in general.
 
-There are potential workarounds to these problems but some require
-defining schemas.
+There are more sophisticated potential workarounds to these problems but
+the ones I know require defining schemas.
+
+#### Local time complexity
+
+You should assume that locally and at the very minimum, a
+[BFS traversal][bfs] will always run at least once for both `.save()`
+and `.fetch()`, against the entire object graph.  
+
+This is followed by an additional[Quicksort][qs][^2] step in `.fetch`,
+against *every* list.
+
+It's rather pointless to go in detail here since there are too many factors
+involved, some unmentioned steps should be obvious in and by themselves,
+so only the non-immediately obvious steps are mentioned and that's if
+they exhibit time complexities that are generally worse than `linear O(n)`.
+
+Apart from trying to avoid egregious and obvious mistakes, there's not much
+attention paid in ensuring that local steps are as efficient as possible.
+
+So attempting to save a list with a gazillion items is probably a bad idea
+but that's probably a bad idea in general.
 
 ### Where this is unnecessary
 
@@ -384,13 +443,17 @@ and `JSON.parse(json)`
 
 This is a dead-simple, highly efficient and inherently atomic operation.
 
-If you don't expect to have big lists in your object graphs,
-you should just use this method instead;   
-you don't need this package at all.
+There's zero point in talking about time complexities, atomicities or
+concurrency yada yadas if you can easily get away with this.  
+In this case you're absolutely set and you should stop reading this.
+You simply don't need this package.  
 
-The small caveat is that you cannot fetch individual list items directly
-from Redis since you always need to fetch and parse the entire graph,
-which for most use-cases is entirely ok.
+In some cases this is even more performant than using Redis JSON directly,
+a [good benchmark of which can be found here][benchmark].
+
+The obvious caveat is that you cannot fetch individual list items directly
+from Redis since you would always need to fetch and parse the entire graph,
+but for (probably most?) use-cases that's just entirely ok.
 
 ### Why not Redis JSON
 
@@ -398,9 +461,15 @@ Redis JSON is not a native datatype in Redis.
 
 A lot of managed cloud Redis providers do not allow it's use.
 
+If your application cloud provider offers a fairly OK Redis service, it
+also most likely offers that service in the same network as your application
+servers which means you're locked-in to their offering if you want to ensure
+minimal amounts of overhead latency which is the make or break factor in most
+use cases looking to benefit from using Redis.
+
 It goes without saying that if you can use it then by all means, you should.
 
-### Alternatives
+### Known alternatives
 
 [Redis-OM][redisom]
 
@@ -480,8 +549,10 @@ Produces a test coverage report
       this step does not involve any network roundtrips, it's assumed to have a
       negligible impact.  
 
-[^4]: Both `mget` and our custom `hgetall` run in [linear-time O(n)][const]
-      when the request lands in Redis.
+[^4]: Both `mget` and the custom `hgetall` run in [linear-time O(n)][const]
+      when the request lands in Redis but this is relative to the total number
+      of keys in Redis. This might cause issues in some cases but it's not
+      something that can be reasonably worked around anyway.
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
@@ -497,8 +568,11 @@ Produces a test coverage report
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
+[linear]: https://en.wikipedia.org/wiki/Linear_search
 [mget]: https://redis.io/docs/latest/commands/mget/
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [cc]: https://en.wikipedia.org/wiki/Concurrency_control
+[bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
+[cap]: https://en.wikipedia.org/wiki/CAP_theorem
