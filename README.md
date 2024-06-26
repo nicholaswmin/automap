@@ -300,8 +300,8 @@ In general, this package:
 > it's behaviour as legal "warranty".
 >
 > For all intents and purposes, you can consider all your data thrown in
-> a volcano by default, in the rare case you did use this package as your
-> sole datastore driver.
+> a volcano by default, in the rare case you did come across this, mistook it
+> for a proven good idea and used this package as your sole datastore driver.
 >
 > The term "guarantee" means that it attempts to preserve the guarantees
 > provided by Redis in that context, and does so as a hard requirement.
