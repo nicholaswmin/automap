@@ -390,7 +390,7 @@ You should assume that locally and at the very minimum, a
 [BFS traversal][bfs] will always run at least once for both `.save()`
 and `.fetch()`, against the entire object graph.  
 
-This is followed by an additional[Quicksort][qs][^2] step in `.fetch`,
+This is followed by an additional [Quicksort][qs][^2] step in `.fetch`,
 against *every* list.
 
 Apart from trying to avoid egregious and obvious mistakes, there's not much
