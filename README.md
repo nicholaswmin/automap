@@ -262,8 +262,6 @@ get big, so it decomposes those lists into manageable pieces that can be
 saved more efficiently while also allowing for flexibility into whether
 they can be lazy-loaded.
 
-That's pretty much it.
-
 ## Performance
 
 Known performance issues are summarised in these bullet points.
@@ -288,17 +286,25 @@ In general, this package:
 - is not an object-mapper and if you were looking for one, [this one][redisom]
   is most probably what you're looking for.
 
->
 > This should be obvious to the 99.9% of the few people
 > that might read this, but:
 >
-> The term "guarantee" here has nothing to do with "warranty" or legal
-> guarantees. This is an open-source package casually made for internal use
+> The term "guarantee" here has nothing to do with "warranty" like when
+> buying a car or legal guarantees.  
+> This is an open-source package casually made for internal use
 > and published for free, under an MIT license, as agreed by the company which
 > owns the product for which it's initially made for.
 >
-> It's author, me, is unlikely to support it in even the most basic form.  
-> I don't even plan to semver it properly.
+> I, the author, don't even plan to semver it properly, might not even support
+> it in even the most basic form and certainly not guarantee any aspects of
+> it's behaviour as legal "warranty".
+>
+> For all intents and purposes, you can consider all your data thrown in
+> a volcano by default, in the rare case you did use this package as your
+> sole datastore driver.
+>
+> The term "guarantee" means that it attempts to preserve the guarantees
+> provided by Redis in that context, and does so as a hard requirement.
 >
 
 All sections below simply go into a bit more detail on the points listed
