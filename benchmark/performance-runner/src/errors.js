@@ -1,9 +1,33 @@
 import { styleText as style } from 'node:util'
 
 class RunNotEndedError extends Error {
-  constructor(message) {
-    super(style('red', 'Must end run first via PerformanceRunner.end()'))
+  constructor() {
+    super(style('red', 'Run has not ended yet'))
   }
 }
 
-export default { RunNotEndedError }
+class StillRunningError extends Error {
+  constructor() {
+    super(style('red', 'Run is still running'))
+  }
+}
+
+class AlreadyEndedError extends Error {
+  constructor(message) {
+    super(style('red', 'Run has already ended'))
+  }
+}
+
+class InvalidStateError extends Error {
+  constructor(state) {
+    const message = `state must be "running" or "ended", got: "${state || ''}"`
+    super(style('red', message))
+  }
+}
+
+export default {
+  RunNotEndedError,
+  StillRunningError,
+  AlreadyEndedError,
+  InvalidStateError
+}

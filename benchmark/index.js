@@ -1,4 +1,3 @@
-
 import { PerformanceRunner } from './performance-runner/index.js'
 import { Paper, Board } from './paper/index.js'
 import { Repository, utils } from '../index.js'
@@ -11,46 +10,53 @@ const runner = new PerformanceRunner()
 const fetch = performance.timerify(repo.fetch.bind(repo))
 const save = performance.timerify(repo.save.bind(repo))
 
+// Each array item is a Task
+
 await runner.run([
   {
     name: 'create_paper',
-    times: 1,
-    fn: async ({ i, step }) => {
+    cycles: 1,
+    fn: async ({ i, cycle }) => {
       const paper = new Paper({ id: 'foo' })
 
-      await save(paper, step)
+      await save(paper, cycle)
     }
   },
   {
     name: 'add_items',
-    times: 5,
-    fn: async ({ i, step }) => {
-      const paper = await fetch({ id: 'foo' }, step)
+    cycles: 5,
+    fn: async ({ i, cycle }) => {
+      const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.addItemToActiveBoard({
         id: 'i_' + utils.randomID(),
         json: utils.payloadKB(5)
       })
 
-      await save(paper, step)
+      const markA = performance.mark('markA')
+      const markB = performance.mark('markB')
+
+      performance.measure('markAB', 'markA', 'markB')
+
+      await save(paper, cycle)
     }
   },
   {
     name: 'create_board',
-    times: 1,
-    fn: async ({ i, step }) => {
-      const paper = await fetch({ id: 'foo' }, step)
+    cycles: 1,
+    fn: async ({ i, cycle }) => {
+      const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.addBoard({ id: 'b_' +  utils.randomID() })
 
-      await save(paper, step)
+      await save(paper, cycle)
     }
   },
   {
     name: 'add_items',
-    times: 20,
-    fn: async ({ i, step }) => {
-      const paper = await fetch({ id: 'foo' }, step)
+    cycles: 20,
+    fn: async ({ i, cycle }) => {
+      const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.addItemToActiveBoard({
         id: 'i_' + utils.randomID(),
@@ -59,25 +65,22 @@ await runner.run([
 
       performance.mark('payload', { detail: { value: 5, unit: 'kb'  } })
 
-      await save(paper, step)
+      await save(paper, cycle)
     }
   },
   {
     name: 'delete_board',
-    times: 1,
-    fn: async ({ i, step }) => {
-      const paper = await fetch({ id: 'foo' }, step)
+    cycles: 1,
+    fn: async ({ i, cycle }) => {
+      const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.deleteBoard({ id: paper.boards.at(-2).id })
 
-      await save(paper, step)
+      await save(paper, cycle)
     }
   }
 ])
 
 redis.disconnect()
 
-await runner.end()
-
-runner.printTimeline()
-      .printOverview()
+runner.printTimeline().printAggregates()

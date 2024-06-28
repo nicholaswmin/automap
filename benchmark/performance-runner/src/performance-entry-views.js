@@ -2,72 +2,47 @@ import { styleText as style } from 'node:util'
 import utils from './utils.js'
 
 const performanceEntryViews = {
-  'cycle': (ctx, entry) => {
-    const { i, step } = entry.detail[0]
-
-    i === 1 ? ctx.currentTable.addRows([
-      ctx.computeSeparator(['type', 'name', 'value']),
-      {
-        type: style(['magenta'], '---'),
-        name: style(['magenta', 'bold', 'underline'], step),
-        value: style(['magenta'], '---'),
-      },
-      ctx.computeSeparator(['type', 'name', 'value'])
-    ]) : ctx.currentTable.addRows([
-      ctx.computeSeparator(['type', 'name', 'value'])
-    ])
-
-    return {
-      type: style(['white', 'bold', 'underline'], 'cycle'),
-      name: style(['white', 'bold', 'underline'], `${step}  ${i}`),
-      value: style(
-        ['green', 'bold', 'underline'],
-        utils.toMillis(entry.duration)
-      )
-    }
-  },
-
-  'connect': (ctx, entry) => {
+  'connect': (entry, ctx, table) => {
     return {
       type: style(['blue'], 'connect'),
       name: 'connect',
-      value: utils.toMillis(entry.duration)
+      value: utils.toMs(entry.duration)
     }
   },
 
-  'net': (ctx, entry) => {
+  'net': (entry, ctx, table) => {
     return {
       type: style(['blue'], 'net'),
       name: 'net',
-      value: utils.toMillis(entry.duration)
+      value: utils.toMs(entry.duration)
     }
   },
 
-  'dns': (ctx, entry) => {
+  'dns': (entry, ctx, table) => {
     return {
       type: style(['blue'], 'dns'),
       name: 'dns',
-      value: utils.toMillis(entry.duration)
+      value: utils.toMs(entry.duration)
     }
   },
 
-  'function': (ctx, entry) => {
+  'function': (entry, ctx, table) => {
     return {
       type: 'function',
       name: entry.name.replace('bound', ''),
-      value: utils.toMillis(entry.duration)
+      value: utils.toMs(entry.duration)
     }
   },
 
-  'gc': (ctx, entry) => {
+  'gc': (entry, ctx, table) => {
     return {
       type: 'gc',
       name: 'gc',
-      value: utils.toMillis(entry.duration)
+      value: utils.toMs(entry.duration)
     }
   },
 
-  'mark': (ctx, entry) => {
+  'mark': (entry, ctx, table) => {
     const value = entry.detail?.value || ' -- '
     const unit = entry.detail?.unit?.trim() || ''
 
@@ -78,11 +53,11 @@ const performanceEntryViews = {
     )}
   },
 
-  'measure': (ctx, entry) => {
+  'measure': (entry, ctx, table) => {
     return {
       type:  style(['blue'], 'measure'),
       name:  style(['blue'], entry.name),
-      value: style(['blue'], utils.toMillis(entry.duration))
+      value: style(['blue'], utils.toMs(entry.duration))
     }
   }
 }

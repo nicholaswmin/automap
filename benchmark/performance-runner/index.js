@@ -1,54 +1,60 @@
+import { createHistogram, monitorEventLoopDelay } from 'node:perf_hooks'
 import { styleText as style } from 'node:util'
 import { Table, printTable } from 'console-table-printer'
 
-import performanceEntryViews from './src/performance-entry-views.js'
+import histograms from './src/histograms.js'
+import timeline from './src/timeline.js'
 import errors from './src/errors.js'
 import utils from './src/utils.js'
 
+class Task {
+  constructor({ id = utils.randomID(), name, cycles, fn }) {
+    this.id = id
+    this.name = name
+    this.cycles = cycles
+
+    this.histogram = createHistogram()
+    this.timerifiedFn = performance.timerify(fn, { histogram: this.histogram })
+  }
+
+  async run(i) {
+    return await this.timerifiedFn({ cycle: i + 1, taskname: this.name })
+  }
+}
+
 class PerformanceRunner {
-  #ended
+  #state
 
   constructor() {
     this.tasks = []
     this.entries = []
-    this.currentTable = null
-    this.#ended = false
+    this.#state = 'ready'
 
+    this.loopHistogram = new monitorEventLoopDelay({ resolution: 10 })
     this.observer = new PerformanceObserver(this.#observerCallback.bind(this))
     this.entryTypes = PerformanceObserver.supportedEntryTypes
     this.observer.observe({ entryTypes: this.entryTypes })
   }
 
-  async run(tasks = []) {
-    this.tasks = tasks
+  async run(taskData = []) {
+    this.#throwIfEnded()
+    this.#throwIfRunning()
 
-    for (let task of tasks) {
-      performance.mark('memoryUsage', {
-        detail: {
-          value: utils.toMB(process.memoryUsage().heapUsed),
-          unit: 'mb'
-        }
-      })
+    this.tasks = taskData.map(task => new Task(task))
+    this.#transitionState('running')
+    this.loopHistogram.enable()
 
-      for (let i = 0; i < task.times; i++) {
-        await performance.timerify(task.fn)({ i: i + 1, step: task.name })
-      }
-    }
-  }
+    for (let task of this.tasks)
+      for (let i = 0; i < task.cycles; i++)
+        await task.run(i)
 
-  async end() {
-    await this.#onEventLoopEnd()
-    this.observer.disconnect()
-
-    this.entries = this.entries.concat(this.observer.takeRecords()).flat()
-
-    this.#ended = true
+    return this.#end()
   }
 
   printTimeline() {
-    this.#throwIfRunning()
+    this.#throwIfNotEnded()
 
-    this.currentTable = new Table({
+    const table = new Table({
       title: 'timeline',
       columns: [
         { name: 'type', alignment: 'right' },
@@ -57,177 +63,91 @@ class PerformanceRunner {
       ]
     })
 
-    this.currentTable.addRows([
-      this.computeSeparator(['type', 'name', 'value']),
-      { type: 'Startup' },
-      this.computeSeparator(['type', 'name', 'value'])
-    ])
+    table.addRows(timeline.computeHeaderRows({
+      column: 'type',
+      columns: ['type', 'name', 'value'],
+      value: style(['white', 'bold', 'underline'], 'Startup')
+    }))
 
     this.entries.forEach(entry => {
-      const step = Object.hasOwn(entry.detail?.[0] || {}, 'step')
-      const view = performanceEntryViews[step ? 'cycle' : entry.entryType]
+      const isTask = entry.detail &&
+        entry.detail.length &&
+        Object.hasOwn(entry.detail[0], 'taskname')
 
-      return this.currentTable.addRow(view(this, entry))
+      return isTask ?
+        timeline.addRowForCycle(table, entry) :
+        table.addRow(timeline.toRowView(entry))
     })
 
-    this.currentTable.printTable()
+    table.printTable()
 
     return this
   }
 
-  async printOverview() {
-    this.#throwIfRunning()
+  printAggregates() {
+    this.#throwIfNotEnded()
 
-    this.currentTable = new Table({
-      title: 'stats overview',
-      columns: [
-        { name: 'name', alignment: 'right' },
-        { name: 'count', alignment: 'right' },
-        { name: 'min', alignment: 'left' },
-        { name: 'max', alignment: 'left' },
-        { name: 'average', alignment: 'left' }
-      ]
+    const table = new Table({
+      title: 'Histograms',
+      columns: histograms.computeHistogramColumns()
     })
 
-    const units = this.#computeMarkUnits(this.entries)
-    const columns = ['name', 'count', 'min', 'max', 'average']
-    const taskStats = this.#computeTaskStats(this.entries)
-    const markStats = this.#computeMarkStats(this.entries)
-    const measureStats = this.#computeMeasureStats(this.entries)
-    const separator = this.computeSeparator(columns)
+    histograms.addRowsForTasks(table, this.tasks)
+    histograms.addRowsForMarks(table, this.entries)
+    histograms.addRowsForMeasures(table, this.entries)
+    histograms.addRowsForEntryType(table, this.entries, { entryType: 'gc' })
+    histograms.addRowsForEntryType(table, this.entries, { entryType: 'dns' })
+    histograms.addRowsForEntryType(table, this.entries, { entryType: 'net' })
 
-    const view = _unit => {
-      return row => {
-        const unit = _unit || units[row.name] || ''
-        const postfix = unit ? ' ' + unit : ''
+    histograms.addRowsForHistogram(table, this.loopHistogram, {
+      name: 'loop latency'
+    })
 
-        return {
-          name: row.name,
-          count: row.count,
-          min: utils.round(row.min) + postfix,
-          max: style('yellow', utils.round(row.max) + postfix),
-          average: style('green', utils.round(row.average) + postfix)
-        }
-      }
-    }
-
-    if (taskStats.length) {
-      this.currentTable.addRows([
-        this.computeSeparator(columns),
-        { name: style('magenta', 'Tasks') },
-        this.computeSeparator(columns)
-      ])
-
-      taskStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(view('ms')(row)))
-    }
-
-    if (markStats.length) {
-      this.currentTable.addRows([
-        this.computeSeparator(columns),
-        { name: style('cyan', 'Marks') },
-        this.computeSeparator(columns)
-      ])
-
-      markStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(view(null)(row)))
-    }
-
-    if (measureStats.length) {
-      this.currentTable.addRows([
-        this.computeSeparator(columns),
-        { name: style('blue', 'Measures') },
-        this.computeSeparator(columns)
-      ])
-
-      measureStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(view('ms')(row)))
-    }
-
-    this.currentTable.printTable()
+    table.printTable()
 
     return this
   }
 
-  computeSeparator(keys) {
-    return keys.reduce((acc, key) => {
-      acc[key] = ''
+  async #end() {
+    await this.#onEventLoopEnd()
 
-      return acc
-    }, {})
-  }
+    this.observer.disconnect()
+    this.loopHistogram.disable()
+    this.entries = this.entries.concat(this.observer.takeRecords()).flat()
 
-  #computeTaskStats(entries) {
-    return entries
-      .filter(entry => entry.detail?.[0]?.step)
-      .map(entry => ({
-        ...entry,
-        key: entry.detail?.[0]?.step,
-        value: entry.duration
-      }))
-      .reduce(this.#computeEntryStats, [])
-  }
-
-  #computeMarkStats(entries) {
-    return entries
-      .filter(entry => entry.entryType === 'mark' && entry.detail?.value)
-      .map(entry => ({ ...entry, key: entry.name, value: entry.detail.value }))
-      .reduce(this.#computeEntryStats, [])
-  }
-
-  #computeMeasureStats(entries) {
-    return entries
-      .filter(entry => entry.entryType === 'measure')
-      .map(entry => ({ ...entry, key: entry.name, value: entry.duration }))
-      .reduce(this.#computeEntryStats, [])
-  }
-
-  #computeEntryStats(acc, entry, i, arr) {
-    acc[entry.key] = acc[entry.key] ? {
-      max: entry.value > acc[entry.key].max ? entry.value : acc[entry.key].max,
-      min: entry.value < acc[entry.key].min ? entry.value : acc[entry.key].min,
-      value: acc[entry.key].value + entry.value,
-      count: acc[entry.key].count + 1
-    } : {
-      min: entry.value,
-      max: entry.value,
-      value: entry.value,
-      count: 1
-    }
-
-
-    return i < arr.length - 1 ? acc : Object.keys(acc).map(key => {
-      return {
-        name: key,
-        count: acc[key].count,
-        min: acc[key].min,
-        max: acc[key].max,
-        average: acc[key].value / acc[key].count
-      }
-    })
+    this.#transitionState('ended')
   }
 
   #observerCallback(items) {
     this.entries.push(items.getEntries().map(entry => entry.toJSON()))
   }
 
-  #computeMarkUnits(entries) {
-    return entries.filter(entry => ['mark','measure'].includes(entry.entryType))
-      .reduce((acc, entry) => {
-        acc[entry.name] = entry.entryType === 'measure' ?
-          'ms' : (entry.detail?.unit?.trim() || '')
-
-        return acc
-      }, {})
-  }
-
   #onEventLoopEnd() {
     return new Promise(resolve => setImmediate(() => resolve()))
   }
 
+  #transitionState(state) {
+    if (!['running', 'ended'].includes(state))
+      throw new errors.InvalidStateError(state)
+
+    this.#state = state
+
+    return this
+  }
+
+  #throwIfNotEnded() {
+    if (this.#state !== 'ended')
+      throw new errors.NotEndedError()
+  }
+
+  #throwIfEnded() {
+    if (this.#state === 'ended')
+      throw new errors.AlreadyEndedError()
+  }
+
   #throwIfRunning() {
-    if (!this.#ended)
-      throw new errors.RunNotEndedError()
+    if (this.#state === 'running')
+      throw new errors.StillRunningError()
   }
 }
 
