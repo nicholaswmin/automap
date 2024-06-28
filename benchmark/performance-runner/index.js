@@ -75,11 +75,11 @@ class PerformanceRunner {
     return this
   }
 
-  async printAverages() {
+  async printOverview() {
     this.#throwIfRunning()
 
     this.currentTable = new Table({
-      title: 'average stats',
+      title: 'stats overview',
       columns: [
         { name: 'name', alignment: 'right' },
         { name: 'count', alignment: 'right' },
@@ -90,65 +90,58 @@ class PerformanceRunner {
     })
 
     const units = this.#computeMarkUnits(this.entries)
-    const colors = this.#computeMarkColors(this.entries)
     const columns = ['name', 'count', 'min', 'max', 'average']
     const taskStats = this.#computeTaskStats(this.entries)
     const markStats = this.#computeMarkStats(this.entries)
     const measureStats = this.#computeMeasureStats(this.entries)
     const separator = this.computeSeparator(columns)
-    const taskView = row => {
-      return {
-        'name': style('magenta', row.name),
-        'count': row.count,
-        'min': utils.toMillis(row.min),
-        'max': style('yellow', utils.toMillis(row.max)),
-        'average': style('green', utils.toMillis(row.average))
-      }
-    }
-    const markView = row => {
-      const color = colors[row.name]
-      const unit = units[row.name] ? ' ' + units[row.name] : ''
 
-      return {
-        'name': style(color, row.name),
-        'count': row.count,
-        'min': utils.round(row.min) + unit,
-        'max': style('yellow', utils.round(row.max) + unit),
-        'average': style('green', utils.round(row.average) + unit)
+    const view = _unit => {
+      return row => {
+        const unit = _unit || units[row.name] || ''
+        const postfix = unit ? ' ' + unit : ''
+
+        return {
+          name: row.name,
+          count: row.count,
+          min: utils.round(row.min) + postfix,
+          max: style('yellow', utils.round(row.max) + postfix),
+          average: style('green', utils.round(row.average) + postfix)
+        }
       }
     }
 
     if (taskStats.length) {
       this.currentTable.addRows([
         this.computeSeparator(columns),
-        { name: 'Tasks' },
+        { name: style('magenta', 'Tasks') },
         this.computeSeparator(columns)
       ])
 
       taskStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(taskView(row)))
+        .forEach(row => this.currentTable.addRow(view('ms')(row)))
     }
 
     if (markStats.length) {
       this.currentTable.addRows([
         this.computeSeparator(columns),
-        { name: 'Marks' },
+        { name: style('cyan', 'Marks') },
         this.computeSeparator(columns)
       ])
 
       markStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(markView(row)))
+        .forEach(row => this.currentTable.addRow(view(null)(row)))
     }
 
     if (measureStats.length) {
       this.currentTable.addRows([
         this.computeSeparator(columns),
-        { name : 'Measure' },
+        { name: style('blue', 'Measures') },
         this.computeSeparator(columns)
       ])
 
       measureStats.sort((a, b) => b.average - a.average)
-        .forEach(row => this.currentTable.addRow(markView(row)))
+        .forEach(row => this.currentTable.addRow(view('ms')(row)))
     }
 
     this.currentTable.printTable()
@@ -223,15 +216,6 @@ class PerformanceRunner {
       .reduce((acc, entry) => {
         acc[entry.name] = entry.entryType === 'measure' ?
           'ms' : (entry.detail?.unit?.trim() || '')
-
-        return acc
-      }, {})
-  }
-
-  #computeMarkColors(entries) {
-    return entries.filter(entry => ['mark','measure'].includes(entry.entryType))
-      .reduce((acc, entry) => {
-        acc[entry.name] = entry.entryType === 'measure' ? 'blue' : 'cyan'
 
         return acc
       }, {})

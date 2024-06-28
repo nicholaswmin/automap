@@ -7,16 +7,23 @@ const performanceEntryViews = {
 
     i === 1 ? ctx.currentTable.addRows([
       ctx.computeSeparator(['type', 'name', 'value']),
-      { type: style(['magenta', 'underline'], step) },
+      {
+        type: style(['magenta'], '---'),
+        name: style(['magenta', 'bold', 'underline'], step),
+        value: style(['magenta'], '---'),
+      },
       ctx.computeSeparator(['type', 'name', 'value'])
     ]) : ctx.currentTable.addRows([
       ctx.computeSeparator(['type', 'name', 'value'])
     ])
 
     return {
-      type: style(['magenta'], 'cycle'),
-      name: style(['magenta', 'underline'], `${step}:${i}`),
-      value: style(['green', 'underline'], utils.toMillis(entry.duration))
+      type: style(['white', 'bold', 'underline'], 'cycle'),
+      name: style(['white', 'bold', 'underline'], `${step}  ${i}`),
+      value: style(
+        ['green', 'bold', 'underline'],
+        utils.toMillis(entry.duration)
+      )
     }
   },
 

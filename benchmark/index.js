@@ -80,4 +80,4 @@ redis.disconnect()
 await runner.end()
 
 runner.printTimeline()
-      .printAverages()
+      .printOverview()
