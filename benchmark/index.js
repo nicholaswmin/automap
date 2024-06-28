@@ -6,8 +6,7 @@ import { Repository, utils } from '../index.js'
 const redis = utils.ioredis()
 const repo = new Repository(Paper, redis)
 
-
-const runner = new PerformanceRunner()
+const runner = new PerformanceRunner({ title: 'automap paper' })
 
 const fetch = performance.timerify(repo.fetch.bind(repo))
 const save = performance.timerify(repo.save.bind(repo))
@@ -16,7 +15,7 @@ await runner.run([
   {
     name: 'create_paper',
     times: 1,
-    fn: async step => {
+    fn: async ({ i, step }) => {
       const paper = new Paper({ id: 'foo' })
 
       await save(paper, step)
@@ -25,7 +24,7 @@ await runner.run([
   {
     name: 'add_items',
     times: 5,
-    fn: async step => {
+    fn: async ({ i, step }) => {
       const paper = await fetch({ id: 'foo' }, step)
 
       await paper.addItemToActiveBoard({
@@ -39,7 +38,7 @@ await runner.run([
   {
     name: 'create_board',
     times: 1,
-    fn: async step => {
+    fn: async ({ i, step }) => {
       const paper = await fetch({ id: 'foo' }, step)
 
       await paper.addBoard({ id: 'b_' +  utils.randomID() })
@@ -50,7 +49,7 @@ await runner.run([
   {
     name: 'add_items',
     times: 20,
-    fn: async step => {
+    fn: async ({ i, step }) => {
       const paper = await fetch({ id: 'foo' }, step)
 
       await paper.addItemToActiveBoard({
@@ -65,7 +64,7 @@ await runner.run([
   {
     name: 'delete_board',
     times: 1,
-    fn: async step => {
+    fn: async ({ i, step }) => {
       const paper = await fetch({ id: 'foo' }, step)
 
       await paper.deleteBoard({ id: paper.boards.at(-2).id })
@@ -75,6 +74,6 @@ await runner.run([
   }
 ])
 
-await runner.displayResults()
-
 redis.disconnect()
+
+await runner.end()

@@ -1,9 +1,29 @@
 import { styleText as style } from 'node:util'
-import { utils } from '../../index.js'
+import utils from './utils.js'
 
 const toMillis = num => utils.round(num) + ' ms'
 
 const performanceEntryViews = {
+  'cycle': (ctx, entry) => {
+    const { i, step } = entry.detail[0]
+
+    i === 0 ? ctx.createHeader(step) : ctx.createSeparator()
+
+    return {
+      type: style(['green', 'underline'], 'cycle'),
+      name: style(['green', 'underline'], `${step}:${i}`),
+      value: style(['green', 'underline'], toMillis(entry.duration))
+    }
+  },
+
+  'connect': (ctx, entry) => {
+    return {
+      type: style(['blue'], 'connect'),
+      name: 'connect',
+      value: toMillis(entry.duration)
+    }
+  },
+
   'net': (ctx, entry) => {
     return {
       type: style(['blue'], 'net'),
@@ -17,31 +37,6 @@ const performanceEntryViews = {
       type: style(['blue'], 'dns'),
       name: 'dns',
       value: toMillis(entry.duration)
-    }
-  },
-
-  'connect': (ctx, entry) => {
-    return {
-      type: style(['blue'], 'connect'),
-      name: 'connect',
-      value: toMillis(entry.duration)
-    }
-  },
-
-  'fn': (ctx, entry) => {
-    const step = entry.detail[0]
-    const name = entry.detail[1]
-
-    ctx.table.addRow({
-      type:  '---------',
-      name:  '---------------',
-      value: '--------',
-    })
-
-    return {
-      type: style(['green', 'underline'], 'cycle'),
-      name: style(['green', 'underline'], `${step}:${name}`),
-      value: style(['green', 'underline'], toMillis(entry.duration))
     }
   },
 
@@ -65,9 +60,7 @@ const performanceEntryViews = {
     return {
       type:  style(['yellow'], 'mark'),
       name:  style(['yellow'], entry.name),
-      value: style(['yellow'], entry.detail ?
-        entry.detail.value.toString() :
-        entry.duration.toString()
+      value: style(['yellow'], entry.detail?.value?.toString() || 'undefined'
     )}
   },
 
