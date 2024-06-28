@@ -1,18 +1,22 @@
 import { styleText as style } from 'node:util'
 import utils from './utils.js'
 
-const toMillis = num => utils.round(num) + ' ms'
-
 const performanceEntryViews = {
   'cycle': (ctx, entry) => {
     const { i, step } = entry.detail[0]
 
-    i === 0 ? ctx.createHeader(step) : ctx.createSeparator()
+    i === 1 ? ctx.currentTable.addRows([
+      ctx.computeSeparator(['type', 'name', 'value']),
+      { type: style(['magenta', 'underline'], step) },
+      ctx.computeSeparator(['type', 'name', 'value'])
+    ]) : ctx.currentTable.addRows([
+      ctx.computeSeparator(['type', 'name', 'value'])
+    ])
 
     return {
-      type: style(['green', 'underline'], 'cycle'),
-      name: style(['green', 'underline'], `${step}:${i}`),
-      value: style(['green', 'underline'], toMillis(entry.duration))
+      type: style(['magenta'], 'cycle'),
+      name: style(['magenta', 'underline'], `${step}:${i}`),
+      value: style(['green', 'underline'], utils.toMillis(entry.duration))
     }
   },
 
@@ -20,7 +24,7 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'connect'),
       name: 'connect',
-      value: toMillis(entry.duration)
+      value: utils.toMillis(entry.duration)
     }
   },
 
@@ -28,7 +32,7 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'net'),
       name: 'net',
-      value: toMillis(entry.duration)
+      value: utils.toMillis(entry.duration)
     }
   },
 
@@ -36,7 +40,7 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'dns'),
       name: 'dns',
-      value: toMillis(entry.duration)
+      value: utils.toMillis(entry.duration)
     }
   },
 
@@ -44,7 +48,7 @@ const performanceEntryViews = {
     return {
       type: 'function',
       name: entry.name.replace('bound', ''),
-      value: toMillis(entry.duration)
+      value: utils.toMillis(entry.duration)
     }
   },
 
@@ -52,15 +56,18 @@ const performanceEntryViews = {
     return {
       type: 'gc',
       name: 'gc',
-      value: toMillis(entry.duration)
+      value: utils.toMillis(entry.duration)
     }
   },
 
   'mark': (ctx, entry) => {
+    const value = entry.detail?.value || ' -- '
+    const unit = entry.detail?.unit?.trim() || ''
+
     return {
-      type:  style(['yellow'], 'mark'),
-      name:  style(['yellow'], entry.name),
-      value: style(['yellow'], entry.detail?.value?.toString() || 'undefined'
+      type:  style(['cyan'], 'mark'),
+      name:  style(['cyan'], entry.name),
+      value: style(['cyan'], value + ' ' + unit
     )}
   },
 
@@ -68,7 +75,7 @@ const performanceEntryViews = {
     return {
       type:  style(['blue'], 'measure'),
       name:  style(['blue'], entry.name),
-      value: style(['blue'], toMillis())
+      value: style(['blue'], utils.toMillis(entry.duration))
     }
   }
 }

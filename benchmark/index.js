@@ -6,7 +6,7 @@ import { Repository, utils } from '../index.js'
 const redis = utils.ioredis()
 const repo = new Repository(Paper, redis)
 
-const runner = new PerformanceRunner({ title: 'automap paper' })
+const runner = new PerformanceRunner()
 
 const fetch = performance.timerify(repo.fetch.bind(repo))
 const save = performance.timerify(repo.save.bind(repo))
@@ -56,7 +56,8 @@ await runner.run([
         id: 'i_' + utils.randomID(),
         json: utils.payloadKB(5)
       })
-      performance.mark('payload', { detail: { value: '5 kb' }})
+
+      performance.mark('payload', { detail: { value: 5, unit: 'kb'  } })
 
       await save(paper, step)
     }
@@ -77,3 +78,6 @@ await runner.run([
 redis.disconnect()
 
 await runner.end()
+
+runner.printTimeline()
+      .printAverages()
