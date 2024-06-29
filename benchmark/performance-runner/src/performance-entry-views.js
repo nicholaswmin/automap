@@ -6,7 +6,8 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'connect'),
       name: 'connect',
-      value: utils.toMs(entry.duration)
+      value: utils.toMs(entry.duration),
+      detail: utils.toDetail(entry.detail)
     }
   },
 
@@ -14,7 +15,10 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'net'),
       name: 'net',
-      value: utils.toMs(entry.duration)
+      value: utils.toMs(entry.duration),
+      detail: utils.toDetail({
+        host: entry.detail.host, port: entry.detail.port
+      })
     }
   },
 
@@ -22,7 +26,8 @@ const performanceEntryViews = {
     return {
       type: style(['blue'], 'dns'),
       name: 'dns',
-      value: utils.toMs(entry.duration)
+      value: utils.toMs(entry.duration),
+      detail: utils.toDetail({ hostname: entry.detail.hostname })
     }
   },
 
@@ -30,7 +35,8 @@ const performanceEntryViews = {
     return {
       type: 'function',
       name: entry.name.replace('bound', ''),
-      value: utils.toMs(entry.duration)
+      value: utils.toMs(entry.duration),
+      detail: '--'
     }
   },
 
@@ -38,7 +44,8 @@ const performanceEntryViews = {
     return {
       type: 'gc',
       name: 'gc',
-      value: utils.toMs(entry.duration)
+      value: utils.toMs(entry.duration),
+      detail: utils.toDetail(entry.detail)
     }
   },
 
@@ -49,15 +56,17 @@ const performanceEntryViews = {
     return {
       type:  style(['cyan'], 'mark'),
       name:  style(['cyan'], entry.name),
-      value: style(['cyan'], value + ' ' + unit
-    )}
+      value: style(['cyan'], value + ' ' + unit),
+      detail: utils.toDetail(entry.detail)
+    }
   },
 
   'measure': (entry, ctx, table) => {
     return {
       type:  style(['blue'], 'measure'),
       name:  style(['blue'], entry.name),
-      value: style(['blue'], utils.toMs(entry.duration))
+      value: style(['blue'], utils.toMs(entry.duration)),
+      detail: utils.toDetail(entry.detail)
     }
   }
 }

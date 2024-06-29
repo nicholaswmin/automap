@@ -1,4 +1,4 @@
-import { createHistogram, monitorEventLoopDelay } from 'node:perf_hooks'
+import { monitorEventLoopDelay } from 'node:perf_hooks'
 import { styleText as style } from 'node:util'
 import { Table, printTable } from 'console-table-printer'
 
@@ -6,21 +6,7 @@ import histograms from './src/histograms.js'
 import timeline from './src/timeline.js'
 import errors from './src/errors.js'
 import utils from './src/utils.js'
-
-class Task {
-  constructor({ id = utils.randomID(), name, cycles, fn }) {
-    this.id = id
-    this.name = name
-    this.cycles = cycles
-
-    this.histogram = createHistogram()
-    this.timerifiedFn = performance.timerify(fn, { histogram: this.histogram })
-  }
-
-  async run(i) {
-    return await this.timerifiedFn({ cycle: i + 1, taskname: this.name })
-  }
-}
+import Task from './src/task.js'
 
 class PerformanceRunner {
   #state
@@ -28,30 +14,33 @@ class PerformanceRunner {
   constructor() {
     this.tasks = []
     this.entries = []
+    this.memUsages = []
     this.#state = 'ready'
 
-    this.loopHistogram = new monitorEventLoopDelay({ resolution: 10 })
+    this.loopHs = new monitorEventLoopDelay({ resolution: 10 })
     this.observer = new PerformanceObserver(this.#observerCallback.bind(this))
     this.entryTypes = PerformanceObserver.supportedEntryTypes
     this.observer.observe({ entryTypes: this.entryTypes })
   }
 
   async run(taskData = []) {
+    this.#validateTasks(taskData)
+
     this.#throwIfEnded()
     this.#throwIfRunning()
 
     this.tasks = taskData.map(task => new Task(task))
     this.#transitionState('running')
-    this.loopHistogram.enable()
+    this.loopHs.enable()
+
 
     for (let task of this.tasks)
-      for (let i = 0; i < task.cycles; i++)
-        await task.run(i)
+      this.memUsages = this.memUsages.concat(await task.run())
 
     return this.#end()
   }
 
-  printTimeline() {
+  toTimeline() {
     this.#throwIfNotEnded()
 
     const table = new Table({
@@ -59,60 +48,74 @@ class PerformanceRunner {
       columns: [
         { name: 'type', alignment: 'right' },
         { name: 'name', alignment: 'right' },
-        { name: 'value', alignment: 'left' }
+        { name: 'value', alignment: 'left' },
+        { name: 'detail', alignment: 'left' }
       ]
     })
 
     table.addRows(timeline.computeHeaderRows({
       column: 'type',
-      columns: ['type', 'name', 'value'],
+      columns: ['type', 'name', 'value', 'detail'],
       value: style(['white', 'bold', 'underline'], 'Startup')
     }))
 
     this.entries.forEach(entry => {
-      const isTask = entry.detail &&
-        entry.detail.length &&
+      const isTask = entry.detail && entry.detail.length &&
         Object.hasOwn(entry.detail[0], 'taskname')
 
       return isTask ?
         timeline.addRowForCycle(table, entry) :
-        table.addRow(timeline.toRowView(entry))
+        timeline.addRowForEntry(table, entry)
     })
 
-    table.printTable()
+    process.env.NODE_ENV === 'test' ?
+      null : table.printTable()
 
-    return this
+    return table
   }
 
-  printAggregates() {
+  toHistograms() {
     this.#throwIfNotEnded()
 
     const table = new Table({
-      title: 'Histograms',
+      title: 'histograms',
       columns: histograms.computeHistogramColumns()
     })
 
+    histograms.addRowsForHeader(table, { name: 'tasks' })
     histograms.addRowsForTasks(table, this.tasks)
+
+    histograms.addRowsForHeader(table, { name: 'entry' })
     histograms.addRowsForMarks(table, this.entries)
+
+    histograms.addRowsForHeader(table, { name: 'measures' })
     histograms.addRowsForMeasures(table, this.entries)
+
+    histograms.addRowsForHeader(table, { name: 'entry types' })
     histograms.addRowsForEntryType(table, this.entries, { entryType: 'gc' })
     histograms.addRowsForEntryType(table, this.entries, { entryType: 'dns' })
     histograms.addRowsForEntryType(table, this.entries, { entryType: 'net' })
 
-    histograms.addRowsForHistogram(table, this.loopHistogram, {
-      name: 'loop latency'
-    })
+    histograms.addRowsForHeader(table, { name: 'vitals' })
 
-    table.printTable()
+    histograms.addRowsForUsages(table, this.memUsages, { name: 'memory usage' })
+    histograms.addRowsForHistogram(table, this.loopHs, { name: 'loop latency' })
 
-    return this
+    process.env.NODE_ENV === 'test' ?
+      null : table.printTable()
+
+    return table
+  }
+
+  toPerformanceEntries() {
+    return this.entries.map(entry => entry)
   }
 
   async #end() {
     await this.#onEventLoopEnd()
 
     this.observer.disconnect()
-    this.loopHistogram.disable()
+    this.loopHs.disable()
     this.entries = this.entries.concat(this.observer.takeRecords()).flat()
 
     this.#transitionState('ended')
@@ -123,7 +126,7 @@ class PerformanceRunner {
   }
 
   #onEventLoopEnd() {
-    return new Promise(resolve => setImmediate(() => resolve()))
+    return new Promise(resolve => setTimeout(() => resolve()))
   }
 
   #transitionState(state) {
@@ -133,6 +136,27 @@ class PerformanceRunner {
     this.#state = state
 
     return this
+  }
+
+  #validateTasks(tasks) {
+    if (!Array.isArray(tasks) || !tasks.length)
+      throw new Error(`Expected tasks to be an Array with length`)
+
+    tasks.forEach((task, i) => {
+      if (!task || typeof tasks !== 'object')
+        throw new Error(`Expected task ${i} to be an object`)
+
+      if (!Object.hasOwn(task, 'name') || task.name.length < 1)
+        throw new Error(`Expected task ${i} to have a valid name property `)
+
+      if (!Object.hasOwn(task, 'fn') || typeof task.fn !== 'function')
+        throw new Error(`Expected task ${i} to have a valid fn property `)
+
+      if (!Object.hasOwn(task, 'cycles') || task.cycles < 1)
+        throw new Error(`Expected task.${i}.cycles to be a positive integer`)
+    })
+
+    return tasks
   }
 
   #throwIfNotEnded() {

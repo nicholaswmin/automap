@@ -6,11 +6,13 @@ const hStyle = ['cyan', 'bold']
 
 const sortHistogram = (a, b) => b.histogram.mean - a.histogram.mean
 
+const addRowsForHeader = (table, { name }) => {
+  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, name) }))
+}
+
 const addRowsForTasks = (table, histograms) => {
   if (!histograms.length)
     return
-
-  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, 'tasks') }))
 
   histograms.sort(sortHistogram)
     .forEach(({ histogram, name }) =>
@@ -22,8 +24,6 @@ const addRowsForMarks = (table, entries) => {
 
   if (!histograms.length)
     return
-
-  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, 'marks') }))
 
   histograms.sort(sortHistogram)
     .forEach(({ histogram, name, unit }) => {
@@ -38,8 +38,6 @@ const addRowsForMeasures = (table, entries) => {
   if (!histograms.length)
     return
 
-  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, 'measures') }))
-
   histograms.sort(sortHistogram)
     .forEach(({ name, histogram }) =>
       table.addRow(computeHistogramRow(histogram, utils.toMs, { name })))
@@ -51,13 +49,21 @@ const addRowsForEntryType = (table, entries, { entryType }) => {
   if (!histogram)
     return
 
-  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, entryType) }))
-  table.addRow(computeHistogramRow(histogram, utils.toMs, { name: '-' }))
+  table.addRow(computeHistogramRow(histogram, utils.nsToMs, { name: entryType }))
 }
 
 const addRowsForHistogram = (table, histogram, { name }) => {
-  table.addRows(computeHistogramHeaderRows({ name: style(hStyle, name) }))
-  table.addRow(computeHistogramRow(histogram, utils.nsToMs, { name: '-' }))
+  table.addRow(computeHistogramRow(histogram, utils.nsToMs, { name }))
+}
+
+const addRowsForUsages = (table, usages, { name }) => {
+  const histogram = createHistogram()
+  const _entries = usages
+    .forEach(usage => histogram.record(Math.ceil(usage.heapUsed)))
+
+  const mapFn = bytes => utils.round((bytes / 1000 / 1000)) + ' mb'
+
+  table.addRow(computeHistogramRow(histogram, mapFn, { name }))
 }
 
 const computeHistogramForEntryType = (entries, { entryType }) => {
@@ -151,8 +157,9 @@ export default {
   addRowsForEntryType,
   addRowsForMarks,
   addRowsForMeasures,
+  addRowsForUsages,
   addRowsForHistogram,
 
-  computeHistogramColumns,
-  computeHistogramHeaderRows
+  addRowsForHeader,
+  computeHistogramColumns
 }

@@ -5,19 +5,25 @@ import performanceEntryViews from './performance-entry-views.js'
 
 const toRowView = entry => performanceEntryViews[entry.entryType](entry)
 
+const addRowForEntry = (table, entry) => {
+  table.addRow(toRowView(entry))
+}
+
 const addRowForCycle = (table, entry) => {
   const { taskname, cycle } = entry.detail[0]
 
   cycle === 1 ? table.addRows(computeHeaderRows({
     columns: ['type', 'name', 'value'],
     column: 'type',
-    value: style(['magenta', 'bold', 'underline'], taskname)
+    value: style(['magenta', 'bold', 'underline'], taskname),
+    detail: ''
   })) : table.addRow(computeSeparator(['type', 'name', 'value']))
 
   table.addRow({
     type: style(['white', 'bold', 'underline'], 'cycle'),
-    name: style(['white', 'bold'], `${taskname}  ${cycle}`),
-    value: style(['green', 'bold', 'underline'], utils.toMs(entry.duration))
+    name: style(['white', 'bold'], `${taskname} ${cycle}`),
+    value: style(['green', 'bold', 'underline'], utils.toMs(entry.duration)),
+    detail: ''
   })
 }
 
@@ -35,10 +41,9 @@ const computeSeparator = (columns) => {
   }, {})
 }
 
-
 export default {
-  toRowView,
   addRowForCycle,
+  addRowForEntry,
   computeHeaderRows,
   computeSeparator
 }

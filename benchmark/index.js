@@ -1,4 +1,6 @@
+import { setTimeout } from 'node:timers/promises'
 import { PerformanceRunner } from './performance-runner/index.js'
+
 import { Paper, Board } from './paper/index.js'
 import { Repository, utils } from '../index.js'
 
@@ -24,7 +26,7 @@ await runner.run([
   },
   {
     name: 'add_items',
-    cycles: 5,
+    cycles: 10,
     fn: async ({ i, cycle }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
@@ -33,10 +35,11 @@ await runner.run([
         json: utils.payloadKB(5)
       })
 
-      const markA = performance.mark('markA')
-      const markB = performance.mark('markB')
+      const markA = performance.mark('a')
+      await setTimeout(30)
+      const markB = performance.mark('b')
 
-      performance.measure('markAB', 'markA', 'markB')
+      performance.measure('a-to-b', 'a', 'b')
 
       await save(paper, cycle)
     }
@@ -54,7 +57,7 @@ await runner.run([
   },
   {
     name: 'add_items',
-    cycles: 20,
+    cycles: 10,
     fn: async ({ i, cycle }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
@@ -63,7 +66,7 @@ await runner.run([
         json: utils.payloadKB(5)
       })
 
-      performance.mark('payload', { detail: { value: 5, unit: 'kb'  } })
+      performance.mark('payload', { detail: { value: 5, unit: 'kb' } })
 
       await save(paper, cycle)
     }
@@ -83,4 +86,4 @@ await runner.run([
 
 redis.disconnect()
 
-runner.printTimeline().printAggregates()
+runner.toTimeline()
