@@ -17,18 +17,28 @@ const save = performance.timerify(repo.save.bind(repo))
 await runner.run([
   {
     name: 'create_paper',
-    cycles: 1,
-    fn: async ({ i, cycle }) => {
+    cycles: 25,
+    fn: async ({ cycle, taskname }) => {
       const paper = new Paper({ id: 'foo' })
 
       await save(paper, cycle)
     }
   },
+
   {
     name: 'add_items',
-    cycles: 10,
-    fn: async ({ i, cycle }) => {
+    cycles: 40,
+    fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
+
+      const doFoo = async () => {
+        await setTimeout(250)
+      }
+
+      const _doFoo = performance.timerify(doFoo)
+
+      if (cycle === 2 || cycle === 4)
+        await _doFoo()
 
       await paper.addItemToActiveBoard({
         id: 'i_' + utils.randomID(),
@@ -44,10 +54,11 @@ await runner.run([
       await save(paper, cycle)
     }
   },
+
   {
     name: 'create_board',
-    cycles: 1,
-    fn: async ({ i, cycle }) => {
+    cycles: 10,
+    fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.addBoard({ id: 'b_' +  utils.randomID() })
@@ -55,10 +66,11 @@ await runner.run([
       await save(paper, cycle)
     }
   },
+
   {
     name: 'add_items',
-    cycles: 10,
-    fn: async ({ i, cycle }) => {
+    cycles: 5,
+    fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.addItemToActiveBoard({
@@ -71,10 +83,11 @@ await runner.run([
       await save(paper, cycle)
     }
   },
+
   {
     name: 'delete_board',
     cycles: 1,
-    fn: async ({ i, cycle }) => {
+    fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
       await paper.deleteBoard({ id: paper.boards.at(-2).id })
@@ -87,3 +100,4 @@ await runner.run([
 redis.disconnect()
 
 runner.toTimeline()
+runner.toPlots()

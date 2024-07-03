@@ -1,5 +1,6 @@
 import { createHistogram } from 'node:perf_hooks'
 
+import CyclePlot from './cycle-plot.js'
 import utils from './utils.js'
 
 class Task {
@@ -7,34 +8,54 @@ class Task {
     this.id = id
     this.name = this.#validateStringWithLength(name, 'name')
     this.cycles = this.#validatePositiveInt(cycles, 'cycles')
-    this.memUsages = []
+
+    this.entries = []
+
+    this.plot = new CyclePlot({ entries: this.entries, name })
+    this.observer = new PerformanceObserver(this.#observerCB.bind(this))
+    this.entryTypes = PerformanceObserver.supportedEntryTypes
 
     this.histogram = createHistogram()
     this.timerifiedFn = performance.timerify(
-      this.#validateFunction(fn, 'fn'),
-      { histogram: this.histogram })
+      this.#validateFn(fn, 'fn'),
+      { histogram: this.histogram }
+    )
   }
 
   async run(i = null) {
-    i = i === null ? 0 : i
+    i = i === null ? (this.#start() || 0) : i
 
     await this.timerifiedFn({ cycle: i + 1, taskname: this.name })
 
-    this.#tickLoader(this.name, i)
-    this.memUsages.push(process.memoryUsage())
+    await this.plot.update(i).then(plot => plot.draw(i))
 
-    return i === this.cycles - 1 ? this.memUsages : await this.run(++i)
+    return i === this.cycles - 1 ? this.#end() : this.run(++i)
   }
 
-  #tickLoader(name, i) {
-    if (process.env.NODE_ENV === 'test')
-      return
+  #start() {
+    this.observer.observe({ entryTypes: this.entryTypes })
+  }
 
+  async #end() {
+    await this.#onEventLoopEnd()
 
-    if (i === 0 || i % 5 === 0) {
-      console.clear()
-      console.log('--', 'Running:', name, i, '--')
-    }
+    this.observer.disconnect()
+
+    this.#addEntries(this.observer.takeRecords())
+
+    return this.entries.flat()
+  }
+
+  #observerCB(items) {
+    this.#addEntries(items.getEntries())
+  }
+
+  #addEntries(entries) {
+    this.entries.push(entries.map(entry => entry.toJSON()))
+  }
+
+  #onEventLoopEnd() {
+    return new Promise(res => setImmediate(res))
   }
 
   #validateStringWithLength(str, name) {
@@ -51,7 +72,7 @@ class Task {
     return num
   }
 
-  #validateFunction(func, name) {
+  #validateFn(func, name) {
     if (typeof func !== 'function')
       throw new Error(`Expected ${name} to be a function`)
 

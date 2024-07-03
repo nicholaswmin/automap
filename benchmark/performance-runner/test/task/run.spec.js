@@ -3,7 +3,6 @@ import { mock, test, before, beforeEach } from 'node:test'
 
 import Task from '../../src/task.js'
 
-
 test('Task', async t => {
   let task, mockFn
 
@@ -20,9 +19,7 @@ test('Task', async t => {
     })
 
     await t.test('records the runs in its "task.histogram"', async t => {
-      await t.beforeEach(async t => {
-        await task.run()
-      })
+      await t.beforeEach(t => task.run())
 
       assert.ok(Object.hasOwn(task, 'histogram'))
 
@@ -38,30 +35,22 @@ test('Task', async t => {
       })
     })
 
-    await t.test('returns its memory usage', async t => {
-      const memUsages = await task.run()
-      assert.ok(Array.isArray(memUsages))
+    await t.test('returns an Array of entries', async t => {
+      let entries
 
-      await t.test('has a usage item for each run', async t => {
-        assert.strictEqual(memUsages.length, task.cycles)
+      await t.beforeEach(async t => {
+        entries = await task.run()
       })
 
-      await t.test('each of type object', async t => {
-        memUsages.forEach(usage => assert.strictEqual(typeof usage, 'object'))
+      await t.test('with 10 elements', async t => {
+        assert.strictEqual(entries.length, 10)
       })
 
-      await t.test('each has a "heapUsed" property', async t => {
-        memUsages.forEach(usage => assert.ok(Object.hasOwn(usage, 'heapUsed')))
-      })
-
-      await t.test('of type number', async t => {
-        memUsages.forEach(usage => {
-          assert.strictEqual(typeof usage.heapUsed, 'number')
+      await t.test('each is an Entry', async t => {
+        entries.forEach(entry => {
+          assert.strictEqual(entry.constructor.name, 'Object')
+          assert.ok(Object.hasOwn(entry, 'duration'))
         })
-      })
-
-      await t.test('is a big positive number', async t => {
-        memUsages.forEach(usage => assert.ok(usage.heapUsed > 1000))
       })
     })
 

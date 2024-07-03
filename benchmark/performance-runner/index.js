@@ -1,5 +1,5 @@
 import { monitorEventLoopDelay } from 'node:perf_hooks'
-import { styleText as style } from 'node:util'
+import { styleText as style, inspect } from 'node:util'
 import { Table, printTable } from 'console-table-printer'
 
 import histograms from './src/histograms.js'
@@ -14,13 +14,9 @@ class PerformanceRunner {
   constructor() {
     this.tasks = []
     this.entries = []
-    this.memUsages = []
-    this.#state = 'ready'
-
     this.loopHs = new monitorEventLoopDelay({ resolution: 10 })
-    this.observer = new PerformanceObserver(this.#observerCallback.bind(this))
-    this.entryTypes = PerformanceObserver.supportedEntryTypes
-    this.observer.observe({ entryTypes: this.entryTypes })
+
+    this.#state = 'ready'
   }
 
   async run(taskData = []) {
@@ -33,9 +29,8 @@ class PerformanceRunner {
     this.#transitionState('running')
     this.loopHs.enable()
 
-
-    for (let task of this.tasks)
-      this.memUsages = this.memUsages.concat(await task.run())
+    for (const task of this.tasks)
+      this.entries = this.entries.concat(await task.run())
 
     return this.#end()
   }
@@ -98,7 +93,6 @@ class PerformanceRunner {
 
     histograms.addRowsForHeader(table, { name: 'vitals' })
 
-    histograms.addRowsForUsages(table, this.memUsages, { name: 'memory usage' })
     histograms.addRowsForHistogram(table, this.loopHs, { name: 'loop latency' })
 
     process.env.NODE_ENV === 'test' ?
@@ -107,26 +101,13 @@ class PerformanceRunner {
     return table
   }
 
-  toPerformanceEntries() {
-    return this.entries.map(entry => entry)
+  toPlots() {
+    this.tasks.forEach(task => console.log(task.plot.get(), '\n'))
   }
 
   async #end() {
-    await this.#onEventLoopEnd()
-
-    this.observer.disconnect()
     this.loopHs.disable()
-    this.entries = this.entries.concat(this.observer.takeRecords()).flat()
-
     this.#transitionState('ended')
-  }
-
-  #observerCallback(items) {
-    this.entries.push(items.getEntries().map(entry => entry.toJSON()))
-  }
-
-  #onEventLoopEnd() {
-    return new Promise(resolve => setTimeout(() => resolve()))
   }
 
   #transitionState(state) {
