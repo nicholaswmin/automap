@@ -171,12 +171,14 @@ The following methods are supported:
 
 #### Using `performance.timerify`
 
-You can use `performance.timerify` to wrap functions which tracks the time
-spent in each wrapped function.
+You can use [`performance.timerify`][timerify] to wrap functions which
+automatically tracks the time spent running that function.
 
-The time spent is then displayed as part of the output.
+The tracked time is then displayed as part of the output.
 
-An example, wrapping the `save` and `user.computeFibonacci` functions:
+##### Example:
+
+Wrapping rapping the `save` and `user.computeFibonacci` functions:
 
 ```js
 const runner = new PerformanceRunner()
@@ -218,11 +220,12 @@ runner.toTimeline()
 
 #### Using `performance.measure`
 
-.. or use `performance.measure` to capture time between 2 marks, set via
-`performance.mark`.
+.. or use [`performance.measure`][measure] to capture the time difference
+between 2 marks, set via [`performance.mark`][mark].
 
-Here's an example where the time to run `user.computeFibonacci()` is tracked
-using `performance.measure`:
+##### Example
+
+Tracking the time to run `user.computeFibonacci()` using `performance.measure`:
 
 ```js
 const runner = new PerformanceRunner()
@@ -258,7 +261,8 @@ runner.toTimeline()
 
 #### Capturing custom values
 
-Use `performance.mark` and pass a `value` and `unit` as the `detail` parameter.
+Use [`performance.mark`][mark] and pass a `value` and `unit` as the `detail`
+parameter.
 
 The values are accumulated, calculated and displayed as part of the output.
 
