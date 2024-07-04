@@ -60,39 +60,47 @@ class CyclePlot {
   }
 
   #updatePaddedCycles(i) {
-    this.cycles = this.#getLastFunctionEntries()
-      .reduce((cycles, fnEntry) => {
-        const fnEntries = cycles[fnEntry.name]
-        const lastEntry = fnEntries ? fnEntries.at(-1) : null
+    const updatedCycles = this.#getLastFunctionEntries(this.entries.flat())
+      .reduce((cycles, entry) => {
+        const cycle = cycles[entry.name]
+        const lastEntry = cycle ? cycle.at(-1) : null
+        const noNewEntry = lastEntry && lastEntry.startTime === entry.startTime
+        const paddingEntry = lastEntry ? ({ ...lastEntry, duration: 0 }) : null
 
-        return fnEntries ? {
+        return cycle ? {
           ...cycles,
-          [fnEntry.name]: [
-            ...fnEntries,
-            lastEntry.startTime === fnEntry.startTime ?
-              ({ ...lastEntry, duration: 0 }) : fnEntry
-          ]
-        } : {
-          ...cycles,
-          [fnEntry.name]: Array
-            .from({ length: i })
-            .fill({ startTime: 0, duration: 0 })
-            .concat([ fnEntry ])
-        }
+          [entry.name]: [ ...cycle, noNewEntry ? paddingEntry : entry ]
+        } : { ...cycles, [entry.name]: [ entry ] }
       }, this.cycles)
+
+    this.cycles = this.#padCyclesToMaxLength(updatedCycles)
 
     return this
   }
 
-  #getLastFunctionEntries() {
-    return this.entries.flat()
-      .filter(entry => ['function'].includes(entry.entryType))
-      .reduce((acc, fnEntry, i, arr) => {
-        const name = fnEntry.name === 'fn' ?
-          fnEntry.detail?.[0]?.taskname :
-          fnEntry.name
+  #padCyclesToMaxLength(cycles) {
+    const cycleLengths = Object.values(cycles).map(cycle => cycle.length)
+    const maxCycleLength = Math.max(...cycleLengths)
 
-        acc[fnEntry.name] = { ...fnEntry, name: name }
+    return Object.keys(cycles).reduce((cycles, key) => {
+      return {
+        ...cycles,
+        [key]: Array.from({ length: maxCycleLength - cycles[key].length })
+         .fill({ startTime: 0, duration: 0 })
+         .concat(cycles[key])
+      }
+    }, cycles)
+  }
+
+  #getLastFunctionEntries(entries) {
+    return entries
+      .filter(entry => ['function'].includes(entry.entryType))
+      .reduce((acc, entry, i, arr) => {
+        const name = entry.name === 'fn' ?
+          entry.detail?.[0]?.taskname :
+          entry.name
+
+        acc[name] = { ...entry, name }
 
         return i === arr.length - 1 ? Object.values(acc) : acc
       }, [])
