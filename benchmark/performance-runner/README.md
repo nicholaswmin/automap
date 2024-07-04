@@ -175,7 +175,7 @@ spent in each wrapped function.
 
 The time spent is then displayed as part of the output.
 
-Here's an example, wrapping the `save` function:
+An example, wrapping the `save` and `user.computeFibonacci` functions:
 
 ```js
 const runner = new PerformanceRunner()
@@ -200,7 +200,9 @@ await runner.run([
     fn: async ({ cycle, taskname }) => {
       const user = new User()
 
-      user.computeFibonacci()
+      const userFibTimerified = performance.timerify(user.computeFibonacci)
+
+      userFibTimerified()
 
       // use the wrapped function instead
       await saveTimerified(user)
