@@ -152,7 +152,10 @@ outputs:
 ... and so on...
 ```
 
-**Note:** `Task A 2` is the *2nd* cycle of *"Task A"*, which took *1.31ms*.
+### Notes:
+
+- `Task A 2` is the *2nd* cycle of *"Task A"*, which took *1.31ms*.
+- `gc` is Garbage Collection cycle durations
 
 ### Using the Performance Measure API
 
