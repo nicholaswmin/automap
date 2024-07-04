@@ -62,10 +62,8 @@ await runner.run([
     name: 'Task A',
     cycles: 10,
     fn: function() {
-      slowRunningFunctionFoo()
-      slowRunningFunctionBar()
-
-      // ... or more work
+      slowFunctionFoo()
+      slowFunctionBar()
     }
   },
 
@@ -73,21 +71,21 @@ await runner.run([
     name: 'Task B',
     cycles: 20,
     fn: async function() {
-
-      // ... use async/await
-      await asyncFunctionBaz()
+      await slowAsyncFunctionBaz()
     }
   }
 
-  // more tasks ...
+  // add more tasks ...
 ])
 
+
+// produce a histogram:
 runner.toHistograms()
 
-// or
+// or a timeline:
 // runner.toTimeline()
 
-// or
+// or a chart:
 // runner.toPlots()
 ```
 
