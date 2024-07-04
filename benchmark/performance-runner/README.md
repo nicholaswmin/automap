@@ -178,7 +178,7 @@ An example, wrapping the `save` and `user.computeFibonacci` functions:
 ```js
 const runner = new PerformanceRunner()
 
-// assume `repo.save` is a slow function that hits the DB
+// timerify `repo.save`
 const saveTimerified = performance.timerify(repo.save.bind(repo))
 
 await runner.run([
@@ -198,10 +198,11 @@ await runner.run([
     fn: async () => {
       const user = new User()
 
-      const userFibTimerified = performance.timerify(user.computeFibonacci)
+      // timerify `user.computeFibonacci`
+      const fibonacciTimerified = performance.timerify(user.computeFibonacci)
 
       // use timerified `user.computeFibonacci`
-      userFibTimerified()
+      fibonacciTimerified()
 
       // use timerified `save`
       await saveTimerified(user)
