@@ -15,8 +15,8 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
    * [Output](#output)
       + [`runner.toHistograms()`](#runnertohistograms)
       + [`runner.toTimeline()`](#runnertotimeline)
-      + [`runner.toPlots()`](#runnertoplots)
       + [`runner.toEntries()`](#runnertoentries)
+      + [`runner.toPlots()`](#runnertoplots)
    * [Accessing cycle info](#accessing-cycle-info)
 - [Test](#test)
 - [Authors](#authors)
@@ -339,6 +339,13 @@ Produces a timeline of the cycles for each task
 ... and so on ...
 ```
 
+
+#### `runner.toEntries()`
+
+Returns an array with all captured [`PerformanceEntry`][perf-entry] items for
+each task.
+
+
 #### `runner.toPlots()`
 
 Draws charts of max durations for each task and their timerified functions:
@@ -362,11 +369,6 @@ durations (ms)       - main task  - fn: user.computeFibonacci  - fn: save
 0   0   0   1   1   1   1   1   2   2   2   2   2   3   3   3   3   3   4    
                                            cycles
 ```
-
-#### `runner.toEntries()`
-
-Returns an array with all captured [`PerformanceEntry`][perf-entry] items for
-each task.
 
 ### Accessing cycle info
 
