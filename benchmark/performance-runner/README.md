@@ -50,7 +50,7 @@ runner.toHistograms()
 
 - `name`: Name of the task
 - `cycle`: How many times to run the task
-- `fn`: The task itself as a function
+- `fn`: The task function
 
 Example with 2 tasks:
 
@@ -370,7 +370,7 @@ each task.
 The `fn` callback is called with an object containing:
 
 - `cycle`: The current cycle
-- `taskname`: The task name itself
+- `taskname`: The task name
 
 An example:
 
