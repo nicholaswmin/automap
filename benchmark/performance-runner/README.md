@@ -263,7 +263,7 @@ An example, tracking the size of the `user` object:
 {
   name: 'Task A',
   cycles: 5,
-  fn: async ({ cycle, taskname }) => {
+  fn: async () => {
     const user = new User()
 
     const kilobytes = new Blob([JSON.stringify(user)]).size / 1000
