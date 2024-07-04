@@ -1,6 +1,6 @@
 [![test-workflow][test-workflow-badge]][ci-test]
 
-# Bench
+# :watch: bench
 
 Benchmarking using the [Performance Measurement API][perf-hooks]
 
