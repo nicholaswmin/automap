@@ -5,8 +5,8 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "test": "node --test test/index.spec.js",
-    "test-coverage": "node --test --experimental-test-coverage test/index.spec.js",
+    "test": "NODE_ENV=test && node --test test/index.spec.js",
+    "test-cov": "node --test --experimental-test-coverage test/index.spec.js",
     "benchmark": "node benchmark/index.js",
     "example": "node .github/example/index.js"
   },
