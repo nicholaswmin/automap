@@ -1,5 +1,5 @@
 import { setTimeout } from 'node:timers/promises'
-import { PerformanceRunner } from './performance-runner/index.js'
+import { PerformanceRunner } from './bench/index.js'
 
 import { Paper, Board } from './paper/index.js'
 import { Repository, utils } from '../index.js'

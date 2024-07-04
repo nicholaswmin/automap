@@ -1,5 +1,5 @@
 {
-  "name": "performance-runner",
+  "name": "bench",
   "type": "module",
   "version": "0.1.0",
   "description": "Benchmarking using the Performance Measurement API",
