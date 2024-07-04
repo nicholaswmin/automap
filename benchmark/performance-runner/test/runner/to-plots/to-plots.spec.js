@@ -7,7 +7,15 @@ import { PerformanceRunner } from '../../../index.js'
 test('PerformanceRunner', async t => {
   let runner = null, result = null, rows = null, foo = null, bar = null
 
-  await t.todo('#toPlots', async t => {
-    // @TODO
+  await t.test('#toPlots', async t => {
+    await t.test('does not throw', async t => {
+      runner = new PerformanceRunner()
+
+      assert.doesNotThrow(t => runner.toPlots())
+    })
+
+    await t.todo('draws a plot', async t => {
+      // @TODO
+    })
   })
 })

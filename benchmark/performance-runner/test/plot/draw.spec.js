@@ -32,5 +32,9 @@ test('CyclePlot', async t => {
     await t.test('does not throw', async t => {
       assert.doesNotThrow(t => plot.draw(i++))
     })
+
+    await t.todo('draws a plot', async t => {
+      // @TODO
+    })
   })
 })
