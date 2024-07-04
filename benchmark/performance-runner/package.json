@@ -2,7 +2,7 @@
   "name": "performance-runner",
   "type": "module",
   "version": "0.1.0",
-  "description": "Benchmark functions using the Performance Measurement API",
+  "description": "Benchmarking using the Performance Measurement API",
   "main": "index.js",
   "directories": {
     "test": "test"

@@ -2,7 +2,8 @@
 
 # :watch: bench
 
-Benchmarking using the [Performance Measurement API][perf-hooks]
+Benchmarking in [Node.js][nodejs] using
+the [Performance Measurement API][perf-hooks]
 
 - [Install](#install)
 - [Usage](#usage)
@@ -461,6 +462,7 @@ npm run test-cov
 [ci-test]: https://github.com/nicholaswmin/bench/actions/workflows/tests.yml
 
 [perf-hooks]: https://nodejs.org/api/perf_hooks.html
+[nodejs]: https://nodejs.org/en
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
 [measure]: https://nodejs.org/api/perf_hooks.html#performancemeasurename-startmarkoroptions-endmark
 [mark]: https://nodejs.org/api/perf_hooks.html#performancemarkname-options
