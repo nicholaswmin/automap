@@ -160,8 +160,8 @@ outputs:
 
 ### Using the Performance Measure API
 
-Ideally, you'll be using the basic utilities from the Measurement API to
-capture measurements for specific functions.
+Ideally, you'll be using the Measurement API utilities to
+capture measurements of specific functions within each task.
 
 The following methods are supported:
 
@@ -178,13 +178,14 @@ The tracked time is then displayed as part of the output.
 
 ##### Example:
 
-Wrapping rapping the `save` and `user.computeFibonacci` functions:
+Tracking time spent in `userRepository.save`
+and `user.computeFibonacci` functions:
 
 ```js
 const runner = new PerformanceRunner()
 
-// timerify `repo.save`
-const saveTimerified = performance.timerify(repo.save.bind(repo))
+// timerify `userRepository.save`
+const saveTimerified = performance.timerify(userRepository.save)
 
 await runner.run([
   {
@@ -225,12 +226,12 @@ between 2 marks, set via [`performance.mark`][mark].
 
 ##### Example
 
-Tracking the time to run `user.computeFibonacci()` using `performance.measure`:
+Tracking the time to run `user.computeFibonacci()`:
 
 ```js
 const runner = new PerformanceRunner()
 
-const save = performance.timerify(repo.save.bind(repo))
+const save = performance.timerify(userRepository.save)
 
 await runner.run([
   // Task A...
@@ -299,7 +300,7 @@ An example, tracking the size of the `user` object:
 
     await save(user)
   }
-},
+}
 ```
 
 ### Displaying Results
@@ -399,19 +400,19 @@ The `fn` callback is called with an object containing:
 - `cycle`: The current cycle
 - `taskname`: The task name
 
-An example:
-
 ```js
 runner.run([
   {
     name: 'Task A',
     cycles: 5,
     fn: async ({ cycle, taskname }) => {
-      // logs '5', if this is the last cycle
       console.log(cycle)
+      // '1', assuming it's the first cycle
+      //  ....
+      // '5', assuming it's the last cycle
 
-      // logs 'Task A'
       console.log(taskname)
+      // 'Task A'
     }
   }
 ])
@@ -431,7 +432,7 @@ run unit tests:
 npm test
 ```
 
-run unit-tests and produce a test-coverage report:
+... and produce a test-coverage report:
 
 ```bash
 npm run test-cov
