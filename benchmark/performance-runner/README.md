@@ -343,7 +343,7 @@ Draws charts of max durations for each task and their timerified functions:
 ```text
                                         Task: "A"
 
-durations (ms)       - main task  - fn:user.computeFibonacci  - fn:save
+durations (ms)       - main task  - fn: user.computeFibonacci  - fn: save
 ╷
 580.00 ┼                                                          ╭───────────
 522.00 ┤                   ╭───────────────────╮                  │                    
