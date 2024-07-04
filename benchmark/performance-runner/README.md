@@ -261,7 +261,7 @@ An example, tracking the size of the `user` object:
 
 ```js
 {
-  name: 'add_items',
+  name: 'Task A',
   cycles: 5,
   fn: async ({ cycle, taskname }) => {
     const user = new User()
