@@ -347,7 +347,6 @@ Produces a timeline of the cycles for each task
 │          net │             net │ 1.27 ms   │ host=127.0.0.1 port=6379 │
 │              │                 │           │                          │
 │       Task A │                 │           │                          │
-│       Task B │                 │           │                          |
 |              |                 │           |                          |
 │        cycle │        Task A 1 │ 9.86 ms   │                          │
 │     function │            save │ 9.7 ms    │ --                       │
@@ -420,7 +419,7 @@ runner.run([
 
 ## Test
 
-clean install all deps:
+clean install deps:
 
 ```bash
 npm ci
