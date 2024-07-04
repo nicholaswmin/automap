@@ -215,7 +215,7 @@ runner.toTimeline()
 
 #### Using `performance.measure`
 
-.. or use `performance.measure` to capture time between 2 `performance.mark`.
+.. or use `performance.measure` to capture time between 2 `performance.mark`s.
 
 Here's an example where the time to run `user.computeFibonacci()` is tracked
 using `performance.measure`:
