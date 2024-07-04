@@ -6,16 +6,17 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
 
 - [Install](#install)
 - [Usage](#usage)
-  * [Basic](#using-the-performance-measure-api)
-  * [Using `performance.timerify`](#using-performancetimerify)
-  * [Using `performance.measure`](#using-performancemeasure)
-  * [Using `performance.mark`](#capturing-custom-values)
-  * [Output](#output)
-    + [`PerformanceEntries`](#runnertoentries)
-    + [Histograms](#runnertohistograms)
-    + [Timeline](#runnertotimeline)
-    + [Charts](#runnertoplots)
-  * [Current cycle info](#accessing-cycle-info)
+   * [Task definition](#task-definition)
+   * [Using the Performance Measure API](#using-the-performance-measure-api)
+      + [Using `performance.timerify`](#using-performancetimerify)
+      + [Using `performance.measure`](#using-performancemeasure)
+      + [Capturing custom values](#capturing-custom-values)
+   * [Output](#output)
+      + [`runner.toHistograms()`](#runnertohistograms)
+      + [`runner.toTimeline()`](#runnertotimeline)
+      + [`runner.toPlots()`](#runnertoplots)
+      + [`runner.toEntries()`](#runnertoentries)
+   * [Accessing cycle info](#accessing-cycle-info)
 - [Test](#test)
 - [Authors](#authors)
 - [License](#license)
@@ -28,16 +29,30 @@ npm i https://github.com/nicholaswmin/bench
 
 ## Usage
 
-Pass an array of `tasks` to `runner.run`, with each task having a:
+then import as an ESM:
+
+```js
+import { PerformanceRunner } from '@nicholaswmin/bench'
+
+const runner = new PerformanceRunner()
+
+// see below for task definition
+await runner.run(tasks)
+
+// produce a histogram of task durations
+runner.toHistograms()
+```
+
+### Task definition
+
+
+`runner.run(tasks)` accepts an array of tasks, with each task having:
 
 - `name`: Name of the task
 - `cycle`: How many times to run the task
 - `fn`: The task itself as a function
 
-Then you can produce a report of the task/cycle durations using any of
-the output methods.  
-
-Example:
+Example with 2 tasks:
 
 ```js
 const runner = new PerformanceRunner()
@@ -47,9 +62,10 @@ await runner.run([
     name: 'Task A',
     cycles: 10,
     fn: function() {
-      // sync
       slowRunningFunctionFoo()
       slowRunningFunctionBar()
+
+      // ... or more work
     }
   },
 
@@ -57,10 +73,11 @@ await runner.run([
     name: 'Task B',
     cycles: 20,
     fn: async function() {
-      // or use async/await
+
+      // ... use async/await
       await asyncFunctionBaz()
     }
-  },
+  }
 
   // more tasks ...
 ])
@@ -74,10 +91,8 @@ runner.toHistograms()
 // runner.toPlots()
 ```
 
-A more detailed example.
-
-Running 2 separate tasks for a total of 30 times,
-hypothetically creating and saving a user in a DB:
+A more detailed example, hypotheticaly creating and saving a user in a DB,
+then producing a *timeline* report:
 
 ```js
 const runner = new PerformanceRunner()
@@ -137,11 +152,11 @@ outputs:
 ... and so on...
 ```
 
-`Task A 2` is the 2nd cycle of "Task A", which took ***1.31ms***
+**Note:** `Task A 2` is the *2nd* cycle of *"Task A"*, which took *1.31ms*.
 
 ### Using the Performance Measure API
 
-Ideally, you'll make use of the basic Measurement API utilities to
+Ideally, you'll be using the basic utilities from the Measurement API to
 capture measurements for specific functions.
 
 The following methods are supported:
