@@ -273,11 +273,29 @@ An example, tracking the size of the `user` object:
   name: 'Task A',
   cycles: 5,
   fn: async () => {
-    const user = new User()
+    const user = new User('foo')
 
-    const kilobytes = new Blob([JSON.stringify(user)]).size / 1000
+    const sizeKB = new Blob([JSON.stringify(user)]).size / 1000
 
-    performance.mark('user', { detail: { value: kilobytes, unit: 'kb' } })
+    performance.mark('user-size-kb', {
+      detail: { value: sizeKB, unit: 'kb' }
+    })
+
+    await save(user)
+  }
+},
+
+{
+  name: 'Task B',
+  cycles: 10,
+  fn: async () => {
+    const user = new User('bar')
+
+    const sizeKB = new Blob([JSON.stringify(user)]).size / 1000
+
+    performance.mark('user-size-kb', {
+      detail: { value: sizeKB, unit: 'kb' }
+    })
 
     await save(user)
   }
