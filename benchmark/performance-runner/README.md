@@ -7,7 +7,7 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
 - [Install](#install)
 - [Usage](#usage)
    * [Running tasks](#running-tasks)
-   * [Task definition](#task-definition)
+   * [Defining a task](#defining-a-task)
    * [Using the Performance Measure API](#using-the-performance-measure-api)
       + [Using `performance.timerify`](#using-performancetimerify)
       + [Using `performance.measure`](#using-performancemeasure)
@@ -44,7 +44,7 @@ await runner.run([taskA, taskB])
 runner.toHistograms()
 ```
 
-### Task definition
+### Defining a task
 
 
 `runner.run(tasks)` accepts an array of tasks, with each task having:
