@@ -477,7 +477,7 @@ Runs all tests, both unit-tests and integration-tests.
 ### Test coverage
 
 ```bash
-npm run test-coverage
+npm run test-cov
 ```
 
 Produces a test coverage report
