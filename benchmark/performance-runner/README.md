@@ -407,11 +407,21 @@ npm run test-cov
 
 ## Authors
 
-[Nicholas Kyriakides, @nicholaswmin][nicholaswmin]
+[@nicholaswmin][nicholaswmin]
 
 ## License
 
-[MIT "No Attribution" License][mit-no-attr]
+>
+> MIT, No Attribution
+>
+> Copyright 2024, Nicholas Kyriakides
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy of this
+> software and associated documentation files (the "Software"), to deal in the Software
+> without restriction, including without limitation the rights to use, copy, modify,
+> merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+> permit persons to whom the Software is furnished to do so.
+
 
 [test-workflow-badge]: https://github.com/nicholaswmin/bench/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/bench/actions/workflows/tests.yml
