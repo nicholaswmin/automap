@@ -6,6 +6,7 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
 
 - [Install](#install)
 - [Usage](#usage)
+   * [Running tasks](#running-tasks)
    * [Task definition](#task-definition)
    * [Using the Performance Measure API](#using-the-performance-measure-api)
       + [Using `performance.timerify`](#using-performancetimerify)
@@ -29,7 +30,7 @@ npm i https://github.com/nicholaswmin/bench
 
 ## Usage
 
-then import as an ESM:
+### Running tasks
 
 ```js
 import { PerformanceRunner } from '@nicholaswmin/bench'
