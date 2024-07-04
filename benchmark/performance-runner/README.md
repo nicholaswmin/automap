@@ -90,7 +90,9 @@ runner.toHistograms()
 // runner.toPlots()
 ```
 
-A more detailed example, hypotheticaly creating and saving a user in a DB,
+A more detailed example:
+
+Hypotheticaly creating and saving a user in a DB,
 then producing a *timeline* report:
 
 ```js
@@ -153,7 +155,7 @@ outputs:
 
 #### Notes:
 
-- `Task A 2` is the *2nd* cycle of *"Task A"*, which took *1.31ms*.
+- `Task A 2` is the *2nd* cycle of *"Task A"*, which took *1.31ms*
 - `gc` is Garbage Collection cycle durations
 
 ### Using the Performance Measure API
@@ -216,7 +218,8 @@ runner.toTimeline()
 
 #### Using `performance.measure`
 
-.. or use `performance.measure` to capture time between 2 `performance.mark`s.
+.. or use `performance.measure` to capture time between 2 marks, set via
+`performance.mark`.
 
 Here's an example where the time to run `user.computeFibonacci()` is tracked
 using `performance.measure`:
