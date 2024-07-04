@@ -185,7 +185,7 @@ await runner.run([
   {
     name: 'Task A',
     cycles: 10,
-    fn: async ({ cycle, taskname }) => {
+    fn: async () => {
       const user = new User()
 
       // use timerified `save`
@@ -195,7 +195,7 @@ await runner.run([
   {
     name: 'Task B',
     cycles: 20,
-    fn: async ({ cycle, taskname }) => {
+    fn: async () => {
       const user = new User()
 
       const userFibTimerified = performance.timerify(user.computeFibonacci)
