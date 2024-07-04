@@ -31,14 +31,11 @@ await runner.run([
     fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
-      const doFoo = async () => {
-        await setTimeout(250)
-      }
+      const _somethingSlow = () => setTimeout(250)
+      const somethingSlow = performance.timerify(_somethingSlow)
 
-      const _doFoo = performance.timerify(doFoo)
-
-      if (cycle === 2 || cycle === 4)
-        await _doFoo()
+      if ([2,4].includes(cycle))
+        await somethingSlow()
 
       await paper.addItemToActiveBoard({
         id: 'i_' + utils.randomID(),
