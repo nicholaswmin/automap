@@ -12,7 +12,7 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
       + [Using `performance.timerify`](#using-performancetimerify)
       + [Using `performance.measure`](#using-performancemeasure)
       + [Capturing custom values](#capturing-custom-values)
-   * [Output](#output)
+   * [Displaying Results](#displaying-results)
       + [`runner.toHistograms()`](#runnertohistograms)
       + [`runner.toTimeline()`](#runnertotimeline)
       + [`runner.toEntries()`](#runnertoentries)
@@ -280,7 +280,7 @@ An example, tracking the size of the `user` object:
 },
 ```
 
-### Output
+### Displaying Results
 
 The different ways of visualising the measurements.
 
