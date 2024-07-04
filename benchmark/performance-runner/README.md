@@ -273,7 +273,7 @@ An example, tracking the size of the `user` object:
 
 ### Output
 
-These are different output visualisations:
+The different ways of visualising the measurements.
 
 #### `runner.toHistograms()`
 
