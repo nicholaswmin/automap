@@ -190,7 +190,7 @@ await runner.run([
     fn: async ({ cycle, taskname }) => {
       const user = new User()
 
-      // use the wrapped function instead
+      // use timerified `save`
       await saveTimerified(user)
   },
 
@@ -202,9 +202,10 @@ await runner.run([
 
       const userFibTimerified = performance.timerify(user.computeFibonacci)
 
+      // use timerified `user.computeFibonacci`
       userFibTimerified()
 
-      // use the wrapped function instead
+      // use timerified `save`
       await saveTimerified(user)
     }
   }
