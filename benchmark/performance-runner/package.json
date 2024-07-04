@@ -1,0 +1,30 @@
+{
+  "name": "performance-runner",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Benchmark functions using the Performance Measurement API",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test node --test test/index.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholaswmin/performance-runner.git"
+  },
+  "keywords": [
+    "performance-measurement-api",
+    "performance",
+    "benchmark",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "@nicholaswmin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicholaswmin/performance-runner/issues"
+  },
+  "homepage": "https://github.com/nicholaswmin/performance-runner#readme"
+}

@@ -27,7 +27,7 @@ await runner.run([
 
   {
     name: 'add_items',
-    cycles: 40,
+    cycles: 2,
     fn: async ({ cycle, taskname }) => {
       const paper = await fetch({ id: 'foo' }, cycle)
 
@@ -97,4 +97,3 @@ await runner.run([
 redis.disconnect()
 
 runner.toTimeline()
-runner.toPlots()
