@@ -126,8 +126,8 @@ runner.toTimeline()
 
 outputs:
 
-```txt
-──────────────┬─────────────────┬───────────┬──────────────────────────┐
+```text
+┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
 │         type │            name │ value     │ detail                   │
 ├──────────────┼─────────────────┼───────────┼──────────────────────────┤
 │              │                 │           │                          │
@@ -305,7 +305,7 @@ each measurement:
 Produces a timeline of the cycles for each task
 
 ```text
-──────────────┬─────────────────┬───────────┬──────────────────────────┐
+┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
 │         type │            name │ value     │ detail                   │
 ├──────────────┼─────────────────┼───────────┼──────────────────────────┤
 │              │                 │           │                          │
@@ -422,5 +422,5 @@ npm run test-cov
 [mark]: https://nodejs.org/api/perf_hooks.html#performancemarkname-options
 [hgram]: https://en.wikipedia.org/wiki/Histogram
 [perf-entry]: https://nodejs.org/api/perf_hooks.html#class-performanceentry
-[nicholaswmin]: github.com/nicholaswmin
+[nicholaswmin]: https://github.com/nicholaswmin
 [mit-no-attr]: https://github.com/aws/mit-0
