@@ -37,7 +37,7 @@ import { PerformanceRunner } from '@nicholaswmin/bench'
 const runner = new PerformanceRunner()
 
 // see below for task definition
-await runner.run(tasks)
+await runner.run([taskA, taskB])
 
 // produce a histogram of task durations
 runner.toHistograms()
