@@ -388,6 +388,12 @@ run unit tests:
 npm test
 ```
 
+run unit-tests and produce a test-coverage report:
+
+```bash
+npm run test-cov
+```
+
 ## Authors
 
 [Nicholas Kyriakides, @nicholaswmin][nicholaswmin]
