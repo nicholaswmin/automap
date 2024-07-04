@@ -4,8 +4,6 @@
 
 Benchmarking using the [Performance Measurement API][perf-hooks]
 
-<!-- TOC start -->
-
 - [Install](#install)
 - [Usage](#usage)
   * [Basic](#using-the-performance-measure-api)
@@ -21,8 +19,6 @@ Benchmarking using the [Performance Measurement API][perf-hooks]
 - [Test](#test)
 - [Authors](#authors)
 - [License](#license)
-
-<!-- TOC end -->
 
 ## Install
 
