@@ -16,11 +16,14 @@
   },
   "keywords": [
     "performance-measurement-api",
+    "performance-measurement",
     "performance",
-    "benchmark",
+    "perf_hooks",
     "javascript",
+    "benchmark",
     "profiling",
-    "nodejs"
+    "nodejs",
+    "node"
   ],
   "author": "@nicholaswmin",
   "license": "MIT",
