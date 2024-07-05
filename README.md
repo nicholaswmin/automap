@@ -268,26 +268,28 @@ Known performance issues are summarised in these bullet points.
 
 In general, this package:
 
-- has a fairly extensive testing suite but no benchmarks, at all.
-- does not implement any extra concurrency controls outside of atomic updates
-- makes a good effort to guarantee that updates are atomic
-- does not guarantee that reads are entirely atomic
-- makes a fairly OK effort to minimise the time-complexity of the steps
-  which affect the number of network roundtrips
-- makes an average-to-poor effort in minimising the time-complexity of
-  steps that only involve local computations
-- makes a good effort in exhibiting [constant-time complexity O(1)][const] when
-  lists are not nested but only in the context of network requests/roundtrips.
-- supports an arbitrary number of nesting of lists but does not recommend
-  it's use since it guarantees that that it's network request steps will
-  run at the very least in [quadratic-time O(n<sup>2</sup>)][qtc].
+- does not implement any concurrency control mechanism
+- ensures that updates are atomic
+- does not ensure that reads are atomic
+- has good time-complexity in steps that affect the number of network
+  roundtrips.
+- makes a poor effort to optimise time-complexity of steps that only involve
+  local computations
+- exhibits near [constant-time complexity O(1)][const] when lists are not
+  nested inside other lists.
+- supports an arbitrary number of nesting of lists
+- but exhibits very bad performance in those cases; it issues network requests
+  in a process that runs at the very least in
+  [quadratic-time O(n<sup>2</sup>)][qtc].
 - is entirely unnecessary if you can get away with stuffing your object
   graph as a `JSON` in a single `Redis SET` operation.
 - is not an object-mapper and if you were looking for one, [this one][redisom]
   is most probably what you're looking for.
 
-All sections below simply go into a little more detail on the points listed
-above. You can skip reading them entirely.
+The sections below simply go into a bit more detail on the points listed
+above.
+
+You can skip reading them entirely.
 
 ### Benchmarks?
 
@@ -328,7 +330,7 @@ root object. This is fixable but currently it is not.
 This package allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
 
-It does so by doing a [bfs traversal][bfs] of the passed object-graph then
+It does so by doing a [BFS traversal][bfs] of the passed object-graph then
 marking the lists which need to be mapped as it exits the currently
 traversed branch.
 
@@ -342,9 +344,15 @@ But you should note the following...
 
 ### Time-complexity
 
-> This section describes the [time-complexity][time] of possible input
-> configurations solely in the context of network roundtrips, not
-> local computations.
+> This section briefly describes the [time-complexity][time] of possible input
+> configurations.
+>
+> Note that in these time-complexity speculations are solely in the context
+> of network roundtrips and/or requests since they are by far the biggest
+> bottleneck in most cases.
+>
+> They don't describe local computations and there's not much attention
+> being paid in that regard, in general.
 
 #### Flat lists
 
@@ -352,42 +360,33 @@ Object graphs which don't have lists nested inside other lists,
 are fetched in a process that exhibits an almost
 [constant-time complexity O(1)][const][^3][^4].
 
-There's no network roundtrip involved for each list; or even separate requests
+There's no network roundtrip involved for each list, or even separate requests
 since this package uses a small Lua script which allows something akin to
 an [`mget`][mget], but for hashes.
-
-
-```js
-// this is the script, in case this sounds interesting:
-//
-// Usage: `redis.hmgetall(3, 'hash1', 'hash2', 'hash3')`
-// `3` means you intend to get 3 hashes, then the name of each hash
-redis.defineCommand('hmgetall', {
-  lua: `local r = {} for _, v in pairs(KEYS) do r[#r+1] = redis.call('HGETALL', v) end return r`
-})
-```
 
 #### Nested lists
 
 In contrast, fetching object graphs which have nested lists is a process which
 performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 
-Every nesting level increases the exponent so you can easily jump from
+Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 Note again that these aren't going to only run high counts of local iterations,
-they are going to create full network roundtrips.
+those are a non-problem in most cases - but they are going to create full
+network roundtrips.
 
-Even a list with 5 items becomes prohibitively expensive at even the most
-basic nesting depth.
+Just a brief calculation based on the above is enough to figure out that
+even a tiny list with 5 items will become prohibitively expensive at even
+the most basic nesting depth.
 
-So while nested lists are supported, they are not recommended in the slightest
-based on the naivety of the current method they are dealt with.
+So while nested lists are supported, they are not
+recommended in the slightest.
 
-This can be solved in better time complexity with some rudimentary
-assumptions and some slight tradeoffs, like assuming that if 1 List item has
-a List, then all of them probably do - but for now this is ignored as
-irrelevant.
+This particular issue can be solved in better time complexity with
+some rudimentary assumptions and some slight tradeoffs,
+like assuming that if 1 List item has a List, then all of them probably do -
+but for now this problem is ignored as irrelevant.
 
 Other basic workarounds:
 
@@ -402,10 +401,7 @@ Other basic workarounds:
   they will eventually exhibit the same behaviour when you call `list.load()`
   to load their contents.
 
-- Avoid nested lists in your object graph in general or just don't use this
-  package which sounds like a better solution rather than changing your
-  own structures to fit the capabilities of this package.
-
+- Avoid nested lists in your object graph in general.
 
 #### Local time complexity
 
@@ -416,8 +412,8 @@ and `.fetch()`, against the entire object graph.
 This is followed by an additional [Quicksort][qs][^2] step in `.fetch`,
 against *every* list.
 
-Apart from trying to avoid egregious and obvious mistakes, there's not much
-attention paid in ensuring that local steps are as efficient as possible.
+There's almost zero attention being paid in assuring good time complexity
+locally unless there's an obvious bottleneck.
 
 ### Where this is unnecessary
 
@@ -462,17 +458,6 @@ This is a full-blown Object-Mapper which of course requires
 schema definitions. It's like an ORM but for non-relational datastores
 like Redis.
 
-Note:
-
-- This package doesn't involve defining relationship between entities so
-  it's not aiming to be an OM itself hence it's not really an "alternative"
-  but if you confused this for an OM/ORM and got disappointed, this is what you
-  should be looking at.
-
-- I have no idea how fast it is with lists. It's unlikely to be faster
-  than this package, especially when no nesting is involved but I could very
-  well be wrong.
-
 ## Test
 
 Install dependencies:
@@ -492,7 +477,7 @@ Runs all tests, both unit-tests and integration-tests.
 ### Test coverage
 
 ```bash
-npm run test-coverage
+npm run test-cov
 ```
 
 Produces a test coverage report
