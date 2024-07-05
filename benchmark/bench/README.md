@@ -5,11 +5,12 @@
 Benchmarking using the [Performance Measurement API][perf-hooks], in
 [Node.js][nodejs]
 
+
 - [Installation](#install)
 - [Usage](#usage)
    * [Running tasks](#running-tasks)
    * [Defining a task](#defining-a-task)
-   * [Measuring](#capturing-measurements)
+   * [Taking measurements](#capturing-measurements)
       + [durations with `performance.timerify`](#using-performancetimerify)
       + [durations with `performance.measure`](#using-performancemeasure)
       + [arbitrary values with `performance.mark`](#measuring-arbitrary-values)
@@ -20,9 +21,8 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
       + [`runner.toPlots()`](#runnertoplots)
    * [Accessing cycle info](#accessing-cycle-info)
 - [Test](#test)
-  * [Unit tests](#unit-tests)
+  * [Unit tests](#run-unit-tests)
   * [Test coverage](#run-test-coverage)
-
 - [Authors](#authors)
 - [License](#license)
 
