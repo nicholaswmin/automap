@@ -36,15 +36,15 @@ npm i https://github.com/nicholaswmin/bench
 
 ### Running tasks
 
+Run 2 tasks and print a [histogram][hgram] of the durations:
+
 ```js
 import { PerformanceRunner } from 'bench'
 
 const runner = new PerformanceRunner()
 
-// run 2 tasks
 await runner.run([taskA, taskB])
 
-// Print a duration histogram
 runner.toHistograms()
 ```
 
