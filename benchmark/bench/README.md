@@ -8,18 +8,18 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
 
 - [Installation](#install)
 - [Usage](#usage)
-   * [Running tasks](#running-tasks)
-   * [Defining a task](#defining-a-task)
-   * [Taking measurements](#capturing-measurements)
+   * [Run tasks](#running-tasks)
+   * [Define a task](#defining-a-task)
+   * [Take measurements](#capturing-measurements)
       + [durations with `performance.timerify`](#using-performancetimerify)
       + [durations with `performance.measure`](#using-performancemeasure)
       + [arbitrary values with `performance.mark`](#measuring-arbitrary-values)
-   * [Displaying Results](#displaying-results)
-      + [`runner.toHistograms()`](#runnertohistograms)
+   * [Display Results](#displaying-results)
       + [`runner.toTimeline()`](#runnertotimeline)
+      + [`runner.toHistograms()`](#runnertohistograms)
       + [`runner.toEntries()`](#runnertoentries)
       + [`runner.toPlots()`](#runnertoplots)
-   * [Accessing cycle info](#accessing-cycle-info)
+   * [Access cycle info](#accessing-cycle-info)
 - [Test](#test)
   * [Unit tests](#run-unit-tests)
   * [Test coverage](#run-test-coverage)
@@ -90,40 +90,41 @@ runner.toTimeline()
 outputs a timeline with each task, the task cycles and their durations:
 
 ```text
-┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
-│         type │            name │ value     │ detail                   │
-├──────────────┼─────────────────┼───────────┼──────────────────────────┤
-│       Task A │                 │           │                          │
-|              |                 │           |                          |
-│        cycle │        Task A 1 │ 9.86 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task A 2 │ 9.36 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task A 3 │ 9.1 ms    │                          │
-│              |                 |           |                          |
-|       Task B │                 │           │                          │
-|              |                 │           |                          |
-│        cycle │        Task B 1 │ 8.12 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task B 2 │ 8.51 ms   │                          │
-│              │                 │           │                          │
+┌──────────────┬─────────────────┬───────────┐
+│         type │            name │ value     │
+├──────────────┼─────────────────┼───────────┤
+│       Task A │                 │           │
+|              |                 │           |
+│        cycle │        Task A 1 │ 9.86 ms   │
+│              │                 │           │
+│        cycle │        Task A 2 │ 9.36 ms   │
+│              │                 │           │
+│        cycle │        Task A 3 │ 9.10 ms   │
+│              |                 |           |
+|       Task B │                 │           |
+|              |                 │           |
+│        cycle │        Task B 1 │ 8.12 ms   │
+│              │                 │           │
+│        cycle │        Task B 2 │ 8.51 ms   │
+│              │                 │           │
 ... and so on...
 ```
 
-In the above Example
+In the above example:
 
-`Task A 2`:
+- `Task A 1`, the 1st cycle of `"Task A"` which took: `9.86 ms`
+- `Task A 2`, the 2nd cycle of `"Task A"` which took: `9.36 ms`
+- `Task B 1`, the 1st cycle of `"Task B"` which took: `8.12 ms`
 
-is the *2nd* cycle of `"Task A"` which took *9.36 ms*
-
-`Task B 1`:
-
-is the *1st* cycle of `"Task B"` which took *8.12 ms*
+and so on ...
 
 ## Capturing measurements
 
 Ideally you'll be using the [Measurement API][perf-hooks] methods to capture
 measurements of specific functions within each task.
+
+This allows measuring the time of specific functions so you can figure out
+where most of the time is spent, in each task.
 
 The following [Performance Measurement][perf-hooks] methods are supported:
 
@@ -185,24 +186,32 @@ runner.toTimeline()
 which outputs a timeline:
 
 ```text
-┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
-│         type │            name │ value     │ detail                   │
-├──────────────┼─────────────────┼───────────┼──────────────────────────┤
-│       Task A │                 │           │                          │
-|              |                 │           |                          |
-│        cycle │        Task A 1 │ 9.86 ms   │                          │
-│     function │            save │ 9.80 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task A 2 │ 9.10 ms   │                          │
-│     function │            save │ 8.90 ms   │                          │
-|              |                 |           |                          |
-|       Task B |                 |           |                          |
-|              |                 |           |                          |
-|     function |                 |           |                          |
-│        cycle │        Task B 1 │ 8.12 ms   │                          │
-│     function │      user.greet │ 5.10 ms   │                          │
-│     function │            save │ 2.90 ms   │                          │
-│              │                 │           │                          │
+┌──────────────┬─────────────────┬───────────┐
+│         type │            name │ value     │
+├──────────────┼─────────────────┼─────────--┤
+│       Task A │                 │           │
+|              |                 │           |
+│        cycle │        Task A 1 │ 9.86 ms   │
+│     function │            save │ 9.80 ms   │
+│              │                 │           │
+│        cycle │        Task A 2 │ 9.10 ms   │
+│     function │            save │ 8.90 ms   │
+|              |                 |           |
+|       Task B |                 |           |
+|              |                 |           |
+│        cycle │        Task B 1 │ 8.12 ms   │
+│     function │      user.greet │ 5.10 ms   │
+│     function │            save │ 2.90 ms   │
+│              │                 │           │
+│        cycle │        Task B 2 │ 8.50 ms   │
+│     function │      user.greet │ 4.05 ms   │
+│     function │            save │ 3.10 ms   │
+│              │                 │           │
+│        cycle │        Task B 3 │ 9.21 ms   │
+│     function │      user.greet │ 4.35 ms   │
+│     function │            save │ 3.15 ms   │
+|              |                 |           |
+
 ... and so on...
 ```
 
@@ -249,26 +258,26 @@ runner.toTimeline()
 which outputs:
 
 ```text
-┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
-│         type │            name │ value     │ detail                   │
-├──────────────┼─────────────────┼───────────┼──────────────────────────┤
-│       Task A │                 │           │                          │
-|              |                 │           |                          |
-│        cycle │        Task A 1 │ 9.86 ms   │                          │
-│      measure │          a-to-b │ 5.10 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task A 2 │ 8.10 ms   │                          │
-│      measure │          a-to-b │ 4.35 ms   │                          │
-|              |                 |           |                          |
-|              |                 |           |                          |
-|       Task B |                 |           |                          |
-|              |                 |           |                          |
-│        cycle │        Task B 1 │ 8.12 ms   │                          │
-│      measure │          a-to-b │ 6.20 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task B 2 │ 8.12 ms   │                          │
-│      measure │          a-to-b │ 4.10 ms   │                          │
-│              │                 │           │                          │
+┌──────────────┬─────────────────┬───────----┐
+│         type │            name │ value     │
+├──────────────┼─────────────────┼──────────-┤
+│       Task A │                 │           │
+|              |                 │           |
+│        cycle │        Task A 1 │ 9.86 ms   │
+│      measure │          a-to-b │ 5.10 ms   │
+│              │                 │           │
+│        cycle │        Task A 2 │ 8.10 ms   │
+│      measure │          a-to-b │ 4.35 ms   │
+|              |                 |           |
+|              |                 |           |
+|       Task B |                 |           |
+|              |                 |           |
+│        cycle │        Task B 1 │ 8.12 ms   │
+│      measure │          a-to-b │ 6.20 ms   │
+│              │                 │           │
+│        cycle │        Task B 2 │ 8.12 ms   │
+│      measure │          a-to-b │ 4.10 ms   │
+│              │                 │           │
 ... and so on...
 ```
 
@@ -331,23 +340,50 @@ runner.toHistograms()
 which outputs:
 
 ```text
-┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬───────────┬
-│         name │ count │     min │     max │    mean │    50 % │    99 % │ deviation │
-├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼───────────┼
-│        tasks │       │         │         │         │         │         │           │
-│              │       │         │         │         │         │         │           │
-│       Task B │    10 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0.13 ms   │
-│       Task A │     5 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0.01 ms   │
-│              │       │         │         │         │         │         │           │
-│        entry │       │         │         │         │         │         │           │
-│              │       │         │         │         │         │         │           │
-│ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │   12 mb   │
-└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴───────────┴
+┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┬
+│         name │ count │     min │     max │    mean │    50 % │    99 % │ dev │
+├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┼
+│        tasks │       │         │         │         │         │         │     │
+│              │       │         │         │         │         │         │     │
+│       Task B │    10 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
+│       Task A │     5 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
+│              │       │         │         │         │         │         │     │
+│        entry │       │         │         │         │         │         │     │
+│              │       │         │         │         │         │         │     │
+│ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │ 12  │
+└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
 ```
 
 ### Displaying Results
 
 The different ways of visualising measurements.
+
+#### `runner.toTimeline()`
+
+Produces a detailed breakdown of the timeline of the cycles for each task:
+
+```text
+┌──────────────┬─────────────────┬────────── ┐
+│         type │            name │ value     │
+├──────────────┼─────────────────┼───────────┤
+│       Task A │                 │           │
+|              |                 │           |
+│        cycle │        Task A 1 │ 9.86 ms   │
+│     function │            save │ 2.40 ms   │
+│              │                 │           │
+│        cycle │        Task A 2 │ 9.1 ms    │
+│     function │            save │ 3.12 ms   |
+|              |                 |           |
+|              |                 |           |
+|       Task B |                 |           |
+|              |                 |           |
+│        cycle │        Task B 1 │ 8.12 ms   │
+│     function │      user.greet │ 5.10 ms   |
+│     function │            save │ 2.90 ms   |
+│              │                 │           │
+
+... and so on ...
+```
 
 #### `runner.toHistograms()`
 
@@ -355,47 +391,18 @@ Produces a [histogram][hgram] with `min`/`mean`/`max` and `percentiles` for
 each measurement:
 
 ```text
-┌──────────────┬───────┬───────────┬───────────┬───────────┬───────────┬───────────┬───────────┬───────────┐
-│         name │ count │       min │       max │      mean │      50_% │      75_% │     100_% │ deviation │
-├──────────────┼───────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│              │       │           │           │           │           │           │           │           │
-│        tasks │       │           │           │           │           │           │           │           │
-│              │       │           │           │           │           │           │           │           │
-│       Task A │    40 │ 292.55 ms │ 544.74 ms │ 333.63 ms │ 308.81 ms │ 341.31 ms │ 544.21 ms │  56.87 ms │
-│       Task B │    25 │   0.14 ms │   9.99 ms │   0.82 ms │   0.32 ms │   0.45 ms │   9.98 ms │    1.9 ms │
-│              │       │           │           │           │           │           │           │           │
-│     measures │       │           │           │           │           │           │           │           │
-│              │       │           │           │           │           │           │           │           │
-│       a-to-b │    40 │     30 ms │     32 ms │  31.18 ms │     31 ms │     32 ms │     32 ms │   0.63 ms │
-│              │       │           │           │           │           │           │           │           │
-└──────────────┴───────┴───────────┴───────────┴───────────┴───────────┴───────────┴───────────┴───────────┘
-```
-
-#### `runner.toTimeline()`
-
-Produces a timeline of the cycles for each task
-
-```text
-┌──────────────┬─────────────────┬───────────┬──────────────────────────┐
-│         type │            name │ value     │ detail                   │
-├──────────────┼─────────────────┼───────────┼──────────────────────────┤
-│       Task A │                 │           │                          │
-|              |                 │           |                          |
-│        cycle │        Task A 1 │ 9.86 ms   │                          │
-│     function │            save │ 2.40 ms   │                          │
-│              │                 │           │                          │
-│        cycle │        Task A 2 │ 9.1 ms    │                          │
-│     function │            save │ 3.12 ms   │                          │
-|              |                 |           |                          |
-|              |                 |           |                          |
-|       Task B |                 |           |                          |
-|              |                 |           |                          |
-│        cycle │        Task B 1 │ 8.12 ms   │                          │
-│     function │      user.greet │ 5.10 ms   │                          │
-│     function │            save │ 2.90 ms   │                          │
-│              │                 │           │                          │
-
-... and so on ...
+┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┬
+│         name │ count │     min │     max │    mean │    50 % │    99 % │ dev │
+├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┼
+│        tasks │       │         │         │         │         │         │     │
+│              │       │         │         │         │         │         │     │
+│       Task B │    10 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
+│       Task A │     5 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
+│              │       │         │         │         │         │         │     │
+│        entry │       │         │         │         │         │         │     │
+│              │       │         │         │         │         │         │     │
+│ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │ 12  │
+└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
 ```
 
 #### `runner.toEntries()`
@@ -411,7 +418,7 @@ functions:
 ```text
                                         Task: "A"
 
-durations (ms)                      - main task  - fn: user.greet  - fn: save
+durations (ms)                                         - main task  - fn: save
 ╷
 580.00 ┼                                                          ╭───────────
 522.00 ┤                   ╭───────────────────╮                  │                    
@@ -428,12 +435,32 @@ durations (ms)                      - main task  - fn: user.greet  - fn: save
                                                                          cycles
 ```
 
+```text
+                                       Task: "B"
+
+durations (ms)                      - main task  - fn: user.greet  - fn: save
+╷
+580.00 ┼                                                          ╭───────────
+522.00 ┤                   ╭───────────────────╮                  │                    
+464.00 ┤                   │                   │                  │                    
+406.00 ┤                   │                   ╰──────────────────╯        
+348.00 ┤                   │                                     
+232.00 ┼                   |
+174.00 ┤                   │  
+116.00 ┤                   │
+58.00  ┤                   │  
+0.00   ┼-----------------------------------------------------------------------
+┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬────--
+0   0   0   1   1   1   1   1   2   2   2   2   2   3   3   3   3   3   4    
+
+```
+
 ### Accessing cycle info
 
-The `fn` callback is called with an object containing:
+The `fn` function is called with an object containing:
 
-- `cycle`: The current cycle
-- `taskname`: The task name
+- `cycle`   : `Number`: The current cycle, similar to `i` in a `for` loop
+- `taskname`: `String`: The task name
 
 ```js
 runner.run([
@@ -460,13 +487,13 @@ runner.run([
 npm ci
 ```
 
-#### Run Unit Tests:
+#### Run unit tests:
 
 ```bash
 npm test
 ```
 
-#### Run test-coverage:
+#### Run test coverage:
 
 ```bash
 npm run test-cov
