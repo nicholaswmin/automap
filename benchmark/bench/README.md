@@ -120,9 +120,10 @@ and so on ...
 
 ## Capturing measurements
 
-The duration of each task is captured automatically.
+The total durations of each task cycle and the overall duration of the task
+itself are captured automatically.
 
-Most probably, you'd also need to capture the durations of *specific*
+Most probably, you'd also want to capture the durations of *specific*
 functions or steps within each task, so you can figure out where most of the
 time is spent.
 
