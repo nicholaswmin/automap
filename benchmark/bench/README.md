@@ -26,6 +26,7 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
 - [Authors](#authors)
 - [License](#license)
 
+
 ## Install
 
 ```bash
@@ -54,9 +55,11 @@ runner.toHistograms()
 
 Each task is an object with:
 
-- `name` : `String`  : Name of the task
-- `cycle`: `Number`  : Number of times the task should run
-- `fn`   : `Function`: The task function
+| property    | type   	    | details                                         |
+|-----------	|-------------|-----------------------------------------------	|
+| `name`  	  | `String`   	| Name of the task, required          	          |
+| `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
+| `fn`    	  | `Function` 	| The task function                             	|
 
 #### Example
 
@@ -291,8 +294,10 @@ over this method.
 Call [`performance.mark`][mark] and pass in the `detail` parameter an object
 with these properties:
 
-- `value`: `Number`: The tracked value, required
-- `unit` : `String`: Used as a label, optional
+| property    | type   	    | details                               |
+|-----------	|-------------|-------------------------------------	|
+| `value`  	  | `Number`   	| Tracked value, required              	|
+| `unit`  	  | `String`   	| Label for value, optional            	|
 
 ##### Example
 
