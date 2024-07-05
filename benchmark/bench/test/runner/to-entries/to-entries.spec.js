@@ -7,7 +7,19 @@ import { PerformanceRunner } from '../../../index.js'
 test('PerformanceRunner', async t => {
   let runner = null, tasks = [], taskEntries = []
 
-  await t.test('#toEntries', async t => {
+  await t.test('when run before runner.run() has ended', async t => {
+    await beforeEach(async () => {
+      runner = new PerformanceRunner()
+    })
+
+    await t.test('when run before runner.run() has ended', async t => {
+      await t.test('throws an error', async t => {
+        assert.throws(t => runner.toEntries())
+      })
+    })
+  })
+
+  await t.test('when run after runner.run() has ended', async t => {
     await beforeEach(async t => {
       runner = new PerformanceRunner()
 
@@ -27,6 +39,10 @@ test('PerformanceRunner', async t => {
       await runner.run(tasks)
 
       taskEntries = runner.toEntries()
+    })
+
+    await t.test('does not throw', async t => {
+      assert.doesNotThrow(t => runner.toEntries())
     })
 
     await t.test("returns each task's PerformanceEntry entries", async t => {

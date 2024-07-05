@@ -102,10 +102,14 @@ class PerformanceRunner {
   }
 
   toPlots() {
+    this.#throwIfNotEnded()
+
     this.tasks.forEach(task => console.log(task.plot.get(), '\n'))
   }
 
   toEntries() {
+    this.#throwIfNotEnded()
+
     return this.tasks.map(task => {
       return {
         name: task.name,
@@ -151,7 +155,7 @@ class PerformanceRunner {
 
   #throwIfNotEnded() {
     if (this.#state !== 'ended')
-      throw new errors.NotEndedError()
+      throw new errors.RunNotEndedError()
   }
 
   #throwIfEnded() {
