@@ -4,8 +4,13 @@ class Repository {
   constructor(Class, redis) {
     this.Class = Class
     this.redis = redis
+    // Usage: `const res = await this.redis.hmgetall(2, 'hash1', 'hash2')`
+    this.redis.defineCommand('hmgetall', {
+      lua: `local r = {} for _, v in pairs(KEYS) do r[#r+1] = redis.call('HGETALL', v) end return r`
+    })
+
     this.loaders = {
-      key: {
+      string: {
         get: key => {
           return this.redis.get(key)
             .then(data => data ? JSON.parse(data) : null)
@@ -17,6 +22,16 @@ class Repository {
       },
 
       hash: {
+        getMany: async (keys = []) => {
+          // ???? wtf
+          return this.redis.hmgetall(keys.length, ...keys)
+            .then(hashes => hashes.map(hash =>
+              hash.filter(field => field.startsWith('{'))
+                .map(JSON.parse)
+                  .sort((a, b) => a.i - b.i)
+                    .map(item => item.json)))
+        },
+
         getField: (key, field) => {
           return this.redis.hget(key, field)
             .then(data => data ? JSON.parse(data) : null)
@@ -36,6 +51,15 @@ class Repository {
       },
 
       list: {
+        getMany: (keys = []) => {
+          const pipeline = keys.reduce((promise, key) => {
+            return promise.lrange(key, 0, -1)
+              .then(res => res.map(JSON.parse))
+          }, this.redis.pipeline())
+
+          return pipeline.exec()
+        },
+
         get: key => {
           return this.redis.lrange(key, 0, -1).then(res => res.map(JSON.parse))
         },
@@ -59,16 +83,28 @@ class Repository {
   }
 
   async fetch({ id }) {
-    const root = await this.loaders.key.get(id)
+    const key = this.Class.name.toLowerCase() + ':' + id
+    const root = await this.loaders.string.get(key)
 
     if (!root)
       Repository.createResourceNotFoundError(id)
 
-    const data = await expand(root, async ({ path, traits }) => {
-      return this.loaders[traits.type].get(path)
+    const expandedData = await expand(root, async subs => {
+      const hashSubs = subs.filter(sub => sub.traits.type === 'hash')
+      const listSubs = subs.filter(sub => sub.traits.type === 'list')
+
+      const hashSubsWithItems = await this.loaders['hash']
+        .getMany(hashSubs.map(sub => sub.path))
+        .then(items => hashSubs.map((sub, i) => ({ ...sub, items: items[i] })))
+
+      const listSubsWithItems = await this.loaders['list']
+        .getMany(listSubs.map(sub => sub.path))
+        .then(items => listSubs.map((sub, i) => ({ ...sub, items: items[i] })))
+
+      return [...hashSubsWithItems, ...listSubsWithItems]
     })
 
-    return new this.Class(data)
+    return new this.Class(expandedData)
   }
 
   async fetchHashField({ id, parentId }) {

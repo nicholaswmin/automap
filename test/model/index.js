@@ -10,10 +10,10 @@ The model represents a simple Chatroom in the following structure:
         - 'user.notes'
 */
 
-import { List, LazyList, AppendList, rand } from '../../index.js'
+import { List, LazyList, AppendList, utils } from '../../index.js'
 
 class Chatroom {
-  constructor({ id = rand(), users = [], messages = [] }) {
+  constructor({ id = utils.randomID(), users = [], messages = [] }) {
     this.id = id
 
     this.users = new List({
@@ -40,7 +40,7 @@ class Chatroom {
 }
 
 class User {
-  constructor({ id = rand(), name = 'John', notes = [] }) {
+  constructor({ id = utils.randomID(), name = 'John', notes = [] }) {
     this.id = id
     this.name = name
     this.notes = new List({ from: notes })
@@ -52,14 +52,14 @@ class User {
 }
 
 class Message {
-  constructor({ id = rand(), text }) {
+  constructor({ id = utils.randomID(), text }) {
     this.id = id
     this.text = text
   }
 }
 
 class Note {
-  constructor({ id = rand(), content }) {
+  constructor({ id = utils.randomID(), content }) {
     this.id = id
     this.content = content
   }

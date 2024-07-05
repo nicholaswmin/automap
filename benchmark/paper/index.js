@@ -1,4 +1,4 @@
-import { List, AppendList, rand } from '../../../index.js'
+import { List, AppendList, utils } from '../../index.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {
@@ -15,8 +15,14 @@ class Board {
   } = {},
   ) {
     this.id = id
-    this.items = new AppendList({ items, construct: item => item })
+    this.items = new AppendList({ from: items })
     this.viewPosition = new ViewPosition(viewPosition)
+  }
+
+  addItem(item) {
+    this.items.push(item)
+
+    return this
   }
 
   static cloneFrom(board, { id }) {
@@ -37,7 +43,7 @@ class User {
 
 class Paper {
   constructor({
-    id = rand(),
+    id = utils.randomID(),
     activeBoardId = 1111111,
     boards = [{ id: 1111111 }],
     users = []
@@ -51,20 +57,23 @@ class Paper {
     this.id = id
 
     this.activeBoardId = activeBoardId
-
-    this.boards = new List({
-      items: boards,
-      construct: item => new Board(item)
-    })
-
-    this.users = new List({
-      items: users,
-      construct: item => new User(item)
-    })
+    this.boards = new List({ type: Board, from: boards })
+    this.users = new List({ type: User, from: users })
   }
 
   addUser({ id, name }) {
     this.users.push(new User({ id, name }))
+
+    return this
+  }
+
+  addItemToActiveBoard(item) {
+    const board = this.getActiveBoard()
+
+    if (!board)
+      throw Paper.createActiveBoardNotFoundError()
+
+    board.addItem(item)
 
     return this
   }
@@ -163,6 +172,10 @@ class Paper {
 
   static createBoardNotFoundError(id) {
     throw new Error(`Cannot find board: ${id}`)
+  }
+
+  static createActiveBoardNotFoundError() {
+    throw new Error(`Cannot find a board that matches the activeBoardId`)
   }
 
   static createBoardExistsError(id) {
