@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { mock, test, before, beforeEach } from 'node:test'
 import { setTimeout } from 'timers/promises'
 
-import CyclePlot from '../../src/cycle-plot.js'
+import CyclePlot from '../../src/cycle-plot/index.js'
 
 test('CyclePlot', async t => {
   let i, plot, entries

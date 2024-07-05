@@ -1,6 +1,6 @@
 import { createHistogram } from 'node:perf_hooks'
 
-import CyclePlot from './cycle-plot.js'
+import CyclePlot from './cycle-plot/index.js'
 import utils from './utils.js'
 
 class Task {
