@@ -121,10 +121,8 @@ and so on ...
 ## Capturing measurements
 
 Ideally you'll be using the [Measurement API][perf-hooks] methods to capture
-measurements of specific functions within each task.
-
-This allows measuring the time of specific functions so you can figure out
-where most of the time is spent, in each task.
+measurements of specific functions within each task, so you can figure out
+where most of the time is spent.
 
 The following [Performance Measurement][perf-hooks] methods are supported:
 
