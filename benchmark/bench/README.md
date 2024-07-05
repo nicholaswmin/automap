@@ -127,7 +127,7 @@ functions or steps within each task, so you can figure out where most of the
 time is spent.
 
 In this case, you can use the following [Performance Measurement][perf-hooks]
- methods:
+methods:
 
 - [`performance.timerify`][timerify]
 - [`performance.mark`][mark]
