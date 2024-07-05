@@ -120,11 +120,14 @@ and so on ...
 
 ## Capturing measurements
 
-Ideally you'll be using the [Measurement API][perf-hooks] methods to capture
-measurements of specific functions within each task, so you can figure out
-where most of the time is spent.
+The duration of each task is captured automatically.
 
-The following [Performance Measurement][perf-hooks] methods are supported:
+Most probably, you'd also need to capture the durations of *specific*
+functions or steps within each task, so you can figure out where most of the
+time is spent.
+
+In this case, you can use the following [Performance Measurement][perf-hooks]
+ methods:
 
 - [`performance.timerify`][timerify]
 - [`performance.mark`][mark]
