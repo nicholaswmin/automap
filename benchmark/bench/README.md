@@ -181,7 +181,7 @@ await runner.run([
 runner.toTimeline()
 ```
 
-which outputs a timeline:
+which outputs:
 
 ```text
 ┌──────────────┬─────────────────┬───────────┐
