@@ -96,4 +96,4 @@ await runner.run([
 
 redis.disconnect()
 
-runner.toTimeline()
+console.log(runner.toEntries())

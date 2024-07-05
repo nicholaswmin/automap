@@ -105,6 +105,15 @@ class PerformanceRunner {
     this.tasks.forEach(task => console.log(task.plot.get(), '\n'))
   }
 
+  toEntries() {
+    return this.tasks.map(task => {
+      return {
+        name: task.name,
+        entries: task.entries.flat()
+      }
+    })
+  }
+
   async #end() {
     this.loopHs.disable()
     this.#transitionState('ended')
