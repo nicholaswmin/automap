@@ -12,21 +12,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicholaswmin/performance-runner.git"
+    "url": "git+https://github.com/nicholaswmin/bench.git"
   },
   "keywords": [
     "performance-measurement-api",
     "performance",
     "benchmark",
     "javascript",
+    "profiling",
     "nodejs"
   ],
   "author": "@nicholaswmin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nicholaswmin/performance-runner/issues"
+    "url": "https://github.com/nicholaswmin/bench/issues"
   },
-  "homepage": "https://github.com/nicholaswmin/performance-runner#readme",
+  "homepage": "https://github.com/nicholaswmin/bench#readme",
   "dependencies": {
     "asciichart": "^1.5.25",
     "console-table-printer": "^2.12.1",
