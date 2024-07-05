@@ -55,11 +55,11 @@ runner.toHistograms()
 
 Each task is an object with:
 
-| property    | type   	    | details                                         |
+| property    | type   	    | description                                     |
 |-----------	|-------------|-----------------------------------------------	|
 | `name`  	  | `String`   	| Name of the task, required          	          |
 | `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
-| `fn`    	  | `Function` 	| The task function                             	|
+| `fn`    	  | `Function` 	| The task function, required                    	|
 
 #### Example
 
@@ -82,15 +82,19 @@ await runner.run([
     fn: async function() {
       await slowAsyncFunctionBaz()
     }
-  }
+  },
 
-  // add more tasks ...
+  // more tasks ...
 ])
 
 runner.toTimeline()
 ```
 
-outputs a timeline with each task, the task cycles and their durations:
+This outputs:
+
+- a timeline with each task
+- each task's cycles
+- their durations in *milliseconds*
 
 ```text
 ┌──────────────┬─────────────────┬───────────┐
@@ -104,6 +108,7 @@ outputs a timeline with each task, the task cycles and their durations:
 │              │                 │           │
 │        cycle │        Task A 3 │ 9.10 ms   │
 │              |                 |           |
+│              |                 |           |=
 |       Task B │                 │           |
 |              |                 │           |
 │        cycle │        Task B 1 │ 8.12 ms   │
@@ -113,22 +118,14 @@ outputs a timeline with each task, the task cycles and their durations:
 ... and so on...
 ```
 
-In the above example:
-
-- `Task A 1`, the 1st cycle of `"Task A"` which took: `9.86 ms`
-- `Task A 2`, the 2nd cycle of `"Task A"` which took: `9.36 ms`
-- `Task B 1`, the 1st cycle of `"Task B"` which took: `8.12 ms`
-
-and so on ...
-
 ## Capturing measurements
 
 The total durations of each task cycle and the overall duration of the task
 itself are captured automatically.
 
-Most probably, you'd also want to capture the durations of *specific*
-functions or steps within each task, so you can figure out where most of the
-time is spent.
+On top of that, it's likely you'd also want to capture the durations of
+*specific* functions or steps within each task, so you can figure out where
+most of the time is spent.
 
 In this case, you can use the following [Performance Measurement][perf-hooks]
 methods:
@@ -294,10 +291,11 @@ over this method.
 Call [`performance.mark`][mark] and pass in the `detail` parameter an object
 with these properties:
 
-| property    | type   	    | details                               |
-|-----------	|-------------|-------------------------------------	|
+| property    | type   	    | description                           |
+|-----------	|------------ |-------------------------------------	|
 | `value`  	  | `Number`   	| Tracked value, required              	|
 | `unit`  	  | `String`   	| Label for value, optional            	|
+
 
 ##### Example
 
@@ -361,7 +359,7 @@ which outputs:
 └──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
 ```
 
-### Displaying Results
+### Displaying results
 
 The different ways of visualising measurements.
 
@@ -469,15 +467,23 @@ The `fn` function is called with an object containing:
 - `cycle`   : `Number`: The current cycle, similar to `i` in a `for` loop
 - `taskname`: `String`: The task name
 
+| property    | type   	    | description                                     |
+|-----------	|-------------|-----------------------------------------------	|
+| `cycle` 	  | `Number`   	| The current cycle, like `i` in a `for` loop   	|
+| `taskname`  | `String`   	| The task name                                 	|
+
+
 ```js
 runner.run([
   {
     name: 'Task A',
-    cycles: 5,
+    cycles: 3,
     fn: async ({ cycle, taskname }) => {
       console.log(cycle)
-      // '1' assuming it's the first cycle
-      // '5' assuming it's the last cycle
+
+      // '1' if it's the first cycle
+      // '2' if it's the second cycle
+      // '3' if it's the third & last cycle
 
       console.log(taskname)
       // 'Task A'
