@@ -41,14 +41,15 @@ const fetched = await repo.fetch({ id: 'kensington' })
 await fetched.flats.load(repo)
 
 fetched.flats[0].ringDoorbell()
+// Logs Doorbell 🔔 at flat: 101
 
 const list = new List({ from: [1, 2, 3] })
 
 for (let i = 0; i < list.length; i++)
   console.log(list[i].constructor.name, list[i])
 
-// Number 1
-// Number 2
-// Number 3\
+// Logs "Number 1"
+// Logs "Number 2"
+// Logs "Number 3"
 
 redis.disconnect()
