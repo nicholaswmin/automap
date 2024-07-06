@@ -7,7 +7,6 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
 
 - [Install](#install)
 - [Usage](#usage)
-   * [Run tasks](#running-tasks)
    * [Define a task](#defining-a-task)
    * [Take measurements](#capturing-measurements)
       + [time durations with `performance.timerify`](#using-performancetimerify)
@@ -33,33 +32,7 @@ npm i https://github.com/nicholaswmin/bench
 
 ## Usage
 
-### Running tasks
-
 Run 2 tasks and print a [histogram][hgram] of the durations:
-
-```js
-import { PerformanceRunner } from 'bench'
-
-const runner = new PerformanceRunner()
-
-await runner.run([taskA, taskB])
-
-runner.toHistograms()
-```
-
-### Defining a task
-
-`runner.run(tasks)` accepts an array of tasks.
-
-A single task should be an object with the following properties:
-
-| property    | type   	    | description                                     |
-|-----------	|-------------|-----------------------------------------------	|
-| `name`  	  | `String`   	| Name of the task, required          	          |
-| `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
-| `fn`    	  | `Function` 	| The task function, required                    	|
-
-#### Example
 
 ```js
 const runner = new PerformanceRunner()
@@ -109,13 +82,47 @@ which outputs a timeline of the task cycles:
 └─────────┴──────┴───────────┘
 ```
 
+### Defining a task
+
+`runner.run(tasks)` accepts an array of tasks.
+
+A single task should be an object with the following properties:
+
+| property    | type   	    | description                                     |
+|-----------	|-------------|-----------------------------------------------	|
+| `name`  	  | `String`   	| Name of the task, required          	          |
+| `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
+| `fn`    	  | `Function` 	| The task function, can be `async`, required    	|
+
+##### Example:
+
+```js
+await runner.run([
+  {
+    name: 'Task A',
+    cycles: 10,
+    fn: function() {
+      // do work here
+    }
+  },
+
+  {
+    name: 'Task B',
+    cycles: 20,
+    fn: async function() {
+      // do work here
+    }
+  }
+])
+
+```
+
 ## Capturing measurements
 
-The total durations of each task cycle and the overall duration of the task
-itself are captured automatically.
+The call durations of each task cycle is captured and displayed automatically.
 
-On top of that, it's likely you'd also want to capture the durations of
-*specific* functions or steps within each task, so you can figure out where
+However, on top of that, it's likely you'd also want to capture the durations
+of *specific* functions or steps within each task, so you can figure out where
 most of the time is spent.
 
 In these cases you can use the following [Performance Measurement][perf-hooks]
@@ -128,7 +135,7 @@ methods:
 ### Using `performance.timerify`
 
 Use [`performance.timerify`][timerify] to wrap functions which automatically
-tracks the function duration, which is then displayed as part of the output.
+tracks the function duration.
 
 #### Example
 
