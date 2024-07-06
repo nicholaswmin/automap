@@ -210,8 +210,8 @@ which outputs:
 │  Task: A │       │           │
 │          │       │           │
 │    cycle │   A 1 │  36.36 ms │
-│ function │ fetch │  95.12 ms │
-│ function │  save │  36.12 ms │
+│ function │ fetch │  31.12 ms │
+│ function │  save │   5.24 ms │
 │          │       │           │
 │    cycle │   A 2 │ 189.12 ms │
 │ function │ fetch │  80.03 ms │
@@ -237,7 +237,7 @@ Use [`performance.measure`][measure] to capture the time difference between
 
 #### Example
 
-Tracking the duration of `user.greet()` and `save`:
+Tracking the duration between 2 marks:
 
 ```js
 const runner = new PerformanceRunner()
@@ -278,14 +278,14 @@ which outputs:
 ├──────────┼───────┼───────────┤
 │  Task: A │       │           │
 │          │       │           │
-│    cycle │   A 1 │ 111.7 ms  │
+│    cycle │   A 1 │ 141.71 ms │
 |  measure │   a-b │ 120.20 ms │
 │          │       │           │
 │    cycle │   A 2 │ 225.74 ms │
 |  measure │   a-b │ 189.18 ms │
 │          │       │           │
 │    cycle │   A 3 │  98.79 ms │
-|  measure │   a-b │ 120.35 ms │
+|  measure │   a-b │  44.35 ms │
 │          │       │           │
 └──────────┴───────┴───────────┘
 ```
@@ -369,7 +369,7 @@ There are different ways of visualising measurements.
 
 - A timeline
 - A [histogram][hgram]
-- An ASCII max duration chart
+- An ASCII chart of max-durations
 
 ##### Example
 
@@ -382,6 +382,11 @@ const runner = new PerformanceRunner()
 await runner.run(tasks)
 
 runner.toTimeline()
+
+// or ...
+// runner.toHistograms()
+// runner.toEntries()
+// runner.toPlots()
 ```
 
 #### `runner.toTimeline()`
