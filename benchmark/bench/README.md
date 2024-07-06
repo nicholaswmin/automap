@@ -51,7 +51,7 @@ runner.toHistograms()
 
 `runner.run(tasks)` accepts an array of tasks.
 
-Each task is an object with:
+A single task should be an object with the following properties:
 
 | property    | type   	    | description                                     |
 |-----------	|-------------|-----------------------------------------------	|
@@ -66,7 +66,7 @@ const runner = new PerformanceRunner()
 
 await runner.run([
   {
-    name: 'A',
+    name: 'Task A',
     cycles: 2,
     fn: function() {
       slowFunctionFoo()
@@ -75,7 +75,7 @@ await runner.run([
   },
 
   {
-    name: 'B',
+    name: 'Task B',
     cycles: 3,
     fn: async function() {
       await slowAsyncFunctionBaz()
@@ -86,11 +86,9 @@ await runner.run([
 runner.toTimeline()
 ```
 
-This outputs:
+which outputs a timeline of the task cycles:
 
-- a timeline with each task
-- each task's cycles
-- their durations in milliseconds
+> `value` is the total call duration in milliseconds.
 
 ```text   
 ┌─────────┬──────┬───────────┐
@@ -98,17 +96,14 @@ This outputs:
 ├─────────┼──────┼───────────┤
 │ Task: A │      │           │
 │         │      │           │
-│   cycle │  A 1 │ 501.25 ms │
-│         │      │           │
+│   cycle │  A 1 │ 321.44 ms │
 │   cycle │  A 2 │ 250.95 ms │
 │         │      │           │
 │         │      │           │
 │ Task: B │      │           │
 │         │      │           │
-│   cycle │  B 1 │ 250.55 ms │
-│         │      │           │
+│   cycle │  B 1 │ 255.61 ms │
 │   cycle │  B 2 │ 121.10 ms │
-│         │      │           │
 │   cycle │  B 3 │ 193.12 ms │
 │         │      │           │
 └─────────┴──────┴───────────┘
@@ -123,7 +118,7 @@ On top of that, it's likely you'd also want to capture the durations of
 *specific* functions or steps within each task, so you can figure out where
 most of the time is spent.
 
-In this case, you can use the following [Performance Measurement][perf-hooks]
+In these cases you can use the following [Performance Measurement][perf-hooks]
 methods:
 
 - [`performance.timerify`][timerify]
@@ -132,10 +127,8 @@ methods:
 
 ### Using `performance.timerify`
 
-Use [`performance.timerify`][timerify] to wrap functions and automatically
-track the function duration.
-
-The tracked duration is displayed as part of the output.
+Use [`performance.timerify`][timerify] to wrap functions which automatically
+tracks the function duration, which is then displayed as part of the output.
 
 #### Example
 
@@ -274,18 +267,19 @@ which outputs:
 
 ### Measuring arbitrary values
 
-Call [`performance.mark`][mark] and pass in the `detail` parameter an object
-with these properties:
+You can measure arbitrary values, apart from time durations, using
+[`performance.mark`][mark] and passing as the `detail` parameter an
+object with these properties:
 
-| property    | type   	    | description                           |
-|-----------	|------------ |-------------------------------------	|
-| `value`  	  | `Number`   	| Tracked value, required              	|
-| `unit`  	  | `String`   	| Label for value, optional            	|
+| property    | type   	    | description                         |
+|-----------	|------------ |-------------------------------------|
+| `value`  	  | `Number`   	| Tracked value, required             |
+| `unit`  	  | `String`   	| Label for value, optional           |
 
 
 ##### Example
 
-Tracking the memory usage of each cycle, then displaying it in a histogram:
+Tracking memory usage and displaying it in a histogram:
 
 ```js
 await runner.run([
@@ -450,10 +444,11 @@ runner.run([
       // '3' if it's the third & last cycle
 
       console.log(taskname)
-      // 'Task A'
+      // 'A'
     }
   },
 
+  // entries ...
 ])
 ```
 
