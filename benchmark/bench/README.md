@@ -96,10 +96,11 @@ which outputs a timeline of the task cycles:
 
 A single task should be an object with the following properties:
 
-| name  	| `String`   	| description                   	| required 	|
-|-------	|------------	|--------------------------------	|----------	|
-| cycle 	| `Number`   	| how many times to run the task 	| required 	|
-| fn    	| `Function` 	| the task function              	| required 	|
+| property  | type      	| description                     | required 	|
+|---------	|------------	|--------------------------------	|----------	|
+| `name`  	| `String`   	| the task name                  	| yes     	|
+| `cycle` 	| `Number`   	| how many times to run the task 	| yes     	|
+| `fn`    	| `Function` 	| the task function              	| yes      	|
 
 ##### Example:
 
@@ -295,10 +296,10 @@ You can measure arbitrary values, apart from time durations, using
 [`performance.mark`][mark] and passing as the `detail` parameter an
 object with these properties:
 
-| name  	| type      	| description      | required 	|
-|-------	|------------	|----------------- |----------- |
-| `value` | `Number`   	| tracked value    | required 	|
-| `unit`  | `String`  	| label for value  | required 	|
+| property  | type      	| description      | required 	|
+|---------	|------------	|----------------- |----------- |
+| `value`   | `Number`   	| tracked value    | yes 	      |
+| `unit`    | `String`  	| label for value  | yes 	      |
 
 
 ##### Example
