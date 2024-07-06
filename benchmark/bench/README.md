@@ -17,7 +17,7 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
       + [`runner.toHistograms()`](#runnertohistograms)
       + [`runner.toEntries()`](#runnertoentries)
       + [`runner.toPlots()`](#runnertoplots)
-   * [Access cycle info](#accessing-cycle-info)
+   * [Current cycle info](#current-cycle-info)
 - [Test](#test)
   * [Unit tests](#unit-tests)
   * [Test coverage](#test-coverage)
@@ -513,7 +513,7 @@ durations (ms)                                   - main task - fn:save
                                                                    cycles
 ```
 
-### Accessing cycle info
+### Current cycle info
 
 | name  	   | type      	  | description       |
 |----------- |------------	|------------------ |
