@@ -108,7 +108,7 @@ This outputs:
 │              │                 │           │
 │        cycle │        Task A 3 │ 9.10 ms   │
 │              |                 |           |
-│              |                 |           |=
+│              |                 |           |
 |       Task B │                 │           |
 |              |                 │           |
 │        cycle │        Task B 1 │ 8.12 ms   │
