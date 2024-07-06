@@ -40,24 +40,26 @@ const runner = new PerformanceRunner()
 await runner.run([
   {
     name: 'Task A',
-    cycles: 5,
+    cycles: 2,
     fn: function() {
+      // runs 2 times ...
+
       slowFunctionFoo()
       slowFunctionBar()
-      // runs 5 times ...
 
-      // more work here ...
+      // do more work here ...
     }
   },
 
   {
     name: 'Task B',
-    cycles: 5,
+    cycles: 3,
     fn: async function() {
-      await slowAsyncFunctionBaz()
-      // runs 5 times ...
+      // runs 3 times ...
 
-      // more async work here ...
+      await slowAsyncFunctionBaz()
+
+      // do more async work here ...
     }
   }
 ])
