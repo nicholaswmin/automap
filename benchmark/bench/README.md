@@ -69,7 +69,7 @@ runner.toTimeline()
 
 which outputs a timeline of the task cycles:
 
-> `value` is the total call duration in milliseconds.
+> `value` is the total call duration in [milliseconds][millis].
 
 ```text   
 ┌─────────┬──────┬───────────┐
@@ -96,11 +96,10 @@ which outputs a timeline of the task cycles:
 
 A single task should be an object with the following properties:
 
-| property    | type   	    | description                                     |
-|-----------	|-------------|-----------------------------------------------	|
-| `name`  	  | `String`   	| Name of the task, required          	          |
-| `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
-| `fn`    	  | `Function` 	| The task function, can be `async`, required    	|
+| name  	| `String`   	| description                   	| required 	|
+|-------	|------------	|--------------------------------	|----------	|
+| cycle 	| `Number`   	| how many times to run the task 	| required 	|
+| fn    	| `Function` 	| the task function              	| required 	|
 
 ##### Example:
 
@@ -127,7 +126,7 @@ await runner.run([
 
 ## Capturing measurements
 
-The call durations of each task cycle is captured and displayed automatically.
+The call durations of each task cycle are captured and displayed automatically.
 
 However, on top of that, it's likely you'd also want to capture the durations
 of *specific* functions or steps within each task, so you can figure out where
@@ -296,10 +295,10 @@ You can measure arbitrary values, apart from time durations, using
 [`performance.mark`][mark] and passing as the `detail` parameter an
 object with these properties:
 
-| property    | type   	    | description                         |
-|-----------	|------------ |-------------------------------------|
-| `value`  	  | `Number`   	| Tracked value, required             |
-| `unit`  	  | `String`   	| Label for value, optional           |
+| name  	| type      	|description       | required 	|
+|-------	|------------	|----------------- |----------- |
+| `value` | `Number`   	| tracked value    | required 	|
+| `unit`  | `String`  	| label for value  | required 	|
 
 
 ##### Example
@@ -510,11 +509,10 @@ durations (ms)                                   - main task - fn:save
 
 ### Accessing cycle info
 
-| property    | type   	    | description                                     |
-|-----------	|-------------|-----------------------------------------------	|
-| `cycle` 	  | `Number`   	| The current cycle, like `i` in a `for` loop   	|
-| `taskname`  | `String`   	| The task name                                 	|
-
+| name  	   | type      	  | description       |
+|----------- |------------	|------------------ |
+| `cycle`    | `Number`   	| The current cycle |
+| `taskname` | `String`  	  | The task name     |
 
 ```js
 runner.run([
@@ -588,3 +586,4 @@ npm run test-cov
 [perf-entry]: https://nodejs.org/api/perf_hooks.html#class-performanceentry
 [nicholaswmin]: https://github.com/nicholaswmin
 [mit-no-attr]: https://github.com/aws/mit-0
+[millis]: https://en.wikipedia.org/wiki/Millisecond
