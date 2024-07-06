@@ -147,22 +147,35 @@ tracks the function duration.
 
 Tracking the duration of `save` and `user.greet` methods:
 
-> Assume `save` is an existing function which saves users in a database
+> Assume `fetch` and `save` are functions that fetch/save users
+> to/from a database
 
 ```js
-const runner = new PerformanceRunner()
+// Example function A:
+const fetch = user =>
+  new Promise(resolve =>
+    setTimeout(() => resolve({ name: 'foo' })), 250)
 
-// timerify `save()`
+// Example function B:
+const save = user =>
+  new Promise(resolve => setTimeout(() => resolve()), 250)
+
+
+// timerify function A
+const fetchTimerified = performance.timerify(fetch)
+
+// timerify function B
 const saveTimerified = performance.timerify(save)
+
 
 await runner.run([
   {
     name: 'A',
     cycles: 2,
     fn: async () => {
-      const user = new User()
+      const user = new User('foo')
 
-      // use timerified `save()`
+      // call timerified function:
       await saveTimerified(user)
     }
   },
@@ -171,15 +184,12 @@ await runner.run([
     name: 'B',
     cycles: 3,
     fn: async () => {
-      const user = new User()
+      // call timerified function:
+      const user = fetchTimerified('foo')
 
-      // timerify `user.greet`
-      const greetTimerified = performance.timerify(user.greet)
+      user.updateName('bar')
 
-      // use timerified `user.greet()`
-      await greetTimerified()
-
-      // use timerified `save()`
+      // call timerified function:
       await saveTimerified(user)
     }
   }
@@ -205,16 +215,16 @@ which outputs:
 │  Task: B │       │           │
 │          │       │           │
 │    cycle │   B 1 │  111.7 ms │
+│ function │ fetch │  80.59 ms │
 │ function │  save │  40.43 ms │
-│ function │ greet │  80.59 ms │
 │          │       │           │
 │    cycle │   B 2 │ 225.74 ms │
-│ function │  save │ 145.08 ms │
-│ function │ greet │  90.54 ms │
+│ function │ fetch │  90.54 ms │
+│ function │  save │   8.18 ms │
 │          │       │           │
 │    cycle │   B 3 │  98.79 ms │
+│ function │ fetch │ 161.36 ms │
 │ function │  save │   8.18 ms │
-│ function │ greet │ 161.36 ms │
 └──────────┴───────┴───────────┘
 ```
 
