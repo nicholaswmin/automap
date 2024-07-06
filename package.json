@@ -36,6 +36,9 @@
     "pathval": "^2.0.0"
   },
   "devDependencies": {
-    "ioredis": "^5.4.1"
+    "asciichart": "^1.5.25",
+    "console-table-printer": "^2.12.1",
+    "ioredis": "^5.4.1",
+    "strip-ansi": "^7.1.0"
   }
 }

@@ -7,6 +7,7 @@ import { PerformanceRunner } from '../../../index.js'
 test('PerformanceRunner', async t => {
   let runner = null, tasks = [], taskEntries = []
 
+<<<<<<< HEAD
   await t.test('when run before runner.run() has ended', async t => {
     await beforeEach(async () => {
       runner = new PerformanceRunner()
@@ -20,6 +21,9 @@ test('PerformanceRunner', async t => {
   })
 
   await t.test('when run after runner.run() has ended', async t => {
+=======
+  await t.test('#toEntries', async t => {
+>>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
     await beforeEach(async t => {
       runner = new PerformanceRunner()
 
@@ -41,10 +45,13 @@ test('PerformanceRunner', async t => {
       taskEntries = runner.toEntries()
     })
 
+<<<<<<< HEAD
     await t.test('does not throw', async t => {
       assert.doesNotThrow(t => runner.toEntries())
     })
 
+=======
+>>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
     await t.test("returns each task's PerformanceEntry entries", async t => {
       await t.test('returns an Array', async t => {
         assert.ok(Array.isArray(taskEntries))
