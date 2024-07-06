@@ -25,5 +25,6 @@ jobs:
     - run: npm test
     - run: npm audit
     - run: npm --prefix benchmark/bench test
+    - run: npm --prefix benchmark/bench audit
       env:
         NODE_ENV: test
