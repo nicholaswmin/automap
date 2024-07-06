@@ -5,20 +5,13 @@
 Benchmarking using the [Performance Measurement API][perf-hooks], in
 [Node.js][nodejs]
 
-
-- [Installation](#install)
+- [Install](#install)
 - [Usage](#usage)
    * [Run tasks](#running-tasks)
    * [Define a task](#defining-a-task)
-<<<<<<< HEAD
-   * [Custom measurements](#capturing-measurements)
-      + [with `performance.timerify`](#using-performancetimerify)
-      + [with `performance.measure`](#using-performancemeasure)
-=======
    * [Take measurements](#capturing-measurements)
       + [durations with `performance.timerify`](#using-performancetimerify)
       + [durations with `performance.measure`](#using-performancemeasure)
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
       + [arbitrary values with `performance.mark`](#measuring-arbitrary-values)
    * [Display Results](#displaying-results)
       + [`runner.toTimeline()`](#runnertotimeline)
@@ -32,10 +25,6 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
 - [Authors](#authors)
 - [License](#license)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 ## Install
 
 ```bash
@@ -46,25 +35,15 @@ npm i https://github.com/nicholaswmin/bench
 
 ### Running tasks
 
-<<<<<<< HEAD
 Run 2 tasks and print a [histogram][hgram] of the durations:
 
-=======
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 ```js
 import { PerformanceRunner } from 'bench'
 
 const runner = new PerformanceRunner()
 
-<<<<<<< HEAD
 await runner.run([taskA, taskB])
 
-=======
-// run 2 tasks
-await runner.run([taskA, taskB])
-
-// Print a duration histogram
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 runner.toHistograms()
 ```
 
@@ -74,17 +53,11 @@ runner.toHistograms()
 
 Each task is an object with:
 
-<<<<<<< HEAD
 | property    | type   	    | description                                     |
 |-----------	|-------------|-----------------------------------------------	|
 | `name`  	  | `String`   	| Name of the task, required          	          |
 | `cycle` 	  | `Number`   	| Number of times the task should run, required 	|
 | `fn`    	  | `Function` 	| The task function, required                    	|
-=======
-- `name` : `String`  : Name of the task
-- `cycle`: `Number`  : Number of times the task should run
-- `fn`   : `Function`: The task function
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 
 #### Example
 
@@ -107,29 +80,17 @@ await runner.run([
     fn: async function() {
       await slowAsyncFunctionBaz()
     }
-<<<<<<< HEAD
-  },
-
-  // more tasks ...
-=======
   }
-
-  // add more tasks ...
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 ])
 
 runner.toTimeline()
 ```
 
-<<<<<<< HEAD
 This outputs:
 
 - a timeline with each task
 - each task's cycles
-- their durations in *milliseconds*
-=======
-outputs a timeline with each task, the task cycles and their durations:
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
+- their durations in milliseconds
 
 ```text
 ┌──────────────┬─────────────────┬───────────┐
@@ -143,10 +104,6 @@ outputs a timeline with each task, the task cycles and their durations:
 │              │                 │           │
 │        cycle │        Task A 3 │ 9.10 ms   │
 │              |                 |           |
-<<<<<<< HEAD
-│              |                 |           |
-=======
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 |       Task B │                 │           |
 |              |                 │           |
 │        cycle │        Task B 1 │ 8.12 ms   │
@@ -156,8 +113,6 @@ outputs a timeline with each task, the task cycles and their durations:
 ... and so on...
 ```
 
-<<<<<<< HEAD
-=======
 In the above example:
 
 - `Task A 1`, the 1st cycle of `"Task A"` which took: `9.86 ms`
@@ -166,21 +121,14 @@ In the above example:
 
 and so on ...
 
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 ## Capturing measurements
 
 The total durations of each task cycle and the overall duration of the task
 itself are captured automatically.
 
-<<<<<<< HEAD
 On top of that, it's likely you'd also want to capture the durations of
 *specific* functions or steps within each task, so you can figure out where
 most of the time is spent.
-=======
-Most probably, you'd also want to capture the durations of *specific*
-functions or steps within each task, so you can figure out where most of the
-time is spent.
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 
 In this case, you can use the following [Performance Measurement][perf-hooks]
 methods:
@@ -346,16 +294,11 @@ over this method.
 Call [`performance.mark`][mark] and pass in the `detail` parameter an object
 with these properties:
 
-<<<<<<< HEAD
 | property    | type   	    | description                           |
 |-----------	|------------ |-------------------------------------	|
 | `value`  	  | `Number`   	| Tracked value, required              	|
 | `unit`  	  | `String`   	| Label for value, optional            	|
 
-=======
-- `value`: `Number`: The tracked value, required
-- `unit` : `String`: Used as a label, optional
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 
 ##### Example
 
@@ -419,11 +362,7 @@ which outputs:
 └──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
 ```
 
-<<<<<<< HEAD
 ### Displaying results
-=======
-### Displaying Results
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 
 The different ways of visualising measurements.
 
@@ -526,39 +465,22 @@ durations (ms)                      - main task  - fn: user.greet  - fn: save
 
 ### Accessing cycle info
 
-The `fn` function is called with an object containing:
-
-- `cycle`   : `Number`: The current cycle, similar to `i` in a `for` loop
-- `taskname`: `String`: The task name
-
-<<<<<<< HEAD
 | property    | type   	    | description                                     |
 |-----------	|-------------|-----------------------------------------------	|
 | `cycle` 	  | `Number`   	| The current cycle, like `i` in a `for` loop   	|
 | `taskname`  | `String`   	| The task name                                 	|
 
 
-=======
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 ```js
 runner.run([
   {
     name: 'Task A',
-<<<<<<< HEAD
     cycles: 3,
     fn: async ({ cycle, taskname }) => {
       console.log(cycle)
-
       // '1' if it's the first cycle
       // '2' if it's the second cycle
       // '3' if it's the third & last cycle
-=======
-    cycles: 5,
-    fn: async ({ cycle, taskname }) => {
-      console.log(cycle)
-      // '1' assuming it's the first cycle
-      // '5' assuming it's the last cycle
->>>>>>> b8533fffd0b690a58411de0c79c8be30afb476ff
 
       console.log(taskname)
       // 'Task A'

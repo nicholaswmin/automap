@@ -1,6 +1,3 @@
-// Run with:
-// node --test --experimental-test-coverage server/domain/paper/mapper/test/index.spec.js
-
 import './model/test/index.spec.js'
 import './instantiation.spec.js'
 
