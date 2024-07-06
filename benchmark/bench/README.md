@@ -19,8 +19,8 @@ Benchmarking using the [Performance Measurement API][perf-hooks], in
       + [`runner.toPlots()`](#runnertoplots)
    * [Access cycle info](#accessing-cycle-info)
 - [Test](#test)
-  * [Unit tests](#run-unit-tests)
-  * [Test coverage](#run-test-coverage)
+  * [Unit tests](#unit-tests)
+  * [Test coverage](#test-coverage)
 - [Authors](#authors)
 - [License](#license)
 
@@ -542,19 +542,19 @@ runner.run([
 
 ## Test
 
-#### Install deps:
+#### Install deps
 
 ```bash
 npm ci
 ```
 
-#### Run unit tests:
+#### Unit tests
 
 ```bash
 npm test
 ```
 
-#### Run test coverage:
+#### Test coverage
 
 ```bash
 npm run test-cov
