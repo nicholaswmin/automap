@@ -295,7 +295,7 @@ You can measure arbitrary values, apart from time durations, using
 [`performance.mark`][mark] and passing as the `detail` parameter an
 object with these properties:
 
-| name  	| type      	|description       | required 	|
+| name  	| type      	| description      | required 	|
 |-------	|------------	|----------------- |----------- |
 | `value` | `Number`   	| tracked value    | required 	|
 | `unit`  | `String`  	| label for value  | required 	|
