@@ -137,8 +137,8 @@ In these cases you can use the following [Performance Measurement][perf-hooks]
 methods:
 
 - [`performance.timerify`][timerify]
-- [`performance.mark`][mark]
 - [`performance.measure`][measure]
+- [`performance.mark`][mark]
 
 ### Using `performance.timerify`
 
