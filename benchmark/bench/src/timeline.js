@@ -15,7 +15,7 @@ const addRowForCycle = (table, entry) => {
   cycle === 1 ? table.addRows(computeHeaderRows({
     columns: ['type', 'name', 'value'],
     column: 'type',
-    value: style(['magenta', 'bold', 'underline'], taskname),
+    value: style(['magenta', 'bold', 'underline'], `Task: ${taskname}`),
     detail: ''
   })) : table.addRow(computeSeparator(['type', 'name', 'value']))
 

@@ -66,7 +66,7 @@ const runner = new PerformanceRunner()
 
 await runner.run([
   {
-    name: 'Task A',
+    name: 'A',
     cycles: 2,
     fn: function() {
       slowFunctionFoo()
@@ -75,8 +75,8 @@ await runner.run([
   },
 
   {
-    name: 'Task B',
-    cycles: 10,
+    name: 'B',
+    cycles: 3,
     fn: async function() {
       await slowAsyncFunctionBaz()
     }
@@ -92,34 +92,27 @@ This outputs:
 - each task's cycles
 - their durations in milliseconds
 
-```text
-┌──────────────┬─────────────────┬───────────┐
-│         type │            name │ value     │
-├──────────────┼─────────────────┼───────────┤
-│       Task A │                 │           │
-|              |                 │           |
-│        cycle │        Task A 1 │ 9.86 ms   │
-│              │                 │           │
-│        cycle │        Task A 2 │ 9.36 ms   │
-│              │                 │           │
-│        cycle │        Task A 3 │ 9.10 ms   │
-│              |                 |           |
-|       Task B │                 │           |
-|              |                 │           |
-│        cycle │        Task B 1 │ 8.12 ms   │
-│              │                 │           │
-│        cycle │        Task B 2 │ 8.51 ms   │
-│              │                 │           │
-... and so on...
+```text   
+┌─────────┬──────┬───────────┐
+│    type │ name │ value     │
+├─────────┼──────┼───────────┤
+│ Task: A │      │           │
+│         │      │           │
+│   cycle │  A 1 │ 501.25 ms │
+│         │      │           │
+│   cycle │  A 2 │ 250.95 ms │
+│         │      │           │
+│         │      │           │
+│ Task: B │      │           │
+│         │      │           │
+│   cycle │  B 1 │ 250.55 ms │
+│         │      │           │
+│   cycle │  B 2 │ 121.10 ms │
+│         │      │           │
+│   cycle │  B 3 │ 193.12 ms │
+│         │      │           │
+└─────────┴──────┴───────────┘
 ```
-
-In the above example:
-
-- `Task A 1`, the 1st cycle of `"Task A"` which took: `9.86 ms`
-- `Task A 2`, the 2nd cycle of `"Task A"` which took: `9.36 ms`
-- `Task B 1`, the 1st cycle of `"Task B"` which took: `8.12 ms`
-
-and so on ...
 
 ## Capturing measurements
 
@@ -146,41 +139,42 @@ The tracked duration is displayed as part of the output.
 
 #### Example
 
-Tracking the duration of `saveInDB` and `user.greet` methods:
+Tracking the duration of `save` and `user.greet` methods:
 
-> Asssume `saveInDB` is an existing function which saves users in a database
+> Asssume `save` is an existing function which saves users in a database
 
 ```js
 const runner = new PerformanceRunner()
 
-// timerify `saveInDB()`
-const saveInDBTimerified = performance.timerify(saveInDB)
+// timerify `save()`
+const saveTimerified = performance.timerify(save)
 
 await runner.run([
   {
-    name: 'Task A',
+    name: 'A',
     cycles: 2,
     fn: async () => {
       const user = new User()
 
-      // use timerified `saveInDB()`
-      await saveInDBTimerified(user)
+      // use timerified `save()`
+      await saveTimerified(user)
+    }
   },
 
   {
-    name: 'Task B',
-    cycles: 5,
+    name: 'B',
+    cycles: 3,
     fn: async () => {
       const user = new User()
 
       // timerify `user.greet`
-      const userGreetTimerified = performance.timerify(user.greet)
+      const greetTimerified = performance.timerify(user.greet)
 
       // use timerified `user.greet()`
-      userGreetTimerified()
+      await greetTimerified()
 
-      // use timerified `saveInDB()`
-      await saveInDBTimerified(user)
+      // use timerified `save()`
+      await saveTimerified(user)
     }
   }
 ])
@@ -190,34 +184,32 @@ runner.toTimeline()
 
 which outputs:
 
-```text
-┌──────────────┬─────────────────┬───────────┐
-│         type │            name │ value     │
-├──────────────┼─────────────────┼─────────--┤
-│       Task A │                 │           │
-|              |                 │           |
-│        cycle │        Task A 1 │ 9.86 ms   │
-│     function │            save │ 9.80 ms   │
-│              │                 │           │
-│        cycle │        Task A 2 │ 9.10 ms   │
-│     function │            save │ 8.90 ms   │
-|              |                 |           |
-|       Task B |                 |           |
-|              |                 |           |
-│        cycle │        Task B 1 │ 8.12 ms   │
-│     function │      user.greet │ 5.10 ms   │
-│     function │            save │ 2.90 ms   │
-│              │                 │           │
-│        cycle │        Task B 2 │ 8.50 ms   │
-│     function │      user.greet │ 4.05 ms   │
-│     function │            save │ 3.10 ms   │
-│              │                 │           │
-│        cycle │        Task B 3 │ 9.21 ms   │
-│     function │      user.greet │ 4.35 ms   │
-│     function │            save │ 3.15 ms   │
-|              |                 |           |
-
-... and so on...
+```text         
+┌──────────┬───────┬───────────┐
+│     type │  name │ value     │
+├──────────┼───────┼───────────┤
+│  Task: A │       │           │
+│          │       │           │
+│    cycle │   A 1 │  36.36 ms │
+│ function │  save │  36.12 ms │
+│          │       │           │
+│    cycle │   A 2 │ 189.12 ms │
+│ function │  save │ 189.09 ms │
+│          │       │           │
+│  Task: B │       │           │
+│          │       │           │
+│    cycle │   B 1 │  111.7 ms │
+│ function │  save │  40.43 ms │
+│ function │ greet │  80.59 ms │
+│          │       │           │
+│    cycle │   B 2 │ 225.74 ms │
+│ function │  save │ 145.08 ms │
+│ function │ greet │  90.54 ms │
+│          │       │           │
+│    cycle │   B 3 │  98.79 ms │
+│ function │  save │   8.18 ms │
+│ function │ greet │ 161.36 ms │
+└──────────┴───────┴───────────┘
 ```
 
 ### Using `performance.measure`
@@ -227,29 +219,28 @@ Use [`performance.measure`][measure] to capture the time difference between
 
 #### Example
 
-Tracking the duration of `user.greet()` and `saveInDB`:
+Tracking the duration of `user.greet()` and `save`:
 
 ```js
 const runner = new PerformanceRunner()
 
 await runner.run([
   {
-    name: 'Task A',
-    cycles: 20,
+    name: 'A',
+    cycles: 3,
     fn: async ({ cycle, taskname }) => {
       const user = new User()
 
       // start mark
       performance.mark('a')
 
-      user.greet()
-
-      await saveInDB(user)
+      await user.greet()
+      await save(user)
 
       // end mark
       performance.mark('b')
 
-      // capture time difference between `a` & `b`
+      // measure duration between `a`-`b`
       performance.measure('a-b', 'a', 'b')
     }
   },
@@ -263,31 +254,23 @@ runner.toTimeline()
 which outputs:
 
 ```text
-┌──────────────┬─────────────────┬───────----┐
-│         type │            name │ value     │
-├──────────────┼─────────────────┼──────────-┤
-│       Task A │                 │           │
-|              |                 │           |
-│        cycle │        Task A 1 │ 9.86 ms   │
-│      measure │          a-to-b │ 5.10 ms   │
-│              │                 │           │
-│        cycle │        Task A 2 │ 8.10 ms   │
-│      measure │          a-to-b │ 4.35 ms   │
-|              |                 |           |
-|              |                 |           |
-|       Task B |                 |           |
-|              |                 |           |
-│        cycle │        Task B 1 │ 8.12 ms   │
-│      measure │          a-to-b │ 6.20 ms   │
-│              │                 │           │
-│        cycle │        Task B 2 │ 8.12 ms   │
-│      measure │          a-to-b │ 4.10 ms   │
-│              │                 │           │
-... and so on...
+            timeline                 
+┌──────────┬───────┬───────────┐
+│     type │  name │ value     │
+├──────────┼───────┼───────────┤
+│  Task: A │       │           │
+│          │       │           │
+│    cycle │   A 1 │ 111.7 ms  │
+|  measure │   a-b │ 120.20 ms │
+│          │       │           │
+│    cycle │   A 2 │ 225.74 ms │
+|  measure │   a-b │ 189.18 ms │
+│          │       │           │
+│    cycle │   A 3 │  98.79 ms │
+|  measure │   a-b │ 120.35 ms │
+│          │       │           │
+└──────────┴───────┴───────────┘
 ```
-
-Generally speaking, you should prefer using `performance.timerify(fn)`
-over this method.
 
 ### Measuring arbitrary values
 
@@ -306,39 +289,38 @@ Tracking the memory usage of each cycle, then displaying it in a histogram:
 
 ```js
 await runner.run([
-{
-  name: 'Task A',
-  cycles: 5,
-  fn: async () => {
-    const memory = process.memoryUsage()
-    const user = new User('foo')
+  {
+    name: 'A',
+    cycles: 5,
+    fn: async () => {
+      const user = new User('foo')
 
-    await saveInDB(user)
+      await save(user)
 
-    performance.mark('memory-usage', {
-      detail: {
-        value: Math.ceil(memory.heapUsed / 1000 / 1000),
-        unit: 'mb'
-      }
-    })
-  }
-},
+      performance.mark('memory-usage', {
+        detail: {
+          value: process.memoryUsage().heapUsed / 1000 / 1000,
+          unit: 'mb'
+        }
+      })
+    }
+  },
 
-{
-  name: 'Task B',
-  cycles: 10,
-  fn: async () => {
-    const memory = process.memoryUsage()
-    const user = new User('bar')
+  {
+    name: 'B',
+    cycles: 10,
+    fn: async () => {
+      const user = new User('foo')
 
-    await saveInDB(user)
+      await save(user)
 
-    performance.mark('memory-usage', {
-      detail: {
-        value: Math.ceil(memory.heapUsed / 1000 / 1000),
-        unit: 'mb'
-      }
-    })
+      performance.mark('memory-usage', {
+        detail: {
+          value: process.memoryUsage().heapUsed / 1000 / 1000,
+          unit: 'mb'
+        }
+      })
+    }
   }
 ])
 
@@ -348,18 +330,18 @@ runner.toHistograms()
 which outputs:
 
 ```text
-┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┬
+┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┐
 │         name │ count │     min │     max │    mean │    50 % │    99 % │ dev │
-├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┼
+├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┤
 │        tasks │       │         │         │         │         │         │     │
 │              │       │         │         │         │         │         │     │
-│       Task B │    10 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
-│       Task A │     5 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
+│       Task A │     5 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
+│       Task B │    10 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
 │              │       │         │         │         │         │         │     │
 │        entry │       │         │         │         │         │         │     │
 │              │       │         │         │         │         │         │     │
 │ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │ 12  │
-└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
+└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┘
 ```
 
 ### Displaying results
@@ -371,26 +353,31 @@ The different ways of visualising measurements.
 Produces a detailed breakdown of the timeline of the cycles for each task:
 
 ```text
-┌──────────────┬─────────────────┬────────── ┐
-│         type │            name │ value     │
-├──────────────┼─────────────────┼───────────┤
-│       Task A │                 │           │
-|              |                 │           |
-│        cycle │        Task A 1 │ 9.86 ms   │
-│     function │            save │ 2.40 ms   │
-│              │                 │           │
-│        cycle │        Task A 2 │ 9.1 ms    │
-│     function │            save │ 3.12 ms   |
-|              |                 |           |
-|              |                 |           |
-|       Task B |                 |           |
-|              |                 |           |
-│        cycle │        Task B 1 │ 8.12 ms   │
-│     function │      user.greet │ 5.10 ms   |
-│     function │            save │ 2.90 ms   |
-│              │                 │           │
-
-... and so on ...
+┌──────────┬───────┬───────────┐
+│     type │  name │ value     │
+├──────────┼───────┼───────────┤
+│  Task: A │       │           │
+│          │       │           │
+│    cycle │   A 1 │ 36.36 ms  │
+│ function │  save │ 36.12 ms  │
+│          │       │           │
+│    cycle │   A 2 │ 200.10 ms │
+│ function │  save │ 189.09 ms │
+│          │       │           │
+│  Task: B │       │           │
+│          │       │           │
+│    cycle │   B 1 │  90.03 ms │
+│ function │  save │  40.43 ms │
+│ function │ greet │  80.60 ms │
+│          │       │           │
+│    cycle │   B 2 │ 235.08 ms │
+│ function │  save │ 145.08 ms │
+│ function │ greet │  90.00 ms │
+│          │       │           │
+│    cycle │   B 3 │ 164.00 ms │
+│ function │  save │ 100.00 ms │
+│ function │ greet │  64.00 ms │
+└──────────┴───────┴───────────┘
 ```
 
 #### `runner.toHistograms()`
@@ -399,18 +386,18 @@ Produces a [histogram][hgram] with `min`/`mean`/`max` and `percentiles` for
 each measurement:
 
 ```text
-┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┬
+┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┐
 │         name │ count │     min │     max │    mean │    50 % │    99 % │ dev │
-├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┼
+├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┤
 │        tasks │       │         │         │         │         │         │     │
 │              │       │         │         │         │         │         │     │
-│       Task B │    10 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
-│       Task A │     5 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
+│       Task A │     5 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
+│       Task B │    10 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
 │              │       │         │         │         │         │         │     │
 │        entry │       │         │         │         │         │         │     │
 │              │       │         │         │         │         │         │     │
 │ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │ 12  │
-└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┴
+└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┘
 ```
 
 #### `runner.toEntries()`
@@ -420,47 +407,27 @@ for each task.
 
 #### `runner.toPlots()`
 
-Draws ASCII charts of the max durations for each task and any timerified
-functions:
+Draws ASCII charts of max durations of each cycle and any timerified functions:
 
 ```text
-                                        Task: "A"
+                                Task: "B"
 
-durations (ms)                                         - main task  - fn: save
+durations (ms)                                   - main task - fn:save
 ╷
-580.00 ┼                                                          ╭───────────
-522.00 ┤                   ╭───────────────────╮                  │                    
-464.00 ┤                   │                   │                  │                    
-406.00 ┤                   │                   │                  │                    
-348.00 ┤                   │                   ╰──────────────────╯                    
-232.00 ┼-------------------╯
-174.00 ┤                   │  
-116.00 ┤                   │
-58.00  ┤                   │  
-0.00   ┼-----------------------------------------------------------------------
-┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬────--
-0   0   0   1   1   1   1   1   2   2   2   2   2   3   3   3   3   3   4    
-                                                                         cycles
-```
-
-```text
-                                       Task: "B"
-
-durations (ms)                      - main task  - fn: user.greet  - fn: save
-╷
-580.00 ┼                                                          ╭───────────
-522.00 ┤                   ╭───────────────────╮                  │                    
-464.00 ┤                   │                   │                  │                    
-406.00 ┤                   │                   ╰──────────────────╯        
-348.00 ┤                   │                                     
-232.00 ┼                   |
-174.00 ┤                   │  
-116.00 ┤                   │
-58.00  ┤                   │  
-0.00   ┼-----------------------------------------------------------------------
-┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬────--
-0   0   0   1   1   1   1   1   2   2   2   2   2   3   3   3   3   3   4    
-
+457.00 ┤                                               ╭──────────────                
+416.80 ┤                               ╭───────────────╯                              
+376.60 ┼───────────────╮               │                                              
+336.40 ┤               │               │                                              
+296.20 ┤               ╰───────────────╯                                              
+256.00 ┤                                                                              
+215.80 ┤                                                              
+175.60 ┤                               ╭─────────────────────────────╮                
+135.40 ┤               ╭───────────────╯                             │                
+95.20  ┤               │                                             │                
+55.00  ┼───────────────╯                                             |
+┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬
+0   0   1   1   1   1   2   2   2   2   3   3   3   3   4   4   4   4   5     
+                                                                   cycles
 ```
 
 ### Accessing cycle info
@@ -474,7 +441,7 @@ durations (ms)                      - main task  - fn: user.greet  - fn: save
 ```js
 runner.run([
   {
-    name: 'Task A',
+    name: 'A',
     cycles: 3,
     fn: async ({ cycle, taskname }) => {
       console.log(cycle)
@@ -485,7 +452,8 @@ runner.run([
       console.log(taskname)
       // 'Task A'
     }
-  }
+  },
+
 ])
 ```
 
