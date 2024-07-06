@@ -471,7 +471,10 @@ Logs:
 
 #### `runner.toPlots()`
 
-Draws ASCII charts of max durations of each cycle and any timerified functions:
+Draws an ASCII chart of max durations for each task.
+
+The chart displays the duration of each cycle and any
+[timerified functions][timerify]:
 
 ```text
                                 Task: "B"
