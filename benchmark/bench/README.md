@@ -188,7 +188,9 @@ await runner.run([
     name: 'B',
     cycles: 2,
     fn: async () => {
-      const user = new User('foo')
+      const user = new User('bar')
+
+      user.updateName('baz')
 
       // call timerified "function B":
       await saveTimerified(user)
