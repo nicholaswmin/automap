@@ -369,7 +369,7 @@ There are different ways of visualising measurements.
 
 - A timeline
 - A [histogram][hgram]
-- ASCII max duration chart
+- An ASCII max duration chart
 
 ##### Example
 
