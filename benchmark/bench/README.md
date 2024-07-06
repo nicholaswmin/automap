@@ -147,7 +147,7 @@ tracks the function duration.
 
 Tracking the duration of `save` and `user.greet` methods:
 
-> Asssume `save` is an existing function which saves users in a database
+> Assume `save` is an existing function which saves users in a database
 
 ```js
 const runner = new PerformanceRunner()
@@ -304,7 +304,7 @@ await runner.run([
 
       await save(user)
 
-      performance.mark('memory-usage', {
+      performance.mark('mem-usage', {
         detail: {
           value: process.memoryUsage().heapUsed / 1000 / 1000,
           unit: 'mb'
@@ -321,7 +321,7 @@ await runner.run([
 
       await save(user)
 
-      performance.mark('memory-usage', {
+      performance.mark('mem-usage', {
         detail: {
           value: process.memoryUsage().heapUsed / 1000 / 1000,
           unit: 'mb'
@@ -337,23 +337,40 @@ runner.toHistograms()
 which outputs:
 
 ```text
-┌──────────────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────┐
-│         name │ count │     min │     max │    mean │    50 % │    99 % │ dev │
-├──────────────┼───────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────┤
-│        tasks │       │         │         │         │         │         │     │
-│              │       │         │         │         │         │         │     │
-│       Task A │     5 │ 0.04 ms │ 0.29 ms │ 0.17 ms │ 0.04 ms │ 0.29 ms │ 0   |
-│       Task B │    10 │ 0.05 ms │ 0.07 ms │ 0.06 ms │ 0.05 ms │ 0.07 ms │ 0   │
-│              │       │         │         │         │         │         │     │
-│        entry │       │         │         │         │         │         │     │
-│              │       │         │         │         │         │         │     │
-│ memory-usage │    15 │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │   19 mb │ 12  │
-└──────────────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────┘
+┌───────────┬───────┬─────────┬─────────┬─────────┬─────────────────────┐
+│      name |   min │     max │    mean │    50 % │    99 % │ deviation │
+├───────────┼───────┼─────────┼─────────┼─────────┼─────────┼───────────┤
+│     tasks │       │         │         │         │         │           │
+│           │       │         │         │         │         │           │
+│    Task A |  1 ms │  3.2 ms │ 2.13 ms │ 2.01 ms │ 2.10 ms │ 0.29 ms   │
+│    Task B │  2 ms │  3.1 ms │ 2.66 ms │ 2.44 ms │ 2.60 ms │ 0.07 ms   │
+│           │       │         │         │         │         │           │
+│     entry │       │         │         │         │         │           │
+│           │       │         │         │         │         │           │
+│ mem-usage │       │ 11.2 mb │ 36.3 mb │ 22.1 mb │ 21.2 mb │ 19.2 mb   │
+└───────────┴───────┴─────────┴─────────┴─────────┴─────────┴───────────┘
 ```
 
 ### Displaying results
 
-The different ways of visualising measurements.
+There are different ways of visualising measurements.
+
+- A timeline
+- A [histogram][hgram]
+- ASCII max duration chart
+
+##### Example
+
+Displaying the output as a timeline:
+
+```js
+
+const runner = new PerformanceRunner()
+
+await runner.run(tasks)
+
+runner.toTimeline()
+```
 
 #### `runner.toTimeline()`
 
@@ -409,8 +426,48 @@ each measurement:
 
 #### `runner.toEntries()`
 
-Returns an array with all emitted [`PerformanceEntry`][perf-entry] entries
+Returns an array of all emitted [`PerformanceEntry`][perf-entry] entries
 for each task.
+
+```js
+
+console.log(runner.toEntries())
+
+/*
+Logs:
+
+[
+  {
+    name: 'Task A',
+    entries: [
+      {
+        name: 'foo',
+        entryType: 'mark',
+        startTime: 100.539,
+        duration: 0,
+        detail: { value: 'foo', unit: 'foo' }
+      },
+
+      // more entries ...
+    ]
+  },
+  {
+    name: 'Task B',
+    entries: [
+      {
+        name: 'save',
+        entryType: 'function',
+        startTime: 167.683,
+        duration: 0.00533300000000736,
+      },
+
+      // more entries ...
+    ]
+  }
+]
+
+*/
+```
 
 #### `runner.toPlots()`
 

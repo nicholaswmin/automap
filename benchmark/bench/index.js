@@ -105,6 +105,8 @@ class PerformanceRunner {
     this.#throwIfNotEnded()
 
     this.tasks.forEach(task => console.log(task.plot.get(), '\n'))
+
+    return this
   }
 
   toEntries() {
