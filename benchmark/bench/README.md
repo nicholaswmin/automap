@@ -147,51 +147,50 @@ tracks the function duration.
 
 #### Example
 
-Tracking the duration of `save` and `user.greet` methods:
+Tracking the duration of `fetch` and `save` functions:
 
-> Assume `fetch` and `save` are functions that fetch/save users
-> to/from a database
+> assume they are real functions that get/save a user from/to a database
 
 ```js
-// Example function A:
+// function A:
 const fetch = user =>
   new Promise(resolve =>
     setTimeout(() => resolve({ name: 'foo' })), 250)
 
-// Example function B:
+// function B:
 const save = user =>
   new Promise(resolve => setTimeout(() => resolve()), 250)
 
 
-// timerify function A:
+// timerify "function A":
 const fetchTimerified = performance.timerify(fetch)
 
-// timerify function B:
+// timerify "function B":
 const saveTimerified = performance.timerify(save)
 
 
 await runner.run([
   {
     name: 'A',
-    cycles: 2,
+    cycles: 3,
     fn: async () => {
-      const user = new User('foo')
+      // call timerified "function A":
+      const user = fetchTimerified('foo')
 
-      // call timerified function:
+      user.updateName('bar')
+
+      // call timerified "function B":
       await saveTimerified(user)
     }
   },
 
   {
     name: 'B',
-    cycles: 3,
+    cycles: 2,
     fn: async () => {
-      // call timerified function:
-      const user = fetchTimerified('foo')
+      const user = new User('foo')
 
-      user.updateName('bar')
-
-      // call timerified function:
+      // call timerified "function B":
       await saveTimerified(user)
     }
   }
@@ -209,23 +208,22 @@ which outputs:
 │  Task: A │       │           │
 │          │       │           │
 │    cycle │   A 1 │  36.36 ms │
+│ function │ fetch │  95.12 ms │
 │ function │  save │  36.12 ms │
 │          │       │           │
 │    cycle │   A 2 │ 189.12 ms │
-│ function │  save │ 189.09 ms │
+│ function │ fetch │  80.03 ms │
+│ function │  save │ 109.09 ms │
 │          │       │           │
 │  Task: B │       │           │
 │          │       │           │
-│    cycle │   B 1 │  111.7 ms │
-│ function │ fetch │  80.59 ms │
+│    cycle │   B 1 │ 111.70 ms │
 │ function │  save │  40.43 ms │
 │          │       │           │
 │    cycle │   B 2 │ 225.74 ms │
-│ function │ fetch │  90.54 ms │
 │ function │  save │   8.18 ms │
 │          │       │           │
 │    cycle │   B 3 │  98.79 ms │
-│ function │ fetch │ 161.36 ms │
 │ function │  save │   8.18 ms │
 └──────────┴───────┴───────────┘
 ```
