@@ -329,7 +329,7 @@ await runner.run([
     name: 'B',
     cycles: 10,
     fn: async () => {
-      const user = new User('foo')
+      const user = new User('bar')
 
       await save(user)
 
