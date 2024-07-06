@@ -32,7 +32,7 @@ npm i https://github.com/nicholaswmin/bench
 
 ## Usage
 
-Run 2 tasks and print a [histogram][hgram] of the durations:
+Run 2 tasks, 5 times each, then print a timeline of the durations:
 
 ```js
 const runner = new PerformanceRunner()
@@ -40,18 +40,24 @@ const runner = new PerformanceRunner()
 await runner.run([
   {
     name: 'Task A',
-    cycles: 2,
+    cycles: 5,
     fn: function() {
       slowFunctionFoo()
       slowFunctionBar()
+      // runs 5 times ...
+
+      // more work here ...
     }
   },
 
   {
     name: 'Task B',
-    cycles: 3,
+    cycles: 5,
     fn: async function() {
       await slowAsyncFunctionBaz()
+      // runs 5 times ...
+
+      // more work here ...
     }
   }
 ])
