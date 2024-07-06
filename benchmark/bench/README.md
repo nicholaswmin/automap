@@ -161,10 +161,10 @@ const save = user =>
   new Promise(resolve => setTimeout(() => resolve()), 250)
 
 
-// timerify function A
+// timerify function A:
 const fetchTimerified = performance.timerify(fetch)
 
-// timerify function B
+// timerify function B:
 const saveTimerified = performance.timerify(save)
 
 
