@@ -527,9 +527,9 @@ runner.run([
     cycles: 3,
     fn: async ({ cycle, taskname }) => {
       console.log(cycle)
-      // '1' if it's the first cycle
-      // '2' if it's the second cycle
-      // '3' if it's the third & last cycle
+      // '1' for 1st cycle
+      // '2' for 2nd cycle
+      // '3' for 3rd/last cycle
 
       console.log(taskname)
       // 'A'
