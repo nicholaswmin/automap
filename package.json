@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test node --test test/index.spec.js",
-    "test-cov": "node --test --experimental-test-coverage test/index.spec.js",
+    "lcov": "NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
     "benchmark": "node benchmark/index.js",
     "example": "node .github/example/index.js"
   },
@@ -36,9 +36,7 @@
     "pathval": "^2.0.0"
   },
   "devDependencies": {
-    "asciichart": "^1.5.25",
-    "console-table-printer": "^2.12.1",
-    "ioredis": "^5.4.1",
-    "strip-ansi": "^7.1.0"
+    "bench": "github:nicholaswmin/bench",
+    "ioredis": "^5.4.1"
   }
 }

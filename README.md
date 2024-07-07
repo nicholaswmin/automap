@@ -1,4 +1,4 @@
-[![test-workflow][test-workflow-badge]][ci-test]
+[![test-workflow][test-workflow-badge]][ci-test] [![Coverage Status][coveralls-badge]][coveralls-report]
 
 # automap
 
@@ -526,6 +526,9 @@ Produces a test coverage report
 
 [test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
+
+[coveralls-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
+[coveralls-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
 
 [oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
 [redis]: https://redis.io/
