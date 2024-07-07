@@ -21,75 +21,7 @@ await runner.run([
     fn: async ({ cycle, taskname }) => {
       const paper = new Paper({ id: 'foo' })
 
-      await save(paper, cycle)
-    }
-  },
-
-  {
-    name: 'add_items',
-    cycles: 2,
-    fn: async ({ cycle, taskname }) => {
-      const paper = await fetch({ id: 'foo' }, cycle)
-
-      const _somethingSlow = () => setTimeout(250)
-      const somethingSlow = performance.timerify(_somethingSlow)
-
-      if ([2,4].includes(cycle))
-        await somethingSlow()
-
-      await paper.addItemToActiveBoard({
-        id: 'i_' + utils.randomID(),
-        json: utils.payloadKB(5)
-      })
-
-      const markA = performance.mark('a')
-      await setTimeout(30)
-      const markB = performance.mark('b')
-
-      performance.measure('a-to-b', 'a', 'b')
-
-      await save(paper, cycle)
-    }
-  },
-
-  {
-    name: 'create_board',
-    cycles: 10,
-    fn: async ({ cycle, taskname }) => {
-      const paper = await fetch({ id: 'foo' }, cycle)
-
-      await paper.addBoard({ id: 'b_' +  utils.randomID() })
-
-      await save(paper, cycle)
-    }
-  },
-
-  {
-    name: 'add_items',
-    cycles: 5,
-    fn: async ({ cycle, taskname }) => {
-      const paper = await fetch({ id: 'foo' }, cycle)
-
-      await paper.addItemToActiveBoard({
-        id: 'i_' + utils.randomID(),
-        json: utils.payloadKB(5)
-      })
-
-      performance.mark('payload', { detail: { value: 5, unit: 'kb' } })
-
-      await save(paper, cycle)
-    }
-  },
-
-  {
-    name: 'delete_board',
-    cycles: 1,
-    fn: async ({ cycle, taskname }) => {
-      const paper = await fetch({ id: 'foo' }, cycle)
-
-      await paper.deleteBoard({ id: paper.boards.at(-2).id })
-
-      await save(paper, cycle)
+      await save(paper)
     }
   }
 ])

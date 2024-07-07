@@ -1,4 +1,4 @@
-[![test-workflow][test-workflow-badge]][ci-test] [![Coverage Status][coveralls-badge]][coveralls-report]
+[![tests-workflow][tests-badge]][tests-workflow] [![coveralls-workflow][coveralls-badge]][coveralls-report]
 
 # automap
 
@@ -524,8 +524,8 @@ Produces a test coverage report
       of keys in Redis. This might cause issues in some cases but it's not
       something that can be reasonably worked around anyway.
 
-[test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
-[ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
+[tests-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
+[tests-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
 
 [coveralls-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coveralls-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
