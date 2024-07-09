@@ -4,6 +4,7 @@ import ioredis from 'ioredis-mock'
 
 import { Repository } from '../../../../src/repository.js'
 import { Chatroom } from '../../../model/index.js'
+import { Message } from '../../../model/index.js'
 
 test('repository', async t => {
   let repo
