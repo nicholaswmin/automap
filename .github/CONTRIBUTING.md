@@ -1,9 +1,12 @@
 # Contribution guidelines
 
+## Todos
+
+Remaining todos can be [viewed here][todos].
+
 ## Versioning
 
 Follows [Semantic Versioning][semver]
-
 
 ## Code changes
 
@@ -26,6 +29,7 @@ all should exit with exit-code:`0`, without *any* errors or warnings.
   `meta.yml` workflow.
 
 
+[todos]: ./TODO.md
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [semver]: https://semver.org/
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
