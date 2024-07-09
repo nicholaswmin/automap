@@ -11,6 +11,14 @@ Issues for bug reports *must*:
 
 Remaining todos can be [viewed here][todos].
 
+## Pointers
+
+- Code *must* always be accompanied by unit-tests for all code paths.
+- Dependencies *should* be kept to an absolute minimum.  
+  Use native functionality where possible.
+- Verbosity *should* be kept to a minimum in code, tests and docs.
+- Keep it simple. Prefer doing too little, rather than too much.
+
 ## Versioning
 
 Follows [Semantic Versioning][semver]
@@ -34,15 +42,6 @@ The CI workflows can be [found here][workflows].
 - [Functional tests][func-req] should be run in the `test.yml` workflow.
 - [Non-functional tests][non-func-req], i.e `npm audit` should be run in the
   `meta.yml` workflow.
-
-
-## Philosophy
-
-- Code *must* always be accompanied by unit-tests for all code paths.
-- Dependencies *should* be kept to an absolute minimum.  
-  Use native functionality where possible.
-- Verbosity *should* be kept to a minimum in code, tests and docs.
-- Keep it simple. Prefer doing too little, rather than too much.
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
