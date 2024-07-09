@@ -23,7 +23,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#tests)
   + [Run](#tests)
-  + [Coverage](#coverage)
+  + [Test coverage](#test-coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
 - [License](#license)
@@ -492,7 +492,7 @@ Run integration tests:
 npm run test:integration
 ```
 
-### Coverage
+### Test coverage
 
 ```bash
 npm run test:coverage
