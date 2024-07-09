@@ -483,7 +483,7 @@ npm run test:coverage
 
 ## Contributing
 
-Read the [Contribution Guidelines][contributing].
+Read the [Contribution guidelines][contributing].
 
 ## Authors
 
