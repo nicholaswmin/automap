@@ -1,4 +1,4 @@
-[![tests-workflow][tests-badge]][tests-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
+[![test-workflow][test-badge]][test-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
 
 # :cd: automap
 
@@ -526,8 +526,8 @@ Produces an [LCOV][lcov] report; a machine-readable test coverage report.
 
 <!--- Badges -->
 
-[tests-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
-[tests-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
+[test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml/badge.svg
+[test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
