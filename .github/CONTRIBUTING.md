@@ -38,6 +38,7 @@ The CI workflows can be [found here][workflows].
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
+[semver]: https://semver.org/
 [mcve]: https://en.wikipedia.org/wiki/Minimal_reproducible_example
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
