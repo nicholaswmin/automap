@@ -13,15 +13,13 @@ Follows [GitHub flow][github-flow]
 
 ### Before commit
 
-Run the following:
-
 ```bash
 npm test
 npm audit
 npm run lint
 ```
 
-all of the above should all exit with `0`; no errors and no warnings.
+all of the above should exit with `0`; no errors and no warnings.
 
 ## CI Workflows
 
