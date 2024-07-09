@@ -198,7 +198,7 @@ for (const item of list)
 // Number 1, Number 2, Number 3 ...
 ```
 
-... or use it like a regular `Array`:
+... and use it like a regular `Array`:
 
 ```js
 const array = new List(1, 2, 3)
