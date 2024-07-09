@@ -1,10 +1,10 @@
-import Bench from 'bench'
+import Benchmrk from 'benchmrk'
 import { Paper, Board } from './paper/index.js'
 import { Repository, utils } from '../index.js'
 
 const redis  = utils.ioredis()
 const repo   = new Repository(Paper, redis)
-const runner = new Bench()
+const runner = new Benchmrk()
 
 const fetch = performance.timerify(repo.fetch.bind(repo))
 const save  = performance.timerify(repo.save.bind(repo))

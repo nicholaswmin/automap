@@ -36,7 +36,7 @@
     "pathval": "^2.0.0"
   },
   "devDependencies": {
-    "bench": "github:nicholaswmin/bench",
+    "benchmrk": "^0.1.2",
     "ioredis": "^5.4.1"
   }
 }
