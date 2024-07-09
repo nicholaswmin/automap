@@ -21,7 +21,7 @@ npm audit
 npm run lint
 ```
 
-all of the above should all exit with `exit-code: 0`
+all of the above should all exit with `0`; no errors and no warnings.
 
 ## CI Workflows
 
