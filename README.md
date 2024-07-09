@@ -410,6 +410,8 @@ locally unless there's an obvious bottleneck.
 
 ## Alternatives
 
+### Saving encoded JSONs
+
 A small enough object-graph can easily get away with:
 
 - `JSON.stringify(object)`
