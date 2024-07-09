@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "npx eslint",
     "test": "NODE_ENV=test node --test test/index.spec.js",
+    "integration-test": "NODE_ENV=test node --test test/integration/index.spec.js",
     "coverage": "NODE_ENV=test node --test --experimental-test-coverage",
     "lcov": "NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info test/index.spec.js",
     "benchmark": "node benchmark/index.js",

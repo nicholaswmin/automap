@@ -13,8 +13,16 @@ Follows [GitHub flow][github-flow]
 
 ### Before commit
 
+Functional tests:
+
 ```bash
 npm test
+npm run integration-test
+```
+
+Meta:
+
+```bash
 npm audit
 npm run lint
 ```

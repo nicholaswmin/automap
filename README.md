@@ -19,6 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#test)
   + [Unit tests](#unit-tests)
+  + [Integration tests](#integration-tests)
   + [Test coverage](#test-coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -441,6 +442,12 @@ npm ci
 
 ```bash
 npm test
+```
+
+### Integration tests
+
+```bash
+npm run integration-test
 ```
 
 ### Test coverage
