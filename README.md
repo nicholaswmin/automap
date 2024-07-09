@@ -276,32 +276,9 @@ they can be lazy-loaded.
 
 ## Performance
 
-Known performance issues are summarised in these bullet points.
-
-In general, this module:
-
-- ensures that updates are atomic
-- has good time-complexity in steps that affect the number of network
-  roundtrips.
-- makes a poor effort to optimise time-complexity of steps that only involve
-  local computations
-- exhibits near [constant-time complexity O(1)][const] when lists are not
-  nested inside other lists.
-- supports an arbitrary number of nesting of lists
-- but exhibits very bad performance in those cases; it issues network requests
-  in a process that runs at the very least in
-  [quadratic-time O(n<sup>2</sup>)][qtc].
-- is entirely unnecessary if you can get away with stuffing your object
-  graph as a `JSON` in a single `Redis SET` operation.
-- is not an object-mapper and if you were looking for one, [this one][redisom]
-  is most probably what you're looking for.
-
-The sections below simply go into a bit more detail on the points listed
-above.
-
-You can skip reading them entirely.
-
 ### Atomicity
+
+#### Save
 
 - Each found list is decomposed into a single Redis `HSET` command.
 - All `HSET`s are then packaged into a single [pipelined][pipe] transaction
@@ -312,6 +289,8 @@ to a [`mget`][mget], but for hashes.
 
 These methods are considered enough in ensuring updates are
 both performant and [atomic][atomic][^1].
+
+#### Fetch
 
 In contrast, fetching an object graph is not entirely atomic.
 The part that breaks this guarantee is only when fetching the final
@@ -442,7 +421,7 @@ attempts to solve are solved out-the-box by using RedisJSON directly.
 So it's generally recommended to use RedisJSON directly rather
 than use this module, if it's available to you.
 
-### Alternative module
+### Alternative modules
 
 [Redis-OM][redisom]
 
