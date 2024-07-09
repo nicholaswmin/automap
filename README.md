@@ -208,10 +208,8 @@ const two = array.find(num => num === 2)
 console.log(two) // 2
 ```
 
-#### You can still use `Array`
-
-You can still use a regular `Array` for list-like data which you don't
-expect to become big enough to warrant decomposing when saved in Redis.
+You can still use a regular `Array` for list-like data, which you don't
+expect to become big enough to warrant decomposition when saving in Redis.
 
 ## Redis Data Structure
 
