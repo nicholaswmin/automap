@@ -468,8 +468,6 @@ npm test
 npm run coverage
 ```
 
-Runs all tests then also produces a test coverage report.
-
 ### LCOV report
 
 ```bash
@@ -481,9 +479,6 @@ npm run lcov
 ```bash
 npm run lint
 ```
-
-Produces an [LCOV][lcov] report; a machine-readable test coverage report.  
-Saved in root directory as `lcov.info`.
 
 ## License
 
