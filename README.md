@@ -468,12 +468,6 @@ npm test
 npm run coverage
 ```
 
-### LCOV report
-
-```bash
-npm run lcov
-```
-
 ## Contributing
 
 Read the [Contribution Guidelines][contributing] document.
@@ -553,5 +547,4 @@ Read the [Contribution Guidelines][contributing] document.
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[lcov]: https://github.com/linux-test-project/lcov
 [contributing]: .github/CONTRIBUTING.md
