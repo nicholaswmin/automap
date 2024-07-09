@@ -447,6 +447,8 @@ like Redis.
 
 ## Test
 
+Install all deps before running any tests:
+
 ```bash
 npm ci
 ```
