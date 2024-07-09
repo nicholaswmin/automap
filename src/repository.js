@@ -73,6 +73,8 @@ class Repository {
   }
 
   save(root) {
+    this.#throwOnInvalidRoot(root)
+
     const flat = flatten(root)
     const transaction = flat.lists.reduce((promise, item) => {
       return item.type === 'list' ?
@@ -121,6 +123,20 @@ class Repository {
 
   static createChildResourceNotFoundError(parentId, id) {
     throw new Error(`Cannot find child resource: ${id} of parent: ${parentId}`)
+  }
+
+  #throwOnInvalidRoot(root) {
+    if (!root || typeof root !== 'object')
+      throw new Error(`object must be an "object", got: ${typeof root}`)
+
+    if (!Object.hasOwn(root, 'id'))
+      throw new Error('object must have an "id" property')
+
+    if (typeof root.id !== 'string')
+      throw new Error(`object.id must be a "string", got ${typeof root.id}`)
+
+    if (root.id.length < 2)
+      throw new Error(`object.id must have a reasonable length (>= 2 chars)`)
   }
 }
 
