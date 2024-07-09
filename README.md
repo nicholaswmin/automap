@@ -4,6 +4,9 @@
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
+> [!IMPORTANT]  
+> Unpublished WIP
+
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
@@ -29,13 +32,6 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Authors](#authors)
 - [License](#license)
 
----
-
-> [!IMPORTANT]  
-> Unpublished WIP
->
-> - [Todos](.github/TODO.md)
-> - [Runnable example]( .github/example/index.js)
 
 ## Install
 
@@ -263,7 +259,7 @@ building:kensington:flats:0:persons
 
 A runnable example can be [found here][runnable-example].
 
-Run the example with:
+You can run it with:
 
 ```bash
 npm run example
