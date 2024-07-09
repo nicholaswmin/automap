@@ -29,7 +29,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 > [!IMPORTANT]  
 > Unpublished, work-in-progress  
 >
-> - [Todos](.github/docs/todo.md)
+> - [Todos](.github/todo.md)
 > - [Runnable example]( .github/example/index.js)
 
 ## Install
