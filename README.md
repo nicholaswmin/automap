@@ -51,20 +51,26 @@ This module exports a `Repository` which you set up, then call:
 Assume you have a `Building` which contains an array of `Flats`:
 
 ```js
-import { Repository } from 'automap'
+const building = new Building({
+  id: 'kensington',
+  flats: ['101', '102', '103']
+})
+```
 
-const repo = new Repository(Building, new ioredis())
+You can save it:
+
+```bash
+import { Repository } from 'automap'
 
 const building = new Building({
   id: 'kensington',
   flats: ['101', '102', '103']
 })
 
-await repo.save(building)
-// saved!
+const repo = new Repository(Building, new ioredis())
 ```
 
-and to fetch it back:
+and fetch it back:
 
 ```js
 const building = await repo.fetch('kensington')
