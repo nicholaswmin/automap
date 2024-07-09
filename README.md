@@ -161,7 +161,7 @@ console.log(building.flats)
 
 ### Runnable example
 
-A runnable example can be [found here][runnable-example].
+The `Building` example can be [found here][runnable-example].
 
 You can run it with:
 
