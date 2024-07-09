@@ -104,7 +104,7 @@ import { List } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new List({ // <- Use List instead of Array (!)
+    this.flats = new List({
       type: Flat,
       from: flats
     })
@@ -174,6 +174,16 @@ List-like data must use the `List` or `LazyList` types instead of an
 
 This allows decomposing those lists into manageable pieces that can be saved
 and retrieved far more efficiently.
+
+```js
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    // Using a List instead of Array (!)
+    this.flats = new List({ type: Flat, from: flats })
+  }
+}
+```
 
 Both types are subtypes of the native [`Array`][array],
 so they behave *exactly* the same:
