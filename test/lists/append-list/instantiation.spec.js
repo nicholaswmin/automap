@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test, beforeEach } from 'node:test'
 
 import { AppendList } from '../../../src/list.js'
 import { Message } from '../../model/index.js'
@@ -28,7 +28,7 @@ test('AppendList', async t => {
     await t.test('passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new AppendList({
-          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', name: 'World' }],
+          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
           type: Message
         })
       })
@@ -49,9 +49,7 @@ test('AppendList', async t => {
       await t.test('throws', t => {
         assert.throws(
           () => {
-            list = new List({
-              type: User
-            })
+            list = new AppendList({ type: Message })
           })
       })
     })
@@ -82,6 +80,20 @@ test('AppendList', async t => {
 
     await t.test('set to false', t => {
       assert.strictEqual(list.loaded, false)
+    })
+  })
+
+  await t.test('passing an empty items array', async t => {
+    await t.beforeEach(t => {
+      list = new AppendList({ from: [], type: Message })
+    })
+
+    await t.test('has no items', t => {
+      assert.strictEqual(list.length, 0)
+    })
+
+    await t.test('is loaded', t => {
+      assert.ok(list.loaded === false)
     })
   })
 })

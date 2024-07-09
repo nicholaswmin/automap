@@ -1,8 +1,8 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test, beforeEach } from 'node:test'
 
 import { List } from '../../../src/list.js'
-import { User } from '../../model/index.js'
+import { Message } from '../../model/index.js'
 
 test('List', async t => {
   let list
@@ -11,7 +11,7 @@ test('List', async t => {
     await t.test('without passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new List({
-          from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
+          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }]
         })
       })
 
@@ -20,16 +20,16 @@ test('List', async t => {
       })
 
       await t.test('adds the items as-is', t => {
-        assert.strictEqual(list[0].name, 'John')
-        assert.strictEqual(list[1].name, 'Mary')
+        assert.strictEqual(list[0].text, 'Hello')
+        assert.strictEqual(list[1].text, 'World')
       })
     })
 
     await t.test('passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new List({
-          from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }],
-          type: User
+          from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
+          type: Message
         })
       })
 
@@ -38,8 +38,8 @@ test('List', async t => {
       })
 
       await t.test('maps the items as instances', t => {
-        assert.strictEqual(list[0].constructor.name, 'User')
-        assert.strictEqual(list[1].constructor.name, 'User')
+        assert.strictEqual(list[0].constructor.name, 'Message')
+        assert.strictEqual(list[1].constructor.name, 'Message')
       })
     })
 
@@ -49,9 +49,7 @@ test('List', async t => {
       await t.test('throws', t => {
         assert.throws(
           () => {
-            list = new List({
-              type: User
-            })
+            list = new List({ type: Message })
           })
       })
     })
@@ -81,6 +79,20 @@ test('List', async t => {
     })
 
     await t.test('set to true', t => {
+      assert.ok(list.loaded)
+    })
+  })
+
+  await t.test('passing an empty items array', async t => {
+    await t.beforeEach(t => {
+      list = new List({ from: [], type: Message })
+    })
+
+    await t.test('has no items', t => {
+      assert.strictEqual(list.length, 0)
+    })
+
+    await t.test('is loaded', t => {
       assert.ok(list.loaded)
     })
   })

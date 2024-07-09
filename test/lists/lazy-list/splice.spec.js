@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test, beforeEach } from 'node:test'
 
 import { LazyList } from '../../../src/list.js'
 import { Message } from '../../model/index.js'

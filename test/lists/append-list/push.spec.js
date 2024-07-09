@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test, beforeEach } from 'node:test'
 
 import { Message } from '../../model/index.js'
 import { AppendList } from '../../../src/list.js'
@@ -12,7 +12,7 @@ test('AppendList', async t => {
 
     await t.beforeEach(t => {
       list = new AppendList({
-        from: [{ id: 'm_1', name: 'Hello' }],
+        from: [{ id: 'm_1', text: 'Hello' }],
         type: Message
       })
 
@@ -21,6 +21,7 @@ test('AppendList', async t => {
 
     await t.test('adds the items', t => {
       assert.strictEqual(list.length, 2)
+      assert.strictEqual(list[0].text, 'Hello')
     })
 
     await t.test('adds them after the existing items', t => {

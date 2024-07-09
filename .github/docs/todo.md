@@ -9,13 +9,13 @@
     complete bullshit thing - unnecessary. Must fix - must make it simpler
   - [x] there are tests that do `list.value.value` to access some value, this
         is not acceptable
-  - [ ] There is no testing for lists with 0 items - hence why this slipped
+  - [x] There is no testing for lists with 0 items - hence why this slipped
         through.
 - [x] Instead of using arguments, use inheritance and have 3 lists
   - `List`
   - `LazyList` extends `List`
   - `AppendList` extends `LazyList`
-- [ ] The repositories must take in regular `ids` and not `entity:id` formats.
+- [x] The repositories must take in regular `ids` and not `entity:id` formats.
 - [x] The append list must differentiate between new entries and existing.
 - [ ] The whole `Node` being disconnected from the `List` is confusing.
 - [ ] There is a `for..of` loop that must be pipelined when reviving.
