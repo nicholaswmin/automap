@@ -20,7 +20,8 @@ npm audit
 npm run lint
 ```
 
-all should exit with exit-code:`0`, without *any* errors or warnings.
+all of the above should exit with a **0 exit-code**, without *any* errors
+or warnings.
 
 ## CI Workflows
 
