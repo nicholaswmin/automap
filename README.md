@@ -122,8 +122,8 @@ class Flat {
 
 ### Lazy Loading
 
-Sometimes you won't need to load the contents of a list initially.  
-You might want to load it's contents later; after you fetch it or even
+Sometimes you won't need to load the contents of a list initially.   
+You might want to load it's contents later - after you fetch it, or even
 none at all.
 
 In that case, use a `LazyList` instead of a `List`.
