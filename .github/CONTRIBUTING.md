@@ -1,5 +1,4 @@
-# Contributing
-> Contributing guidelines
+# Contribution guidelines
 
 ## Flow
 
