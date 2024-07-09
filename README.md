@@ -9,7 +9,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Basic](#example-1)
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
-- [Data structure](#redis-data-structure)
+- [Redis data structure](#redis-data-structure)
 - [Reason](#reason)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
