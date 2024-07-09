@@ -1,4 +1,4 @@
-[![meta-workflow][meta-badge]][meta-workflow] [![test-workflow][test-badge]][test-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
+[![test-workflow][test-badge]][test-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
 
 # :cd: automap
 
@@ -501,9 +501,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 
 <!--- Badges -->
-
-[meta-badge]: https://github.com/nicholaswmin/automap/actions/workflows/meta.yml/badge.svg
-[meta-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/meta.yml
 
 [test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml
