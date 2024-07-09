@@ -11,7 +11,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Usage](#usage)
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
-  * [The List type](#the-list-type)
+  * [`List` types](#the-list-types)
 - [Redis data structure](#redis-data-structure)
 - [Runnable example](#runnable-example)
 - [Purpose](#purpose)
@@ -159,7 +159,7 @@ console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
-### The `List` type
+### The `List` types
 
 Both `List` and `LazyList` are direct subtypes of the native [`Array`][array],
 therefore they behave *exactly* the same.
