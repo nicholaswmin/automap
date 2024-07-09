@@ -15,13 +15,10 @@ Follows [GitHub flow][github-flow]
 ### Before commit
 
 ```bash
-npm test &&
-npm audit &&
-npm run lint
+npm run test:precommit
 ```
 
-all of the above should exit with a **exit code: 0**, without *any* errors
-or warnings.
+The above should exit with **exit code: 0**, without *any* errors or warnings.
 
 ## CI Workflows
 
