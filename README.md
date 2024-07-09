@@ -146,8 +146,8 @@ console.log(building.flats)
 
 ### The `List` type
 
-Both provided lists - `List`/`LazyList` - are direct subtypes of
-the native [`Array`][array], therefore they behave *exactly* the same.
+Both `List` and `LazyList` are direct subtypes of the native [`Array`][array],
+therefore they behave *exactly* the same.
 
 They also provide an interface for casting to a type:
 
