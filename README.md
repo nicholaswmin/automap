@@ -4,9 +4,9 @@
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
+- [Install](#install)
 - [Usage](#usage)
-- [Defining models](#defining-models)
-  * [Basic](#example-1)
+  * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
 - [Redis data structure](#redis-data-structure)
@@ -77,14 +77,13 @@ for (let flat of building.flats)
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
 
-## Defining models
+### Model definition
 
-To make an object graph persistable just:
+To make an object graph persistable:
 
-- **Use the provided `List` type instead of an [`Array`][array]**
-  when defining list-like data.
-- Ensure your **root object has an `id` property** set to a unique value.  
-  This `id` is used to fetch your item back.
+- **Use the provided `List` type** for list-like data, instead of an
+  [`Array`][array].
+- **Add an `id` property** set to a unique value on your object root.  
 
 ### Example
 
