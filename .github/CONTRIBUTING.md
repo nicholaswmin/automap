@@ -4,7 +4,7 @@
 
 Follows [GitHub flow][github-flow]
 
-## Before commit
+### Before commit
 
 Run the following:
 
