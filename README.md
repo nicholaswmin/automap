@@ -20,6 +20,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Tests](#test)
   + [Unit tests](#unit-tests)
   + [Test coverage](#test-coverage)
+- [Contributing](#contributing)
 
 ---
 
@@ -473,11 +474,10 @@ npm run coverage
 npm run lcov
 ```
 
-### Lint
+## Contributing
 
-```bash
-npm run lint
-```
+Read the [Contribution Guidelines][contributing] document.
+
 
 ## License
 
@@ -554,3 +554,4 @@ npm run lint
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
 [lcov]: https://github.com/linux-test-project/lcov
+[contributing]: .github/CONTRIBUTING.md
