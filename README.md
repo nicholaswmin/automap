@@ -455,11 +455,15 @@ npm ci
 
 ### Run all
 
+Run unit, integration and performance tests:
+
 ```bash
 npm test
 ```
 
 ### Unit
+
+Run only unit tests:
 
 ```bash
 npm run test:unit
@@ -467,11 +471,15 @@ npm run test:unit
 
 ### Integration
 
+Run only integration tests:
+
 ```bash
 npm run test:integration
 ```
 
 ### Coverage
+
+Run all tests and produce a test coverage report:
 
 ```bash
 npm run test:coverage
