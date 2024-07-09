@@ -14,7 +14,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [The List type](#the-list-type)
 - [Redis data structure](#redis-data-structure)
 - [Runnable example](#runnable-example)
-- [Reason](#reason)
+- [Purpose](#purpose)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
@@ -267,7 +267,7 @@ npm run example
 
 ## Notes
 
-### Reason
+### Purpose
 
 A well-designed OOP structure can accurately capture the semantics and flow
 of your business-logic and/or domain.
