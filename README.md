@@ -59,7 +59,7 @@ const building = new Building({
 
 You can save it:
 
-```bash
+```js
 import { Repository } from 'automap'
 
 const repo = new Repository(Building, new ioredis())
