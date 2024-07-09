@@ -1,5 +1,12 @@
 # Contribution guidelines
 
+## Issues
+
+Issues for bug reports must:
+
+- be tagged as a "bug"
+- include a [Minimal, Complete and Verifiable Example][mcve]
+
 ## Todos
 
 Remaining todos can be [viewed here][todos].
@@ -30,8 +37,8 @@ The CI workflows can be [found here][workflows].
 
 
 [todos]: ./TODO.md
-[github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
-[semver]: https://semver.org/
 [workflows]: ./workflows
+[mcve]: https://en.wikipedia.org/wiki/Minimal_reproducible_example
+[github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
