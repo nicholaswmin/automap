@@ -86,6 +86,8 @@ class Repository {
   }
 
   async fetch({ id }) {
+    this.#throwOnInvalidId(id)
+
     const key = this.Class.name.toLowerCase() + ':' + id
     const root = await this.loaders.string.get(key)
 
@@ -132,11 +134,15 @@ class Repository {
     if (!Object.hasOwn(root, 'id'))
       throw new Error('object must have an "id" property')
 
-    if (typeof root.id !== 'string')
-      throw new Error(`object.id must be a "string", got ${typeof root.id}`)
+    this.#throwOnInvalidId(root.id)
+  }
 
-    if (root.id.length < 2)
-      throw new Error(`object.id must have a reasonable length (>= 2 chars)`)
+  #throwOnInvalidId(id) {
+    if (!id || typeof id !== 'string')
+      throw new Error(`id must be a "string", got: ${typeof id}`)
+
+    if (id.length < 2)
+      throw new Error(`id must have a reasonable length (>= 2 chars)`)
   }
 }
 

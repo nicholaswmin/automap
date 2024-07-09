@@ -3,7 +3,7 @@
 ## Critical
 
 - [ ] Consecutive saves increase the saving time linearly
-  - See `benchmark/save-perf-bug.js`
+  - See `benchmark/index.js`
 - [x] There is a bug which causes empty lists to be passed on to `save()`.
   - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
     complete bullshit thing - unnecessary. Must fix - must make it simpler
