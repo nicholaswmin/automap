@@ -175,10 +175,8 @@ List-like data must use the `List` or `LazyList` types instead of an
 This allows decomposing those lists into manageable pieces that can be saved
 and retrieved far more efficiently.
 
-Both types are direct subtypes of the native [`Array`][array], therefore they
-behave *exactly* the same.
-
-They also provide an interface for casting to a type:
+Both types are subtypes of the native [`Array`][array],
+so they behave *exactly* the same:
 
 ```js
 
