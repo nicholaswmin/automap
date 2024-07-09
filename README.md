@@ -74,8 +74,6 @@ for (let flat of building.flats)
 
 ## Defining models
 
-This module is not an OM/ORM so there's no schema definition.
-
 To make an object graph persistable just:
 
 - **Use the provided `List` type instead of an [`Array`][array]**
