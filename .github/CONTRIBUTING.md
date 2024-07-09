@@ -1,15 +1,8 @@
 # Contribution guidelines
 
-## Issues
-
-Issues for bug reports *must*:
-
-- be tagged as a "bug"
-- include a [Minimal, Complete and Verifiable Example][mcve]
-
 ## Todos
 
-Remaining todos can be [viewed here][todos].
+Todos can be [viewed here][todos].
 
 ## Pointers
 
