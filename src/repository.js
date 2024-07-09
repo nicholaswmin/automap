@@ -83,6 +83,7 @@ class Repository {
     }, this.redis.multi().set(flat.root.key, flat.root.value))
 
     return transaction.exec()
+      .then(res => !!res.flat(10).filter(res => !!res).length)
   }
 
   async fetch({ id }) {
@@ -128,8 +129,15 @@ class Repository {
   }
 
   #throwOnInvalidRoot(root) {
+    const type = this.Class.name
+
     if (!root || typeof root !== 'object')
       throw new Error(`object must be an "object", got: ${typeof root}`)
+
+    if (root.constructor.name !== type)
+      throw new Error(
+        `object must be an instance of ${type}, got: ${root.constructor.name}`
+      )
 
     if (!Object.hasOwn(root, 'id'))
       throw new Error('object must have an "id" property')

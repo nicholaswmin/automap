@@ -27,6 +27,7 @@
 
 ## Testing
 
+- [ ] Fix `test.todo` tests
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
       appropriate/descriptive.

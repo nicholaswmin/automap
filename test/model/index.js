@@ -13,7 +13,7 @@ The model represents a simple Chatroom in the following structure:
 import { List, AppendList, utils } from '../../index.js'
 
 class Chatroom {
-  constructor({ id = utils.randomID(), users = [], messages = [] }) {
+  constructor({ id = utils.randomID(), users = [], messages = [] } = {}) {
     this.id = id
 
     this.users = new List({
