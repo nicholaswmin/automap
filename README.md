@@ -27,7 +27,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 ---
 
 > [!IMPORTANT]  
-> Unpublished, work-in-progress  
+> Unpublished WIP
 >
 > - [Todos](.github/TODO.md)
 > - [Runnable example]( .github/example/index.js)
