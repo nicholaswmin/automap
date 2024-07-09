@@ -466,10 +466,19 @@ Runs all tests, both unit-tests and integration-tests.
 ### Test coverage
 
 ```bash
-npm run test-cov
+npm run coverage
 ```
 
-Produces a test coverage report
+Runs all tests then also produces a test coverage report.
+
+### LCOV report
+
+```bash
+npm run lcov
+```
+
+Produces an [LCOV][lcov] report; a machine-readable test coverage report.
+
 
 
 ## License
@@ -543,3 +552,4 @@ Produces a test coverage report
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
+[lcov]: https://wiki.documentfoundation.org/Development/Lcov
