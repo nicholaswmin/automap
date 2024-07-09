@@ -19,7 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#test)
-  + [Install deps](#test)
+  + [Install](#install-1)
   + [Run](#run-all)
   + [Unit](#unit)
   + [Integration](#integration)
@@ -445,7 +445,7 @@ like Redis.
 
 ## Test
 
-### Install test dependencies
+### Install
 
 Install test dependencies before running any tests:
 
