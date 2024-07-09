@@ -201,7 +201,7 @@ console.log(Array.isArray(list)) // true
 ```
 
 
-... you can also specify a `from` parameter to cast to a type:
+... you can also specify a `type` parameter to cast to a type:
 
 ```js
 const list = new List({ type: String, from: [1, 2, 3] })
