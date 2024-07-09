@@ -468,15 +468,11 @@ like Redis.
 
 ## Tests
 
-### Install
-
 Install test dependencies before running any tests:
 
 ```bash
 npm ci
 ```
-
-### Run
 
 Run all tests:
 
