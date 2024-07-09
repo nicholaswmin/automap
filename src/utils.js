@@ -18,7 +18,7 @@ const payloadKB = kb => {
     ...JSON.parse(`["Path",{"applyMatrix":true,"data":{"guid":"${randomID()}"},"segments":[${`[${randomNum()}, ${randomNum()}]`}],"strokeColor":[0.6141276000612308,0.0073291996604683, 0.20695908748200353],"strokeWidth":2,"strokeCap":"round","strokeJoin":"round"}]`),
     segments: Array.from({
       length: 63 * kb
-    }, (_, i) => [ randomNum(), randomNum() ])
+    }, () => [ randomNum(), randomNum() ])
   })
 }
 

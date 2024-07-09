@@ -66,13 +66,15 @@ class Repository {
         },
 
         set: (key, value) => {
-          return this.redis.rpush(item.key, item.value)
+          return this.redis.rpush(key, value)
         }
       }
     }
   }
 
   save(root) {
+    this.#throwOnInvalidRoot(root)
+
     const flat = flatten(root)
     const transaction = flat.lists.reduce((promise, item) => {
       return item.type === 'list' ?
@@ -84,6 +86,8 @@ class Repository {
   }
 
   async fetch({ id }) {
+    this.#throwOnInvalidId(id)
+
     const key = this.Class.name.toLowerCase() + ':' + id
     const root = await this.loaders.string.get(key)
 
@@ -121,6 +125,24 @@ class Repository {
 
   static createChildResourceNotFoundError(parentId, id) {
     throw new Error(`Cannot find child resource: ${id} of parent: ${parentId}`)
+  }
+
+  #throwOnInvalidRoot(root) {
+    if (!root || typeof root !== 'object')
+      throw new Error(`object must be an "object", got: ${typeof root}`)
+
+    if (!Object.hasOwn(root, 'id'))
+      throw new Error('object must have an "id" property')
+
+    this.#throwOnInvalidId(root.id)
+  }
+
+  #throwOnInvalidId(id) {
+    if (!id || typeof id !== 'string')
+      throw new Error(`id must be a "string", got: ${typeof id}`)
+
+    if (id.length < 2)
+      throw new Error(`id must have a reasonable length (>= 2 chars)`)
   }
 }
 

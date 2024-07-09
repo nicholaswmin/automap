@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test } from 'node:test'
 
 import { flatten } from '../../../../src/map.js'
 import { Chatroom } from '../../../model/index.js'
@@ -7,7 +7,7 @@ import { Chatroom } from '../../../model/index.js'
 test('#flatten()', async t => {
   let list
 
-  await t.beforeEach(t => {
+  await t.beforeEach(() => {
     let chatroom = new Chatroom({
       id: 'c_1',
       messages: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
@@ -21,7 +21,7 @@ test('#flatten()', async t => {
     list = result.lists.find(r => r.key === 'chatroom:c_1:messages')
   })
 
-  await t.test('does not export list since it has no additions', t => {
+  await t.test('does not export list since it has no additions', () => {
     assert.strictEqual(list, undefined)
   })
 })

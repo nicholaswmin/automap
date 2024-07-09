@@ -2,14 +2,14 @@
 
 # :cd: automap
 
-Store [OOP][oop] object-graphs in Redis
+Store [OOP][oop] object-graphs in [Redis][redis]
 
 - [Usage](#usage)
 - [Defining models](#defining-models)
   * [Basic](#example-1)
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
-- [Data structure](#redis-data-structure)
+- [Redis data structure](#redis-data-structure)
 - [Reason](#reason)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
@@ -24,11 +24,16 @@ Store [OOP][oop] object-graphs in Redis
 ---
 
 > [!IMPORTANT]  
+> This is an unpublished work-in-progress  
 >
-> See:  
 > - [Todos](.github/docs/todo.md)
 > - [Runnable example]( .github/example/index.js)
->
+
+## Install
+
+```bash
+npm i https://github.com/nicholaswmin/automap
+```
 
 ## Usage
 
@@ -73,8 +78,6 @@ for (let flat of building.flats)
 > including any nested types.
 
 ## Defining models
-
-This module is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
@@ -146,8 +149,8 @@ console.log(building.flats)
 
 ### The `List` type
 
-Both provided lists - `List`/`LazyList` - are direct subtypes of
-the native [`Array`][array], therefore they behave *exactly* the same.
+Both `List` and `LazyList` are direct subtypes of the native [`Array`][array],
+therefore they behave *exactly* the same.
 
 They also provide an interface for casting to a type:
 
@@ -447,7 +450,7 @@ like Redis.
 
 ## Test
 
-Install dependencies:
+Install all deps before running any tests:
 
 ```bash
 npm ci
@@ -455,13 +458,9 @@ npm ci
 
 ### Unit tests
 
-then:
-
 ```bash
 npm test
 ```
-
-Runs all tests, both unit-tests and integration-tests.
 
 ### Test coverage
 
@@ -477,9 +476,14 @@ Runs all tests then also produces a test coverage report.
 npm run lcov
 ```
 
-Produces an [LCOV][lcov] report; a machine-readable test coverage report.
+### Lint
 
+```bash
+npm run lint
+```
 
+Produces an [LCOV][lcov] report; a machine-readable test coverage report.  
+Saved in root directory as `lcov.info`.
 
 ## License
 

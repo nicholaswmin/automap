@@ -10,7 +10,7 @@ The model represents a simple Chatroom in the following structure:
         - 'user.notes'
 */
 
-import { List, LazyList, AppendList, utils } from '../../index.js'
+import { List, AppendList, utils } from '../../index.js'
 
 class Chatroom {
   constructor({ id = utils.randomID(), users = [], messages = [] }) {

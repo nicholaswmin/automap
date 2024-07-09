@@ -1,3 +1,5 @@
+// Run `npm run example` to run this example
+
 import { Repository, List, LazyList, utils } from '../../index.js'
 
 const redis = utils.ioredis()

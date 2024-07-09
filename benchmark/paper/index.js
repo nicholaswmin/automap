@@ -86,7 +86,7 @@ class Paper {
     const board = this._findBoardById({ id })
 
     if (!board)
-      throw Paper.createBoardNotFoundError(boardId)
+      throw Paper.createBoardNotFoundError()
 
     this.activeBoardId = board.id
 

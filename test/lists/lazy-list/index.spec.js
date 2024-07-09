@@ -1,5 +1,5 @@
-import './instantiation.spec.js'
+import './new.spec.js'
 import './push.spec.js'
 import './splice.spec.js'
 import './load.spec.js'
-import './to-json.spec.js'
+import './export.spec.js'
