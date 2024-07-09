@@ -4,6 +4,8 @@
 
 ## Critical
 
+- [ ] Consecutive saves increase the time linearly
+  - See `benchmark/save-perf-bug.js`
 - [x] There is a bug which causes empty lists to be passed on to `save()`.
   - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
     complete bullshit thing - unnecessary. Must fix - must make it simpler
@@ -11,7 +13,6 @@
         is not acceptable
   - [ ] There is no testing for lists with 0 items - hence why this slipped
         through.
-
 - [x] Instead of using arguments, use inheritance and have 3 lists
   - `List`
   - `LazyList` extends `List`

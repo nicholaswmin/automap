@@ -1,6 +1,6 @@
-[![test-workflow][test-workflow-badge]][ci-test] [![Coverage Status][coveralls-badge]][coveralls-report]
+[![tests-workflow][tests-badge]][tests-workflow] [![coveralls-workflow][coveralls-badge]][coveralls-report] ![npm bundle size][npm-size]
 
-# automap
+# :cd: automap
 
 Efficiently store complex object graphs in Redis
 
@@ -12,15 +12,23 @@ Efficiently store complex object graphs in Redis
 - [Data structure](#redis-data-structure)
 - [Reason](#reason)
 - [Performance](#performance)
-  * [Concurrency Control](#concurrency-control)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
-- [Do you *really* need this?](#where-this-is-unnecessary)
-  * [Why not Redis JSON](#why-not-redis-json)
-  * [Alternatives](#alternatives)
-- [Running tests and test coverage](#test)
+- [Alternatives](#alternatives)
+- [Tests](#test)
+  + [Unit tests](#unit-tests)
+  + [Test coverage](#test-coverage)
+
+---
+
+> [!IMPORTANT]  
+>
+> See:  
+> - [Todos](.github/docs/todo.md)
+> - [Runnable example]( .github/example/index.js)
+>
 
 ## Usage
 
@@ -70,10 +78,9 @@ This package is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
-- Ensure you use the provided `List` type instead of an [`Array`][array]
+- **Use the provided `List` type instead of an [`Array`][array]**
   when defining list-like data.
-- Ensure that at least your root object has an `id` property set to a
-  unique value.  
+- Ensure your **root object has an `id` property** set to a unique value.  
   This `id` is used to fetch your item back.
 
 ### Example
@@ -268,9 +275,7 @@ Known performance issues are summarised in these bullet points.
 
 In general, this package:
 
-- does not implement any concurrency control mechanism
 - ensures that updates are atomic
-- does not ensure that reads are atomic
 - has good time-complexity in steps that affect the number of network
   roundtrips.
 - makes a poor effort to optimise time-complexity of steps that only involve
@@ -290,24 +295,6 @@ The sections below simply go into a bit more detail on the points listed
 above.
 
 You can skip reading them entirely.
-
-### Benchmarks?
-
-This package assumes an acceptable response time is at most `20ms` and on
-average `~10ms`. If this sounds like a lot to you then this is not a
-package that can help you since those are more than OK times for the intended
-use of this package.
-
-For reference, a single Redis `GET` can run in sub-millisecond time assuming
-your services are running relatively close-by.
-
-### Concurrency Control
-
-Outside of attempting to maximise the atomicity of it's own operations, there's
-zero effort in implementing any form of [concurrency control][cc]
-
-As a general rule, the Redis philosophy is to avoid strict concurrency
-controls in favour of high-performance and high-availability.
 
 ### Atomicity
 
@@ -415,7 +402,7 @@ against *every* list.
 There's almost zero attention being paid in assuring good time complexity
 locally unless there's an obvious bottleneck.
 
-### Where this is unnecessary
+## Alternatives
 
 A small enough object-graph can easily get away with:
 
@@ -450,7 +437,7 @@ attempts to solve are solved out-the-box by using RedisJSON directly.
 So it's generally recommended to use RedisJSON directly rather
 than use this package, if it's available to you.
 
-### Known alternatives
+### Other packages
 
 [Redis-OM][redisom]
 
@@ -465,6 +452,8 @@ Install dependencies:
 ```bash
 npm ci
 ```
+
+### Unit tests
 
 then:
 
@@ -524,11 +513,19 @@ Produces a test coverage report
       of keys in Redis. This might cause issues in some cases but it's not
       something that can be reasonably worked around anyway.
 
-[test-workflow-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
-[ci-test]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
+
+
+<!--- Badges -->
+
+[tests-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
+[tests-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
 
 [coveralls-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coveralls-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
+
+[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
+
+<!--- /Badges -->
 
 [oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
 [redis]: https://redis.io/
@@ -537,7 +534,6 @@ Produces a test coverage report
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 [redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
 [redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
-[redlock]: https://redis.io/docs/latest/develop/use/patterns/distributed-locks/
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
@@ -546,6 +542,4 @@ Produces a test coverage report
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
-[cc]: https://en.wikipedia.org/wiki/Concurrency_control
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[cap]: https://en.wikipedia.org/wiki/CAP_theorem

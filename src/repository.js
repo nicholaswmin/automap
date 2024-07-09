@@ -4,6 +4,7 @@ class Repository {
   constructor(Class, redis) {
     this.Class = Class
     this.redis = redis
+
     // Usage: `const res = await this.redis.hmgetall(2, 'hash1', 'hash2')`
     this.redis.defineCommand('hmgetall', {
       lua: `local r = {} for _, v in pairs(KEYS) do r[#r+1] = redis.call('HGETALL', v) end return r`
@@ -87,7 +88,7 @@ class Repository {
     const root = await this.loaders.string.get(key)
 
     if (!root)
-      Repository.createResourceNotFoundError(id)
+      return null
 
     const expandedData = await expand(root, async subs => {
       const hashSubs = subs.filter(sub => sub.traits.type === 'hash')
@@ -116,10 +117,6 @@ class Repository {
     const data = await expand(root, this.loaders)
 
     return new this.Class(data.json)
-  }
-
-  static createResourceNotFoundError(id) {
-    throw new Error(`Cannot find mapped resource: ${id}`)
   }
 
   static createChildResourceNotFoundError(parentId, id) {
