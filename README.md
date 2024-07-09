@@ -21,9 +21,9 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
-- [Tests](#test)
+- [Tests](#tests)
   + [Install](#install-1)
-  + [Run tests](#run)
+  + [Run](#run)
   + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -467,7 +467,7 @@ This is a full-blown Object-Mapper which of course requires
 schema definitions. It's like an ORM but for non-relational datastores
 like Redis.
 
-## Test
+## Tests
 
 ### Install
 
@@ -479,29 +479,25 @@ npm ci
 
 ### Run
 
-#### All
-
-Run unit, integration and performance tests:
+Run all tests:
 
 ```bash
 npm test
 ```
 
-#### Unit
+Run unit tests:
 
 ```bash
 npm run test:unit
 ```
 
-#### Integration
+Run integration tests:
 
 ```bash
 npm run test:integration
 ```
 
 ### Coverage
-
-Run all tests and produce a test coverage report:
 
 ```bash
 npm run test:coverage
