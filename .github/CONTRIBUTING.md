@@ -1,7 +1,9 @@
 # Contributing
 > Contributing guidelines
 
-Uses [Github Flow][github-flow]
+## Overview
+
+Uses [GitHub flow][github-flow]
 
 ## Before commit
 
