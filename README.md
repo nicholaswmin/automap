@@ -93,9 +93,9 @@ for (let flat of building.flats)
 
 To make an object graph persistable:
 
-- **Use the provided `List` type** for list-like data, instead of an
+1. Use the provided `List` type for list-like data, instead of an
   [`Array`][array].
-- **Add an `id` property** set to a unique value on your object root.  
+2. Ensure your root object has an `id` property set to a unique value.
 
 ### Example
 
