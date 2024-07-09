@@ -97,9 +97,9 @@ To make an object graph persistable:
   [`Array`][array].
 2. Ensure your root object has an `id` property set to a unique value.
 
-### Example
+#### Example
 
-A `Building` with `Flats`:
+Same example as above, a `Building` with `Flats`:
 
 ```js
 import { List } from 'automap'
