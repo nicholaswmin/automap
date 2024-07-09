@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 3
     strategy:
       matrix:
-        node-version: [latest]
+        node-version: [20, latest]
     env:
       ENV_CI: 1
     steps:
