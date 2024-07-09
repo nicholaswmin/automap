@@ -21,8 +21,9 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Tests](#test)
   + [Install](#install-1)
   + [Run](#run-all)
-  + [Unit](#unit)
-  + [Integration](#integration)
+    + [All](#run-all)
+    + [Unit](#unit)
+    + [Integration](#integration)
   + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -453,7 +454,9 @@ Install test dependencies before running any tests:
 npm ci
 ```
 
-### Run all
+### Run
+
+#### All
 
 Run unit, integration and performance tests:
 
@@ -461,7 +464,7 @@ Run unit, integration and performance tests:
 npm test
 ```
 
-### Unit
+#### Unit
 
 Run only unit tests:
 
@@ -469,7 +472,7 @@ Run only unit tests:
 npm run test:unit
 ```
 
-### Integration
+#### Integration
 
 Run only integration tests:
 
