@@ -70,7 +70,6 @@ const building = new Building({
 })
 
 await repo.save(building)
-// saved!
 ```
 
 and fetch it back:
