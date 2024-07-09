@@ -16,6 +16,11 @@ npm run lint
 
 all of the above should all exit with `exit-code: 0`
 
+## CI Workflows
+
+- Functional unit-tests should be run in the `test` workflow.
+- Non-functional tests, i.e `npm run lint` should be run in the `meta` workflow.
+
 ## Versioning
 
 Follows [Semantic Versioning][semver-2]
