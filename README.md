@@ -552,4 +552,4 @@ Produces an [LCOV][lcov] report; a machine-readable test coverage report.
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[lcov]: https://wiki.documentfoundation.org/Development/Lcov
+[lcov]: https://github.com/linux-test-project/lcov
