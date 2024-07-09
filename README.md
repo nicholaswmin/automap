@@ -177,7 +177,8 @@ for (const item of list)
 console.log(Array.isArray(list)) // true
 ```
 
-... you can omit the `type` property:
+... you can omit the `type` property
+if you don't need to cast to a type:
 
 ```js
 
