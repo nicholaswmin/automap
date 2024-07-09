@@ -460,7 +460,7 @@ npm run test:integration
 ### Coverage
 
 ```bash
-npm run coverage
+npm run test:coverage
 ```
 
 ## Contributing
