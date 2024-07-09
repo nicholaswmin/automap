@@ -192,8 +192,8 @@ if you don't need to cast to a type:
 
 const list = new List({ from: [1, 2, 3] })
 
-for (let i = 0; i < list.length; i++)
-  console.log(list[i].constructor.name, list[i])
+for (const item of list)
+  console.log(item.constructor.name, item)
 
 // Number 1, Number 2, Number 3 ...
 ```
