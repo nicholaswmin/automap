@@ -447,8 +447,6 @@ like Redis.
 
 ## Test
 
-Install dependencies:
-
 ```bash
 npm ci
 ```
@@ -458,8 +456,6 @@ npm ci
 ```bash
 npm test
 ```
-
-Runs all tests, both unit-tests and integration-tests.
 
 ### Test coverage
 
@@ -475,9 +471,8 @@ Runs all tests then also produces a test coverage report.
 npm run lcov
 ```
 
-Produces an [LCOV][lcov] report; a machine-readable test coverage report.
-
-
+Produces an [LCOV][lcov] report; a machine-readable test coverage report.  
+Saved in root directory as `lcov.info`.
 
 ## License
 
