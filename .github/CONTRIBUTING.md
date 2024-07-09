@@ -18,7 +18,7 @@ Follows [GitHub flow][github-flow]
 npm run test:precommit
 ```
 
-The above **must** exit with `exit code: 0`, without *any* errors or warnings.
+*must* exit with `exit code: 0`, without any errors or warnings.
 
 ## CI Workflows
 
