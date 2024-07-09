@@ -190,7 +190,7 @@ for (let i = 0; i < list.length; i++)
 // Number 1, Number 2, Number 3 ...
 ```
 
-... or just use it like a regular `Array`:
+... or use it like a regular `Array`:
 
 ```js
 const array = new List(1, 2, 3)
