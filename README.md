@@ -10,7 +10,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
 - [Redis data structure](#redis-data-structure)
-- [Runnable example]
+- [Runnable example](#runnable-example)
 - [Reason](#reason)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
