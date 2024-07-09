@@ -10,6 +10,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
 - [Redis data structure](#redis-data-structure)
+- [Runnable example]
 - [Reason](#reason)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
@@ -255,6 +256,16 @@ the persons of the 1st flat would be saved under key:
 
 ```
 building:kensington:flats:0:persons
+```
+
+## Runnable example
+
+A runnable example can be [found here][runnable-example].
+
+Run the example with:
+
+```bash
+npm run example
 ```
 
 ## Notes
@@ -545,3 +556,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
+[runnable-example]: .github/example/index.js
