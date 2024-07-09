@@ -45,8 +45,6 @@ This module exports a `Repository` which you set up, then call:
 - `repository.save(object)` to save an object
 - `repository.fetch('foo')` to fetch it back
 
-### Example
-
 Assume you have a `Building` which contains an array of `Flats`:
 
 ```js
@@ -96,8 +94,6 @@ To make an object graph persistable:
   [`Array`][array].
 2. Ensure your root object has an `id` property set to a unique value.
 
-#### Example
-
 Same example as above, a `Building` with `Flats`:
 
 ```js
@@ -131,7 +127,6 @@ You might want to load it's contents later; after you fetch it or even
 none at all.
 
 In that case, use a `LazyList` instead of a `List`.
-
 
 ```js
 import { LazyList } from 'automap'
