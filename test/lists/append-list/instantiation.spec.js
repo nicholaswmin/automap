@@ -8,7 +8,7 @@ test('AppendList', async t => {
   let list
 
   await t.test('instantiation', async t => {
-    await t.test('without passing a construct function', async t => {
+    await t.test('without passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new AppendList({
           from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }]
@@ -25,7 +25,7 @@ test('AppendList', async t => {
       })
     })
 
-    await t.test('passing a construct function', async t => {
+    await t.test('passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new AppendList({
           from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', name: 'World' }],

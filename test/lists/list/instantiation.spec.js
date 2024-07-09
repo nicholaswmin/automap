@@ -8,7 +8,7 @@ test('List', async t => {
   let list
 
   await t.test('instantiation', async t => {
-    await t.test('without passing a construct function', async t => {
+    await t.test('without passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new List({
           from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
@@ -25,7 +25,7 @@ test('List', async t => {
       })
     })
 
-    await t.test('passing a construct function', async t => {
+    await t.test('passing a "type"', async t => {
       await t.beforeEach(t => {
         list = new List({
           from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }],
