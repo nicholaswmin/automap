@@ -18,7 +18,6 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [`List` instead of `Array`](#the-list-types)
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
-- [Purpose](#purpose)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
