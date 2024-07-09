@@ -455,8 +455,6 @@ npm ci
 
 ### Unit tests
 
-then:
-
 ```bash
 npm test
 ```
