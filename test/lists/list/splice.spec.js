@@ -1,16 +1,13 @@
 import assert from 'node:assert'
-import { test, beforeEach } from 'node:test'
+import { test } from 'node:test'
 
 import { List } from '../../../src/list.js'
-import { User } from '../../model/index.js'
 
 test('List', async t => {
   let list
 
   await t.test('#splice (insertion)', async t => {
-    let list = null
-
-    await t.beforeEach(t => {
+    await t.beforeEach(() => {
       list = new List({
         from: [{ id: 'u_1', name: 'John' }]
       })
@@ -18,11 +15,11 @@ test('List', async t => {
       list.splice(0, 0, { id: 'u_2', name: 'Steven' })
     })
 
-    await t.test('adds the items', t => {
+    await t.test('adds the items', () => {
       assert.strictEqual(list.length, 2)
     })
 
-    await t.test('adds them before the existing items', t => {
+    await t.test('adds them before the existing items', () => {
       assert.strictEqual(list[0].name, 'Steven')
     })
   })
@@ -30,7 +27,7 @@ test('List', async t => {
   await t.test('#splice (deletion)', async t => {
     let list = null
 
-    await t.beforeEach(t => {
+    await t.beforeEach(() => {
       list = new List({
         from: [{ id: 'u_1', name: 'John' }]
       })
@@ -38,7 +35,7 @@ test('List', async t => {
       list.splice(0, 1)
     })
 
-    await t.test('removes the item', t => {
+    await t.test('removes the item', () => {
       assert.strictEqual(list.length, 0)
     })
   })

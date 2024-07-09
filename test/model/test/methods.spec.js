@@ -1,12 +1,12 @@
 import assert from 'node:assert'
-import { test, before, beforeEach } from 'node:test'
+import { test } from 'node:test'
 
 import { Chatroom } from '../index.js'
 
 test('Sample Model', async t => {
   let chatroom
 
-  await beforeEach(() => {
+  await t.beforeEach(() => {
     chatroom = new Chatroom({
       id: 'c_1',
       messages: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
@@ -17,7 +17,7 @@ test('Sample Model', async t => {
     })
   })
 
-  await t.test('Chatroom #addUser', async t => {
+  await t.test('Chatroom #addUser', () => {
     chatroom.addUser('Jane Doe')
 
     assert.strictEqual(chatroom.users.length, 3)
@@ -26,7 +26,7 @@ test('Sample Model', async t => {
   await t.test('Chatroom #kickUser', async t => {
     await t.test('when id user is not found', async t => {
 
-      await t.test('does nothing', async t => {
+      await t.test('does nothing', () => {
         chatroom.kickUser('nonexistent_id_user')
 
         assert.strictEqual(chatroom.users.length, 2)
@@ -35,7 +35,7 @@ test('Sample Model', async t => {
 
     await t.test('when id user is found', async t => {
 
-      await t.test('kicks John out of the chat room', async t => {
+      await t.test('kicks John out of the chat room', () => {
         chatroom.kickUser('u_1')
 
         assert.strictEqual(chatroom.users.length, 1)
@@ -44,7 +44,7 @@ test('Sample Model', async t => {
   })
 
   await t.test('User #sayHi', async t => {
-    await t.test('returns a greeting', async t => {
+    await t.test('returns a greeting', async () => {
       await assert.doesNotThrow(() => {
         const greet = chatroom.users.at(0).sayHi()
 

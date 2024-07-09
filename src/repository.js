@@ -66,7 +66,7 @@ class Repository {
         },
 
         set: (key, value) => {
-          return this.redis.rpush(item.key, item.value)
+          return this.redis.rpush(key, value)
         }
       }
     }

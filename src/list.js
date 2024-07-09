@@ -1,7 +1,7 @@
 class List extends Array {
   static traits = { type: 'hash' }
 
-  #type
+  #type // eslint-disable-line no-unused-private-class-members
 
   constructor(...args) {
 
@@ -76,7 +76,6 @@ class LazyList extends List {
 
 class AppendList extends LazyList {
   static traits = { type: 'list', lazy: true, append: true }
-  #shouldRecord
 
   constructor(...args) {
     super(...args)

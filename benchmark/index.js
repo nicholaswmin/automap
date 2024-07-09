@@ -1,5 +1,5 @@
 import Benchmrk from 'benchmrk'
-import { Paper, Board } from './paper/index.js'
+import { Paper } from './paper/index.js'
 import { Repository, utils } from '../index.js'
 
 const redis  = utils.ioredis()
@@ -14,7 +14,7 @@ await runner.run([
   {
     name: 'paper',
     cycles: 1000,
-    fn: async ({ cycle, taskname }) => {
+    fn: async () => {
       const paper     = await fetch({ id: 'foo' }) || new Paper({ id: 'foo' })
 
       const addBoard  = performance.timerify(paper.addBoard.bind(paper))

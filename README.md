@@ -25,7 +25,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 
 > [!IMPORTANT]  
 > This is an unpublished work-in-progress  
-> 
+>
 > - [Todos](.github/docs/todo.md)
 > - [Runnable example]( .github/example/index.js)
 
@@ -474,6 +474,12 @@ Runs all tests then also produces a test coverage report.
 
 ```bash
 npm run lcov
+```
+
+### Lint
+
+```bash
+npm run lint
 ```
 
 Produces an [LCOV][lcov] report; a machine-readable test coverage report.  

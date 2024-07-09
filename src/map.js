@@ -8,7 +8,7 @@ import { List } from './list.js'
 const expand = async (root, addItemsToSubstitutionsFn) => {
   const subs = []
 
-  traverse(root, ({ key, value, meta }) => {
+  traverse(root, ({ value, meta }) => {
     if (!value?.includes?.(':')) return
 
     const [ path, traitsJSON ] = value.split(' ')
