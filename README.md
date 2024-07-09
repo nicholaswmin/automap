@@ -74,7 +74,7 @@ for (let flat of building.flats)
 
 ## Defining models
 
-This package is not an OM/ORM so there's no schema definition.
+This module is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
@@ -260,7 +260,7 @@ Redis is a high-performance datastore but it's API is as technical
 as it gets; it cannot capture *any* semantics of business logic nor does
 it try to.
 
-This package allows you to keep your OOP structures and use Redis for
+This module allows you to keep your OOP structures and use Redis for
 persistence yet without incurring a considerable mapping performance penalty,
 which would defeat the entire purpose of using Redis for persistence.
 
@@ -273,7 +273,7 @@ they can be lazy-loaded.
 
 Known performance issues are summarised in these bullet points.
 
-In general, this package:
+In general, this module:
 
 - ensures that updates are atomic
 - has good time-complexity in steps that affect the number of network
@@ -314,7 +314,7 @@ root object. This is fixable but currently it is not.
 
 ### Nested Lists
 
-This package allows for an arbitrary amount of nesting of lists, so you can
+This module allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
 
 It does so by doing a [BFS traversal][bfs] of the passed object-graph then
@@ -348,7 +348,7 @@ are fetched in a process that exhibits an almost
 [constant-time complexity O(1)][const][^3][^4].
 
 There's no network roundtrip involved for each list, or even separate requests
-since this package uses a small Lua script which allows something akin to
+since this module uses a small Lua script which allows something akin to
 an [`mget`][mget], but for hashes.
 
 #### Nested lists
@@ -382,7 +382,7 @@ Other basic workarounds:
   acceptable tradeoff, if your nested lists simply contain a minimal
   amount of items.
   If those are your *only* lists, well - then you should probably stop reading.
-  [You just don't need this package](#where-this-is-unnecessary).
+  [You simply don't need this module](#where-this-is-unnecessary).
 
 - Use a `LazyList`? They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
@@ -417,7 +417,7 @@ This is a simple, highly efficient and inherently atomic operation.
 If you can get away with just using this you're absolutely set
 and you should stop reading this.   
 
-You simply don't need this package and none of the issues here apply to
+You simply don't need this module and none of the issues here apply to
 you.
 
 In some cases it's [even faster than RedisJSON][bench].
@@ -431,13 +431,13 @@ but for (probably most) use-cases that's simply just a non-problem.
 If you can use it with your provider then you probably should.
 
 We'd still build a similar mapper to this one but for our own internal reasons
-that are probably specific to us; in general half the issues this package
+that are probably specific to us; in general half the issues this module
 attempts to solve are solved out-the-box by using RedisJSON directly.
 
 So it's generally recommended to use RedisJSON directly rather
-than use this package, if it's available to you.
+than use this module, if it's available to you.
 
-### Other packages
+### Alternative module
 
 [Redis-OM][redisom]
 
@@ -503,7 +503,7 @@ Produces a test coverage report
 
 [^3]: The time complexity bounds described are in the context of fetching data
       from a remote service (Redis).
-      As described, this package also performs a breadth-first graph traversal
+      As described, this module also performs a breadth-first graph traversal
       which is `O(V + E)` but since
       this step does not involve any network roundtrips, it's assumed to have a
       negligible impact.  
