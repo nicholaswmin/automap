@@ -2,7 +2,7 @@
 
 # :cd: automap
 
-Store [OOP][oop] object-graphs in Redis
+Store [OOP][oop] object-graphs in [Redis][redis]
 
 - [Usage](#usage)
 - [Defining models](#defining-models)
