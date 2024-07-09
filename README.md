@@ -169,24 +169,16 @@ npm run example
 
 ### The `List` types
 
-Both `List` and `LazyList` are direct subtypes of the native [`Array`][array],
-therefore they behave *exactly* the same.
+List-like data must use the `List` or `LazyList` types instead of an
+[`Array`][array].  
+
+This allows decomposing those lists into manageable pieces that can be saved
+and retrieved far more efficiently.
+
+Both types are direct subtypes of the native [`Array`][array], therefore they
+behave *exactly* the same.
 
 They also provide an interface for casting to a type:
-
-```js
-const list = new List({ type: String, from: [1, 2, 3] })
-
-for (const item of list)
-  console.log(item.constructor.name, item)
-
-// String '1', String '2', String '3' ...
-
-console.log(Array.isArray(list)) // true
-```
-
-... you can omit the `type` property
-if you don't need to cast to a type:
 
 ```js
 
@@ -196,9 +188,23 @@ for (const item of list)
   console.log(item.constructor.name, item)
 
 // Number 1, Number 2, Number 3 ...
+
+console.log(Array.isArray(list)) // true
 ```
 
-... and use it like a regular `Array`:
+
+... you can also specify a `from` parameter to cast to a type:
+
+```js
+const list = new List({ type: String, from: [1, 2, 3] })
+
+for (const item of list)
+  console.log(item.constructor.name, item)
+
+// String '1', String '2', String '3' ...
+```
+
+... use it like a regular `Array`:
 
 ```js
 const array = new List(1, 2, 3)
