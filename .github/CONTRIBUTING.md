@@ -2,7 +2,7 @@
 
 ## Issues
 
-Issues for bug reports must:
+Issues for bug reports *must*:
 
 - be tagged as a "bug"
 - include a [Minimal, Complete and Verifiable Example][mcve]
@@ -35,6 +35,14 @@ The CI workflows can be [found here][workflows].
 - [Non-functional tests][non-func-req], i.e `npm audit` should be run in the
   `meta.yml` workflow.
 
+
+## Philosophy
+
+- Code *must* always be accompanied by unit-tests for all code paths.
+- Dependencies *should* be kept to an absolute minimum.  
+  Use native functionality where possible.
+- Verbosity *should* be kept to a minimum in code, tests and docs.
+- Keep it simple. Prefer doing too little, rather than too much.
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
