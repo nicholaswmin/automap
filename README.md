@@ -15,8 +15,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Usage](#usage)
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
-  * [Runnable example](#runnable-example)
   * [`List` instead of `Array`](#the-list-types)
+  * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Purpose](#purpose)
 - [Performance](#performance)
@@ -140,7 +140,10 @@ import { LazyList } from 'automap'
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ type: Flat, from: flats })
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
   }
 }
 ```
@@ -159,17 +162,6 @@ console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
-### Runnable example
-
-The `Building` example can be [found here][runnable-example].
-
-You can run it with:
-
-```bash
-npm run example
-```
-
-
 ### The `List` types
 
 List-like data must use the `List` or `LazyList` types instead of an
@@ -182,14 +174,18 @@ and retrieved far more efficiently.
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
+
     // Using a List instead of Array (!)
-    this.flats = new List({ type: Flat, from: flats })
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
   }
 }
 ```
 
-Both types are subtypes of the native [`Array`][array],
-so they behave *exactly* the same:
+Both are subtypes of the native [`Array`][array]
+and behave *exactly* the same:
 
 ```js
 
@@ -203,7 +199,6 @@ for (const item of list)
 console.log(Array.isArray(list)) // true
 ```
 
-
 ... you can also specify a `type` parameter to cast to a type:
 
 ```js
@@ -215,20 +210,32 @@ for (const item of list)
 // String '1', String '2', String '3' ...
 ```
 
-... use it like a regular `Array`:
+... and use it like a regular `Array`:
 
 ```js
 const array = new List(1, 2, 3)
 
 const two = array.find(num => num === 2)
 
-console.log(two) // 2
+console.log(two)
+// 2
 ```
 
 You can still use a regular `Array` for list-like data, which you don't
 expect to become big enough to warrant decomposition when saving in Redis.
 
-## Redis Data Structure
+### Runnable example
+
+The `Building` example demonstrated above
+can be [found here][runnable-example].
+
+You can run it with:
+
+```bash
+npm run example
+```
+
+## Redis data structure
 
 All keys/values saved into Redis follow a canonical and most importantly
 *human-readable* format.
@@ -253,7 +260,7 @@ which is a [Redis Hash][redis-hash] with the following shape:
 | 103   	| `{"i":2,"json":{"id":"103"}}` 	|
 
 
-Therefore if you need to access an individual flat directly from Redis,
+If you need to access an individual flat directly from Redis,
 you can simply run:
 
 ```
@@ -292,26 +299,6 @@ the persons of the 1st flat would be saved under key:
 ```
 building:kensington:flats:0:persons
 ```
-
-## Notes
-
-### Purpose
-
-A well-designed OOP structure can accurately capture the semantics and flow
-of your business-logic and/or domain.
-
-Redis is a high-performance datastore but it's API is as technical
-as it gets; it cannot capture *any* semantics of business logic nor does
-it try to.
-
-This module allows you to keep your OOP structures and use Redis for
-persistence yet without incurring a considerable mapping performance penalty,
-which would defeat the entire purpose of using Redis for persistence.
-
-It does so by assuming that your object-graph has lists/arrays, which can
-get big, so it decomposes those lists into manageable pieces that can be
-saved more efficiently while also allowing for flexibility into whether
-they can be lazy-loaded.
 
 ## Performance
 
@@ -451,9 +438,10 @@ The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
 but for (probably most) use-cases that's simply just a non-problem.
 
-### Why not Redis JSON
+### [Redis JSON][redisJSON]
 
-If you can use it with your provider then you probably should.
+If your cloud-provider supports [RedisJSON][redis-json] then you probably
+use that instead.
 
 We'd still build a similar mapper to this one but for our own internal reasons
 that are probably specific to us; in general half the issues this module
@@ -580,6 +568,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [linear]: https://en.wikipedia.org/wiki/Linear_search
 [mget]: https://redis.io/docs/latest/commands/mget/
 [redisom]: https://github.com/redis/redis-om-node
+[redis-json]: https://redis.io/docs/latest/develop/data-types/json/
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
