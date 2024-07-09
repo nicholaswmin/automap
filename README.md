@@ -18,9 +18,10 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#test)
-  + [Unit tests](#unit-tests)
-  + [Integration tests](#integration-tests)
-  + [Test coverage](#test-coverage)
+  + [Run all](#run-all)
+  + [Unit tests](#unit)
+  + [Integration tests](#integration)
+  + [Test coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
 - [License](#license)
@@ -438,25 +439,25 @@ First, install all deps:
 npm ci
 ```
 
-### Run all tests
+### Run all
 
 ```bash
 npm test
 ```
 
-### Unit tests
+### Unit
 
 ```bash
 npm run test:unit
 ```
 
-### Integration tests
+### Integration
 
 ```bash
 npm run test:integration
 ```
 
-### Test coverage
+### Coverage
 
 ```bash
 npm run coverage
