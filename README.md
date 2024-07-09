@@ -62,12 +62,15 @@ You can save it:
 ```bash
 import { Repository } from 'automap'
 
+const repo = new Repository(Building, new ioredis())
+
 const building = new Building({
   id: 'kensington',
   flats: ['101', '102', '103']
 })
 
-const repo = new Repository(Building, new ioredis())
+await repo.save(building)
+// saved!
 ```
 
 and fetch it back:
