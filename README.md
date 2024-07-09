@@ -438,16 +438,22 @@ First, install all deps:
 npm ci
 ```
 
-### Unit tests
+### Run all tests
 
 ```bash
 npm test
 ```
 
+### Unit tests
+
+```bash
+npm run test:unit
+```
+
 ### Integration tests
 
 ```bash
-npm run integration-test
+npm run test:integration
 ```
 
 ### Test coverage
