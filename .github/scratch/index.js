@@ -1,6 +1,6 @@
 import Benchmrk from 'benchmrk'
 import { Paper } from './paper/index.js'
-import { Repository, utils } from '../index.js'
+import { Repository, utils } from '../../index.js'
 
 const redis  = utils.ioredis()
 const repo   = new Repository(Paper, redis)
