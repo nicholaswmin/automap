@@ -9,18 +9,17 @@ const runner = new Benchmrk()
 const fetch  = performance.timerify(repo.fetch.bind(repo))
 const save   = performance.timerify(repo.save.bind(repo))
 
+await redis.flushall()
 await runner.run([
   {
     name: 'paper',
     cycles: 1000,
     fn: async ({ cycle, taskname }) => {
-      const existing = await fetch({ id: 'foo' })
-      const paper = existing || new Paper({ id: 'foo' })
+      const paper     = await fetch({ id: 'foo' }) || new Paper({ id: 'foo' })
 
-      const addBoard = performance.timerify(paper.addBoard.bind(paper))
-      const addItem = performance.timerify(paper.boards.at(0).addItem.bind(
-        paper.boards.at(0))
-      )
+      const addBoard  = performance.timerify(paper.addBoard.bind(paper))
+      const lastBoard = paper.boards.at(0)
+      const addItem   = performance.timerify(lastBoard.addItem.bind(lastBoard))
 
       for (let i = 0; i < 100; i++)
         addBoard({ id: utils.randomID() })
