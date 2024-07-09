@@ -20,7 +20,9 @@ npm run test:precommit
 
 *must* exit with `exit code: 0`, without any errors or warnings.
 
-## CI Workflows
+## CI workflows
+
+The CI workflows can be [found here][workflows].
 
 - [Functional tests][func-req] should be run in the `test.yml` workflow.
 - [Non-functional tests][non-func-req], i.e `npm audit` should be run in the
@@ -30,5 +32,6 @@ npm run test:precommit
 [todos]: ./TODO.md
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [semver]: https://semver.org/
+[workflows]: ./workflows
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
