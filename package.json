@@ -5,12 +5,12 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "lint": "npx eslint",
-    "test": "NODE_ENV=test node --test test/index.spec.js",
+    "test": "npm run test:unit && npm run test:integration",
     "test:unit": "NODE_ENV=test node --test test/unit/index.spec.js",
     "test:integration": "NODE_ENV=test node --test test/integration/index.spec.js",
-    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage",
-    "lcov": "NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info test/index.spec.js",
+    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
+
+    "lint": "npx eslint",
     "benchmark": "node benchmark/index.js",
     "example": "node .github/example/index.js"
   },
