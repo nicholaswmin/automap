@@ -19,7 +19,7 @@ all of the above should all exit with `exit-code: 0`
 
 ## Versioning
 
-Follows [Semantic Versioning][semver-2.0]
+Follows [Semantic Versioning][semver-2]
 
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [semver-2]: https://semver.org/
