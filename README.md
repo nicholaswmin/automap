@@ -21,6 +21,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   + [Unit tests](#unit-tests)
   + [Test coverage](#test-coverage)
 - [Contributing](#contributing)
+- [Authors](#authors)
+- [License](#license)
 
 ---
 
