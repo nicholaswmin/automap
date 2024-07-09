@@ -11,7 +11,7 @@
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
 
     "lint": "npx eslint",
-    "benchmark": "node benchmark/index.js",
+    "playground": "node playground/index.js",
     "example": "node .github/example/index.js"
   },
   "engines": {
