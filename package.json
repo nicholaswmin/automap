@@ -25,6 +25,7 @@
   "keywords": [
     "orm",
     "object-mapping",
+    "object-relational-mapping",
     "redis",
     "javascript",
     "database"
