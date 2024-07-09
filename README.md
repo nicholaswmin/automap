@@ -7,6 +7,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 > [!IMPORTANT]  
 > Unpublished WIP
 
+---
+
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
