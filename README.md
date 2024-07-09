@@ -19,7 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#test)
-  + [Install](#test)
+  + [Install deps](#test)
   + [Run](#run-all)
   + [Unit](#unit)
   + [Integration](#integration)
@@ -444,6 +444,8 @@ schema definitions. It's like an ORM but for non-relational datastores
 like Redis.
 
 ## Test
+
+### Install deps
 
 First, install all deps:
 
