@@ -472,6 +472,9 @@ npm run coverage
 
 Read the [Contribution Guidelines][contributing] document.
 
+## Authors
+
+Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 ## License
 
@@ -547,4 +550,5 @@ Read the [Contribution Guidelines][contributing] document.
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
+[nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
