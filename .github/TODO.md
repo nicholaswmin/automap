@@ -22,8 +22,8 @@
 
 ## Could have
 
-- How can you share the model between client/server?
-- Concurrency control?
+- Sharing the model between client/server
+- Concurrency control
 
 ## Testing
 
