@@ -1,6 +1,6 @@
-# Todos
+# Todo
 
-## Critical
+## Must have
 
 - [ ] Consecutive saves increase the saving time linearly
   - See `benchmark/index.js`
@@ -20,7 +20,12 @@
 - [ ] The whole `Node` being disconnected from the `List` is confusing.
 - [ ] There is a `for..of` loop that must be pipelined when reviving.
 
-## Testing Todos
+## Could have
+
+- How can you share the model between client/server?
+- Concurrency control?
+
+## Testing
 
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
@@ -28,13 +33,5 @@
 - [x] Exiting the tests requires a `--test-force-exit` flag which is not
       ideal - but can live with for now.
 - [ ] Test the repository as an integration test
-
-### General
-
 - [ ] Lists must be tested against a long time period - as in a lot of
 items added - is it still adding `AppendList` items in `O(1)`?
-
-## Next Todos
-
-- How can you share the model between client/server?
-- Concurrency control?

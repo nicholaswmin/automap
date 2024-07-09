@@ -24,4 +24,4 @@ all of the above should exit with `0`; no errors and no warnings.
 ## CI Workflows
 
 - Functional unit-tests should be run in the `test` workflow.
-- Non-functional tests, i.e `npm run lint` should be run in the `meta` workflow.
+- Non-functional tests, i.e `npm audit` should be run in the `meta` workflow.
