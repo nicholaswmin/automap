@@ -438,17 +438,14 @@ The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
 but for (probably most) use-cases that's simply just a non-problem.
 
-### [Redis JSON][redisJSON]
+### Redis JSON
 
-If your cloud-provider supports [RedisJSON][redis-json] then you probably
+If your cloud-provider supports [Redis JSON][redis-json], then you probably
 use that instead.
 
 We'd still build a similar mapper to this one but for our own internal reasons
 that are probably specific to us; in general half the issues this module
 attempts to solve are solved out-the-box by using RedisJSON directly.
-
-So it's generally recommended to use RedisJSON directly rather
-than use this module, if it's available to you.
 
 ### Alternative modules
 
