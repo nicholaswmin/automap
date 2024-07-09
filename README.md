@@ -447,7 +447,7 @@ like Redis.
 
 ### Install deps
 
-First, install all deps:
+First, install all dependencies:
 
 ```bash
 npm ci
