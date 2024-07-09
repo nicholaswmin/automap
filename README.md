@@ -12,7 +12,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
   * [Runnable example](#runnable-example)
-  * [`List` types](#the-list-types)
+  * [`List` instead of `Array`](#the-list-types)
 - [Redis data structure](#redis-data-structure)
 - [Purpose](#purpose)
 - [Performance](#performance)
