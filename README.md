@@ -2,7 +2,7 @@
 
 # :cd: automap
 
-Efficiently store complex object graphs in Redis
+Store [OOP][oop] object-graphs in Redis
 
 - [Usage](#usage)
 - [Defining models](#defining-models)
