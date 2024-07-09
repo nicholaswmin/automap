@@ -450,7 +450,7 @@ like Redis.
 
 ## Test
 
-Install all deps before running any tests:
+First, install all deps:
 
 ```bash
 npm ci
