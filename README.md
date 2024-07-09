@@ -275,9 +275,7 @@ Known performance issues are summarised in these bullet points.
 
 In general, this package:
 
-- does not implement any concurrency control mechanism
 - ensures that updates are atomic
-- does not ensure that reads are atomic
 - has good time-complexity in steps that affect the number of network
   roundtrips.
 - makes a poor effort to optimise time-complexity of steps that only involve
@@ -297,16 +295,6 @@ The sections below simply go into a bit more detail on the points listed
 above.
 
 You can skip reading them entirely.
-
-### Benchmarks?
-
-This package assumes an acceptable response time is at most `20ms` and on
-average `~10ms`. If this sounds like a lot to you then this is not a
-package that can help you since those are more than OK times for the intended
-use of this package.
-
-For reference, a single Redis `GET` can run in sub-millisecond time assuming
-your services are running relatively close-by.
 
 ### Atomicity
 
