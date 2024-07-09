@@ -451,7 +451,7 @@ npm run coverage
 
 ## Contributing
 
-Read the [Contribution Guidelines][contributing] document.
+Read the [Contribution Guidelines][contributing].
 
 ## Authors
 
