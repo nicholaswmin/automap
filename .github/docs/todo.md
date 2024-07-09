@@ -27,6 +27,7 @@
       appropriate/descriptive.
 - [x] Exiting the tests requires a `--test-force-exit` flag which is not
       ideal - but can live with for now.
+- [ ] Test the repository as an integration test
 
 ### General
 
