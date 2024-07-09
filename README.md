@@ -468,7 +468,7 @@ like Redis.
 
 ## Tests
 
-Install test dependencies before running any tests:
+Install test dependencies:
 
 ```bash
 npm ci
