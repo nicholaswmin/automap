@@ -445,9 +445,9 @@ like Redis.
 
 ## Test
 
-### Install deps
+### Install test dependencies
 
-First, install all dependencies:
+Install test dependencies before running any tests:
 
 ```bash
 npm ci
