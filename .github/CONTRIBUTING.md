@@ -1,8 +1,8 @@
 # Contribution guidelines
 
-## Flow
+## Code changes
 
-Uses [GitHub flow][github-flow]
+Follows [GitHub flow][github-flow]
 
 ## Before commit
 
