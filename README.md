@@ -490,7 +490,8 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 ## License
 
-> MIT No Attribution License
+> MIT No Attribution License  
+> SPDX: MIT-0
 >
 > Copyright (c) 2024 Nicholas Kyriakides
 >
