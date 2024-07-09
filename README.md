@@ -466,15 +466,11 @@ npm test
 
 #### Unit
 
-Run only unit tests:
-
 ```bash
 npm run test:unit
 ```
 
 #### Integration
-
-Run only integration tests:
 
 ```bash
 npm run test:integration
