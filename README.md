@@ -1,6 +1,6 @@
 [![tests-workflow][tests-badge]][tests-workflow] [![coveralls-workflow][coveralls-badge]][coveralls-report] ![npm bundle size][npm-size]
 
-# automap
+# :dvd: automap
 
 Efficiently store complex object graphs in Redis
 
