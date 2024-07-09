@@ -11,9 +11,9 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Usage](#usage)
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
+  * [Runnable example](#runnable-example)
   * [`List` types](#the-list-types)
 - [Redis data structure](#redis-data-structure)
-- [Runnable example](#runnable-example)
 - [Purpose](#purpose)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
@@ -159,6 +159,17 @@ console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
+### Runnable example
+
+A runnable example can be [found here][runnable-example].
+
+You can run it with:
+
+```bash
+npm run example
+```
+
+
 ### The `List` types
 
 Both `List` and `LazyList` are direct subtypes of the native [`Array`][array],
@@ -263,16 +274,6 @@ the persons of the 1st flat would be saved under key:
 
 ```
 building:kensington:flats:0:persons
-```
-
-## Runnable example
-
-A runnable example can be [found here][runnable-example].
-
-You can run it with:
-
-```bash
-npm run example
 ```
 
 ## Notes
