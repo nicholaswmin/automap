@@ -525,11 +525,19 @@ Produces a test coverage report
       of keys in Redis. This might cause issues in some cases but it's not
       something that can be reasonably worked around anyway.
 
+
+
+<!--- Badges -->
+
 [tests-badge]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml/badge.svg
 [tests-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/tests.yml
 
 [coveralls-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coveralls-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
+
+[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
+
+<!--- /Badges -->
 
 [oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
 [redis]: https://redis.io/
@@ -547,4 +555,3 @@ Produces a test coverage report
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
