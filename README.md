@@ -20,11 +20,14 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Tests](#test)
   + [Unit tests](#unit-tests)
   + [Test coverage](#test-coverage)
+- [Contributing](#contributing)
+- [Authors](#authors)
+- [License](#license)
 
 ---
 
 > [!IMPORTANT]  
-> This is an unpublished work-in-progress  
+> Unpublished, work-in-progress  
 >
 > - [Todos](.github/docs/todo.md)
 > - [Runnable example]( .github/example/index.js)
@@ -273,32 +276,9 @@ they can be lazy-loaded.
 
 ## Performance
 
-Known performance issues are summarised in these bullet points.
-
-In general, this module:
-
-- ensures that updates are atomic
-- has good time-complexity in steps that affect the number of network
-  roundtrips.
-- makes a poor effort to optimise time-complexity of steps that only involve
-  local computations
-- exhibits near [constant-time complexity O(1)][const] when lists are not
-  nested inside other lists.
-- supports an arbitrary number of nesting of lists
-- but exhibits very bad performance in those cases; it issues network requests
-  in a process that runs at the very least in
-  [quadratic-time O(n<sup>2</sup>)][qtc].
-- is entirely unnecessary if you can get away with stuffing your object
-  graph as a `JSON` in a single `Redis SET` operation.
-- is not an object-mapper and if you were looking for one, [this one][redisom]
-  is most probably what you're looking for.
-
-The sections below simply go into a bit more detail on the points listed
-above.
-
-You can skip reading them entirely.
-
 ### Atomicity
+
+#### Save
 
 - Each found list is decomposed into a single Redis `HSET` command.
 - All `HSET`s are then packaged into a single [pipelined][pipe] transaction
@@ -309,6 +289,8 @@ to a [`mget`][mget], but for hashes.
 
 These methods are considered enough in ensuring updates are
 both performant and [atomic][atomic][^1].
+
+#### Fetch
 
 In contrast, fetching an object graph is not entirely atomic.
 The part that breaks this guarantee is only when fetching the final
@@ -439,7 +421,7 @@ attempts to solve are solved out-the-box by using RedisJSON directly.
 So it's generally recommended to use RedisJSON directly rather
 than use this module, if it's available to you.
 
-### Alternative module
+### Alternative modules
 
 [Redis-OM][redisom]
 
@@ -449,7 +431,7 @@ like Redis.
 
 ## Test
 
-Install all deps before running any tests:
+First, install all deps:
 
 ```bash
 npm ci
@@ -467,22 +449,13 @@ npm test
 npm run coverage
 ```
 
-Runs all tests then also produces a test coverage report.
+## Contributing
 
-### LCOV report
+Read the [Contribution Guidelines][contributing].
 
-```bash
-npm run lcov
-```
+## Authors
 
-### Lint
-
-```bash
-npm run lint
-```
-
-Produces an [LCOV][lcov] report; a machine-readable test coverage report.  
-Saved in root directory as `lcov.info`.
+Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 ## License
 
@@ -555,4 +528,5 @@ Saved in root directory as `lcov.info`.
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[lcov]: https://github.com/linux-test-project/lcov
+[nicholaswmin]: https://github.com/nicholaswmin
+[contributing]: .github/CONTRIBUTING.md
