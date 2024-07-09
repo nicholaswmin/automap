@@ -1,4 +1,4 @@
-[![tests-workflow][tests-badge]][tests-workflow] [![coveralls-workflow][coveralls-badge]][coveralls-report]
+[![tests-workflow][tests-badge]][tests-workflow] [![coveralls-workflow][coveralls-badge]][coveralls-report] ![npm bundle size][npm-size]
 
 # automap
 
@@ -12,15 +12,23 @@ Efficiently store complex object graphs in Redis
 - [Data structure](#redis-data-structure)
 - [Reason](#reason)
 - [Performance](#performance)
-  * [Concurrency Control](#concurrency-control)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
-- [Do you *really* need this?](#where-this-is-unnecessary)
-  * [Why not Redis JSON](#why-not-redis-json)
-  * [Alternatives](#alternatives)
-- [Running tests and test coverage](#test)
+- [Alternatives](#alternatives)
+- [Tests](#test)
+  + [Unit tests](#unit-tests)
+  + [Test coverage](#test-coverage)
+
+---
+
+> [!IMPORTANT]  
+>
+> See:  
+> - [Todos](./github/docs/todo.md)
+> - [Runnable example](./github/docs/example/index.js)
+>
 
 ## Usage
 
@@ -70,10 +78,9 @@ This package is not an OM/ORM so there's no schema definition.
 
 To make an object graph persistable just:
 
-- Ensure you use the provided `List` type instead of an [`Array`][array]
+- **Use the provided `List` type instead of an [`Array`][array]**
   when defining list-like data.
-- Ensure that at least your root object has an `id` property set to a
-  unique value.  
+- Ensure your **root object has an `id` property** set to a unique value.  
   This `id` is used to fetch your item back.
 
 ### Example
@@ -301,14 +308,6 @@ use of this package.
 For reference, a single Redis `GET` can run in sub-millisecond time assuming
 your services are running relatively close-by.
 
-### Concurrency Control
-
-Outside of attempting to maximise the atomicity of it's own operations, there's
-zero effort in implementing any form of [concurrency control][cc]
-
-As a general rule, the Redis philosophy is to avoid strict concurrency
-controls in favour of high-performance and high-availability.
-
 ### Atomicity
 
 - Each found list is decomposed into a single Redis `HSET` command.
@@ -415,7 +414,7 @@ against *every* list.
 There's almost zero attention being paid in assuring good time complexity
 locally unless there's an obvious bottleneck.
 
-### Where this is unnecessary
+## Alternatives
 
 A small enough object-graph can easily get away with:
 
@@ -450,7 +449,7 @@ attempts to solve are solved out-the-box by using RedisJSON directly.
 So it's generally recommended to use RedisJSON directly rather
 than use this package, if it's available to you.
 
-### Known alternatives
+### Other packages
 
 [Redis-OM][redisom]
 
@@ -465,6 +464,8 @@ Install dependencies:
 ```bash
 npm ci
 ```
+
+### Unit tests
 
 then:
 
@@ -537,7 +538,6 @@ Produces a test coverage report
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 [redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
 [redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
-[redlock]: https://redis.io/docs/latest/develop/use/patterns/distributed-locks/
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
@@ -546,6 +546,5 @@ Produces a test coverage report
 [redisom]: https://github.com/redis/redis-om-node
 [qs]: https://en.wikipedia.org/wiki/Quicksort
 [time]: https://en.wikipedia.org/wiki/Time_complexity
-[cc]: https://en.wikipedia.org/wiki/Concurrency_control
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
-[cap]: https://en.wikipedia.org/wiki/CAP_theorem
+[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
