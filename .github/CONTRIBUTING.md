@@ -15,8 +15,8 @@ Follows [GitHub flow][github-flow]
 ### Before commit
 
 ```bash
-npm test
-npm audit
+npm test &&
+npm audit &&
 npm run lint
 ```
 
