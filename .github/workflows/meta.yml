@@ -1,4 +1,5 @@
 name: meta
+
 on:
   push:
     branches: [ "main" ]
@@ -22,5 +23,3 @@ jobs:
     - run: npm ci
     - run: npm audit
     - run: npm run lint
-      env:
-        NODE_ENV: test
