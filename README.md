@@ -27,7 +27,7 @@ Efficiently store complex object graphs in Redis
 >
 > See:  
 > - [Todos](.github/docs/todo.md)
-> - [Runnable example](.github/docs/example/index.js)
+> - [Runnable example]( .github/example/index.js)
 >
 
 ## Usage
