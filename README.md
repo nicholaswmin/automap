@@ -10,6 +10,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Lazy loading](#lazy-loading)
   * [The List type](#the-list-type)
 - [Redis data structure](#redis-data-structure)
+- [Runnable example](#runnable-example)
 - [Reason](#reason)
 - [Performance](#performance)
   * [Atomicity](#atomicity)
@@ -18,8 +19,12 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#test)
-  + [Unit tests](#unit-tests)
-  + [Test coverage](#test-coverage)
+  + [Install](#install-1)
+  + [Run](#run)
+    + [All](#all)
+    + [Unit](#unit)
+    + [Integration](#integration)
+  + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
 - [License](#license)
@@ -254,6 +259,16 @@ the persons of the 1st flat would be saved under key:
 building:kensington:flats:0:persons
 ```
 
+## Runnable example
+
+A runnable example can be [found here][runnable-example].
+
+Run the example with:
+
+```bash
+npm run example
+```
+
 ## Notes
 
 ### Reason
@@ -431,22 +446,42 @@ like Redis.
 
 ## Test
 
-First, install all deps:
+### Install
+
+Install test dependencies before running any tests:
 
 ```bash
 npm ci
 ```
 
-### Unit tests
+### Run
+
+#### All
+
+Run unit, integration and performance tests:
 
 ```bash
 npm test
 ```
 
-### Test coverage
+#### Unit
 
 ```bash
-npm run coverage
+npm run test:unit
+```
+
+#### Integration
+
+```bash
+npm run test:integration
+```
+
+### Coverage
+
+Run all tests and produce a test coverage report:
+
+```bash
+npm run test:coverage
 ```
 
 ## Contributing
@@ -530,3 +565,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [bench]: https://redis.io/docs/latest/develop/data-types/json/performance/
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
+[runnable-example]: .github/example/index.js

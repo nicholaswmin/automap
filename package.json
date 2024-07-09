@@ -5,16 +5,19 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "NODE_ENV=test node --test test/unit/index.spec.js",
+    "test:integration": "NODE_ENV=test node --test test/integration/index.spec.js",
+    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
+
     "lint": "npx eslint",
-    "test": "NODE_ENV=test node --test test/index.spec.js",
-    "coverage": "NODE_ENV=test node --test --experimental-test-coverage",
-    "lcov": "NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info test/index.spec.js",
-    "benchmark": "node benchmark/index.js",
+    "scratch": "node .github/scratch/index.js",
     "example": "node .github/example/index.js"
   },
   "engines": {
     "node": ">=20"
   },
+  "os": ["darwin", "linux"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nicholaswmin/automap.git"

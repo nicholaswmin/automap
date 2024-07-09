@@ -22,12 +22,14 @@
 
 ## Could have
 
-- How can you share the model between client/server?
-- Concurrency control?
+- Sharing the model between client/server
+- Concurrency control
 
 ## Testing
 
 - [ ] Fix `test.todo` tests
+- [x] Split unit and integration tests
+- [ ] Do not use `ioredis-mock` in integration tests.
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
       appropriate/descriptive.
