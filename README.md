@@ -18,7 +18,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#tests)
-  + [Run](#tests)
+  + [Unit](#tests)
+  + [Performance](#performance)
   + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -422,9 +423,9 @@ run unit tests:
 npm test
 ```
 
-run performance tests:
+### Performance
 
-> requires [Redis Server][redis-install] running at port: 6379
+> require a runnning [Redis Server][redis-install] at port: 6379
 
 ```bash
 npm run test:perf
