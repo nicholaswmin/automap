@@ -424,7 +424,7 @@ npm test
 
 run performance tests:
 
-> requires [Redis Server][redis] running at port: 6379
+> requires [Redis Server][redis-install] running at port: 6379
 
 ```bash
 npm run test:perf
@@ -508,3 +508,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
+[redis-install]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
