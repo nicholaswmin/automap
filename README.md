@@ -463,13 +463,13 @@ Run all tests:
 npm test
 ```
 
-Run unit tests:
+only unit tests:
 
 ```bash
 npm run test:unit
 ```
 
-Run integration tests:
+only integration tests:
 
 ```bash
 npm run test:integration
