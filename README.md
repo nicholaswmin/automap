@@ -425,7 +425,7 @@ npm test
 
 ### Performance
 
-> require a runnning [Redis Server][redis-install] at port: 6379
+> require a running [Redis Server][redis-install] at port: 6379
 
 ```bash
 npm run test:perf
