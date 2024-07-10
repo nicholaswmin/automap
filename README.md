@@ -274,8 +274,8 @@ which you can easily get by:
 GET building:kensington
 ```
 
-All of these commands occur in [constant-time `(O1)`][const], except
-`HGETALL` which is [linear-time `(On)`][linear].
+These commands run in [constant-time `(O1)`][const], except `HGETALL` which
+runs in [linear-time `(On)`][linear].
 
 ### List items without `id`
 
@@ -302,12 +302,11 @@ before being sent down the wire.
 Additionally, there's a simple Lua script which allows something akin
 to a [`mget`][mget], but for hashes.
 
-These methods are considered enough in ensuring updates are
-both performant and [atomic][atomic][^1].
+These methods ensure updates are both performant and [atomic][atomic][^1].
 
 #### Fetch
 
-In contrast, fetching an object graph is not entirely atomic.
+In contrast, fetching an object graph is not atomic.  
 The part that breaks this guarantee is only when fetching the final
 root object. This is fixable but currently it is not.
 
@@ -326,7 +325,7 @@ with no decomposed children.
 
 So nested lists are supported and correctly decomposed.
 
-But you should note the following...
+But you should note the following ...
 
 ### Time-complexity
 
@@ -366,8 +365,7 @@ Just a brief calculation based on the above is enough to figure out that
 even a tiny list with 5 items will become prohibitively expensive at even
 the most basic nesting depth.
 
-So while nested lists are supported, they are not
-recommended in the slightest.
+So while nested lists are supported, they are *not* recommended.
 
 This particular issue can be solved in better time complexity with
 some rudimentary assumptions and some slight tradeoffs,
@@ -376,12 +374,13 @@ but for now this problem is ignored as irrelevant.
 
 Other basic workarounds:
 
-- Don't use a `List`. Keep the list as an `Array`.
+- Don't use a `List`. Keep the list as an `Array`.  
   This means it won't be decomposed and in some cases it might be an
   acceptable tradeoff, if your nested lists simply contain a minimal
   amount of items.
 
-- Use a `LazyList`? They won't have an impact on the initial fetching but
+- Use a `LazyList`.   
+  They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
   to load their contents.
 
@@ -389,15 +388,14 @@ Other basic workarounds:
 
 #### Local time complexity
 
-You should assume that locally and at the very minimum, a
-[BFS traversal][bfs] will always run at least once for both `.save()`
-and `.fetch()`, against the entire object graph.  
+Locally and at the very minimum, a [BFS traversal][bfs] will always run at
+least once for both `.save()` and `.fetch()`, against the entire object graph.  
 
 This is followed by an additional [Quicksort][qs][^2] step in `.fetch`,
 against *every* list.
 
-There's almost zero attention being paid in assuring good time complexity
-locally unless there's an obvious bottleneck.
+Only minimal attention is being paid to ensuring good time complexity locally,
+unless there's an obvious bottleneck.
 
 ## Alternatives
 
@@ -412,9 +410,6 @@ A small enough object-graph can easily get away with:
 and `JSON.parse(json)`
 
 This is a simple, highly efficient and inherently atomic operation.
-
-If you can get away with just using this you're absolutely set
-and you should stop reading this.   
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
@@ -431,13 +426,11 @@ by using Redis JSON directly.
 
 [Redis-OM][redisom]
 
-This is a full-blown Object-Mapper which of course requires
-schema definitions. It's like an ORM but for non-relational datastores
-like Redis.
+A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-Install test dependencies:
+Install dependencies:
 
 ```bash
 npm ci
