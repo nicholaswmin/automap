@@ -20,7 +20,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Tests](#tests)
   + [Unit](#tests)
   + [Performance](#tests)
-  + [Coverage](#coverage)
+  + [Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
 
