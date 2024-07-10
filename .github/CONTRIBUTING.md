@@ -9,11 +9,12 @@ Bug reports *must*:
 
 ## Todos
 
-Remaining todos can be [viewed here][todos].
+Todos can be [viewed here][todos].
 
 ## Pointers
 
-- Code *must* always be accompanied by unit-tests for all code paths.
+- Code *must* always be accompanied by unit-tests.
+- Test coverage should never be lessened in Pull Requests.
 - Dependencies *should* be kept to an absolute minimum.  
   Use native functionality where possible.
 - Verbosity *should* be kept to a minimum in code, tests and docs.
