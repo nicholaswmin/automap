@@ -70,6 +70,10 @@ test('performance: List', async t => {
 
         await t.test('durations', async t => {
           await t.test('#fetch', async t => {
+            await t.before(() => {
+              console.log('took:', utils.histogramToMs(histograms.fetch), 'ms')
+            })
+
             await t.test('ran 100 times', () => {
               const count = histograms.fetch.count
 
@@ -102,6 +106,10 @@ test('performance: List', async t => {
           })
 
           await t.test('#save', async t => {
+            await t.before(() => {
+              console.log('took:', utils.histogramToMs(histograms.save), 'ms')
+            })
+
             await t.test('ran 100 times', () => {
               const count = histograms.save.count
 

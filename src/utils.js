@@ -12,6 +12,19 @@ const randomID = () => crypto.randomUUID().split('-').at(-1)
 const randomNum = (min = -300, max = 600) =>
   round(Math.random() * (max - min) + min)
 
+// Histograms
+
+const histogramToMs = histogram => {
+  const json = histogram.toJSON()
+
+  return ['min', 'max', 'mean', 'stddev'].reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: round(json[key] / 1e+6)
+    }
+  }, {})
+}
+
 // Payload
 
 const payloadKB = kb => {
@@ -62,6 +75,8 @@ const utils = {
 
   randomID,
   randomNum,
+
+  histogramToMs,
 
   payloadKB,
 
