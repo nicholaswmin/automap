@@ -33,7 +33,8 @@ test('performance: List', async t => {
           })
 
           for (let i = 0; i < 100; i++) {
-            const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
+            const room = await fetch({ id: 'foo' }) ||
+                         new Chatroom({ id: 'foo' })
 
             if (room)
               room.addUser({ name: utils.payloadKB(1) })
