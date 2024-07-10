@@ -425,8 +425,6 @@ npm test
 
 run performance tests:
 
-> require a running [Redis Server][redis-install] at port: 6379
-
 ```bash
 npm run test:perf
 ```
@@ -439,11 +437,13 @@ npm run test:coverage
 
 run meta tests:
 
-> non-functional tests, i.e ESlint, `npm audit` etc
-
 ```bash
 npm run test:meta
 ```
+
+> performance/integration tests require [Redis][redis-i] running at port: 6379
+>
+> "meta tests" refers to non-functional tests, i.e `npm audit` etc
 
 ## Contributing
 
@@ -517,4 +517,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
-[redis-install]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
