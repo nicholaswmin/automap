@@ -422,11 +422,10 @@ but for (probably most) use-cases that's simply just a non-problem.
 
 ### Redis JSON
 
-If your cloud-provider supports [Redis JSON][redis-json], then you probably
-use that instead.
+If [Redis JSON][redis-json] is available, then you should use that instead.
 
 Half the issues this module attempts to solve are solved out-the-box
-by using RedisJSON directly.
+by using Redis JSON directly.
 
 ### Alternative modules
 
