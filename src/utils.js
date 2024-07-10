@@ -41,6 +41,10 @@ const sizeBytes = item => {
 
 // Redis
 
+const delObjectGraph = (redis, id) =>
+  redis.keys(id + ':*').then(keys =>
+    keys.reduce((ppl, id) => ppl.del(id), redis.pipeline().del(id)).exec())
+
 const createRedis = () => ['development', undefined]
   .includes(process.env.NODE_ENV) ?
     new ioredis() :
@@ -52,6 +56,7 @@ const createRedis = () => ['development', undefined]
 
 const utils = {
   ioredis: { mock: ioredisMock, real: createRedis },
+  delObjectGraph,
 
   round,
 
