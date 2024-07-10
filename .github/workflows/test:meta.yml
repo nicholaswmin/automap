@@ -1,4 +1,4 @@
-name: unit-tests
+name: tests:meta
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 3
     strategy:
       matrix:
-        node-version: [20, latest]
+        node-version: [latest]
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
@@ -21,6 +21,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm test
-      env:
-        NODE_ENV: test
+    - run: npm audit
+    - run: npm run lint

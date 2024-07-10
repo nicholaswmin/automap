@@ -475,11 +475,11 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 <!--- Badges -->
 
-[test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/unit-tests.yml/badge.svg
-[test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/unit-tests.yml
+[test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml/badge.svg
+[test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml
 
-[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/perf-tests.yml/badge.svg
-[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/perf-tests.yml
+[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml/badge.svg
+[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main

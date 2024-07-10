@@ -1,4 +1,4 @@
-name: performance-tests
+name: tests:coverage
 
 on:
   push:
@@ -7,25 +7,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  report-coverage:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 3
     strategy:
       matrix:
         node-version: [latest]
-
-    services:
-      redis:
-        image: redis
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
-
+    env:
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
@@ -33,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
     - run: npm ci
-    - run: npm run test:perf
-      env:
-        NODE_ENV: test
+    - run: NODE_ENV=test node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info test/unit/index.spec.js
+    - run: curl -sL https://coveralls.io/coveralls-linux.tar.gz | tar -xz && ./coveralls report lcov.info

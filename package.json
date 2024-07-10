@@ -8,8 +8,8 @@
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test node --test test/unit/index.spec.js",
     "test:perf": "NODE_ENV=test node --test test/perf/index.spec.js",
+    "test:meta": "npm run lint && npm run audit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:precommit": "npm test && npm audit && npm run lint",
 
     "lint": "npx eslint",
     "scratch": "node .github/scratch/index.js",

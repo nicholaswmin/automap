@@ -14,8 +14,11 @@ Follows [GitHub flow][github-flow]
 
 ### Before commit
 
+Run these:
+
 ```bash
-npm run test:precommit
+npm test
+npm run test:meta
 ```
 
 which *must* exit with `exit code: 0`, without any errors or warnings.
