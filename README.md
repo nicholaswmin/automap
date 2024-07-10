@@ -4,13 +4,6 @@
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
----
-
-> [!IMPORTANT]  
-> Unpublished WIP
-
----
-
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
@@ -34,6 +27,9 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 
 ## Install
 
+> [!IMPORTANT]  
+> This is an unpublished WIP
+
 ```bash
 npm i https://github.com/nicholaswmin/automap
 ```
@@ -43,7 +39,7 @@ npm i https://github.com/nicholaswmin/automap
 This module exports a `Repository` which you set up, then call:
 
 - `repository.save(object)` to save an object
-- `repository.fetch('foo')` to fetch it back
+- `repository.fetch({ id: 'foo' })` to fetch it back
 
 Assume you have a `Building` which contains an array of `Flats`:
 
@@ -72,7 +68,9 @@ await repo.save(building)
 and fetch it back:
 
 ```js
-const building = await repo.fetch('kensington')
+const building = await repo.fetch({
+  id: 'kensington'
+})
 
 building.flats[0].ringDoorbell()
 // Doorbell 🔔 at flat: 101 !
@@ -145,7 +143,9 @@ class Building {
 ... and load its contents by calling `list.load()`:
 
 ```js
-const building = await repo.fetch('kensington')
+const building = await repo.fetch({
+  id: 'kensington'
+})
 
 console.log(building.flats)
 // [] (empty)
@@ -183,7 +183,9 @@ and behave *exactly* the same:
 
 ```js
 
-const list = new List({ from: [1, 2, 3] })
+const list = new List({
+ from: [1, 2, 3]
+})
 
 for (const item of list)
   console.log(item.constructor.name, item)
@@ -196,7 +198,10 @@ console.log(Array.isArray(list)) // true
 ... you can also specify a `type` parameter to cast to a type:
 
 ```js
-const list = new List({ type: String, from: [1, 2, 3] })
+const list = new List({
+ type: String,
+ from: [1, 2, 3]
+})
 
 for (const item of list)
   console.log(item.constructor.name, item)
@@ -282,7 +287,7 @@ runs in [linear-time `(On)`][linear].
 List items without an `id` property will use the `index`; their current
 position in the list, as the separator.
 
-So if the flats didn't have an `id` and they contained a list of `Persons`,
+If the flats didn't have an `id` and they contained a list of `Persons`,
 the persons of the 1st flat would be saved under key:
 
 ```
@@ -307,23 +312,11 @@ These methods ensure updates are both performant and [atomic][atomic][^1].
 #### Fetch
 
 In contrast, fetching an object graph is not atomic.  
-The part that breaks this guarantee is only when fetching the final
-root object. This is fixable but currently it is not.
 
 ### Nested Lists
 
 This module allows for an arbitrary amount of nesting of lists, so you can
 have a list, inside another list, inside another list and so on...
-
-It does so by doing a [BFS traversal][bfs] of the passed object-graph then
-marking the lists which need to be mapped as it exits the currently
-traversed branch.
-
-This allows a decomposition of the innermost lists *first* so a list with
-3 levels of nesting will save 4 list hashes intead of 1 big parent hash
-with no decomposed children.
-
-So nested lists are supported and correctly decomposed.
 
 But you should note the following ...
 
@@ -357,10 +350,6 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
-Note again that these aren't going to only run high counts of local iterations,
-those are a non-problem in most cases - but they are going to create full
-network roundtrips.
-
 Just a brief calculation based on the above is enough to figure out that
 even a tiny list with 5 items will become prohibitively expensive at even
 the most basic nesting depth.
@@ -372,7 +361,7 @@ some rudimentary assumptions and some slight tradeoffs,
 like assuming that if 1 List item has a List, then all of them probably do -
 but for now this problem is ignored as irrelevant.
 
-Other basic workarounds:
+Possible workarounds:
 
 - Don't use a `List`. Keep the list as an `Array`.  
   This means it won't be decomposed and in some cases it might be an
@@ -385,17 +374,6 @@ Other basic workarounds:
   to load their contents.
 
 - Avoid nested lists in your object graph in general.
-
-#### Local time complexity
-
-Locally and at the very minimum, a [BFS traversal][bfs] will always run at
-least once for both `.save()` and `.fetch()`, against the entire object graph.  
-
-This is followed by an additional [Quicksort][qs][^2] step in `.fetch`,
-against *every* list.
-
-Only minimal attention is being paid to ensuring good time complexity locally,
-unless there's an obvious bottleneck.
 
 ## Alternatives
 
