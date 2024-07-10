@@ -14,6 +14,7 @@ Todos can be [viewed here][todos].
 ## Pointers
 
 ### General
+
 - Dependencies *should* be kept to an absolute minimum.  
   Use native functionality where possible.
 - Verbosity *should* be kept to a minimum in code, tests and docs.
