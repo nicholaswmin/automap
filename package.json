@@ -7,10 +7,9 @@
   "scripts": {
     "test": "node --test test/index.spec.js",
     "test:perf": "NODE_ENV=test node test/require-redis.js && node --test test/perf/index.spec.js",
-    "test:meta": "npm run lint && npm run audit",
+    "test:meta": "npx eslint && npm run audit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
 
-    "lint": "npx eslint",
     "scratch": "node .github/scratch/index.js",
     "example": "node .github/example/index.js"
   },

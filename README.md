@@ -437,6 +437,14 @@ npm run test:perf
 npm run test:coverage
 ```
 
+### Meta
+
+> non-functional tests, i.e ESlint etc
+
+```bash
+npm run test:meta
+```
+
 ## Contributing
 
 Read the [Contribution guidelines][contributing].
