@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node --test test/index.spec.js",
-    "test:perf": "NODE_ENV=test node test/require-redis.js && node --test test/perf/index.spec.js",
+    "test:perf": "NODE_ENV=test node test/utils/require-redis.js && node --test test/perf/index.spec.js",
     "test:meta": "npx eslint && npm audit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
 
