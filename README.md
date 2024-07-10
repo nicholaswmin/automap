@@ -18,9 +18,10 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#tests)
-  + [Unit](#tests)
+  + [Unit](#unit)
   + [Performance](#performance-1)
   + [Coverage](#coverage)
+  + [Meta](#meta)
 - [Contributing](#contributing)
 - [Authors](#authors)
 
@@ -411,13 +412,13 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-install dependencies:
+install test deps:
 
 ```bash
 npm ci
 ```
 
-run unit tests:
+### Unit
 
 ```bash
 npm test
