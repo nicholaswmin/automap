@@ -1,5 +1,7 @@
 # Todo
 
+> Follows [MoSCoW prioritisation][moscow]
+
 ## Must have
 
 - [ ] Consecutive saves increase the saving time linearly
@@ -38,3 +40,6 @@
 - [ ] Test the repository as an integration test
 - [ ] Lists must be tested against a long time period - as in a lot of
 items added - is it still adding `AppendList` items in `O(1)`?
+
+
+[moscow]: https://en.wikipedia.org/wiki/MoSCoW_method
