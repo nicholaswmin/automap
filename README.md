@@ -19,7 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#tests)
   + [Unit](#tests)
-  + [Performance](#performance)
+  + [Performance](#performance-1)
   + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
