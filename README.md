@@ -169,7 +169,7 @@ class Building {
   constructor({ id, flats = [] }) {
     this.id = id
 
-    // Using a List instead of Array (!)
+    // (!) List instead of Array
     this.flats = new LazyList({
       type: Flat,
       from: flats
@@ -188,7 +188,7 @@ const list = new List({ from: [1, 2, 3] })
 for (const item of list)
   console.log(item.constructor.name, item)
 
-// Number 1, Number 2, Number 3 ...
+// Number 1, Number 2 ...
 
 console.log(Array.isArray(list)) // true
 ```
@@ -201,7 +201,7 @@ const list = new List({ type: String, from: [1, 2, 3] })
 for (const item of list)
   console.log(item.constructor.name, item)
 
-// String '1', String '2', String '3' ...
+// String '1', String '2' .
 ```
 
 ... and use it like a regular `Array`:
@@ -437,9 +437,8 @@ but for (probably most) use-cases that's simply just a non-problem.
 If your cloud-provider supports [Redis JSON][redis-json], then you probably
 use that instead.
 
-We'd still build a similar mapper to this one but for our own internal reasons
-that are probably specific to us; in general half the issues this module
-attempts to solve are solved out-the-box by using RedisJSON directly.
+Half the issues this module attempts to solve are solved out-the-box
+by using RedisJSON directly.
 
 ### Alternative modules
 

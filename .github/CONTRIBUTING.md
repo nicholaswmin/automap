@@ -46,8 +46,8 @@ npm run test:precommit
 
 The CI workflows can be [found here][workflows].
 
-- [Functional tests][func-req] should be run in the `test.yml` workflow.
-- [Non-functional tests][non-func-req], i.e `npm audit` should be run in the
+- [Functional tests][func-req] *should* be run in the `test.yml` workflow.
+- [Non-functional tests][non-func-req], i.e `npm audit` *should* be run in the
   `meta.yml` workflow.
 
 [todos]: ./TODO.md
