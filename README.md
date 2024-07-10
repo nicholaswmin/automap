@@ -331,9 +331,6 @@ But you should note the following ...
 > Note that in these time-complexity speculations are solely in the context
 > of network roundtrips since they are by far the biggest bottleneck in
 > most cases.
->
-> They don't describe local computations and there's not much attention
-> being paid in that regard, in general.
 
 #### Flat lists
 
@@ -353,30 +350,12 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
-Just a brief calculation based on the above is enough to figure out that
-even a tiny list with 5 items will become prohibitively expensive at even
-the most basic nesting depth.
-
 So while nested lists are supported, they are *not* recommended.
 
 This particular issue can be solved in better time complexity with
 some rudimentary assumptions and some slight tradeoffs,
 like assuming that if 1 List item has a List, then all of them probably do -
 but for now this problem is ignored as irrelevant.
-
-Possible workarounds:
-
-- Don't use a `List`. Keep the list as an `Array`.  
-  This means it won't be decomposed and in some cases it might be an
-  acceptable tradeoff, if your nested lists simply contain a minimal
-  amount of items.
-
-- Use a `LazyList`.   
-  They won't have an impact on the initial fetching but
-  they will eventually exhibit the same behaviour when you call `list.load()`
-  to load their contents.
-
-- Avoid nested lists in your object graph in general.
 
 ## Alternatives
 
