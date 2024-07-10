@@ -439,7 +439,7 @@ npm run test:coverage
 
 ### Meta
 
-> non-functional tests, i.e ESlint etc
+> non-functional tests, i.e ESlint, `npm audit` etc
 
 ```bash
 npm run test:meta
