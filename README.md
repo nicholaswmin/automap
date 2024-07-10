@@ -18,8 +18,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#tests)
-  + [Unit](#tests)
-  + [Performance](#tests)
+  + [Unit tests](#tests)
+  + [Performance tests](#tests)
   + [Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -422,7 +422,7 @@ npm run test:meta
 
 > performance & integration tests require [Redis][redis-i] running at `:6379`
 >
-> *meta tests* refers to non-functional tests, i.e `npm audit` etc
+> "meta tests" refers to [non-functional][non-func] tests, i.e `npm audit` etc
 
 ## Contributing
 
@@ -497,3 +497,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
