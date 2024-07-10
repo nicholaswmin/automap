@@ -1,15 +1,15 @@
 import assert from 'node:assert'
-import ioredis from 'ioredis'
-
 import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
+
+import ioredis from 'ioredis'
 
 import { Repository } from '../../src/repository.js'
 import { Chatroom } from '../model/index.js'
 
 test('List:performance', async t => {
   await t.test('#fetch() - save()', async t => {
-    let histograms
+    let hgrams
 
     await t.test('50 cycles', async t => {
       await t.beforeEach(async () => {
