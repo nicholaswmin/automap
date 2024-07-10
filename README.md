@@ -385,8 +385,6 @@ Other basic workarounds:
   This means it won't be decomposed and in some cases it might be an
   acceptable tradeoff, if your nested lists simply contain a minimal
   amount of items.
-  If those are your *only* lists, well - then you should probably stop reading.
-  [You simply don't need this module](#where-this-is-unnecessary).
 
 - Use a `LazyList`? They won't have an impact on the initial fetching but
   they will eventually exhibit the same behaviour when you call `list.load()`
@@ -422,11 +420,6 @@ This is a simple, highly efficient and inherently atomic operation.
 
 If you can get away with just using this you're absolutely set
 and you should stop reading this.   
-
-You simply don't need this module and none of the issues here apply to
-you.
-
-In some cases it's [even faster than RedisJSON][bench].
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
