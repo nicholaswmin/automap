@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
+[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
 
 # :cd: automap
 
@@ -18,33 +18,37 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#tests)
-  + [Run](#tests)
-  + [Coverage](#test-coverage)
+  + [Unit](#tests)
+  + [Performance](#tests)
+  + [Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
 
 ## Install
 
-> [!IMPORTANT]  
-> This is an unpublished WIP
-
 ```bash
 npm i https://github.com/nicholaswmin/automap
 ```
 
+> [!IMPORTANT]  
+> this is still an unpublished WIP
+
 ## Usage
 
-This module exports a `Repository` which you set up, then call:
+This module exports a `Repository`:
 
-- `repository.save(object)` to save an object
+- `repository.save(object)` to save an object graph
 - `repository.fetch({ id: 'foo' })` to fetch it back
 
-Assume you have a `Building` which contains an array of `Flats`:
+Assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [
+    { id: 101 },
+    { id: 102 }
+  ]
 })
 ```
 
@@ -57,7 +61,10 @@ const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [
+    { id: 101 },
+    { id: 102 }
+  ]
 })
 
 await repo.save(building)
@@ -70,8 +77,8 @@ const building = await repo.fetch({
   id: 'kensington'
 })
 
-building.flats[0].ringDoorbell()
-// Doorbell 🔔 at flat: 101 !
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
 
 for (let flat of building.flats)
   console.log(flat)
@@ -109,8 +116,8 @@ class Flat {
     this.id = id
   }
 
-  ringDoorbell() {
-    console.log(`Doorbell 🔔 at flat: ${this.id}`)
+  doorbell() {
+    console.log(`🔔 at flat: ${this.id}`)
   }
 }
 ```
@@ -404,39 +411,43 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-Install dependencies:
+install dependencies:
 
 ```bash
 npm ci
 ```
 
-Run all tests:
+run unit tests:
 
 ```bash
 npm test
 ```
 
-only unit tests:
+run performance tests:
+
+> require a running [Redis Server][redis-install] at port: 6379
 
 ```bash
-npm run test:unit
+npm run test:perf
 ```
 
-only integration tests:
-
-```bash
-npm run test:integration
-```
-
-### Coverage
+produce a test coverage report:
 
 ```bash
 npm run test:coverage
 ```
 
+run meta tests:
+
+> non-functional tests, i.e ESlint, `npm audit` etc
+
+```bash
+npm run test:meta
+```
+
 ## Contributing
 
-Read the [Contribution guidelines][contributing].
+Read the [contribution guidelines][contributing].
 
 ## Authors
 
@@ -473,8 +484,11 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 <!--- Badges -->
 
-[test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml/badge.svg
-[test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml
+[test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml/badge.svg
+[test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml
+
+[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml/badge.svg
+[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
@@ -503,3 +517,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
+[redis-install]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/

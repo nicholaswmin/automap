@@ -5,13 +5,11 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "NODE_ENV=test node --test test/unit/index.spec.js",
-    "test:integration": "NODE_ENV=test node --test test/integration/index.spec.js",
+    "test": "node --test test/index.spec.js",
+    "test:perf": "NODE_ENV=test node test/utils/require-redis.js && node --test test/perf/index.spec.js",
+    "test:meta": "npx eslint && npm audit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:precommit": "npm test && npm audit && npm run lint",
 
-    "lint": "npx eslint",
     "scratch": "node .github/scratch/index.js",
     "example": "node .github/example/index.js"
   },

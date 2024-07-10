@@ -1,15 +1,20 @@
 // Run `npm run example` to run this example
+//
+// @IMPORTANT:
+// - The console.logs are used for unit-testing this, so don't change them.
 
-import { Repository, List, LazyList, utils } from '../../index.js'
-
-const redis = utils.ioredis()
+import { Repository, LazyList } from '../../index.js'
+import ioredis from 'ioredis-mock'
 
 // Model
 
 class Building {
   constructor({ id, flats = [] }) {
     this.id = id
-    this.flats = new LazyList({ type: Flat, from: flats })
+    this.flats = new LazyList({
+      from: flats,
+      type: Flat
+    })
   }
 }
 
@@ -18,40 +23,33 @@ class Flat {
     this.id = id
   }
 
-  ringDoorbell() {
-    console.log(`Doorbell 🔔 at flat: ${this.id}`)
+  doorbell() {
+    console.log(`🔔 at flat: ${this.id}`)
   }
 }
 
-// Usage
+// Save & Fetch
 
-// Save
+const repo = new Repository(Building, new ioredis())
 
-const repo = new Repository(Building, redis)
-
+// object ...
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [{ id: 101 }, { id: 102 }]
 })
 
+// save ...
 await repo.save(building)
+console.log('saved:', building.constructor.name, 'with id:', building.id)
 
-// Fetch
+// fetch ...
 const fetched = await repo.fetch({ id: 'kensington' })
+console.log('fetched:', fetched.constructor.name, 'with id:', fetched.id)
 
-// List is lazy so we must `list.load()`
+// load lazy list via `list.load()`
 await fetched.flats.load(repo)
 
-fetched.flats[0].ringDoorbell()
-// Logs Doorbell 🔔 at flat: 101
+// call a Flat method ...
+fetched.flats[0].doorbell()
 
-const list = new List({ from: [1, 2, 3] })
-
-for (let i = 0; i < list.length; i++)
-  console.log(list[i].constructor.name, list[i])
-
-// Logs "Number 1"
-// Logs "Number 2"
-// Logs "Number 3"
-
-redis.disconnect()
+// 🔔 at flat: 101 !
