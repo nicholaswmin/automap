@@ -411,7 +411,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-install dependencies:
+install test deps:
 
 ```bash
 npm ci
