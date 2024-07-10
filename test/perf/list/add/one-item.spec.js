@@ -66,9 +66,6 @@ test('performance: List', async t => {
 
         await t.test('durations', async t => {
           await t.test('#fetch', async t => {
-            await t.before(() => {
-              console.log('took:', utils.histogramToMs(histograms.fetch), 'ms')
-            })
 
             await t.test('ran 100 times', () => {
               const count = histograms.fetch.count
@@ -77,34 +74,31 @@ test('performance: List', async t => {
             })
 
             await t.test('min is < 4 ms', () => {
-              const ms = histograms.fetch.min / 1e+6
+              const ms = utils.nanoToMs(histograms.fetch.min)
 
               assert.ok(ms < 4, `value is: ${ms} ms`)
             })
 
             await t.test('mean is < 6 ms', () => {
-              const ms = histograms.fetch.mean / 1e+6
+              const ms = utils.nanoToMs(histograms.fetch.mean)
 
               assert.ok(ms < 6, `value is: ${ms} ms`)
             })
 
             await t.test('max is < 20 ms', () => {
-              const ms = histograms.fetch.max / 1e+6
+              const ms = utils.nanoToMs(histograms.fetch.max)
 
               assert.ok(ms < 20, `value is: ${ms} ms`)
             })
 
             await t.test('deviation is < 3 ms', () => {
-              const ms = histograms.fetch.stddev / 1e+6
+              const ms = utils.nanoToMs(histograms.fetch.stddev)
 
               assert.ok(ms < 3, `value is: ${ms} ms`)
             })
           })
 
           await t.test('#save', async t => {
-            await t.before(() => {
-              console.log('took:', utils.histogramToMs(histograms.save), 'ms')
-            })
 
             await t.test('ran 100 times', () => {
               const count = histograms.save.count
@@ -113,25 +107,25 @@ test('performance: List', async t => {
             })
 
             await t.test('min is < 4 ms', () => {
-              const ms = histograms.save.min / 1e+6
+              const ms = utils.nanoToMs(histograms.save.min)
 
               assert.ok(ms < 4, `value is: ${ms} ms`)
             })
 
             await t.test('mean is < 6 ms', () => {
-              const ms = histograms.save.mean / 1e+6
+              const ms = utils.nanoToMs(histograms.save.mean)
 
               assert.ok(ms < 6, `value is: ${ms} ms`)
             })
 
             await t.test('max is < 20 ms', () => {
-              const ms = histograms.save.max / 1e+6
+              const ms = utils.nanoToMs(histograms.save.max)
 
               assert.ok(ms < 20, `value is: ${ms} ms`)
             })
 
             await t.test('deviation is < 5 ms', () => {
-              const ms = histograms.save.stddev / 1e+6
+              const ms = utils.nanoToMs(histograms.save.stddev)
 
               assert.ok(ms < 5, `value is: ${ms} ms`)
             })

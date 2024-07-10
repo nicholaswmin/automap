@@ -131,7 +131,10 @@ class Repository {
   #throwOnInvalidRoot(root) {
     const type = this.Class.name
 
-    if (!root || typeof root !== 'object')
+    if (!root)
+      throw new Error('object is falsy')
+
+    if (typeof root !== 'object')
       throw new Error(`object must be an "object", got: ${typeof root}`)
 
     if (root.constructor.name !== type)
