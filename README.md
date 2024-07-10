@@ -441,9 +441,9 @@ run meta tests:
 npm run test:meta
 ```
 
-> performance/integration tests require [Redis][redis-i] running at port: 6379
+> performance & integration tests require [Redis][redis-i] running at `:6379`
 >
-> "meta tests" refers to non-functional tests, i.e `npm audit` etc
+> *meta tests* refers to non-functional tests, i.e `npm audit` etc
 
 ## Contributing
 
