@@ -1,5 +1,6 @@
 import crypto from 'node:crypto'
 import ioredis from 'ioredis'
+import ioredisMock from 'ioredis-mock'
 
 // Number
 
@@ -50,7 +51,7 @@ const createRedis = () => ['development', undefined]
 
 
 const utils = {
-  ioredis: createRedis,
+  ioredis: { mock: ioredisMock, real: createRedis },
 
   round,
 
