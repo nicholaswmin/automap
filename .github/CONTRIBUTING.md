@@ -21,9 +21,9 @@ Todos can be [viewed here][todos].
 
 ### Testing
 
+- Unit tests and integrations tests *must* be separate.
 - Code *must* always be accompanied by unit-tests.
 - Pull Requests *should not* lessen test coverage.
-- Unit tests and integrations tests *must* be separate.
 
 ## Versioning
 
