@@ -420,7 +420,8 @@ run meta tests:
 npm run test:meta
 ```
 
-> performance & integration tests require [Redis][redis-i] running at `:6379`
+> performance & integration tests require a [Redis Server][redis-i] running
+> at `:6379`
 >
 > "meta tests" refers to [non-functional][non-func] tests, i.e `npm audit` etc
 
