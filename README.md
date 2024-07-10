@@ -404,7 +404,7 @@ npm test
 
 run performance tests:
 
-> these tests require a locally running [Redis Server][redis-i] at `:6379`
+> these tests require a locally running [redis server][redis-i] at `:6379`
 
 ```bash
 npm run test:perf
