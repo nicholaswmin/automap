@@ -30,7 +30,7 @@
 ## Testing
 
 - [ ] Fix `test.todo` tests
-- [x] Split unit and integration tests
+- [x] Split unit, integration and performance tests
 - [ ] Do not use `ioredis-mock` in integration tests.
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more

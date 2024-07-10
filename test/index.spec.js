@@ -1,9 +1,9 @@
 // unit tests
 import './unit/index.spec.js'
 
-// integration tests
+// performance tests
 
-import './integration/index.spec.js'
+import './performance/index.spec.js'
 
 // test model
 

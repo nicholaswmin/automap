@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
+[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
 
 # :cd: automap
 
@@ -416,22 +416,18 @@ install dependencies:
 npm ci
 ```
 
-run all tests:
+run unit tests:
 
 ```bash
 npm test
 ```
 
-only unit tests:
+run performance tests:
+
+> requires [Redis Server][redis] running at port: 6379
 
 ```bash
-npm run test:unit
-```
-
-only integration tests:
-
-```bash
-npm run test:integration
+npm run test:perf
 ```
 
 ### Coverage
@@ -481,6 +477,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test.yml
+
+[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/perf.yml/badge.svg
+[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/perf.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main

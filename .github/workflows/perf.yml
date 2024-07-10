@@ -1,4 +1,4 @@
-name: unit-tests
+name: performance-tests
 
 on:
   push:
@@ -10,9 +10,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 3
+
     strategy:
       matrix:
-        node-version: [20, latest]
+        node-version: [latest]
+
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
@@ -21,6 +34,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm test
+    - run: npm run test:perf
       env:
         NODE_ENV: test

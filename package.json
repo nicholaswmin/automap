@@ -5,9 +5,9 @@
   "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:unit && npm run test:integration",
+    "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test node --test test/unit/index.spec.js",
-    "test:integration": "NODE_ENV=test node --test test/integration/index.spec.js",
+    "test:perf": "NODE_ENV=test node --test test/perf/index.spec.js",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
     "test:precommit": "npm test && npm audit && npm run lint",
 
