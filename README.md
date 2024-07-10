@@ -34,17 +34,20 @@ npm i https://github.com/nicholaswmin/automap
 
 ## Usage
 
-This module exports a `Repository` which you set up, then call:
+This module exports a `Repository`:
 
-- `repository.save(object)` to save an object
+- `repository.save(object)` to save an object graph
 - `repository.fetch({ id: 'foo' })` to fetch it back
 
-Assume you have a `Building` which contains an array of `Flats`:
+Assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [
+    { id: 101 },
+    { id: 102 }
+  ]
 })
 ```
 
@@ -57,7 +60,10 @@ const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
   id: 'kensington',
-  flats: [{ id: 101}, { id: 102 }, { id: 103 }]
+  flats: [
+    { id: 101 },
+    { id: 102 }
+  ]
 })
 
 await repo.save(building)
