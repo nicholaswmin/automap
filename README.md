@@ -169,7 +169,7 @@ class Building {
   constructor({ id, flats = [] }) {
     this.id = id
 
-    // (!) List instead of Array
+    // ! List instead of Array
     this.flats = new LazyList({
       type: Flat,
       from: flats
@@ -201,7 +201,7 @@ const list = new List({ type: String, from: [1, 2, 3] })
 for (const item of list)
   console.log(item.constructor.name, item)
 
-// String '1', String '2' .
+// String '1', String '2' ...
 ```
 
 ... and use it like a regular `Array`:
