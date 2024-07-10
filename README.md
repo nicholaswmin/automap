@@ -231,12 +231,7 @@ npm run example
 
 ## Redis data structure
 
-All keys/values saved into Redis follow a canonical and most importantly
-*human-readable* format.
-
-The idea is that you might stop using this module altogether or simply
-need to directly get list items from Redis. You should always have a simple
-and clear data structure in Redis that you can easily follow.
+All keys/values saved in Redis follow a canonical and *human-readable* format.
 
 Assuming the above example, our flats are saved under this Redis key:
 
