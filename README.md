@@ -19,7 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#tests)
   + [Unit](#tests)
-  + [Performance](#performance-1)
+  + [Performance](#tests)
   + [Coverage](#coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -423,7 +423,7 @@ run unit tests:
 npm test
 ```
 
-### Performance
+run performance tests:
 
 > require a running [Redis Server][redis-install] at port: 6379
 
@@ -431,13 +431,13 @@ npm test
 npm run test:perf
 ```
 
-### Coverage
+produce a test coverage report:
 
 ```bash
 npm run test:coverage
 ```
 
-### Meta
+run meta tests:
 
 > non-functional tests, i.e ESlint, `npm audit` etc
 
