@@ -7,7 +7,7 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository } from '../../src/repository.js'
 import { Chatroom } from '../model/index.js'
 
-test('List:performance', async t => {
+test('performance', async t => {
   const redis = new ioredis()
   const flushkeys = pattern =>
     redis.keys(pattern).then(keys =>
@@ -20,7 +20,7 @@ test('List:performance', async t => {
     await t.before(() => flushkeys('chatroom:*'))
     await t.after(() =>  flushkeys('chatroom:*').then(() => redis.disconnect()))
 
-    await t.test('50 cycles', async t => {
+    await t.test('run 50 times', async t => {
       await t.beforeEach(async () => {
         histograms = { fetch: createHistogram(), save: createHistogram() }
 
@@ -48,66 +48,66 @@ test('List:performance', async t => {
       })
 
       await t.test('#fetch', async t => {
-        await t.test('ran 50 times', () => {
+        await t.test('has ran 50 times', () => {
           const count = histograms.fetch.count
 
-          assert.strictEqual(count, 50, `count is actually ${count}`)
+          assert.strictEqual(count, 50, `recorded value is: ${count}`)
         })
 
-        await t.test('min duration is < 2 ms', () => {
+        await t.test('min duration is under 2 ms', () => {
           const ms = histograms.fetch.min / 1e+6
 
-          assert.ok(ms < 2, `min duration is actually: ${ms} ms`)
+          assert.ok(ms < 2, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('mean duration is < 3 ms', () => {
+        await t.test('mean duration is under 3 ms', () => {
           const ms = histograms.fetch.mean / 1e+6
 
-          assert.ok(ms < 3, `mean duration is actually: ${ms} ms`)
+          assert.ok(ms < 3, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('max duration is < 20 ms', () => {
+        await t.test('max duration is under 20 ms', () => {
           const ms = histograms.fetch.max / 1e+6
 
-          assert.ok(ms < 20, `'max duration is actually: ${ms} ms`)
+          assert.ok(ms < 20, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('standard deviation is < 3 ms', () => {
+        await t.test('standard deviation is under 3 ms', () => {
           const ms = histograms.fetch.stddev / 1e+6
 
-          assert.ok(ms < 3, `standard deviation is actually: ${ms} ms`)
+          assert.ok(ms < 3, `recorded value is: ${ms} ms`)
         })
       })
 
       await t.test('#save', async t => {
-        await t.test('ran 50 times', () => {
+        await t.test('has ran 50 times', () => {
           const count = histograms.save.count
 
-          assert.strictEqual(count, 50, `count is actually ${count}`)
+          assert.strictEqual(count, 50, `recorded value is: ${count}`)
         })
 
-        await t.test('min duration is < 2 ms', () => {
+        await t.test('min duration is under 2 ms', () => {
           const ms = histograms.save.min / 1e+6
 
-          assert.ok(ms < 2, `min duration is actually: ${ms} ms`)
+          assert.ok(ms < 2, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('mean duration is < 3 ms', () => {
+        await t.test('mean duration is under 3 ms', () => {
           const ms = histograms.save.mean / 1e+6
 
-          assert.ok(ms < 3, `mean duration is actually: ${ms} ms`)
+          assert.ok(ms < 3, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('max duration is < 20 ms', () => {
+        await t.test('max duration is under 20 ms', () => {
           const ms = histograms.save.max / 1e+6
 
-          assert.ok(ms < 20, `'max duration is actually: ${ms} ms`)
+          assert.ok(ms < 20, `recorded value is: ${ms} ms`)
         })
 
-        await t.test('standard deviation is < 3 ms', () => {
+        await t.test('standard deviation is under 3 ms', () => {
           const ms = histograms.save.stddev / 1e+6
 
-          assert.ok(ms < 3, `standard deviation is actually: ${ms} ms`)
+          assert.ok(ms < 3, `recorded value is: ${ms} ms`)
         })
       })
     })
