@@ -57,7 +57,7 @@ const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [{ id: 101}, { id: 102 }, { id: 103 }]
 })
 
 await repo.save(building)
@@ -70,8 +70,8 @@ const building = await repo.fetch({
   id: 'kensington'
 })
 
-building.flats[0].ringDoorbell()
-// Doorbell 🔔 at flat: 101 !
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
 
 for (let flat of building.flats)
   console.log(flat)
@@ -109,8 +109,8 @@ class Flat {
     this.id = id
   }
 
-  ringDoorbell() {
-    console.log(`Doorbell 🔔 at flat: ${this.id}`)
+  doorbell() {
+    console.log(`🔔 at flat: ${this.id}`)
   }
 }
 ```

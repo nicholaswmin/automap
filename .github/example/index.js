@@ -18,8 +18,8 @@ class Flat {
     this.id = id
   }
 
-  ringDoorbell() {
-    console.log(`Doorbell 🔔 at flat: ${this.id}`)
+  doorbell() {
+    console.log(`🔔 at flat: ${this.id}`)
   }
 }
 
@@ -31,7 +31,7 @@ const repo = new Repository(Building, redis)
 
 const building = new Building({
   id: 'kensington',
-  flats: ['101', '102', '103']
+  flats: [{ id: 101 }, { id: 102 }, { id: 103 }]
 })
 
 await repo.save(building)
@@ -42,8 +42,8 @@ const fetched = await repo.fetch({ id: 'kensington' })
 // List is lazy so we must `list.load()`
 await fetched.flats.load(repo)
 
-fetched.flats[0].ringDoorbell()
-// Logs Doorbell 🔔 at flat: 101
+fetched.flats[0].doorbell()
+// 🔔 at flat: 101
 
 const list = new List({ from: [1, 2, 3] })
 
