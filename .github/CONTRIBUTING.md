@@ -23,7 +23,7 @@ Todos can be [viewed here][todos].
 ### Testing
 
 - Unit tests and integrations tests *must* be separate.
-- Code *must* always be accompanied by unit-tests.
+- Tests *should* be [damp, not DRY][damp-tests].
 - Pull Requests *should not* lessen test coverage.
 
 ## Versioning
@@ -57,3 +57,4 @@ The CI workflows can be [found here][workflows].
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
+[damp-tests]: https://enterprisecraftsmanship.com/posts/dry-damp-unit-tests/
