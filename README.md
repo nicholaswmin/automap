@@ -27,12 +27,12 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 
 ## Install
 
-> [!IMPORTANT]  
-> This is an unpublished WIP
-
 ```bash
 npm i https://github.com/nicholaswmin/automap
 ```
+
+> [!IMPORTANT]  
+> this is still an unpublished WIP
 
 ## Usage
 
