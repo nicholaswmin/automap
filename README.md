@@ -410,13 +410,13 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-Install dependencies:
+install dependencies:
 
 ```bash
 npm ci
 ```
 
-Run all tests:
+run all tests:
 
 ```bash
 npm test
