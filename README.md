@@ -22,8 +22,6 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   + [Coverage](#test-coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
-- [License](#license)
-
 
 ## Install
 
@@ -120,7 +118,7 @@ class Flat {
 ### Lazy Loading
 
 Sometimes you won't need to load the contents of a list initially.   
-You might want to load it's after you fetch it, or even none at all.
+You might want to load it's contents after you fetch it, or even none at all.
 
 In that case, use a `LazyList` instead of a `List`.
 
@@ -443,22 +441,6 @@ Read the [Contribution guidelines][contributing].
 ## Authors
 
 Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
-
-## License
-
-> MIT No Attribution License  
->
-> SPDX: MIT-0
->
-> Copyright (c) 2024 Nicholas Kyriakides
->
-> Permission is hereby granted, free of charge, to *any person* obtaining a copy
-> of this software and associated documentation files (the "Software"), to deal
-> in the Software without restriction, including without limitation the rights
-> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-> copies of the Software, and to permit persons to whom the Software is
-> furnished to do so.
-
 
 ## Footnotes
 
