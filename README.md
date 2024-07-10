@@ -333,16 +333,16 @@ But you should note the following ...
 > configurations.
 >
 > Note that in these time-complexity speculations are solely in the context
-> of network roundtrips and/or requests since they are by far the biggest
-> bottleneck in most cases.
+> of network roundtrips since they are by far the biggest bottleneck in
+> most cases.
 >
 > They don't describe local computations and there's not much attention
 > being paid in that regard, in general.
 
 #### Flat lists
 
-Object graphs which don't have lists nested inside other lists,
-are fetched in a process that exhibits an almost
+Object graphs which don't have lists nested inside other lists, are fetched
+in a process that exhibits an almost
 [constant-time complexity O(1)][const][^3][^4].
 
 There's no network roundtrip involved for each list, or even separate requests
