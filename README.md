@@ -19,7 +19,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#tests)
   + [Run](#tests)
-  + [Test coverage](#test-coverage)
+  + [Coverage](#test-coverage)
 - [Contributing](#contributing)
 - [Authors](#authors)
 - [License](#license)
@@ -86,11 +86,10 @@ for (let flat of building.flats)
 
 ### Model definition
 
-To make an object graph persistable:
+An object graph is persistable if it:
 
-1. Use the provided `List` type for list-like data, instead of an
-  [`Array`][array].
-2. Ensure your root object has an `id` property set to a unique value.
+1. has an `id` property set to a unique value.
+2. uses the `List` type for list-like data, instead of an [`Array`][array].
 
 Same example as above, a `Building` with `Flats`:
 
@@ -121,8 +120,7 @@ class Flat {
 ### Lazy Loading
 
 Sometimes you won't need to load the contents of a list initially.   
-You might want to load it's contents later - after you fetch it, or even
-none at all.
+You might want to load it's after you fetch it, or even none at all.
 
 In that case, use a `LazyList` instead of a `List`.
 
@@ -432,7 +430,7 @@ only integration tests:
 npm run test:integration
 ```
 
-### Test coverage
+### Coverage
 
 ```bash
 npm run test:coverage
