@@ -404,6 +404,8 @@ npm test
 
 run performance tests:
 
+> these tests require a locally running [Redis Server][redis-i] at `:6379`
+
 ```bash
 npm run test:perf
 ```
@@ -416,14 +418,11 @@ npm run test:coverage
 
 run meta tests:
 
+> [non-functional][non-func] tests, i.e `npm audit` etc ...
+
 ```bash
 npm run test:meta
 ```
-
-> performance & integration tests require a [Redis Server][redis-i] running
-> at `:6379`
->
-> "meta tests" refers to [non-functional][non-func] tests, i.e `npm audit` etc
 
 ## Contributing
 
