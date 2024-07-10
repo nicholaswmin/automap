@@ -418,7 +418,7 @@ npm run test:coverage
 
 run meta tests:
 
-> [non-functional][non-func] tests, i.e `npm audit` etc ...
+> these are [non-functional][non-func] tests, i.e `npm audit` etc ...
 
 ```bash
 npm run test:meta
