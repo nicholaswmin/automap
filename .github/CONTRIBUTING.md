@@ -14,8 +14,6 @@ Follows [GitHub flow][github-flow]
 
 ### Before commit
 
-Run these:
-
 ```bash
 npm test
 npm run test:meta
