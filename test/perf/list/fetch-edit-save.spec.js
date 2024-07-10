@@ -9,16 +9,16 @@ import { Chatroom } from '../../model/index.js'
 
 test('List:performance', async t => {
   const redis = new ioredis()
-  const delkeys = pattern =>
+  const flushkeys = pattern =>
     redis.keys(pattern).then(keys =>
       keys.reduce((ppln, key) =>
         ppln.del(key), redis.pipeline()).exec())
 
-  await t.test('#fetch() - edit object List - save()', async t => {
+  await t.test('#fetch() - edit object list - save()', async t => {
     let histograms = {}
 
-    await t.before(() => delkeys('chatroom:*'))
-    await t.after(() =>  delkeys('chatroom:*').then(() => redis.disconnect()))
+    await t.before(() => flushkeys('chatroom:*'))
+    await t.after(() =>  flushkeys('chatroom:*').then(() => redis.disconnect()))
 
     await t.test('50 cycles', async t => {
       await t.beforeEach(async () => {

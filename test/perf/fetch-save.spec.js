@@ -8,19 +8,17 @@ import { Repository } from '../../src/repository.js'
 import { Chatroom } from '../model/index.js'
 
 test('List:performance', async t => {
+  const redis = new ioredis()
+  const flushkeys = pattern =>
+    redis.keys(pattern).then(keys =>
+      keys.reduce((ppln, key) =>
+        ppln.del(key), redis.pipeline()).exec())
+
   await t.test('#fetch() - do nothing - save()', async t => {
     let histograms = {}
 
-    let redis = new ioredis()
-
-    let delkeys = pattern =>
-      redis.keys(pattern)
-        .then(keys => keys.reduce((ppln, key) =>
-            ppln.del(key), redis.pipeline()).exec())
-
-    await t.beforeEach(() => delkeys('chatroom:*'))
-    await t.afterEach(() =>  delkeys('chatroom:*'))
-    await t.after(() => redis.disconnect())
+    await t.before(() => flushkeys('chatroom:*'))
+    await t.after(() =>  flushkeys('chatroom:*').then(() => redis.disconnect()))
 
     await t.test('50 cycles', async t => {
       await t.beforeEach(async () => {
