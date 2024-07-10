@@ -31,7 +31,7 @@ npm i https://github.com/nicholaswmin/automap
 ```
 
 > [!IMPORTANT]  
-> this is still an unpublished WIP
+> unpublished WIP
 
 ## Usage
 
