@@ -447,7 +447,7 @@ npm run test:meta
 
 ## Contributing
 
-Read the [Contribution guidelines][contributing].
+Read the [contribution guidelines][contributing].
 
 ## Authors
 
