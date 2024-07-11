@@ -6,15 +6,15 @@ Todos can be [viewed here][todos].
 
 ## Versioning
 
-Follows [semantic versioning][semver]
+Follows the [Semantic Versioning specification][semver]
 
 ## Code changes
 
-Follows [github flow][github-flow]
+Follows [GitHub flow][github-flow]
 
 ## Commit Messages
 
-Follows [conventional commits][conv-comm]
+Follows the [Conventional Commits specification][conv-comm]
 
 ### Before commit
 
