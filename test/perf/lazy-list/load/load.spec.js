@@ -62,7 +62,7 @@ test('perf: load 100 LazyLists', async t => {
       await t.test('loads 100 lists', async t => {
         assert.strictEqual(loadedLists.length, 100)
 
-        await t.test('with 100 items', async t => {
+        await t.test('with 100 items', async () => {
           loadedLists.forEach(list => assert.strictEqual(list.length, 100))
         })
 

@@ -18,7 +18,7 @@ test('perf: edit 100 LazyList items', async t => {
     await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
 
     await t.test('run 100 times, leave object unchanged (noop)', async t => {
-      let histograms = {}, loadedLists = []
+      let histograms = {}
 
       await t.beforeEach(async () => {
         histograms = {
@@ -73,7 +73,7 @@ test('perf: edit 100 LazyList items', async t => {
           // pick a random room:foo:posts, i.e '6'
           assert.ok(room.posts.at(6))
 
-          await t.test('is now 5kb', t => {
+          await t.test('is now 5kb', () => {
             const kb = utils.sizeKB(room.posts.at(6))
 
             assert.ok(kb > 5, `item is: ${kb} kb`)

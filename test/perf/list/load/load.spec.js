@@ -49,7 +49,7 @@ test('perf: fetch then save 100 List items', async t => {
         }
       })
 
-      await t.test('loads 100 rooms', async t => {
+      await t.test('loads 100 rooms', () => {
         assert.strictEqual(loadedRooms.length, 100)
       })
 
