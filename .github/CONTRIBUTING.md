@@ -4,9 +4,21 @@
 
 [View todos][todos].
 
+## Testing
+
+Unit tests, integration tests and performance tests *must* be kept separate.  
+The entire unit-test suite *must* run in `< 5 seconds`, at most.
+
+[Functional code][func-req] *must* have 100% unit-test coverage.
+
+## Documentation
+
+Follows [RFC 2119][rfc-2119] in the rare cases that words like "must",
+"should", "shall not" ... are used.
+
 ## Versioning
 
-Uses [Semantic Versioning][semver]
+Uses [Semantic Versioning][semver] specification
 
 ## Code changes
 
@@ -14,14 +26,7 @@ Uses [GitHub flow][github-flow]
 
 ## Commit Messages
 
-Uses [Conventional Commits][conv-comm]
-
-## Testing
-
-Unit tests, integration tests and performance tests *must* be kept separate.  
-The entire unit-test suite *must* run in `< 5 seconds`, at most.
-
-[Functional code][func-req] *must* have 100% unit-test coverage.
+Uses [Conventional Commits][conv-comm] specification
 
 ### Before commit
 
@@ -30,7 +35,7 @@ npm test
 npm run test:meta
 ```
 
- *must* pass locally, without warnings.
+*must* pass locally, without warnings.
 
 ### Before merging to `main`
 
@@ -42,12 +47,6 @@ npm run test:performance
 ```
 
 *must* pass both locally and on the CI workflows, without warnings.
-
-## Documentation
-
-Follows [RFC 2119][rfc-2119] in the rare cases that words like "must",
-"should", "shall not" ... are used.
-
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
