@@ -36,6 +36,8 @@
 - [ ] Add integration tests which would be very similar to performance tests.
     - then maybe ditch result verification in performance tests?
 - [x] Add `LazyList` performance tests
+- [ ] Add performance testing for concurrency, something like artillery
+      but lighter.
 - [ ] Add expiration on keys created by integration/performance tests.
 - [ ] Performance tests should probably examine the `standard deviation`
       rather than relying on flaky, env. dependent `min`, `mean`, `max` timings.
