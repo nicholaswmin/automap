@@ -60,9 +60,35 @@ test('Sample Model', async t => {
   })
 
   await t.test('Chatroom #addUser', () => {
-    chatroom.addUser('Jane Doe')
+    let result
 
-    assert.strictEqual(chatroom.users.length, 3)
+    t.beforeEach(() => {
+      result = chatroom.addUser({ id: 'foo', name: 'Jane Doe' })
+    })
+
+    t.test('adds user to chatroom users', () => {
+      assert.strictEqual(chatroom.users.length, 3)
+    })
+
+    t.test('returns added user instance', () => {
+      assert.ok(result)
+
+      t.test('is an instance of User added user instance', () => {
+        assert.strictEqual(result.constructor.name, 'User')
+      })
+
+      t.test('has a valid id', () => {
+        assert.ok(Object.hasOwn(result, 'id'))
+
+        t.test('is a string', () => {
+          assert.strictEqual(typeof result.id, 'string')
+        })
+
+        t.test('equals passed id', () => {
+          assert.strictEqual(result.id, 'foo')
+        })
+      })
+    })
   })
 
   await t.test('Chatroom #kickUser', async t => {
@@ -71,7 +97,7 @@ test('Sample Model', async t => {
       await t.test('does nothing', () => {
         chatroom.kickUser('nonexistent_id_user')
 
-        assert.strictEqual(chatroom.users.length, 2)
+        assert.strictEqual(chatroom.users.length, 3)
       })
     })
 
@@ -80,7 +106,7 @@ test('Sample Model', async t => {
       await t.test('kicks John out of the chat room', () => {
         chatroom.kickUser('u_1')
 
-        assert.strictEqual(chatroom.users.length, 1)
+        assert.strictEqual(chatroom.users.length, 2)
       })
     })
   })
