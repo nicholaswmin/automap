@@ -15,11 +15,11 @@ import {
   toHistogramMs
 } from '../../../utils/utils.js'
 
-test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
+test('perf: add 2k AppendList items, nested in 100 Lists', async t => {
   let redis = null
 
   await t.before(() => {
-    console.info(c('yellow', 'note: next test can take > 2 minutes to run ...'))
+    console.info(c('yellow', 'note: next test can take > 3 minutes to run ...'))
 
     redis = new ioredis()
   })
@@ -31,7 +31,7 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
     await t.afterEach(() => deleteall(redis, 'chatroom'))
 
     await t.test('run 50 times, add a List item in each', async t => {
-      await t.test('run 20 times, add an AppendList item in each', async t => {
+      await t.test('run 40 times, add an AppendList item in each', async t => {
         let histograms = {}
 
         await t.beforeEach(async () => {
@@ -57,7 +57,7 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
 
             await repo.save(room)
 
-            for (let j = 0; j < 20; j++) {
+            for (let j = 0; j < 40; j++) {
               const room = await fetch({ id: 'foo' })
 
               const user = room.users.at(i)
@@ -78,8 +78,8 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
           await t.test('are saved as Redis Lists', async t => {
             assert.strictEqual(lists.length, 3)
 
-            await t.test('each contains 20 items', () => {
-              lists.forEach(list => assert.strictEqual(list.length, 20))
+            await t.test('each contains 40 items', () => {
+              lists.forEach(list => assert.strictEqual(list.length, 40))
             })
 
             await t.test('and each item is ~ 3kb', () => {
@@ -103,10 +103,10 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
 
           await t.test('#fetch', async t => {
 
-            await t.test('ran 1000 times', () => {
+            await t.test('ran 2000 times', () => {
               const count = histograms.fetch.count
 
-              assert.strictEqual(count, 1000, `count is: ${count}`)
+              assert.strictEqual(count, 2000, `count is: ${count}`)
             })
 
             await t.test('mean is < 5 ms', () => {
@@ -124,10 +124,10 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
 
           await t.test('#save', async t => {
 
-            await t.test('ran 1000 times', () => {
+            await t.test('ran 2000 times', () => {
               const count = histograms.save.count
 
-              assert.strictEqual(count, 1000, `value is: ${count}`)
+              assert.strictEqual(count, 2000, `value is: ${count}`)
             })
 
             await t.test('mean is < 5 ms', () => {

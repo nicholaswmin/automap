@@ -102,11 +102,18 @@ class Paper {
     if (existing)
       throw Paper.createBoardExistsError(id)
 
+    if (this.reachedMaxBoards())
+      throw Paper.createMaxBoardsReachedError()
+
     const board = new Board({ id })
 
     this.boards.push(board)
 
     return this
+  }
+
+  reachedMaxBoards() {
+    return this.boards.length >= 100
   }
 
   deleteBoard({ id }) {
@@ -165,6 +172,10 @@ class Paper {
 
   _findBoardIndexById({ id }) {
     return this.boards.findIndex(b => b.id == id )
+  }
+
+  static createMaxBoardsReachedError() {
+    throw new Error('Cannot create more than 100 boards')
   }
 
   static createMissingArgumentError(argument = '?') {

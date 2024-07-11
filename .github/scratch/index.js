@@ -21,12 +21,13 @@ await runner.run([
     fn: async () => {
       const paper     = await fetch({ id: 'foo' }) || new Paper({ id: 'foo' })
 
+      console.log(paper.boards.length)
       const addBoard  = performance.timerify(paper.addBoard.bind(paper))
       const lastBoard = paper.boards.at(0)
       const addItem   = performance.timerify(lastBoard.addItem.bind(lastBoard))
 
       for (let i = 0; i < 100; i++)
-        addBoard({ id: randomId() })
+        paper.reachedMaxBoards() ? null : addBoard({ id: randomId() })
 
       addItem(payloadKB(5))
 
@@ -37,5 +38,5 @@ await runner.run([
 
 redis.disconnect()
 
-runner.toHistograms()
-runner.toPlots()
+//runner.toHistograms()
+//runner.toPlots()
