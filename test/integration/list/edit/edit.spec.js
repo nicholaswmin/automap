@@ -44,12 +44,12 @@ test('#repository.save()', async t => {
           assert.strictEqual(room.users.length, 10)
         })
 
-        await t.test('edited items are edited', async t => {
+        await t.test('edited items are edited', () => {
           for (let i = 5; i < 10; i++)
             assert.strictEqual(room.users.at(i).name, 'Jane-' + i)
         })
 
-        await t.test('non-edited items are not edited', async t => {
+        await t.test('non-edited items are not edited', () => {
           for (let i = 0; i < 5; i++)
             assert.strictEqual(room.users.at(i).name, 'John-' + i)
         })

@@ -7,7 +7,6 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 import {
-  sizeKB,
   nanoToMs,
   deleteall,
   payloadKB,
@@ -55,7 +54,7 @@ test('perf: edit 100 List items', async t => {
         }
       })
 
-      await t.test('saves the list', async t => {
+      await t.test('saves the list', async () => {
         const items = await redis.hgetall('chatroom:foo:users')
         assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
       })
