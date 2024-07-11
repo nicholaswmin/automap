@@ -17,6 +17,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
+- [Minimum Redis and `ioredis` versions](#minimum-redis-and-ioredis)
 - [Tests](#tests)
   + [Unit tests](#tests)
   + [Integration tests](#tests)
@@ -404,6 +405,10 @@ by using Redis JSON directly.
 [Redis-OM][redisom]
 
 A full-blown object mapper which of course requires schema definitions.
+
+## Minimum redis and ioredis
+
+TBD
 
 ## Tests
 
