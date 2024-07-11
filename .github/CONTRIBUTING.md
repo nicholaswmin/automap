@@ -16,11 +16,6 @@ Uses [GitHub flow][github-flow]
 
 Uses [Conventional Commits][conv-comm]
 
-## Documentation
-
-Follows [RFC 2119][rfc-2119] when using words like
-"must", "should", "shall not" etc ...
-
 ## Testing
 
 Unit, integration and performance tests *must* be separate.  
@@ -49,6 +44,12 @@ npm run test:performance
 ```
 
 *must* pass both locally and on the CI workflows, without warnings.
+
+## Documentation
+
+Tone *should* be informal but *must* follow [RFC 2119][rfc-2119] when using
+words like "must", "should", "shall not" etc ...
+
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
