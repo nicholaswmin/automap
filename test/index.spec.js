@@ -5,4 +5,4 @@ import './unit/index.spec.js'
 import './model/test/index.spec.js'
 
 // runnable example
-import './example/index.spec.js'
+import '../.github/example/test/index.spec.js'

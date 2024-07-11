@@ -4,7 +4,7 @@ import { test } from 'node:test'
 test('Runnable example', async t => {
   await t.test('runs without errors', async () => {
     await assert.doesNotReject(() => {
-      return import(`../../.github/example/index.js?bust_cache=${Date.now()}`)
+      return import(`../index.js?bust_cache=${Date.now()}`)
     })
   })
 
@@ -18,7 +18,7 @@ test('Runnable example', async t => {
     await t.beforeEach(() => {
       logs = []
 
-      return import(`../../.github/example/index.js?bust_cache=${Date.now()}`)
+      return import(`../index.js?bust_cache=${Date.now()}`)
     })
 
     await t.test('at least 3 string-only logs', () => {

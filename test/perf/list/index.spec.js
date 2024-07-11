@@ -1,3 +1,3 @@
-import './nochange/nochange.spec.js'
-import './edit/one-item.spec.js'
-import './add/one-item.spec.js'
+import './noop/100-items.spec.js'
+import './edit/100-items.spec.js'
+import './add/100-items.spec.js'

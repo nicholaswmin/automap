@@ -27,15 +27,27 @@ class Chatroom {
     })
   }
 
+  addMessage({ id, text = 'Hello' } = {}) {
+    const message = new Message({ id, text })
+
+    this.messages.push(message)
+
+    return message
+  }
+
+  addUser({ id = null, name }) {
+    const user = new User({ id, name })
+
+    this.users.push(user)
+
+    return user
+  }
+
   kickUser(id) {
     const i = this.users.findIndex(user => user.id === id)
     const kicked = i > -1 ? this.users.splice(i, 1).pop() : null
 
     kicked ? console.log('kicked', kicked.name) : console.log('no such user')
-  }
-
-  addUser({ name }) {
-    this.users.push(new User({ name }))
   }
 }
 
@@ -43,7 +55,15 @@ class User {
   constructor({ id = utils.randomID(), name = 'John', notes = [] }) {
     this.id = id
     this.name = name
-    this.notes = new List({ from: notes })
+    this.notes = new AppendList({ from: notes })
+  }
+
+  addNote({ id, content = 'lorem ipsum' } = {}) {
+    const note = new Note({ id, content })
+
+    this.notes.push(note)
+
+    return note
   }
 
   sayHi() {
