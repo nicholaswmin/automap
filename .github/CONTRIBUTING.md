@@ -47,8 +47,8 @@ npm run test:performance
 
 ## Documentation
 
-Tone *should* be informal but *must* follow [RFC 2119][rfc-2119] when using
-words like "must", "should", "shall not" etc ...
+Follows [RFC 2119][rfc-2119] in the rare cases that words like "must",
+"should", "shall not" ... are used.
 
 
 [todos]: ./TODO.md
