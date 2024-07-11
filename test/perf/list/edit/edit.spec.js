@@ -1,4 +1,4 @@
-import { assert } from 'node:assert'
+import assert from 'node:assert'
 import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
 
