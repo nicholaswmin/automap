@@ -26,8 +26,7 @@
 
 ## Should have
 
-- [ ] < 10ms fetch/save cycle performance on 2 MB root + lists object graphs
-- [x] Infinite append-only lists with O(1) `repo.save` time-complexity
+TBD
 
 ## Could have
 
