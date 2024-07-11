@@ -95,46 +95,46 @@ test('Sample Model', async t => {
     })
   })
 
-  await t.test('User #addNote', async t => {
+  await t.test('User #sendMessage', async t => {
     let user, result
 
-    await t.test('when "id" and "content" is provided', async t => {
+    await t.test('when "id" and "text" is provided', async t => {
       await t.beforeEach(async () => {
         user = chatroom.users.at(-1)
-        result = chatroom.users.at(-1).addNote({ id: 'foo', content: 'bar' })
+        result = chatroom.users.at(-1).sendMessage({ id: 'foo', text: 'bar' })
       })
 
-      await t.test('adds a Note into user.notes list', () => {
-        assert.strictEqual(user.notes.length, 2)
-        assert.strictEqual(user.notes.at(-1).constructor.name, 'Note')
-        assert.strictEqual(user.notes.at(-1).id, 'foo')
-        assert.strictEqual(user.notes.at(-1).content, 'bar')
+      await t.test('adds a Message into user.messages list', () => {
+        assert.strictEqual(user.messages.length, 1)
+        assert.strictEqual(user.messages.at(-1).constructor.name, 'Message')
+        assert.strictEqual(user.messages.at(-1).id, 'foo')
+        assert.strictEqual(user.messages.at(-1).text, 'bar')
       })
 
       await t.test('returns the constructed Message', () => {
         assert.ok(result, 'returns a result')
-        assert.strictEqual(result.constructor.name, 'Note')
+        assert.strictEqual(result.constructor.name, 'Message')
         assert.strictEqual(result.id, 'foo')
-        assert.strictEqual(result.content, 'bar')
+        assert.strictEqual(result.text, 'bar')
       })
     })
 
     await t.test('when no parameters provided', async t => {
       await t.beforeEach(async () => {
         user = chatroom.users.at(-1)
-        result = chatroom.users.at(-1).addNote()
+        result = chatroom.users.at(-1).sendMessage()
       })
 
-      await t.test('adds a Note into user.notes list', () => {
-        assert.strictEqual(user.notes.length, 2)
+      await t.test('adds a Message into user.messages list', () => {
+        assert.strictEqual(user.messages.length, 1)
       })
 
-      await t.test('defaults to "lorem ipsum" for content', () => {
-        assert.strictEqual(user.notes.at(-1).content, 'lorem ipsum')
+      await t.test('defaults to text: "hi"', () => {
+        assert.strictEqual(user.messages.at(-1).text, 'hi')
       })
 
       await t.test('defaults to a random id', () => {
-        assert.ok(user.notes.at(-1).id)
+        assert.ok(user.messages.at(-1).id)
       })
     })
   })

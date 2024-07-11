@@ -52,18 +52,19 @@ class Chatroom {
 }
 
 class User {
-  constructor({ id = utils.randomID(), name = 'John', notes = [] }) {
+  constructor({ id = utils.randomID(), name= 'J', notes = [], messages = [] }) {
     this.id = id
     this.name = name
-    this.notes = new AppendList({ from: notes })
+    this.notes = new List({ from: notes })
+    this.messages = new AppendList({ from: messages })
   }
 
-  addNote({ id, content = 'lorem ipsum' } = {}) {
-    const note = new Note({ id, content })
+  sendMessage({ id, text = 'hi' } = {}) {
+    const message = new Message({ id, text })
 
-    this.notes.push(note)
+    this.messages.push(message)
 
-    return note
+    return message
   }
 
   sayHi() {

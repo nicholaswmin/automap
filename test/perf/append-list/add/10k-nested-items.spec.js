@@ -55,7 +55,7 @@ test('perf: add 10k AppendList items ~ 3 kb, nested in 100 Lists', async t => {
 
               const user = room.users.at(i)
 
-              user.addNote({ id: j, content: utils.payloadKB(3) })
+              user.sendMessage({ id: j, text: utils.payloadKB(3) })
 
               await save(room)
             }
