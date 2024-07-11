@@ -30,6 +30,10 @@
 - [ ] Sharing the model between client/server
 - [ ] Concurrency control
 
+## Wont have
+
+- 0 dependencies feature
+
 ## Testing
 
 ### General
