@@ -46,14 +46,14 @@ test('perf: add 100 AppendList items', async t => {
       await t.test('saved AppendList', async t => {
         const items = await redis.lrange('chatroom:foo:messages', 0, -1)
 
-        await t.test('is a Redis List', async t => {
+        await t.test('is saved as Redis List', async t => {
           assert.ok(items, 'cannot find Redis key: "chatroom:foo:messages"')
 
-          await t.test('containing 100 items', () => {
+          await t.test('contains 100 items', () => {
             assert.strictEqual(Object.keys(items).length, 100)
           })
 
-          await t.test('each item is ~ 3kb', () => {
+          await t.test('and each item is ~ 3kb', () => {
             Object.keys(items).forEach((key, i) => {
               const kb = utils.sizeKB(items[key])
 

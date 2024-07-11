@@ -62,20 +62,20 @@ test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
           }
         })
 
-        await t.test('3 randomly-picked, saved AppendLists', async t => {
+        await t.test('3 randomly-picked AppendLists', async t => {
           // - picking `user:messages` of 3 random users
           const lists = await Promise.all([1,50,95].map(uid => {
             return redis.lrange(`chatroom:foo:users:${uid}:messages`, 0, -1)
           }))
 
-          await t.test('are Redis Lists', async t => {
+          await t.test('are saved as Redis Lists', async t => {
             assert.strictEqual(lists.length, 3)
 
-            await t.test('each containing 100 items', () => {
+            await t.test('each contains 100 items', () => {
               lists.forEach(list => assert.strictEqual(list.length, 100))
             })
 
-            await t.test('each item is ~ 3kb', () => {
+            await t.test('and each item is ~ 3kb', () => {
               lists.forEach((list, i) => {
                 list.forEach((item, j) => {
                   const kb = utils.sizeKB(item)

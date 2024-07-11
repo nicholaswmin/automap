@@ -50,14 +50,14 @@ test('perf: fetch then save 100 List items', async t => {
       await t.test('saved List', async t => {
         const items = await redis.hgetall('chatroom:foo:users')
 
-        await t.test('is a Redis Hash', async t => {
+        await t.test('saved as a Redis Hash', async t => {
           assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
 
-          await t.test('containing 100 items', () => {
+          await t.test('contains 100 items', () => {
             assert.strictEqual(Object.keys(items).length, 100)
           })
 
-          await t.test('each item is ~ 3 kb', () => {
+          await t.test('and each item is ~ 3 kb', () => {
             Object.keys(items).forEach((key, i) => {
               const kb = utils.sizeKB(items[key])
 
