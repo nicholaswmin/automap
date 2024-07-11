@@ -5,7 +5,9 @@
 ## Must have
 
 - [ ] Consecutive saves increase the saving time linearly
-  - See `benchmark/index.js`
+  - Run example in `.github/scratch/index.js`
+  - Cannot repro this in `test/perf/append-list/add/5k-nested.spec.js`
+- [ ] List deletions?
 - [x] There is a bug which causes empty lists to be passed on to `save()`.
   - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
     complete bullshit thing - unnecessary. Must fix - must make it simpler
@@ -24,22 +26,29 @@
 
 ## Could have
 
-- Sharing the model between client/server
-- Concurrency control
+- [ ] Sharing the model between client/server
+- [ ] Concurrency control
 
 ## Testing
 
 - [ ] Fix `test.todo` tests
+- [ ] Add integration tests which would be very similar to performance tests.
+    - then maybe ditch result verification in performance tests?
+- [x] Add `LazyList` performance tests
 - [ ] Add expiration on keys created by integration/performance tests.
+- [ ] Performance tests should probably examine the `standard deviation`
+      rather than relying on flaky, env. dependent `min`, `mean`, `max` timings.
+- [ ] Not sure if i.e `10k-items.spec.js` naming is correct, maybe `cycles` is
+      a more appropriate metric?
 - [x] Split unit, integration and performance tests
-- [ ] Do not use `ioredis-mock` in integration tests.
+- [x] Do not use `ioredis-mock` in performance/integration tests.
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
       appropriate/descriptive.
 - [x] Exiting the tests requires a `--test-force-exit` flag which is not
       ideal - but can live with for now.
 - [ ] Test the repository as an integration test
-- [ ] Lists must be tested against a long time period - as in a lot of
+- [x] Lists must be tested against a long time period - as in a lot of
 items added - is it still adding `AppendList` items in `O(1)`?
 
 

@@ -1,5 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
-
+[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
 # :cd: automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
@@ -12,14 +11,15 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
+  * [Bechmarks](#benchmarks)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
 - [Tests](#tests)
-  + [Unit](#tests)
-  + [Performance](#tests)
+  + [Unit tests](#tests)
+  + [Performance tests](#tests)
   + [Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -31,14 +31,21 @@ npm i https://github.com/nicholaswmin/automap
 ```
 
 > [!IMPORTANT]  
-> this is still an unpublished WIP
+> unpublished WIP
 
 ## Usage
 
 This module exports a `Repository`:
 
-- `repository.save(object)` to save an object graph
-- `repository.fetch({ id: 'foo' })` to fetch it back
+- `repository.save(object)` saves an object graph
+- `repository.fetch({ id: 'foo' })` gets it back
+
+`repository.save()` transparently decomposes any list-like data in the
+object-graph into a [Redis Hash][redis-hash], rather than jamming everything
+into a single [Redis key/value pair][redis-string].
+
+The object-graph is fully reconstituted/hydrated when fetching it back, using
+it's original types.
 
 Assume you have a `Building` which contains `Flats`:
 
@@ -282,9 +289,6 @@ which you can easily get by:
 GET building:kensington
 ```
 
-These commands run in [constant-time `(O1)`][const], except `HGETALL` which
-runs in [linear-time `(On)`][linear].
-
 ### List items without `id`
 
 List items without an `id` property will use the `index`; their current
@@ -298,6 +302,19 @@ building:kensington:flats:0:persons
 ```
 
 ## Performance
+
+### Bechmarks
+
+The only thing close to a benchmark are the performance tests,
+runnable by:
+
+```bash
+npm run test:perf
+```
+
+> You need a locally running redis-server at `:6379` to run these tests
+
+You can [view the test files here][perf-tests].
 
 ### Atomicity
 
@@ -331,9 +348,6 @@ But you should note the following ...
 > Note that in these time-complexity speculations are solely in the context
 > of network roundtrips since they are by far the biggest bottleneck in
 > most cases.
->
-> They don't describe local computations and there's not much attention
-> being paid in that regard, in general.
 
 #### Flat lists
 
@@ -353,31 +367,6 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
-Just a brief calculation based on the above is enough to figure out that
-even a tiny list with 5 items will become prohibitively expensive at even
-the most basic nesting depth.
-
-So while nested lists are supported, they are *not* recommended.
-
-This particular issue can be solved in better time complexity with
-some rudimentary assumptions and some slight tradeoffs,
-like assuming that if 1 List item has a List, then all of them probably do -
-but for now this problem is ignored as irrelevant.
-
-Possible workarounds:
-
-- Don't use a `List`. Keep the list as an `Array`.  
-  This means it won't be decomposed and in some cases it might be an
-  acceptable tradeoff, if your nested lists simply contain a minimal
-  amount of items.
-
-- Use a `LazyList`.   
-  They won't have an impact on the initial fetching but
-  they will eventually exhibit the same behaviour when you call `list.load()`
-  to load their contents.
-
-- Avoid nested lists in your object graph in general.
-
 ## Alternatives
 
 ### Saving encoded JSONs
@@ -390,7 +379,7 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is a simple, highly efficient and inherently atomic operation.
+This is a simple, efficient and inherently atomic operation.
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
@@ -411,7 +400,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-install dependencies:
+install deps:
 
 ```bash
 npm ci
@@ -425,7 +414,7 @@ npm test
 
 run performance tests:
 
-> require a running [Redis Server][redis-install] at port: 6379
+> requires a locally running [redis server][redis-i] at `:6379`
 
 ```bash
 npm run test:perf
@@ -439,7 +428,7 @@ npm run test:coverage
 
 run meta tests:
 
-> non-functional tests, i.e ESlint, `npm audit` etc
+> [non-functional][non-func] tests, i.e `npm audit` etc ...
 
 ```bash
 npm run test:meta
@@ -493,8 +482,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
 
-[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
-
 <!--- /Badges -->
 
 [oop]: https://en.wikipedia.org/wiki/Object-oriented_programming
@@ -517,4 +504,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
-[redis-install]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
+[perf-tests]: ./test/perf

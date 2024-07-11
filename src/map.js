@@ -13,6 +13,10 @@ const expand = async (root, addItemsToSubstitutionsFn) => {
 
     const [ path, traitsJSON ] = value.split(' ')
     const { nodePath } = meta
+
+    if (!traitsJSON)
+      return
+
     const traits = JSON.parse(traitsJSON)
 
     if (traits.lazy)

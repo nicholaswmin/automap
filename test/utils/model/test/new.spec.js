@@ -49,8 +49,8 @@ test('Sample Model', async t => {
     })
   })
 
-  await t.test('has 3 keys', async t => {
-    assert.strictEqual(Object.keys(chatroom).length, 3)
+  await t.test('has 4 keys', async t => {
+    assert.strictEqual(Object.keys(chatroom).length, 4)
 
     await t.test('has an id property', async t => {
       assert.ok(Object.hasOwn(chatroom, 'id'))

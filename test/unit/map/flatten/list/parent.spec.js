@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { flatten } from '../../../../../src/map.js'
-import { Chatroom } from '../../../../model/index.js'
+import { Chatroom } from '../../../../utils/model/index.js'
 
 test('#flatten()', async t => {
   let chatroom
@@ -57,7 +57,9 @@ test('#flatten()', async t => {
       })
 
       await t.test('and have the same keys as the array item', () => {
-        assert.deepStrictEqual(Object.keys(parsed.json), ['id','name','notes'])
+        assert.deepStrictEqual(Object.keys(parsed.json), [
+          'id','name','messages', 'notes'
+        ])
       })
 
       await t.test('the List properties are replaced with a path', async t => {

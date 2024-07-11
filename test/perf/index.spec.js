@@ -1,2 +1,3 @@
-import './fetch-save.spec.js'
-import './list/fetch-edit-save.spec.js'
+import './list/index.spec.js'
+import './lazy-list/index.spec.js'
+import './append-list/index.spec.js'

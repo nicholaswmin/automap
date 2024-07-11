@@ -2,7 +2,7 @@
 import './unit/index.spec.js'
 
 // test model
-import './model/test/index.spec.js'
+import './utils/model/test/index.spec.js'
 
 // runnable example
-import './example/index.spec.js'
+import '../.github/example/test/index.spec.js'
