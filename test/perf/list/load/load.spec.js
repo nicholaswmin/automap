@@ -13,7 +13,7 @@ import {
   toHistogramMs
 } from '../../../utils/utils.js'
 
-test('perf: fetch then save 100 List items', async t => {
+test('perf: fetch then save List items', async t => {
   let redis = null
 
   await t.before(() => redis = new ioredis())

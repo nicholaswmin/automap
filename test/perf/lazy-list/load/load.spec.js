@@ -14,7 +14,7 @@ import {
   toHistogramMs
 } from '../../../utils/utils.js'
 
-test('perf: load 100 LazyLists', async t => {
+test('perf: fetch, load and save LazyLists', async t => {
   let redis = null
 
   await t.before(() => redis = new ioredis())
