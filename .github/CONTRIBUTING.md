@@ -16,6 +16,11 @@ Follows [GitHub flow][github-flow]
 
 Follows the [Conventional Commits specification][conv-comm]
 
+## Documentation
+
+Where appropriate, follow [RFC 2119][rfc-2119] guidelines when using words
+like "must", "should", "shall not" etc.
+
 ### Before commit
 
 ```bash
