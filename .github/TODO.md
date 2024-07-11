@@ -37,6 +37,7 @@
 - [ ] Fix/implement `test.todo` tests
 - [ ] Add integration tests which would be very similar to performance tests.
     - then maybe ditch result verification in performance tests?
+- [ ] Use a single example/test model in both docs and tests
 
 ### Performance
 
