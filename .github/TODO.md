@@ -26,6 +26,7 @@
 
 ## Could have
 
+- [ ] Providing the `id` in the repo itself, rather than the object having it
 - [ ] Sharing the model between client/server
 - [ ] Concurrency control
 
