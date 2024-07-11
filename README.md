@@ -302,6 +302,19 @@ building:kensington:flats:0:persons
 
 ## Performance
 
+### Bechmarks
+
+The only thing close to a benchmark are the performance tests,
+runnable by:
+
+```bash
+npm run test:perf
+```
+
+> You need a locally running redis-server at `:6379` to run these tests
+
+You can [view them here][perf-tests].
+
 ### Atomicity
 
 #### Save
@@ -492,3 +505,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [runnable-example]: .github/example/index.js
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
+[perf-tests]: ./test/perf
