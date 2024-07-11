@@ -7,16 +7,25 @@
   "scripts": {
     "test": "node --test test/index.spec.js",
     "test:perf": "NODE_ENV=test node test/utils/require-redis.js && node --test test/perf/index.spec.js",
-    "test:meta": "npx eslint && npm audit",
+    "test:meta": "npx eslint && npm audit && npx size-limit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
 
+    "size": "size-limit",
     "scratch": "node .github/scratch/index.js",
     "example": "node .github/example/index.js"
   },
+  "size-limit": [{
+    "path": "index.js",
+    "limit": "5 kB",
+    "ignore": ["./src/utils.js"]
+  }],
   "engines": {
     "node": ">=20"
   },
-  "os": ["darwin", "linux"],
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nicholaswmin/automap.git"
@@ -42,10 +51,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
+    "@size-limit/preset-small-lib": "^11.1.4",
     "benchmrk": "^0.1.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
     "ioredis": "^5.4.1",
-    "ioredis-mock": "^8.9.0"
+    "ioredis-mock": "^8.9.0",
+    "size-limit": "^11.1.4"
   }
 }

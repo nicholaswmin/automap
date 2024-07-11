@@ -1,7 +1,8 @@
-import ioredis from 'ioredis'
-
+import { assert } from 'node:assert'
 import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
+
+import ioredis from 'ioredis'
 
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'

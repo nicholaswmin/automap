@@ -1,5 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report] ![npm bundle size][npm-size]
-
+[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
 # :cd: automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
@@ -461,8 +460,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
-
-[npm-size]: https://img.shields.io/bundlephobia/minzip/automap
 
 <!--- /Badges -->
 
