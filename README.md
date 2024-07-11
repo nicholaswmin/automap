@@ -35,17 +35,23 @@ npm i https://github.com/nicholaswmin/automap
 
 ## Usage
 
-This module exports a `Repository`:
+This module exports a `repository`:
 
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-`repository.save()` transparently decomposes any list-like data in the
-object-graph into a [Redis Hash][redis-hash], rather than jamming everything
-into a single [Redis key/value pair][redis-string].
+It transparently decomposes "list-like" data in your objects into a
+[Redis Hash][redis-hash], rather than jamming everything into a single
+Redis key/value pair][redis-string].
+
+This provides significant performance gains, allows for lazy-loading lists
+if needed and  allows loading individual list items directly from Redis,
+without needing to `JSON.parse` the entire object-graph.
 
 The object-graph is fully reconstituted/hydrated when fetching it back, using
 it's original types.
+
+An example:
 
 Assume you have a `Building` which contains `Flats`:
 
