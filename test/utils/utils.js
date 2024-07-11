@@ -23,7 +23,7 @@ const toHistogramMs = histogram => {
 }
 // Randoms
 
-const id = () => crypto.randomUUID().split('-').at(-1)
+const randomId = () => crypto.randomUUID().split('-').at(-1)
 const randomNum = (min = -300, max = 600) =>
   round(Math.random() * (max - min) + min)
 
@@ -31,7 +31,7 @@ const randomNum = (min = -300, max = 600) =>
 
 const payloadKB = kb => {
   return JSON.stringify({
-    ...JSON.parse(`["Path",{"applyMatrix":true,"data":{"guid":"${id()}"},"segments":[${`[${randomNum()}, ${randomNum()}]`}],"strokeColor":[0.6141276000612308,0.0073291996604683, 0.20695908748200353],"strokeWidth":2,"strokeCap":"round","strokeJoin":"round"}]`),
+    ...JSON.parse(`["Path",{"applyMatrix":true,"data":{"guid":"${randomId()}"},"segments":[${`[${randomNum()}, ${randomNum()}]`}],"strokeColor":[0.6141276000612308,0.0073291996604683, 0.20695908748200353],"strokeWidth":2,"strokeCap":"round","strokeJoin":"round"}]`),
     segments: Array.from({
       length: 63 * kb
     }, () => [ randomNum(), randomNum() ])
@@ -56,14 +56,14 @@ const sizeBytes = item => {
 
 // Redis
 
-// delete key and any pattern after it,
-// i.e passing `user` deletes key `user` & all `user:*`
+// deletes a key and any pattern after it,
+// i.e passing `user` deletes key `user`, `user:*`
 const deleteall = (redis, id) =>
   redis.keys(id + ':*').then(keys =>
     keys.reduce((ppl, id) => ppl.del(id),
       redis.pipeline().del(id)).exec())
 
-const createRedis = () => ['development', undefined]
+const ioredisClient = () => ['development', undefined]
   .includes(process.env.NODE_ENV) ?
     new ioredis() :
     new ioredis({
@@ -71,16 +71,16 @@ const createRedis = () => ['development', undefined]
       tlsOptions: { tls: { rejectUnauthorized: false } }
     })
 
-
-const utils = {
-  ioredis: { mock: ioredisMock, real: createRedis },
+export {
+  ioredisMock,
+  ioredisClient,
   deleteall,
 
   round,
   nanoToMs,
   toHistogramMs,
 
-  id,
+  randomId,
   randomNum,
 
   payloadKB,
@@ -89,5 +89,3 @@ const utils = {
 
   sizeKB
 }
-
-export { utils }

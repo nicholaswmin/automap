@@ -1,4 +1,5 @@
-import { List, AppendList, utils } from '../../../index.js'
+import { List, AppendList } from '../../../index.js'
+import { randomId } from '../../../test/utils/utils.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {
@@ -43,7 +44,7 @@ class User {
 
 class Paper {
   constructor({
-    id = utils.randomID(),
+    id = randomId(),
     activeBoardId = 1111111,
     boards = [{ id: 1111111 }],
     users = []

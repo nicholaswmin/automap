@@ -3,10 +3,11 @@
   of nesting - plus a couple of OOP-y methods.
 */
 
-import { List, LazyList, AppendList, utils } from '../../../index.js'
+import { List, LazyList, AppendList } from '../../../index.js'
+import { randomId } from '../utils.js'
 
 class Chatroom {
-  constructor({ id = utils.id(), users = [], messages = [], posts = [] } = {}) {
+  constructor({ id = randomId(), users = [], messages = [], posts = [] } = {}) {
     this.id = id
 
     this.users = new List({ type: User, from: users })
@@ -47,7 +48,7 @@ class Chatroom {
 }
 
 class User {
-  constructor({ id = utils.id(), name= 'J', notes = [], messages = [] }) {
+  constructor({ id = randomId(), name= 'J', notes = [], messages = [] }) {
     this.id = id
     this.name = name
     this.notes = new List({ from: notes })
@@ -68,21 +69,21 @@ class User {
 }
 
 class Post {
-  constructor({ id = utils.id(), content }) {
+  constructor({ id = randomId(), content }) {
     this.id = id
     this.content = content
   }
 }
 
 class Message {
-  constructor({ id = utils.id(), text }) {
+  constructor({ id = randomId(), text }) {
     this.id = id
     this.text = text
   }
 }
 
 class Note {
-  constructor({ id = utils.utils.id(), content }) {
+  constructor({ id = randomId(), content }) {
     this.id = id
     this.content = content
   }

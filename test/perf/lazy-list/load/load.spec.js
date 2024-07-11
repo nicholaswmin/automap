@@ -4,8 +4,15 @@ import { createHistogram } from 'node:perf_hooks'
 
 import ioredis from 'ioredis'
 
-import { Repository, utils } from '../../../../index.js'
+import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
+import {
+  sizeKB,
+  nanoToMs,
+  deleteall,
+  payloadKB,
+  toHistogramMs
+} from '../../../utils/utils.js'
 
 test('perf: load 100 LazyLists', async t => {
   let redis = null
@@ -14,8 +21,8 @@ test('perf: load 100 LazyLists', async t => {
   await t.after(() => redis.disconnect())
 
   await t.test('start with 10 List items and 100 LazyList items', async t => {
-    await t.beforeEach(() => utils.deleteall(redis, 'chatroom'))
-    await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
+    await t.beforeEach(() => deleteall(redis, 'chatroom'))
+    await t.afterEach(() => deleteall(redis, 'chatroom'))
 
     await t.test('run 100 times, load one LazyList each time', async t => {
       let histograms = {}, loadedLists = []
@@ -41,7 +48,7 @@ test('perf: load 100 LazyLists', async t => {
           id: 'foo',
           users: Array.from({ length: 1 }, () => ({ name: 'John' })),
           posts: Array.from({ length: 100 }, () => ({
-            content: utils.payloadKB(3)
+            content: payloadKB(3)
           }))
         }))
 
@@ -69,7 +76,7 @@ test('perf: load 100 LazyLists', async t => {
         await t.test('each being ~ 3 kb', () => {
           loadedLists.forEach(list => {
             list.forEach((item, i) => {
-              const kb = utils.sizeKB(item)
+              const kb = sizeKB(item)
 
               assert.ok(kb > 3, `item: ${i} is: ${kb} kb`)
               assert.ok(kb < 4, `item: ${i} is: ${kb} kb`)
@@ -80,9 +87,9 @@ test('perf: load 100 LazyLists', async t => {
 
       await t.test('durations', async t => {
         await t.before(() => console.table({
-          '#fetch()': utils.toHistogramMs(histograms.fetch),
-          '#save()' : utils.toHistogramMs(histograms.save),
-          '#load()' : utils.toHistogramMs(histograms.load)
+          '#fetch()': toHistogramMs(histograms.fetch),
+          '#save()' : toHistogramMs(histograms.save),
+          '#load()' : toHistogramMs(histograms.load)
         }))
 
         await t.test('#fetch', async t => {
@@ -93,13 +100,13 @@ test('perf: load 100 LazyLists', async t => {
           })
 
           await t.test('mean is < 6 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.mean)
+            const ms = nanoToMs(histograms.fetch.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 3 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.stddev)
+            const ms = nanoToMs(histograms.fetch.stddev)
 
             assert.ok(ms < 3, `value is: ${ms} ms`)
           })
@@ -113,13 +120,13 @@ test('perf: load 100 LazyLists', async t => {
           })
 
           await t.test('mean is < 6 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.mean)
+            const ms = nanoToMs(histograms.save.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 4 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.stddev)
+            const ms = nanoToMs(histograms.save.stddev)
 
             assert.ok(ms < 4, `value is: ${ms} ms`)
           })
@@ -133,13 +140,13 @@ test('perf: load 100 LazyLists', async t => {
           })
 
           await t.test('mean is < 4 ms', () => {
-            const ms = utils.nanoToMs(histograms.load.mean)
+            const ms = nanoToMs(histograms.load.mean)
 
             assert.ok(ms < 4, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 3 ms', () => {
-            const ms = utils.nanoToMs(histograms.load.stddev)
+            const ms = nanoToMs(histograms.load.stddev)
 
             assert.ok(ms < 3, `value is: ${ms} ms`)
           })

@@ -4,8 +4,14 @@ import ioredis from 'ioredis'
 import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
 
-import { Repository, utils } from '../../../../index.js'
+import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
+import {
+  nanoToMs,
+  deleteall,
+  payloadKB,
+  toHistogramMs
+} from '../../../utils/utils.js'
 
 test('perf: fetch then save 100 List items', async t => {
   let redis = null
@@ -14,8 +20,8 @@ test('perf: fetch then save 100 List items', async t => {
   await t.after(() => redis.disconnect())
 
   await t.test('start with 100 items', async t => {
-    await t.beforeEach(() => utils.deleteall(redis, 'chatroom'))
-    await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
+    await t.beforeEach(() => deleteall(redis, 'chatroom'))
+    await t.afterEach(() => deleteall(redis, 'chatroom'))
 
     await t.test('run 100 times', async t => {
       let histograms = {}, loadedRooms = []
@@ -36,7 +42,7 @@ test('perf: fetch then save 100 List items', async t => {
         await repo.save(new Chatroom({
           id: 'foo',
           users: Array.from({ length: 100 }, () => ({
-            name: utils.payloadKB(3)
+            name: payloadKB(3)
           }))
         }))
 
@@ -55,8 +61,8 @@ test('perf: fetch then save 100 List items', async t => {
 
       await t.test('durations', async t => {
         await t.before(() => console.table({
-          '#fetch()': utils.toHistogramMs(histograms.fetch),
-          '#save()' : utils.toHistogramMs(histograms.save)
+          '#fetch()': toHistogramMs(histograms.fetch),
+          '#save()' : toHistogramMs(histograms.save)
         }))
 
         await t.test('#fetch', async t => {
@@ -68,13 +74,13 @@ test('perf: fetch then save 100 List items', async t => {
           })
 
           await t.test('mean is < 6 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.mean)
+            const ms = nanoToMs(histograms.fetch.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 3 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.stddev)
+            const ms = nanoToMs(histograms.fetch.stddev)
 
             assert.ok(ms < 3, `value is: ${ms} ms`)
           })
@@ -89,13 +95,13 @@ test('perf: fetch then save 100 List items', async t => {
           })
 
           await t.test('mean is < 6 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.mean)
+            const ms = nanoToMs(histograms.save.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 4 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.stddev)
+            const ms = nanoToMs(histograms.save.stddev)
 
             assert.ok(ms < 4, `value is: ${ms} ms`)
           })

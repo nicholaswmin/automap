@@ -1,8 +1,12 @@
+// Run with: `node ./.github/scratch/index.js`
 import Benchmrk from 'benchmrk'
-import { Paper } from './paper/index.js'
-import { Repository, utils } from '../../index.js'
+import ioredis from 'ioredis'
 
-const redis  = utils.ioredis()
+import { Paper } from './paper/index.js'
+import { Repository } from '../../index.js'
+import { randomId, payloadKB } from '../../test/utils/utils.js'
+
+const redis  = new ioredis()
 const repo   = new Repository(Paper, redis)
 
 const runner = new Benchmrk()
@@ -22,9 +26,9 @@ await runner.run([
       const addItem   = performance.timerify(lastBoard.addItem.bind(lastBoard))
 
       for (let i = 0; i < 100; i++)
-        addBoard({ id: utils.randomID() })
+        addBoard({ id: randomId() })
 
-      addItem(utils.payloadKB(5))
+      addItem(payloadKB(5))
 
       await save(paper)
     }
