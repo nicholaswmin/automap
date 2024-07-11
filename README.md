@@ -312,7 +312,7 @@ building:kensington:flats:0:persons
 
 ## Performance
 
-### Bechmarks
+### Benchmarks
 
 The only thing close to a benchmark are the performance tests,
 runnable by:
