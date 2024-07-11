@@ -282,9 +282,6 @@ which you can easily get by:
 GET building:kensington
 ```
 
-These commands run in [constant-time `(O1)`][const], except `HGETALL` which
-runs in [linear-time `(On)`][linear].
-
 ### List items without `id`
 
 List items without an `id` property will use the `index`; their current
@@ -350,13 +347,6 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
-So while nested lists are supported, they are *not* recommended.
-
-This particular issue can be solved in better time complexity with
-some rudimentary assumptions and some slight tradeoffs,
-like assuming that if 1 List item has a List, then all of them probably do -
-but for now this problem is ignored as irrelevant.
-
 ## Alternatives
 
 ### Saving encoded JSONs
@@ -369,7 +359,7 @@ A small enough object-graph can easily get away with:
 
 and `JSON.parse(json)`
 
-This is a simple, highly efficient and inherently atomic operation.
+This is a simple, efficient and inherently atomic operation.
 
 The obvious caveat is that you cannot fetch individual list items directly
 from Redis since you would always need to fetch and parse the entire graph,
