@@ -23,12 +23,25 @@ like "must", "should", "shall not" etc.
 
 ### Before commit
 
+The following:
+
 ```bash
 npm test
 npm run test:meta
 ```
 
-which *must* exit with `exit code: 0`, without any errors or warnings.
+ *must* pass locally, without warnings.
+
+### Before merge to `main`
+
+In addition to the above, the following:
+
+```bash
+npm run test:integration
+npm run test:performance
+```
+
+*must* pass both locally and on the CI workflows, without warnings.
 
 [todos]: ./TODO.md
 [workflows]: ./workflows
