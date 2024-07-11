@@ -40,7 +40,7 @@ This module exports a `Repository`:
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-`repository.save(obj)` transparently decomposes any list-like data in the
+`repository.save()` transparently decomposes any list-like data in the
 object-graph into a [Redis Hash][redis-hash], rather than jamming everything
 into a single [Redis key/value pair][redis-string].
 
