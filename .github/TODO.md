@@ -6,7 +6,7 @@
 
 - [ ] Consecutive saves increase the saving time linearly
   - Run example in `.github/scratch/index.js`
-  - Cannot repro this in `test/perf/append-list/add/10k-nested-items.spec.js`
+  - Cannot repro this in `test/perf/append-list/add/5k-nested.spec.js`
 - [ ] List deletions?
 - [x] There is a bug which causes empty lists to be passed on to `save()`.
   - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
@@ -26,8 +26,8 @@
 
 ## Could have
 
-- Sharing the model between client/server
-- Concurrency control
+- [ ] Sharing the model between client/server
+- [ ] Concurrency control
 
 ## Testing
 

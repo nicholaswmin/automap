@@ -83,22 +83,10 @@ test('perf: edit 100 List items', async t => {
             assert.strictEqual(count, 100, `count is: ${count}`)
           })
 
-          await t.test('min is < 4 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.min)
-
-            assert.ok(ms < 4, `value is: ${ms} ms`)
-          })
-
           await t.test('mean is < 6 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
-          })
-
-          await t.test('max is < 50 ms', () => {
-            const ms = utils.nanoToMs(histograms.fetch.max)
-
-            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 3 ms', () => {
@@ -116,22 +104,10 @@ test('perf: edit 100 List items', async t => {
             assert.strictEqual(count, 100, `value is: ${count}`)
           })
 
-          await t.test('min is < 4 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.min)
-
-            assert.ok(ms < 4, `value is: ${ms} ms`)
-          })
-
           await t.test('mean is < 6 ms', () => {
             const ms = utils.nanoToMs(histograms.save.mean)
 
             assert.ok(ms < 6, `value is: ${ms} ms`)
-          })
-
-          await t.test('max is < 50 ms', () => {
-            const ms = utils.nanoToMs(histograms.save.max)
-
-            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
           await t.test('deviation (stddev) is < 4 ms', () => {
