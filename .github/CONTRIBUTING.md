@@ -24,7 +24,7 @@ Uses [Semantic Versioning][semver] specification
 
 Uses [GitHub flow][github-flow]
 
-## Commit Messages
+### Commit Messages
 
 Uses [Conventional Commits][conv-comm] specification
 
