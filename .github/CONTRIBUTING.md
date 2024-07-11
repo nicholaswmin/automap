@@ -6,11 +6,11 @@ Todos can be [viewed here][todos].
 
 ## Versioning
 
-Follows [Semantic Versioning][semver]
+Follows [semantic versioning][semver]
 
 ## Code changes
 
-Follows [GitHub flow][github-flow]
+Follows [github flow][github-flow]
 
 ## Commit Messages
 
