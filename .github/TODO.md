@@ -24,6 +24,11 @@
 - [ ] The whole `Node` being disconnected from the `List` is confusing.
 - [ ] There is a `for..of` loop that must be pipelined when reviving.
 
+## Should have
+
+- [ ] < 10ms fetch/save cycle performance on 2 MB root + lists object graphs
+- [x] Infinite append-only lists with O(1) `repo.save` time-complexity
+
 ## Could have
 
 - [ ] Providing/setting a root `id` on the object in `repo.save`
