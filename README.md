@@ -11,6 +11,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
+  * [Bechmarks](#benchmarks)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
@@ -313,7 +314,7 @@ npm run test:perf
 
 > You need a locally running redis-server at `:6379` to run these tests
 
-You can [view them here][perf-tests].
+You can [view the test files here][perf-tests].
 
 ### Atomicity
 
