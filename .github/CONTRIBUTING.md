@@ -21,6 +21,11 @@ Uses [Conventional Commits][conv-comm]
 Follows [RFC 2119][rfc-2119] when using words like
 "must", "should", "shall not" etc ...
 
+## Testing
+
+Unit, integration and performance tests *must* be separate.  
+The entire unit-test suite *must* run in < 2 seconds, at most.
+
 ### Before commit
 
 ```bash
