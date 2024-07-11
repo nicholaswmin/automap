@@ -1,16 +1,9 @@
 /*
-A dead simple model for testing, using 2 types of lists with some level
-of nesting - plus a couple of OOP-y methods.
-
-The model represents a simple Chatroom in the following structure:
-
-- `chatroom`, which has:
-    - `messages`
-    - `users`, which have:
-        - 'user.notes'
+  A dead simple model for testing, using 2 types of lists with some level
+  of nesting - plus a couple of OOP-y methods.
 */
 
-import { List, AppendList, utils } from '../../index.js'
+import { List, AppendList, utils } from '../../../index.js'
 
 class Chatroom {
   constructor({ id = utils.randomID(), users = [], messages = [] } = {}) {

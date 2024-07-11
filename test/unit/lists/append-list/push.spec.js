@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { test } from 'node:test'
 
-import { Message } from '../../../model/index.js'
+import { Message } from '../../../utils/model/index.js'
 import { AppendList } from '../../../../src/list.js'
 
 test('AppendList', async t => {
