@@ -23,8 +23,6 @@ like "must", "should", "shall not" etc.
 
 ### Before commit
 
-The following:
-
 ```bash
 npm test
 npm run test:meta
