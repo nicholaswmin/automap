@@ -32,6 +32,8 @@
 ## Testing
 
 - [ ] Fix `test.todo` tests
+- [ ] Add integration tests which would be very similar to performance tests.
+    - then maybe ditch result verification in performance tests?
 - [x] Add `LazyList` performance tests
 - [ ] Add expiration on keys created by integration/performance tests.
 - [ ] Performance tests should probably examine the `standard deviation`
