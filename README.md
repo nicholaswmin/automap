@@ -1,4 +1,5 @@
 [![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
+
 # :cd: automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
