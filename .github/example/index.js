@@ -1,4 +1,5 @@
-// Run `npm run example` to run this example
+// Run this:
+// `npm run example`
 
 import { Repository, LazyList } from '../../index.js'
 import ioredis from 'ioredis-mock'
