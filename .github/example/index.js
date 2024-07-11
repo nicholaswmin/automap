@@ -1,7 +1,4 @@
 // Run `npm run example` to run this example
-//
-// @IMPORTANT:
-// - The `console.log()` done here are used for unit-testing this.
 
 import { Repository, LazyList } from '../../index.js'
 import ioredis from 'ioredis-mock'
