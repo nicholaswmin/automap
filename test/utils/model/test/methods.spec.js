@@ -40,6 +40,30 @@ test('Sample Model', async t => {
       })
     })
 
+    await t.test('Chatroom #addPost', async t => {
+      let result
+
+      await t.test('when "id" and "content" is provided', async t => {
+        await t.beforeEach(async () => {
+          result = chatroom.addPost({ id: 4, content: 'Bonjour' })
+        })
+
+        await t.test('adds a Post into the posts list', () => {
+          assert.strictEqual(chatroom.posts.length, 1)
+          assert.strictEqual(chatroom.posts.at(-1).constructor.name, 'Post')
+          assert.strictEqual(chatroom.posts.at(-1).id, 4)
+          assert.strictEqual(chatroom.posts.at(-1).content, 'Bonjour')
+        })
+
+        await t.test('returns the constructed Post', () => {
+          assert.ok(result, 'returns a result')
+          assert.strictEqual(result.constructor.name, 'Post')
+          assert.strictEqual(result.id, 4)
+          assert.strictEqual(result.content, 'Bonjour')
+        })
+      })
+    })
+
     await t.test('when no parameters provided', async t => {
       await t.beforeEach(async () => {
         result = chatroom.addMessage()
