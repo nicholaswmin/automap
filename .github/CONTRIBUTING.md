@@ -18,7 +18,7 @@ Uses [Conventional Commits][conv-comm]
 
 ## Testing
 
-Unit, integration and performance tests *must* be separate.  
+Unit, integration and performance tests *must* be kept separate.  
 The entire unit-test suite in particular *must* run in `< 2 seconds`, at most.
 
 [Functional code][func-req] *must* have 100% test coverage.
