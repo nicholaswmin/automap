@@ -37,3 +37,4 @@ which *must* exit with `exit code: 0`, without any errors or warnings.
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
+[rfc-2119]: https://www.ietf.org/rfc/rfc2119.txt
