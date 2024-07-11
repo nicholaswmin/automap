@@ -10,7 +10,8 @@ const nanoToMs = ns => round(ns / 1e+6)
 
 // histograms
 
-const toHistogramMs = (histogram, title = '') => {
+const toHistogramMs = histogram => {
+  // eslint-disable-next-line no-unused-vars
   const { percentiles, exceeds, ...obj } = { ...histogram.toJSON() }
 
   return Object.keys(obj)
