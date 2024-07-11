@@ -1,6 +1,6 @@
 # Todo
 
-> follows [MoSCoW prioritisation][moscow]
+> follows [Moscow prioritisation][moscow]
 
 ## Must have
 
