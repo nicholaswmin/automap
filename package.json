@@ -8,7 +8,8 @@
     "test": "node --test test/index.spec.js",
     "test:meta": "npx eslint && npm audit && npx size-limit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:perf": "NODE_ENV=test node test/utils/require-redis.js && node --test test/perf/index.spec.js",
+    "test:integration": "NODE_ENV=test node test/utils/require-redis.js && node --test test/integration/index.spec.js",
+    "test:performance": "NODE_ENV=test node test/utils/require-redis.js && node --test test/performance/index.spec.js",
 
     "size": "size-limit",
     "example": "node .github/example/index.js"

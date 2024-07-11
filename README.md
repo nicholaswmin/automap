@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
+[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
 # :cd: automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
@@ -19,8 +19,9 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Alternatives](#alternatives)
 - [Tests](#tests)
   + [Unit tests](#tests)
+  + [Integration tests](#tests)
   + [Performance tests](#tests)
-  + [Coverage](#tests)
+  + [Test Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
 
@@ -315,7 +316,7 @@ The only thing close to a benchmark are the performance tests,
 runnable by:
 
 ```bash
-npm run test:perf
+npm run test:performance
 ```
 
 > You need a locally running redis-server at `:6379` to run these tests
@@ -418,12 +419,19 @@ run unit tests:
 npm test
 ```
 
-run performance tests:
+run integration tests:
 
-> requires a locally running [redis server][redis-i] at `:6379`
+> integration & performance tests both require a running
+> [redis server][redis-i] at `:6379`
 
 ```bash
-npm run test:perf
+npm run test:integration
+```
+
+run performance tests:
+
+```bash
+npm run test:performance
 ```
 
 produce a test coverage report:
@@ -482,8 +490,11 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml
 
-[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml/badge.svg
-[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml
+[integration-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:integration.yml/badge.svg
+[integration-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:integration.yml
+
+[performance-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:performance.yml/badge.svg
+[performance-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:performance.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
@@ -512,4 +523,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [runnable-example]: .github/example/index.js
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
-[perf-tests]: ./test/perf
+[perf-tests]: ./test/performance

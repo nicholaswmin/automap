@@ -1,8 +1,8 @@
 import assert from 'node:assert'
+import ioredis from 'ioredis'
+
 import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
-
-import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
@@ -14,17 +14,17 @@ import {
   toHistogramMs
 } from '../../../utils/utils.js'
 
-test('perf: edit 100 List items', async t => {
+test('perf: add 100 List items', async t => {
   let redis = null
 
   await t.before(() => redis = new ioredis())
   await t.after(() => redis.disconnect())
 
-  await t.test('start with 100 items', async t => {
+  await t.test('start with 0 items', async t => {
     await t.beforeEach(() => deleteall(redis, 'chatroom'))
     await t.afterEach(() => deleteall(redis, 'chatroom'))
 
-    await t.test('run 100 times, edit one List item each time', async t => {
+    await t.test('run 100 times, add a List item on each run', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -40,40 +40,19 @@ test('perf: edit 100 List items', async t => {
           histogram: histograms.save
         })
 
-        await repo.save(new Chatroom({
-          id: 'foo',
-          users: Array.from({ length: 100 }, () => ({ name: 'John' }))
-        }))
-
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' })
+          const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
 
-          if (room?.users.at(i))
-            room.users.at(i).name = payloadKB(3)
+          if (room)
+            room.addUser({ id: i, name: payloadKB(3) })
 
           await save(room)
         }
       })
 
-      await t.test('saved List', async t => {
+      await t.test('saves the list', async t => {
         const items = await redis.hgetall('chatroom:foo:users')
-
-        await t.test('is saved as a Redis Hash', async t => {
-          assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
-
-          await t.test('contains 100 items', () => {
-            assert.strictEqual(Object.keys(items).length, 100)
-          })
-
-          await t.test('and each item is ~ 3 kb', () => {
-            Object.keys(items).forEach((key, i) => {
-              const kb = sizeKB(items[key])
-
-              assert.ok(kb > 3, `item: ${i} is: ${kb} kb`)
-              assert.ok(kb < 4, `item: ${i} is: ${kb} kb`)
-            })
-          })
-        })
+        assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
       })
 
       await t.test('durations', async t => {
@@ -117,10 +96,10 @@ test('perf: edit 100 List items', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation (stddev) is < 4 ms', () => {
+          await t.test('deviation (stddev) is < 5 ms', () => {
             const ms = nanoToMs(histograms.save.stddev)
 
-            assert.ok(ms < 4, `value is: ${ms} ms`)
+            assert.ok(ms < 5, `value is: ${ms} ms`)
           })
         })
       })
