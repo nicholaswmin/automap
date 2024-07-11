@@ -15,6 +15,7 @@ const save   = performance.timerify(repo.save.bind(repo))
 
 // Findings
 // - `repo.save()` time increases linearly in relation to max num of boards.
+// -  A very big chunk of that time is taken up by the `flatten` function 
 // - `board.addItem(item)` size does not have a lot of impact on time
 
 await redis.flushall()
