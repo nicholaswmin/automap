@@ -33,6 +33,7 @@
 ## Testing
 
 - [ ] Fix `test.todo` tests
+- [ ] `utils` should not be mixed with prod. code
 - [ ] Add integration tests which would be very similar to performance tests.
     - then maybe ditch result verification in performance tests?
 - [x] Add `LazyList` performance tests
