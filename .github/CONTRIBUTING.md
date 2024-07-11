@@ -6,20 +6,20 @@ Todos can be [viewed here][todos].
 
 ## Versioning
 
-Follows the [Semantic Versioning specification][semver]
+Uses [Semantic Versioning][semver]
 
 ## Code changes
 
-Follows [GitHub flow][github-flow]
+Uses [GitHub flow][github-flow]
 
 ## Commit Messages
 
-Follows the [Conventional Commits specification][conv-comm]
+Uses [Conventional Commits][conv-comm]
 
 ## Documentation
 
-Follows [RFC 2119][rfc-2119] when using words
-like "must", "should", "shall not" etc.
+Follows [RFC 2119][rfc-2119] when using words like
+"must", "should", "shall not" etc ...
 
 ### Before commit
 
@@ -34,7 +34,7 @@ npm run test:meta
 
 > a pull-request to `main` branch
 
-In addition to the above, the following:
+In addition to the above, these:
 
 ```bash
 npm run test:integration
