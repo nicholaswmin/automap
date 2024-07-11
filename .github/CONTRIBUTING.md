@@ -2,7 +2,7 @@
 
 ## Todos
 
-Todos can be [viewed here][todos].
+[View todos][todos].
 
 ## Versioning
 
