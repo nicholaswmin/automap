@@ -26,6 +26,8 @@ Follows [RFC 2119][rfc-2119] when using words like
 Unit, integration and performance tests *must* be separate.  
 The entire unit-test suite *must* run in < 2 seconds, at most.
 
+[Functional code][func-req] *must* have 100% test coverage.
+
 ### Before commit
 
 ```bash
