@@ -1,4 +1,5 @@
 import crypto from 'node:crypto'
+
 import ioredis from 'ioredis'
 import ioredisMock from 'ioredis-mock'
 
@@ -7,6 +8,18 @@ import ioredisMock from 'ioredis-mock'
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 const nanoToMs = ns => round(ns / 1e+6)
 
+// histograms
+
+const toHistogramMs = (histogram, title = '') => {
+  const { percentiles, exceeds, ...obj } = { ...histogram.toJSON() }
+
+  return Object.keys(obj)
+    .sort((a, b) => a - b)
+    .reduce((acc, key) => ({
+      ...acc, [isNaN(key) ? key + (key === 'count' ? '' : ' (ms)') :
+        (+key).toFixed(2) ]: key === 'count' ? obj[key] : nanoToMs(obj[key])
+    }), {})
+}
 // Randoms
 
 const randomID = () => crypto.randomUUID().split('-').at(-1)
@@ -42,9 +55,12 @@ const sizeBytes = item => {
 
 // Redis
 
-const delObjectGraph = (redis, id) =>
+// delete key and any pattern after it,
+// i.e passing `user` deletes key `user` & all `user:*`
+const deleteall = (redis, id) =>
   redis.keys(id + ':*').then(keys =>
-    keys.reduce((ppl, id) => ppl.del(id), redis.pipeline().del(id)).exec())
+    keys.reduce((ppl, id) => ppl.del(id),
+      redis.pipeline().del(id)).exec())
 
 const createRedis = () => ['development', undefined]
   .includes(process.env.NODE_ENV) ?
@@ -57,10 +73,11 @@ const createRedis = () => ['development', undefined]
 
 const utils = {
   ioredis: { mock: ioredisMock, real: createRedis },
-  delObjectGraph,
+  deleteall,
 
   round,
   nanoToMs,
+  toHistogramMs,
 
   randomID,
   randomNum,

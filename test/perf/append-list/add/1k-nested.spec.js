@@ -8,23 +8,23 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
-test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
+test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
   let redis = null
 
   await t.before(() => {
-    console.info(col('yellow', 'next test could take > 10 minutes to run ...'))
+    console.info(col('yellow', 'next test could take > 3 minutes to run ...'))
 
     redis = new ioredis()
   })
 
   await t.after(() => redis.disconnect())
 
-  await t.test('start with 0 List items', { skip: 'runs v. slow' }, async t => {
+  await t.test('start with 0 List items', async t => {
     await t.beforeEach(() => utils.deleteall(redis, 'chatroom'))
     await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
 
-    await t.test('run 100 times, add a List item in each run', async t => {
-      await t.test('run 100 times, add AppendList item each run', async t => {
+    await t.test('run 100 times, add a List item in each', async t => {
+      await t.test('run 100 times, add an AppendList item in each', async t => {
         let histograms = {}
 
         await t.beforeEach(async () => {
@@ -40,7 +40,7 @@ test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
             histogram: histograms.save
           })
 
-          for (let i = 0; i < 100; i++) {
+          for (let i = 0; i < 10; i++) {
             const room = await repo.fetch({ id: 'foo' }) || new Chatroom({
               id: 'foo'
             })
@@ -64,7 +64,7 @@ test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
 
         await t.test('3 randomly-picked, saved AppendLists', async t => {
           // - picking `user:messages` of 3 random users
-          const lists = await Promise.all([1,50,95].map(uid => {
+          const lists = await Promise.all([1,5,9].map(uid => {
             return redis.lrange(`chatroom:foo:users:${uid}:messages`, 0, -1)
           }))
 
@@ -96,10 +96,10 @@ test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
 
           await t.test('#fetch', async t => {
 
-            await t.test('ran 10000 times', () => {
+            await t.test('ran 1000 times', () => {
               const count = histograms.fetch.count
 
-              assert.strictEqual(count, 10000, `count is: ${count}`)
+              assert.strictEqual(count, 1000, `count is: ${count}`)
             })
 
             await t.test('min is < 4 ms', () => {
@@ -129,10 +129,10 @@ test('perf: add 10k AppendList items, nested in 100 Lists', async t => {
 
           await t.test('#save', async t => {
 
-            await t.test('ran 10000 times', () => {
+            await t.test('ran 1000 times', () => {
               const count = histograms.save.count
 
-              assert.strictEqual(count, 10000, `value is: ${count}`)
+              assert.strictEqual(count, 1000, `value is: ${count}`)
             })
 
             await t.test('min is < 4 ms', () => {

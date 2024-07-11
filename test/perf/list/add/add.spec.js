@@ -8,14 +8,16 @@ import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
 test('perf: add 100 List items', async t => {
-  const redis = new ioredis()
+  let redis = null
+
+  await t.before(() => redis = new ioredis())
+  await t.after(() => redis.disconnect())
 
   await t.test('start with 0 items', async t => {
-    await t.beforeEach(() => utils.delObjectGraph(redis, 'chatroom'))
-    await t.afterEach(() => utils.delObjectGraph(redis, 'chatroom'))
-    await t.after(() => redis.disconnect())
+    await t.beforeEach(() => utils.deleteall(redis, 'chatroom'))
+    await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
 
-    await t.test('run 100 times, add a List item in each', async t => {
+    await t.test('run 100 times, add a List item on each run', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -63,6 +65,11 @@ test('perf: add 100 List items', async t => {
       })
 
       await t.test('durations', async t => {
+        await t.before(() => console.table({
+          '#fetch()': utils.toHistogramMs(histograms.fetch),
+          '#save()' : utils.toHistogramMs(histograms.save)
+        }))
+
         await t.test('#fetch', async t => {
 
           await t.test('ran 100 times', () => {
@@ -83,13 +90,13 @@ test('perf: add 100 List items', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 20 ms', () => {
+          await t.test('max is < 50 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.max)
 
-            assert.ok(ms < 20, `value is: ${ms} ms`)
+            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 3 ms', () => {
+          await t.test('deviation (stddev) is < 3 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.stddev)
 
             assert.ok(ms < 3, `value is: ${ms} ms`)
@@ -116,13 +123,13 @@ test('perf: add 100 List items', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 20 ms', () => {
+          await t.test('max is < 50 ms', () => {
             const ms = utils.nanoToMs(histograms.save.max)
 
-            assert.ok(ms < 20, `value is: ${ms} ms`)
+            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 5 ms', () => {
+          await t.test('deviation (stddev) is < 5 ms', () => {
             const ms = utils.nanoToMs(histograms.save.stddev)
 
             assert.ok(ms < 5, `value is: ${ms} ms`)

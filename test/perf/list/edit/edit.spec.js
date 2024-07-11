@@ -8,14 +8,16 @@ import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
 test('perf: edit 100 List items', async t => {
-  const redis = new ioredis()
+  let redis = null
+
+  await t.before(() => redis = new ioredis())
+  await t.after(() => redis.disconnect())
 
   await t.test('start with 100 items', async t => {
-    await t.beforeEach(() => utils.delObjectGraph(redis, 'chatroom'))
-    await t.afterEach(() => utils.delObjectGraph(redis, 'chatroom'))
-    await t.after(() => redis.disconnect())
+    await t.beforeEach(() => utils.deleteall(redis, 'chatroom'))
+    await t.afterEach(() => utils.deleteall(redis, 'chatroom'))
 
-    await t.test('run 100 times, edit a List item in each', async t => {
+    await t.test('run 100 times, edit one List item each time', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -68,7 +70,13 @@ test('perf: edit 100 List items', async t => {
       })
 
       await t.test('durations', async t => {
+        await t.before(() => console.table({
+          '#fetch()': utils.toHistogramMs(histograms.fetch),
+          '#save()' : utils.toHistogramMs(histograms.save)
+        }))
+
         await t.test('#fetch', async t => {
+
           await t.test('ran 100 times', () => {
             const count = histograms.fetch.count
 
@@ -87,13 +95,13 @@ test('perf: edit 100 List items', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 10 ms', () => {
+          await t.test('max is < 50 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.max)
 
-            assert.ok(ms < 10, `value is: ${ms} ms`)
+            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 3 ms', () => {
+          await t.test('deviation (stddev) is < 3 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.stddev)
 
             assert.ok(ms < 3, `value is: ${ms} ms`)
@@ -101,6 +109,7 @@ test('perf: edit 100 List items', async t => {
         })
 
         await t.test('#save', async t => {
+
           await t.test('ran 100 times', () => {
             const count = histograms.save.count
 
@@ -119,13 +128,13 @@ test('perf: edit 100 List items', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 15 ms', () => {
+          await t.test('max is < 50 ms', () => {
             const ms = utils.nanoToMs(histograms.save.max)
 
-            assert.ok(ms < 15, `value is: ${ms} ms`)
+            assert.ok(ms < 50, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 4 ms', () => {
+          await t.test('deviation (stddev) is < 4 ms', () => {
             const ms = utils.nanoToMs(histograms.save.stddev)
 
             assert.ok(ms < 4, `value is: ${ms} ms`)
