@@ -7,7 +7,7 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
-test('perf: add 100 List items ~ 3 kb each', async t => {
+test('perf: add 100 AppendList items', async t => {
   const redis = new ioredis()
 
   await t.test('start with 0 items', async t => {
@@ -15,7 +15,7 @@ test('perf: add 100 List items ~ 3 kb each', async t => {
     await t.afterEach(() => utils.delObjectGraph(redis, 'chatroom'))
     await t.after(() => redis.disconnect())
 
-    await t.test('run 100 times, add a List item in each', async t => {
+    await t.test('run 100 times, add an AppendList item in each', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -35,23 +35,23 @@ test('perf: add 100 List items ~ 3 kb each', async t => {
           const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
 
           if (room)
-            room.addUser({ id: i, name: utils.payloadKB(3) })
+            room.addMessage({ id: i, text: utils.payloadKB(3) })
 
           await save(room)
         }
       })
 
-      await t.test('saved List', async t => {
-        const items = await redis.hgetall('chatroom:foo:users')
+      await t.test('saved AppendList', async t => {
+        const items = await redis.lrange('chatroom:foo:messages', 0, -1)
 
-        await t.test('is a Redis Hash', async t => {
-          assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
+        await t.test('is a Redis List', async t => {
+          assert.ok(items, 'cannot find Redis key: "chatroom:foo:messages"')
 
           await t.test('containing 100 items', () => {
             assert.strictEqual(Object.keys(items).length, 100)
           })
 
-          await t.test('each item is ~ 3 kb', () => {
+          await t.test('each item is ~ 3kb', () => {
             Object.keys(items).forEach((key, i) => {
               const kb = utils.sizeKB(items[key])
 

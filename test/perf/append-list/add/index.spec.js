@@ -1,2 +1,2 @@
-import './100-items.spec.js'
-import './10k-nested-items.spec.js'
+import './add.spec.js'
+import './10k-nested.spec.js'

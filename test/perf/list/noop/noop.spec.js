@@ -7,7 +7,7 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
-test('perf: fetch then save 100 List items, ~ 3 kb each', async t => {
+test('perf: fetch then save 100 List items', async t => {
   const redis = new ioredis()
 
   await t.test('start with 100 items', async t => {

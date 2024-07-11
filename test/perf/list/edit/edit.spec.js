@@ -7,15 +7,15 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
-test('perf: add 100 AppendList items ~ 3 kb each', async t => {
+test('perf: edit 100 List items', async t => {
   const redis = new ioredis()
 
-  await t.test('start with 0 items', async t => {
+  await t.test('start with 100 items', async t => {
     await t.beforeEach(() => utils.delObjectGraph(redis, 'chatroom'))
     await t.afterEach(() => utils.delObjectGraph(redis, 'chatroom'))
     await t.after(() => redis.disconnect())
 
-    await t.test('run 100 times, add an AppendList item in each', async t => {
+    await t.test('run 100 times, edit a List item in each', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -31,27 +31,32 @@ test('perf: add 100 AppendList items ~ 3 kb each', async t => {
           histogram: histograms.save
         })
 
-        for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
+        await repo.save(new Chatroom({
+          id: 'foo',
+          users: Array.from({ length: 100 }, () => ({ name: 'John' }))
+        }))
 
-          if (room)
-            room.addMessage({ id: i, text: utils.payloadKB(3) })
+        for (let i = 0; i < 100; i++) {
+          const room = await fetch({ id: 'foo' })
+
+          if (room?.users.at(i))
+            room.users.at(i).name = utils.payloadKB(3)
 
           await save(room)
         }
       })
 
-      await t.test('saved AppendList', async t => {
-        const items = await redis.lrange('chatroom:foo:messages', 0, -1)
+      await t.test('saved List', async t => {
+        const items = await redis.hgetall('chatroom:foo:users')
 
-        await t.test('is a Redis List', async t => {
-          assert.ok(items, 'cannot find Redis key: "chatroom:foo:messages"')
+        await t.test('is a Redis Hash', async t => {
+          assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
 
           await t.test('containing 100 items', () => {
             assert.strictEqual(Object.keys(items).length, 100)
           })
 
-          await t.test('each item is ~ 3kb', () => {
+          await t.test('each item is ~ 3 kb', () => {
             Object.keys(items).forEach((key, i) => {
               const kb = utils.sizeKB(items[key])
 
@@ -64,7 +69,6 @@ test('perf: add 100 AppendList items ~ 3 kb each', async t => {
 
       await t.test('durations', async t => {
         await t.test('#fetch', async t => {
-
           await t.test('ran 100 times', () => {
             const count = histograms.fetch.count
 
@@ -83,10 +87,10 @@ test('perf: add 100 AppendList items ~ 3 kb each', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 20 ms', () => {
+          await t.test('max is < 10 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.max)
 
-            assert.ok(ms < 20, `value is: ${ms} ms`)
+            assert.ok(ms < 10, `value is: ${ms} ms`)
           })
 
           await t.test('deviation is < 3 ms', () => {
@@ -97,7 +101,6 @@ test('perf: add 100 AppendList items ~ 3 kb each', async t => {
         })
 
         await t.test('#save', async t => {
-
           await t.test('ran 100 times', () => {
             const count = histograms.save.count
 
@@ -116,16 +119,16 @@ test('perf: add 100 AppendList items ~ 3 kb each', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 20 ms', () => {
+          await t.test('max is < 15 ms', () => {
             const ms = utils.nanoToMs(histograms.save.max)
 
-            assert.ok(ms < 20, `value is: ${ms} ms`)
+            assert.ok(ms < 15, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 5 ms', () => {
+          await t.test('deviation is < 4 ms', () => {
             const ms = utils.nanoToMs(histograms.save.stddev)
 
-            assert.ok(ms < 5, `value is: ${ms} ms`)
+            assert.ok(ms < 4, `value is: ${ms} ms`)
           })
         })
       })

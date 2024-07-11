@@ -7,15 +7,15 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository, utils } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 
-test('perf: edit 100 List items to ~ 3 kb', async t => {
+test('perf: add 100 List items', async t => {
   const redis = new ioredis()
 
-  await t.test('start with 100 items', async t => {
+  await t.test('start with 0 items', async t => {
     await t.beforeEach(() => utils.delObjectGraph(redis, 'chatroom'))
     await t.afterEach(() => utils.delObjectGraph(redis, 'chatroom'))
     await t.after(() => redis.disconnect())
 
-    await t.test('run 100 times, edit a List item in each', async t => {
+    await t.test('run 100 times, add a List item in each', async t => {
       let histograms = {}
 
       await t.beforeEach(async () => {
@@ -31,16 +31,11 @@ test('perf: edit 100 List items to ~ 3 kb', async t => {
           histogram: histograms.save
         })
 
-        await repo.save(new Chatroom({
-          id: 'foo',
-          users: Array.from({ length: 100 }, () => ({ name: 'John' }))
-        }))
-
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' })
+          const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
 
-          if (room?.users.at(i))
-            room.users.at(i).name = utils.payloadKB(3)
+          if (room)
+            room.addUser({ id: i, name: utils.payloadKB(3) })
 
           await save(room)
         }
@@ -69,6 +64,7 @@ test('perf: edit 100 List items to ~ 3 kb', async t => {
 
       await t.test('durations', async t => {
         await t.test('#fetch', async t => {
+
           await t.test('ran 100 times', () => {
             const count = histograms.fetch.count
 
@@ -87,10 +83,10 @@ test('perf: edit 100 List items to ~ 3 kb', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 10 ms', () => {
+          await t.test('max is < 20 ms', () => {
             const ms = utils.nanoToMs(histograms.fetch.max)
 
-            assert.ok(ms < 10, `value is: ${ms} ms`)
+            assert.ok(ms < 20, `value is: ${ms} ms`)
           })
 
           await t.test('deviation is < 3 ms', () => {
@@ -101,6 +97,7 @@ test('perf: edit 100 List items to ~ 3 kb', async t => {
         })
 
         await t.test('#save', async t => {
+
           await t.test('ran 100 times', () => {
             const count = histograms.save.count
 
@@ -119,16 +116,16 @@ test('perf: edit 100 List items to ~ 3 kb', async t => {
             assert.ok(ms < 6, `value is: ${ms} ms`)
           })
 
-          await t.test('max is < 15 ms', () => {
+          await t.test('max is < 20 ms', () => {
             const ms = utils.nanoToMs(histograms.save.max)
 
-            assert.ok(ms < 15, `value is: ${ms} ms`)
+            assert.ok(ms < 20, `value is: ${ms} ms`)
           })
 
-          await t.test('deviation is < 4 ms', () => {
+          await t.test('deviation is < 5 ms', () => {
             const ms = utils.nanoToMs(histograms.save.stddev)
 
-            assert.ok(ms < 4, `value is: ${ms} ms`)
+            assert.ok(ms < 5, `value is: ${ms} ms`)
           })
         })
       })

@@ -1,3 +1,4 @@
-import './noop/100-items.spec.js'
-import './edit/100-items.spec.js'
-import './add/100-items.spec.js'
+import './noop/noop.spec.js'
+import './delete/delete.spec.js'
+import './edit/edit.spec.js'
+import './add/add.spec.js'
