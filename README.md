@@ -314,6 +314,8 @@ building:kensington:flats:0:persons
 
 ### Benchmarks
 
+@todo
+
 The only thing close to a benchmark are the performance tests,
 runnable by:
 
@@ -321,9 +323,9 @@ runnable by:
 npm run test:performance
 ```
 
-> You need a locally running redis-server at `:6379` to run these tests
+> You need a running redis-server at `:6379` to run these tests
 
-You can [view the test files here][perf-tests].
+You can [view the performance test files here][perf-tests].
 
 ### Atomicity
 
@@ -409,7 +411,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
-TBD
+@todo
 
 ## Tests
 
