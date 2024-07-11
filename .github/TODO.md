@@ -26,7 +26,7 @@
 
 ## Could have
 
-- [ ] Providing the `id` in the repo itself, rather than the object having it
+- [ ] Providing/setting a root `id` on the object in `repo.save`
 - [ ] Sharing the model between client/server
 - [ ] Concurrency control
 
@@ -36,7 +36,7 @@
 
 - [ ] Fix/implement `test.todo` tests
 - [ ] Add integration tests which would be very similar to performance tests.
-    - then maybe ditch result verification in performance tests?
+    - then ditch result verification in performance tests
 - [ ] Use a single example/test model in both docs and tests
 
 ### Performance
