@@ -39,6 +39,13 @@ This module exports a `Repository`:
 - `repository.save(object)` to save an object graph
 - `repository.fetch({ id: 'foo' })` to fetch it back
 
+This module transparently decomposes any list-like data in the object-graph
+into a [Redis Hash][redis-hash], rather than jamming everything into a single
+Redis Key/Value pair.
+
+The object-graph is fully reconstituted/hydrated when fetching it back, using
+it's original types.
+
 Assume you have a `Building` which contains `Flats`:
 
 ```js
