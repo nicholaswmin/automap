@@ -23,7 +23,7 @@ const toHistogramMs = histogram => {
 }
 // Randoms
 
-const randomID = () => crypto.randomUUID().split('-').at(-1)
+const id = () => crypto.randomUUID().split('-').at(-1)
 const randomNum = (min = -300, max = 600) =>
   round(Math.random() * (max - min) + min)
 
@@ -31,7 +31,7 @@ const randomNum = (min = -300, max = 600) =>
 
 const payloadKB = kb => {
   return JSON.stringify({
-    ...JSON.parse(`["Path",{"applyMatrix":true,"data":{"guid":"${randomID()}"},"segments":[${`[${randomNum()}, ${randomNum()}]`}],"strokeColor":[0.6141276000612308,0.0073291996604683, 0.20695908748200353],"strokeWidth":2,"strokeCap":"round","strokeJoin":"round"}]`),
+    ...JSON.parse(`["Path",{"applyMatrix":true,"data":{"guid":"${id()}"},"segments":[${`[${randomNum()}, ${randomNum()}]`}],"strokeColor":[0.6141276000612308,0.0073291996604683, 0.20695908748200353],"strokeWidth":2,"strokeCap":"round","strokeJoin":"round"}]`),
     segments: Array.from({
       length: 63 * kb
     }, () => [ randomNum(), randomNum() ])
@@ -80,7 +80,7 @@ const utils = {
   nanoToMs,
   toHistogramMs,
 
-  randomID,
+  id,
   randomNum,
 
   payloadKB,

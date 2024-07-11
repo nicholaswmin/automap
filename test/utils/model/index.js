@@ -3,21 +3,23 @@
   of nesting - plus a couple of OOP-y methods.
 */
 
-import { List, AppendList, utils } from '../../../index.js'
+import { List, LazyList, AppendList, utils } from '../../../index.js'
 
 class Chatroom {
-  constructor({ id = utils.randomID(), users = [], messages = [] } = {}) {
+  constructor({ id = utils.id(), users = [], messages = [], posts = [] } = {}) {
     this.id = id
 
-    this.users = new List({
-      from: users,
-      type: User
-    })
+    this.users = new List({ type: User, from: users })
+    this.messages = new AppendList({ type: Message, from: messages })
+    this.posts = new LazyList({ type: Post, from: posts })
+  }
 
-    this.messages = new AppendList({
-      from: messages,
-      type: Message
-    })
+  addPost({ id, content = 'Bonjour' } = {}) {
+    const post = new Post({ id, content })
+
+    this.posts.push(post)
+
+    return post
   }
 
   addMessage({ id, text = 'Hello' } = {}) {
@@ -45,7 +47,7 @@ class Chatroom {
 }
 
 class User {
-  constructor({ id = utils.randomID(), name= 'J', notes = [], messages = [] }) {
+  constructor({ id = utils.id(), name= 'J', notes = [], messages = [] }) {
     this.id = id
     this.name = name
     this.notes = new List({ from: notes })
@@ -65,15 +67,22 @@ class User {
   }
 }
 
+class Post {
+  constructor({ id = utils.id(), content }) {
+    this.id = id
+    this.content = content
+  }
+}
+
 class Message {
-  constructor({ id = utils.randomID(), text }) {
+  constructor({ id = utils.id(), text }) {
     this.id = id
     this.text = text
   }
 }
 
 class Note {
-  constructor({ id = utils.randomID(), content }) {
+  constructor({ id = utils.utils.id(), content }) {
     this.id = id
     this.content = content
   }

@@ -32,7 +32,7 @@
 ## Testing
 
 - [ ] Fix `test.todo` tests
-- [ ] Add `LazyList` performance tests
+- [x] Add `LazyList` performance tests
 - [ ] Add expiration on keys created by integration/performance tests.
 - [ ] Performance tests should probably examine the `standard deviation`
       rather than relying on flaky, env. dependent `min`, `mean`, `max` timings.
