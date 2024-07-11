@@ -32,9 +32,7 @@ npm run test:meta
 
  *must* pass locally, without warnings.
 
-### Before merge
-
-> a pull-request to `main` branch
+### Before merging to `main`
 
 In addition to the above, these:
 
