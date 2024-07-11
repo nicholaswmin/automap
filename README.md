@@ -379,7 +379,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Tests
 
-install test deps:
+install deps:
 
 ```bash
 npm ci
