@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { test } from 'node:test'
 
-import { Chatroom } from '../utils/model/index.js'
+import { Chatroom } from '../helpers/model/index.js'
 
 test('Model instantiation', async t => {
   let chatroom
