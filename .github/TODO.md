@@ -63,5 +63,8 @@ TBD
       test for verifying they actually do what they do.
 - [x] They must also verify the saved data structure/format in Redis
 
+### Docs
+
+Top section is unclear still.
 
 [moscow]: https://en.wikipedia.org/wiki/MoSCoW_method

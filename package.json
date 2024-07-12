@@ -6,11 +6,11 @@
   "main": "index.js",
   "scripts": {
     "test": "node --test test/index.spec.js",
-    "test:meta": "npx eslint && npm audit && npx size-limit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
     "test:integration": "npm run ping-redis && NODE_ENV=test node --test test/integration/index.spec.js",
     "test:performance": "npm run ping-redis && NODE_ENV=test node --test test/performance/index.spec.js",
 
+    "check": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
     "ping-redis": "node test/helpers/ping-redis/index.js"
   },
