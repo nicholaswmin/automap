@@ -43,8 +43,6 @@ TBD
 ### General
 
 - [ ] Fix/implement `test.todo` tests
-- [ ] Add integration tests which would be very similar to performance tests.
-    - then ditch result verification in performance tests
 - [ ] Use a single example/test model in both docs and tests
 
 ### Performance
@@ -61,9 +59,9 @@ TBD
 
 ### integration
 
-- [ ] integration tests should test similar to what the performance tests
+- [x] integration tests should test similar to what the performance tests
       test for verifying they actually do what they do.
-- [ ] They must also verify the saved data structure/format in Redis
+- [x] They must also verify the saved data structure/format in Redis
 
 
 [moscow]: https://en.wikipedia.org/wiki/MoSCoW_method

@@ -14,11 +14,11 @@ follows [Semantic Versioning][semver]
 
 ## Code changes
 
-follow [GitHub flow][github-flow]
+follows [GitHub flow][github-flow]
 
 ### commit messages
 
-follow [conventional commits][conv-comm]
+follows [conventional commits][conv-comm]
 
 ### before commit
 
