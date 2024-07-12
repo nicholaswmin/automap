@@ -11,7 +11,7 @@ test('test utilities', async t => {
     })
 
     await t.test('when passed a number', async t => {
-      await t.test('converts it to milliseconds', async t => {
+      await t.test('converts it to milliseconds', () => {
         assert.strictEqual(result, 1)
       })
     })
@@ -25,7 +25,7 @@ test('test utilities', async t => {
     })
 
     await t.test('when passed a number', async t => {
-      await t.test('rounds it to 2 decimal points', async t => {
+      await t.test('rounds it to 2 decimal points', async () => {
         assert.strictEqual(result, 0)
       })
     })
