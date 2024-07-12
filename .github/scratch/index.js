@@ -1,13 +1,22 @@
+// Run with: `node ./.github/scratch/index.js`
 import Benchmrk from 'benchmrk'
-import { Paper } from './paper/index.js'
-import { Repository, utils } from '../../index.js'
+import ioredis from 'ioredis'
 
-const redis  = utils.ioredis()
+import { Paper } from './paper/index.js'
+import { Repository } from '../../index.js'
+import { randomId, payloadKB } from '../../test/utils/utils.js'
+
+const redis  = new ioredis()
 const repo   = new Repository(Paper, redis)
 
 const runner = new Benchmrk()
 const fetch  = performance.timerify(repo.fetch.bind(repo))
 const save   = performance.timerify(repo.save.bind(repo))
+
+// Findings
+// - `repo.save()` time increases linearly in relation to max num of boards.
+// -  A very big chunk of that time is taken up by the `flatten` function 
+// - `board.addItem(item)` size does not have a lot of impact on time
 
 await redis.flushall()
 await runner.run([
@@ -16,15 +25,14 @@ await runner.run([
     cycles: 1000,
     fn: async () => {
       const paper     = await fetch({ id: 'foo' }) || new Paper({ id: 'foo' })
-
       const addBoard  = performance.timerify(paper.addBoard.bind(paper))
-      const lastBoard = paper.boards.at(0)
+      const lastBoard = paper.boards.at(-1)
       const addItem   = performance.timerify(lastBoard.addItem.bind(lastBoard))
 
-      for (let i = 0; i < 100; i++)
-        addBoard({ id: utils.randomID() })
+      for (let i = 0; i < 200; i++)
+        paper.reachedMaxBoards() ? null : addBoard({ id: randomId() })
 
-      addItem(utils.payloadKB(5))
+      addItem(payloadKB(5))
 
       await save(paper)
     }
@@ -33,5 +41,5 @@ await runner.run([
 
 redis.disconnect()
 
-runner.toHistograms()
+runner.toHistogram()
 runner.toPlots()

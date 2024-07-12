@@ -1,5 +1,6 @@
-[![test-workflow][test-badge]][test-workflow] [![perf-workflow][perf-badge]][perf-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
-# :cd: automap
+[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
+
+# automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
@@ -17,10 +18,12 @@ Store [OOP][oop] object-graphs in [Redis][redis]
     + [Flat lists](#flat-lists)
     + [Nested lists](#nested-lists)
 - [Alternatives](#alternatives)
+- [Minimum Redis and `ioredis` versions](#minimum-redis-and-ioredis)
 - [Tests](#tests)
   + [Unit tests](#tests)
+  + [Integration tests](#tests)
   + [Performance tests](#tests)
-  + [Coverage](#tests)
+  + [Test Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
 
@@ -35,17 +38,23 @@ npm i https://github.com/nicholaswmin/automap
 
 ## Usage
 
-This module exports a `Repository`:
+This module exports a `repository`:
 
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-`repository.save()` transparently decomposes any list-like data in the
-object-graph into a [Redis Hash][redis-hash], rather than jamming everything
-into a single [Redis key/value pair][redis-string].
+It transparently decomposes "list-like" data in your objects into a
+[Redis Hash][redis-hash], rather than jamming everything into a single
+Redis key/value pair][redis-string].
+
+This provides significant performance gains, allows for lazy-loading lists
+if needed and  allows loading individual list items directly from Redis,
+without needing to `JSON.parse` the entire object-graph.
 
 The object-graph is fully reconstituted/hydrated when fetching it back, using
 it's original types.
+
+An example:
 
 Assume you have a `Building` which contains `Flats`:
 
@@ -303,18 +312,16 @@ building:kensington:flats:0:persons
 
 ## Performance
 
-### Bechmarks
+### Benchmarks
 
-The only thing close to a benchmark are the performance tests,
-runnable by:
+@todo
 
-```bash
-npm run test:perf
-```
+Currently, the only thing close to a benchmark are
+the performance tests.
 
-> You need a locally running redis-server at `:6379` to run these tests
+You can [view the performance test files here][perf-tests].
 
-You can [view the test files here][perf-tests].
+Scroll to: [Tests](#tests) for more details on how to run them.
 
 ### Atomicity
 
@@ -398,6 +405,10 @@ by using Redis JSON directly.
 
 A full-blown object mapper which of course requires schema definitions.
 
+## Minimum redis and ioredis
+
+@todo
+
 ## Tests
 
 install deps:
@@ -412,12 +423,19 @@ run unit tests:
 npm test
 ```
 
-run performance tests:
+run integration tests:
 
-> requires a locally running [redis server][redis-i] at `:6379`
+> integration & performance tests require a [redis server][redis-i] running
+> at `:6379`
 
 ```bash
-npm run test:perf
+npm run test:integration
+```
+
+run performance tests:
+
+```bash
+npm run test:performance
 ```
 
 produce a test coverage report:
@@ -476,8 +494,11 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml
 
-[perf-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml/badge.svg
-[perf-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:perf.yml
+[integration-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:integration.yml/badge.svg
+[integration-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:integration.yml
+
+[performance-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:performance.yml/badge.svg
+[performance-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/test:performance.yml
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
@@ -506,4 +527,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [runnable-example]: .github/example/index.js
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
-[perf-tests]: ./test/perf
+[perf-tests]: ./test/performance

@@ -1,4 +1,5 @@
-import { List, AppendList, utils } from '../../../index.js'
+import { List, AppendList } from '../../../index.js'
+import { randomId } from '../../../test/utils/utils.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {
@@ -43,7 +44,7 @@ class User {
 
 class Paper {
   constructor({
-    id = utils.randomID(),
+    id = randomId(),
     activeBoardId = 1111111,
     boards = [{ id: 1111111 }],
     users = []
@@ -101,11 +102,18 @@ class Paper {
     if (existing)
       throw Paper.createBoardExistsError(id)
 
+    if (this.reachedMaxBoards())
+      throw Paper.createMaxBoardsReachedError()
+
     const board = new Board({ id })
 
     this.boards.push(board)
 
     return this
+  }
+
+  reachedMaxBoards() {
+    return this.boards.length >= 100
   }
 
   deleteBoard({ id }) {
@@ -164,6 +172,10 @@ class Paper {
 
   _findBoardIndexById({ id }) {
     return this.boards.findIndex(b => b.id == id )
+  }
+
+  static createMaxBoardsReachedError() {
+    throw new Error('Cannot create more than 100 boards')
   }
 
   static createMissingArgumentError(argument = '?') {

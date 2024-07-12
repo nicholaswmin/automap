@@ -1,6 +1,6 @@
 # Todo
 
-> Follows [MoSCoW prioritisation][moscow]
+> follows [Moscow prioritisation][moscow]
 
 ## Must have
 
@@ -24,32 +24,44 @@
 - [ ] The whole `Node` being disconnected from the `List` is confusing.
 - [ ] There is a `for..of` loop that must be pipelined when reviving.
 
+## Should have
+
+TBD
+
 ## Could have
 
+- [ ] Providing/setting a root `id` on the object in `repo.save`
 - [ ] Sharing the model between client/server
 - [ ] Concurrency control
 
+## Wont have
+
+- 0 dependencies feature
+
 ## Testing
 
-- [ ] Fix `test.todo` tests
-- [ ] Add integration tests which would be very similar to performance tests.
-    - then maybe ditch result verification in performance tests?
-- [x] Add `LazyList` performance tests
+### General
+
+- [ ] Fix/implement `test.todo` tests
+- [ ] Use a single example/test model in both docs and tests
+
+### Performance
+
+- [ ] Add performance testing for concurrency, something like artillery
+      but lighter.
 - [ ] Add expiration on keys created by integration/performance tests.
-- [ ] Performance tests should probably examine the `standard deviation`
-      rather than relying on flaky, env. dependent `min`, `mean`, `max` timings.
-- [ ] Not sure if i.e `10k-items.spec.js` naming is correct, maybe `cycles` is
-      a more appropriate metric?
-- [x] Split unit, integration and performance tests
 - [x] Do not use `ioredis-mock` in performance/integration tests.
 - [ ] Expansion of keys to lists when reviving must move outside the repository,
       to the `node.js` module - which also needs renaming to something more
       appropriate/descriptive.
-- [x] Exiting the tests requires a `--test-force-exit` flag which is not
-      ideal - but can live with for now.
-- [ ] Test the repository as an integration test
 - [x] Lists must be tested against a long time period - as in a lot of
-items added - is it still adding `AppendList` items in `O(1)`?
+      items added - is it still adding `AppendList` items in `O(1)`?
+
+### integration
+
+- [x] integration tests should test similar to what the performance tests
+      test for verifying they actually do what they do.
+- [x] They must also verify the saved data structure/format in Redis
 
 
 [moscow]: https://en.wikipedia.org/wiki/MoSCoW_method

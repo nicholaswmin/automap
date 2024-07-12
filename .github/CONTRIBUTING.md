@@ -1,29 +1,47 @@
-# Contribution guidelines
+# Guidelines
 
 ## Todos
 
-Todos can be [viewed here][todos].
+[View todos][todos].
+
+## Testing
+
+Unit tests, integration tests and performance tests *must* be kept separate.  
 
 ## Versioning
 
-Follows [Semantic Versioning][semver]
+follows [Semantic Versioning][semver]
 
 ## Code changes
 
-Follows [GitHub flow][github-flow]
+follows [GitHub flow][github-flow]
 
-### Before commit
+### commit messages
+
+follows [conventional commits][conv-comm]
+
+### before commit
 
 ```bash
 npm test
 npm run test:meta
 ```
 
-which *must* exit with `exit code: 0`, without any errors or warnings.
+*must* pass locally
+
+### before merging to `main`
+
+In addition to the above:
+
+```bash
+npm run test:integration
+npm run test:performance
+```
+
+*must* also pass, both locally and on CI.
 
 [todos]: ./TODO.md
-[workflows]: ./workflows
 [semver]: https://semver.org/
+[conv-comm]: https://www.conventionalcommits.org/en/v1.0.0/#summary
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
-[func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
