@@ -4,7 +4,7 @@
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
-- [Install](#install)
+- [Install](#install) 
 - [Usage](#usage)
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
