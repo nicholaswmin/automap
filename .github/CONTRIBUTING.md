@@ -24,7 +24,7 @@ follows [conventional commits][conv-comm]
 
 ```bash
 npm test
-npm run test:meta
+npm run checks
 ```
 
 *must* pass locally

@@ -444,12 +444,12 @@ produce a test coverage report:
 npm run test:coverage
 ```
 
-run meta tests:
+check standards:
 
-> [non-functional][non-func] tests, i.e `npm audit` etc ...
+> `eslint`, `npm audit` etc ...
 
 ```bash
-npm run test:meta
+npm run checks
 ```
 
 ## Contributing
