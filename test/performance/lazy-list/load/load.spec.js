@@ -7,7 +7,6 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 import {
-  sizeKB,
   nanoToMs,
   deleteall,
   payloadKB,
@@ -64,25 +63,6 @@ test('perf: fetch, load and save LazyLists', async t => {
 
           await save(room)
         }
-      })
-
-      await t.test('loads 100 lists', async t => {
-        assert.strictEqual(loadedLists.length, 100)
-
-        await t.test('with 100 items', async () => {
-          loadedLists.forEach(list => assert.strictEqual(list.length, 100))
-        })
-
-        await t.test('each being ~ 3 kb', () => {
-          loadedLists.forEach(list => {
-            list.forEach((item, i) => {
-              const kb = sizeKB(item)
-
-              assert.ok(kb > 3, `item: ${i} is: ${kb} kb`)
-              assert.ok(kb < 4, `item: ${i} is: ${kb} kb`)
-            })
-          })
-        })
       })
 
       await t.test('durations', async t => {

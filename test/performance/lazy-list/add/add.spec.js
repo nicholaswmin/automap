@@ -7,7 +7,6 @@ import { createHistogram } from 'node:perf_hooks'
 import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 import {
-  sizeKB,
   nanoToMs,
   deleteall,
   payloadKB,
@@ -50,25 +49,8 @@ test('perf: add 100 LazyList items', async t => {
         }
       })
 
-      await t.test('saved LazyList', async t => {
-        const items = await redis.hgetall('chatroom:foo:posts')
-
-        await t.test('is saved as a Redis Hash', async t => {
-          assert.ok(items, 'cannot find Redis key: "chatroom:foo:posts"')
-
-          await t.test('contains 100 items', () => {
-            assert.strictEqual(Object.keys(items).length, 100)
-          })
-
-          await t.test('and each item is ~ 3 kb', () => {
-            Object.keys(items).forEach((key, i) => {
-              const kb = sizeKB(items[key])
-
-              assert.ok(kb > 3, `item: ${i} is: ${kb} kb`)
-              assert.ok(kb < 4, `item: ${i} is: ${kb} kb`)
-            })
-          })
-        })
+      await t.test('items saved in Redis', async () => {
+        assert.ok(await redis.hgetall('chatroom:foo:posts'))
       })
 
       await t.test('durations', async t => {

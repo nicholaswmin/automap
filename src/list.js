@@ -58,6 +58,9 @@ class LazyList extends List {
     if (!repository)
       throw new Error('Must pass a repository instance when calling .load()')
 
+    if (this.loaded)
+      return false
+
     const type = this.constructor.traits.type
     const loader = repository.loaders[type]
 
@@ -71,6 +74,8 @@ class LazyList extends List {
       .forEach(item => this.splice(0, 0, item))
 
     this.loaded = true
+
+    return this.loaded
   }
 }
 

@@ -54,9 +54,8 @@ test('perf: edit 100 List items', async t => {
         }
       })
 
-      await t.test('saves the list', async () => {
-        const items = await redis.hgetall('chatroom:foo:users')
-        assert.ok(items, 'cannot find Redis key: "chatroom:foo:users"')
+      await t.test('items saved in Redis', async () => {
+        assert.ok(await redis.hgetall('chatroom:foo:users'))
       })
 
       await t.test('durations', async t => {

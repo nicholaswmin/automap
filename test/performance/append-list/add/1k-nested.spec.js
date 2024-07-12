@@ -69,12 +69,10 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
         })
 
         await t.test('items saved in Redis', async () => {
-          const items = await redis.lrange(
-            'chatroom:foo:users:10:messages',
-            0, -1
-          )
+          const key = 'chatroom:foo:users:10:messages'
+          const items = await redis.lrange(key, 0, -1)
 
-          assert.ok(items.length > 0)
+          assert.ok(items.length > 0, `key: ${key} not found in Redis`)
         })
 
         await t.test('durations', async t => {

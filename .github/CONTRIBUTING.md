@@ -8,10 +8,6 @@
 
 Unit tests, integration tests and performance tests *must* be kept separate.  
 
-The entire unit-test suite *must* run in `< 3 seconds`, at most.
-
-[Functional code][func-req] *must* have 100% unit-test coverage.
-
 ## Versioning
 
 follows [Semantic Versioning][semver]

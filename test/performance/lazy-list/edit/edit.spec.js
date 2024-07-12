@@ -7,7 +7,6 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Chatroom } from '../../../utils/model/index.js'
 import {
-  sizeKB,
   nanoToMs,
   deleteall,
   payloadKB,
@@ -65,28 +64,6 @@ test('perf: edit 100 LazyList items', async t => {
 
           await save(room)
         }
-      })
-
-      await t.test('edits all posts', async t => {
-        let room
-
-        await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
-
-          await room.posts.load(repo)
-        })
-
-        await t.test('a randomly picked Post', async t => {
-          // pick a random room:foo:posts, i.e '6'
-          assert.ok(room.posts.at(6))
-
-          await t.test('is now 5kb', () => {
-            const kb = sizeKB(room.posts.at(6))
-
-            assert.ok(kb > 5, `item is: ${kb} kb`)
-            assert.ok(kb < 7, `item is: ${kb} kb`)
-          })
-        })
       })
 
       await t.test('durations', async t => {

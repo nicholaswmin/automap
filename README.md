@@ -4,7 +4,7 @@
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
-- [Install](#install) 
+- [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
   * [Lazy loading](#lazy-loading)
@@ -316,16 +316,12 @@ building:kensington:flats:0:persons
 
 @todo
 
-The only thing close to a benchmark are the performance tests,
-runnable by:
-
-```bash
-npm run test:performance
-```
-
-> You need a running redis-server at `:6379` to run these tests
+Currently, the only thing close to a benchmark are
+the performance tests.
 
 You can [view the performance test files here][perf-tests].
+
+Scroll to: [Tests](#tests) for more details on how to run them.
 
 ### Atomicity
 

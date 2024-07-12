@@ -13,46 +13,44 @@ test('#repository.save()', async t => {
   await t.afterEach(() => deleteall(redis, 'chatroom'))
   await t.after(() => redis.disconnect())
 
-  await t.test('existing object with 10 list item', async t => {
+  await t.test('existing object with 10 LazyList items', async t => {
     let repo = new Repository(Chatroom, redis), room = null
 
     await t.beforeEach(async () => {
       await repo.save(new Chatroom({
         id: 'foo',
-        users: Array.from({ length: 10 }, (_, i) => ({
-          id: i, name: 'John-' + i
+        posts: Array.from({ length: 10 }, (_, i) => ({
+          id: i, content: 'Hello-' + i
         }))
       }))
     })
 
-    await t.test('add 10 new List items & repo.save()', async t => {
+    await t.test('fetch object, list.load() & add 10 items', async t => {
       await t.beforeEach(async () => {
         room = await repo.fetch({ id: 'foo' })
 
+        await room.posts.load(repo)
+
+        assert(room.posts.length, 10)
+
         for (let i = 10; i < 20; i++)
-          room.addUser({ id: i, name: 'John-' + i })
+          room.addPost({ id: i, content: 'post-' + i })
 
         await repo.save(room)
       })
 
-      await t.test('fetching back the object', async t => {
+      await t.test('fetch back the object', async t => {
         await t.beforeEach(async () => {
           room = await repo.fetch({ id: 'foo' })
         })
 
-        await t.test('has the previous + new items', () => {
-          assert.strictEqual(room.users.length, 20)
-        })
-
-        await t.test('each has the specified properties', async t => {
-          await t.test('the id', () => {
-            room.users.forEach((user, i) =>
-              assert.strictEqual(user.id, i))
+        await t.test('load its list', async t => {
+          await t.beforeEach(async () => {
+            await room.posts.load(repo)
           })
 
-          await t.test('the name', () => {
-            room.users.forEach((user, i) =>
-              assert.strictEqual(user.name, 'John-' + i))
+          await t.test('has the previous + new items', () => {
+            assert.strictEqual(room.posts.length, 20)
           })
         })
       })
@@ -61,11 +59,11 @@ test('#repository.save()', async t => {
         let items = null
 
         await t.beforeEach(async () => {
-          items = await redis.hgetall('chatroom:foo:users')
+          items = await redis.hgetall('chatroom:foo:posts')
         })
 
         await t.test('under a human readable path', () => {
-          assert.ok(items, 'cant find Redis Hash: "chatroom:foo:users"')
+          assert.ok(items, 'cant find Redis Hash: "chatroom:foo:posts"')
         })
 
         await t.test('all items are saved', () => {

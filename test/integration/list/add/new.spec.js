@@ -16,7 +16,7 @@ test('#repository.save()', async t => {
   await t.test('new object', async t => {
     let repo = new Repository(Chatroom, redis), room = null
 
-    await t.test('add 10 list item', async t => {
+    await t.test('add 10 new List items & repo.save()', async t => {
       await t.beforeEach(async () => {
         room = new Chatroom({ id: 'foo' })
 
