@@ -14,7 +14,7 @@
     "size": "size-limit",
     "example": "node .github/example/index.js"
   },
-  "size-limit": [{ "path": "index.js", "limit": "6 kB" }],
+  "size-limit": [{ "path": "index.js", "limit": "5 kB" }],
   "engines": {
     "node": ">=20"
   },
