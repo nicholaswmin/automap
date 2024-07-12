@@ -1,6 +1,6 @@
 [![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
 
-# :cd: automap
+# automap
 
 Store [OOP][oop] object-graphs in [Redis][redis]
 
@@ -429,8 +429,8 @@ npm test
 
 run integration tests:
 
-> integration & performance tests both require a running
-> [redis server][redis-i] at `:6379`
+> integration & performance tests require a [redis server][redis-i] running
+> at `:6379`
 
 ```bash
 npm run test:integration

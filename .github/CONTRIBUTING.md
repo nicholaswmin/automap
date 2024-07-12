@@ -1,4 +1,4 @@
-# Contribution guidelines
+# Guidelines
 
 ## Todos
 
@@ -7,52 +7,45 @@
 ## Testing
 
 Unit tests, integration tests and performance tests *must* be kept separate.  
-The entire unit-test suite *must* run in `< 5 seconds`, at most.
+
+The entire unit-test suite *must* run in `< 3 seconds`, at most.
 
 [Functional code][func-req] *must* have 100% unit-test coverage.
 
-## Documentation
-
-Follows [RFC 2119][rfc-2119] in the rare cases that words like "must",
-"should", "shall not" ... are used.
-
 ## Versioning
 
-Uses [Semantic Versioning][semver] specification
+follows [Semantic Versioning][semver]
 
 ## Code changes
 
-Uses [GitHub flow][github-flow]
+follow [GitHub flow][github-flow]
 
-### Commit Messages
+### commit messages
 
-Uses [Conventional Commits][conv-comm] specification
+follow [conventional commits][conv-comm]
 
-### Before commit
+### before commit
 
 ```bash
 npm test
 npm run test:meta
 ```
 
-*must* pass locally, without warnings.
+*must* pass locally
 
-### Before merging to `main`
+### before merging to `main`
 
-In addition to the above, these:
+In addition to the above:
 
 ```bash
 npm run test:integration
 npm run test:performance
 ```
 
-*must* pass both locally and on the CI workflows, without warnings.
+*must* also pass, both locally and on CI.
 
 [todos]: ./TODO.md
-[workflows]: ./workflows
 [semver]: https://semver.org/
 [conv-comm]: https://www.conventionalcommits.org/en/v1.0.0/#summary
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
-[func-req]: https://en.wikipedia.org/wiki/Functional_requirement
 [non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
-[rfc-2119]: https://www.ietf.org/rfc/rfc2119.txt
