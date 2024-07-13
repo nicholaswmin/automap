@@ -288,7 +288,7 @@ class Building {
 
 ```js
 const building = await repo.fetch({
-  id: 'kensington'
+  id: 'foo'
 })
 
 console.log(building.flats)
@@ -318,7 +318,7 @@ All keys/values saved in Redis follow a canonical and *human-readable* format.
 Assuming the above example, our flats are saved under this Redis key:
 
 ```
-building:kensington:flats
+building:foo:flats
 ```
 
 which is a [Redis Hash][redis-hash] with the following shape:
@@ -335,25 +335,25 @@ If you need to access an individual flat directly from Redis,
 you can simply run:
 
 ```
-HGET building:kensington:flats 101
+HGET building:foo:flats 101
 ```
 
 or fetch all the flats:
 
 ```
-HGETALL building:kensington:flats
+HGETALL building:foo:flats
 ```
 
 The `Building` itself is saved as:
 
 ```
-building:kensington
+building:foo
 ```
 
 which you can easily get by:
 
 ```
-GET building:kensington
+GET building:foo
 ```
 
 ### List items without `id`
@@ -365,7 +365,7 @@ If the flats didn't have an `id` and they contained a list of `Persons`,
 the persons of the 1st flat would be saved under key:
 
 ```
-building:kensington:flats:0:persons
+building:foo:flats:0:persons
 ```
 
 ## Performance
@@ -442,13 +442,15 @@ O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 ### Saving encoded JSONs
 
+... as [Redis String][redis-string]
+
 A small enough object-graph can easily get away with:
 
 - `JSON.stringify(object)`
-- `SET building:kensington json`
-- `GET building:kensington`
+- `SET building:foo json`
+- `GET building:foo`
 
-and `JSON.parse(json)`
+and `JSON.parse(json)`s
 
 This is a simple, efficient and inherently atomic operation.
 
