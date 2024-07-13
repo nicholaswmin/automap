@@ -1,4 +1,4 @@
-# load-test benchmark
+# benchmark
 
 > using automap
 
