@@ -45,7 +45,7 @@ This module exports a `repository`:
 
 It transparently decomposes "list-like" data in your objects into a
 [Redis Hash][redis-hash], rather than jamming everything into a single
-Redis key/value pair][redis-string].
+Redis [key/value pair][redis-string].
 
 This provides significant performance gains, allows for lazy-loading lists
 if needed and  allows loading individual list items directly from Redis,
@@ -60,7 +60,7 @@ Assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -76,7 +76,7 @@ import { Repository } from 'automap'
 const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -86,31 +86,89 @@ const building = new Building({
 await repo.save(building)
 ```
 
-and fetch it back:
+... which decomposes it like this:
+
+```js
+            ┌───────────────────┐            
+            │ Building          |
+            │ id: foo           │            
+            │ flats:            │                    
+            │  - Flat 1         │            
+            │  - Flat 2         │            
+            │  = Flat 3         │            
+            │  - Flat 4         │                     
+            └─────────┬─────────┘            
+┌───────────────────┐ │ ┌───────────────────┐
+│ Redis String      │◄┴►│ Redis Hash        │
+│                   │   │                   │
+│ id: foo           │   │  - foo:flats:1    │
+│ flats: foo:flats  |   |  - foo:flats:2    │
+│                   │   │  = foo:flats:3    │
+│                   │   │  - foo:flats:4    │
+└───────────────────┘   └───────────────────┘
+```
+
+> `List` or `LazyList` items are broken off the object-graph and saved
+> as a [`Redis Hash`][redis-hash].
+
+
+... and then fetch it back:
 
 ```js
 const building = await repo.fetch({
-  id: 'kensington'
+  id: 'foo'
 })
 
-building.flats[0].doorbell()
-// 🔔 at flat: 101 !
-
 for (let flat of building.flats)
-  console.log(flat)
-  // { id: '101' }, { id: '102' },...
+  console.log(flat instanceof Flat, flat)
+  // true { id: '101' }, true { id: '102' },...
+```
+
+... which hydrates it back to it's correct types:
+
+```js
+┌───────────────────┐   ┌───────────────────┐
+│ Redis String      │   │ Redis Hash        │
+│                   │   │                   │
+│ id: foo           │   │  - foo:flats:1    │
+│ flats: foo:flats  |   |  - foo:flats:2    │
+│                   │   │  = foo:flats:3    │
+│                   │◄ ►│  - foo:flats:4    │
+└───────────────────┘ │ └───────────────────┘
+                      │
+            ┌───────────────────┐            
+            │ Building          |      
+            │ id: foo           │            
+            │ flats:            │                    
+            │  - Flat 1         │            
+            │  - Flat 2         │            
+            │  = Flat 3         │            
+            │  - Flat 4         │                     
+            └───────────────────┘            
 ```
 
 > [!NOTE]
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
 
+... for example:
+
+```js
+const building = await repo.fetch({
+  id: 'foo'
+})
+
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
+```
+
 ### Model definition
 
 An object graph is persistable if it:
 
 1. has an `id` property set to a unique value.
-2. uses the `List` type for list-like data, instead of an [`Array`][array].
+2. uses the `List` and/or `LazyList` type for list-like data,   
+   instead of an [`Array`][array].
 
 Same example as above, a `Building` with `Flats`:
 
@@ -319,10 +377,17 @@ building:kensington:flats:0:persons
 The closest thing to a benchmark is a concurrent load test, available
 [here][paper-benchmark].
 
-... plus the performance tests themselves.  
+As a rule of thumb, the `Building` example with `100 Flats` takes about:
 
-You can [view the performance test files here][perf-tests].  
-Scroll to: [Tests](#tests) for more details on how to run them.
+- ~ `1.5 ms` to `fetch`
+- ~ `3 ms` to `save`
+
+and can handle ~ 300 `fetch`-`edit`-`save` cycles per second without creating
+a task backlog.
+
+These results where gathered with the benchmark mentioned above  
+on a popular cloud-provider with native Redis add-ons and about
+`~20x` concurrency.
 
 ### Atomicity
 
