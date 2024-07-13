@@ -10,7 +10,8 @@ REDIS_URL=<redis-url> npm run benchmark
 
 ## Overview
 
-> This benchmark is meant to be run on a cloud provider rather than locally.
+This benchmark is designed to measure the [throughput][throughput]
+of horizontally deployed instances of automap.
 
 ### Task under test
 
@@ -54,3 +55,4 @@ The test is considered *concluded* when a worker has accumulated a
 [cluster]: https://nodejs.org/api/cluster.html
 [worker]: https://nodejs.org/api/cluster.html#class-worker
 [nicholaswmin]: https://github.com/nicholaswmin
+[throughput]: https://en.wikipedia.org/wiki/Network_throughput
