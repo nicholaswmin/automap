@@ -45,7 +45,11 @@ if (cluster.isPrimary) {
   })
 } else {
   const tracker = new TaskPerformanceTracker({ constants })
-  const redis = new ioredis()
+  const redis = new ioredis(process.env.REDIS_URL, {
+    tls: process.env.REDIS_URL?.includes('rediss') ? {
+      rejectUnauthorized: false
+    } : undefined
+  })
 
   worker({
     tracker,

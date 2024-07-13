@@ -11,7 +11,7 @@
     "test:performance": "npm run ping-redis && NODE_ENV=test node --test test/performance/index.spec.js",
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
-    "benchmark": "node .github/scratch/index.js",
+    "benchmark": "node .github/benchmark/index.js",
     "ping-redis": "node test/helpers/ping-redis/index.js"
   },
   "size-limit": [
