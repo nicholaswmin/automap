@@ -32,8 +32,10 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 - `TASKS_PER_SECOND`: message rate of the primary
 - `NUM_WORKERS`: number of workers
-- `PAYLOAD_KB`: item size in kilobytes
+- `ITEM_PAYLOAD_KB`: item size, added to a board in each task, in kilobytes
 - `MAX_BOARDS`: maximum number of created boards, per paper
+- `MAX_WORKER_BACKLOG`: max amount of unprocessed tasks in a `worker`
+  before the test concludes.
 
 ### Breaking point
 
