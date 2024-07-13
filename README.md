@@ -526,7 +526,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
-[paper-benchmark]: ./github/benchmark
+[paper-benchmark]: .github/benchmark
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance
