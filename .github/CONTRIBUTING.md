@@ -7,6 +7,7 @@
 ## Testing
 
 Unit tests, integration tests and performance tests *must* be kept separate.  
+The entire unit-testing suite *should* run in `< 1 second`, at most.
 
 ## Versioning
 
@@ -24,7 +25,7 @@ follows [conventional commits][conv-comm]
 
 ```bash
 npm test
-npm run test:meta
+npm run checks
 ```
 
 *must* pass locally

@@ -3,8 +3,8 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../utils/model/index.js'
-import { deleteall } from '../../../utils/utils.js'
+import { Chatroom } from '../../../helpers/model/index.js'
+import { deleteall } from '../../../helpers/utils/index.js'
 
 test('#repository.save()', async t => {
   let redis = new ioredis()

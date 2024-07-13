@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import ioredisMock from 'ioredis-mock'
 
 import { Repository } from '../../../src/repository.js'
-import { Chatroom } from '../../utils/model/index.js'
+import { Chatroom } from '../../helpers/model/index.js'
 
 test('repository', async t => {
   let redis, repository

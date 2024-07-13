@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { flatten } from '../../../../../src/map.js'
-import { Chatroom } from '../../../../utils/model/index.js'
+import { Chatroom } from '../../../../helpers/model/index.js'
 
 test('#flatten()', async t => {
   let chatroom

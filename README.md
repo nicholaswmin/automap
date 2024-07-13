@@ -314,11 +314,12 @@ building:kensington:flats:0:persons
 
 ### Benchmarks
 
-@todo
+`@TODO`
 
-Currently, the only thing close to a benchmark are
-the performance tests.
+The closest thing to a benchmark is a concurrent load test, available
+[here][paper-benchmark].
 
+... and of course the performance tests themselves.  
 You can [view the performance test files here][perf-tests].
 
 Scroll to: [Tests](#tests) for more details on how to run them.
@@ -407,7 +408,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
-@todo
+`@TODO`
 
 ## Tests
 
@@ -444,12 +445,12 @@ produce a test coverage report:
 npm run test:coverage
 ```
 
-run meta tests:
+check standards:
 
-> [non-functional][non-func] tests, i.e `npm audit` etc ...
+> `eslint`, `npm audit` etc ...
 
 ```bash
-npm run test:meta
+npm run checks
 ```
 
 ## Contributing
@@ -525,6 +526,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
+[paper-benchmark]: .github/benchmark
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance

@@ -6,13 +6,13 @@ import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../utils/model/index.js'
+import { Chatroom } from '../../../helpers/model/index.js'
 import {
   nanoToMs,
   deleteall,
   payloadKB,
-  toHistogramMs
-} from '../../../utils/utils.js'
+  histogramMs
+} from '../../../helpers/utils/index.js'
 
 test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
   let redis = null
@@ -77,8 +77,8 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
 
         await t.test('durations', async t => {
           await t.before(() => console.table({
-            '#fetch()': toHistogramMs(histograms.fetch),
-            '#save()' : toHistogramMs(histograms.save)
+            '#fetch()': histogramMs(histograms.fetch),
+            '#save()' : histogramMs(histograms.save)
           }))
 
           await t.test('#fetch', async t => {

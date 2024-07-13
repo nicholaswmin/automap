@@ -6,15 +6,21 @@
   "main": "index.js",
   "scripts": {
     "test": "node --test test/index.spec.js",
-    "test:meta": "npx eslint && npm audit && npx size-limit",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:integration": "NODE_ENV=test node test/utils/require-redis.js && node --test test/integration/index.spec.js",
-    "test:performance": "NODE_ENV=test node test/utils/require-redis.js && node --test test/performance/index.spec.js",
+    "test:integration": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/integration/index.spec.js",
+    "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/performance/index.spec.js",
+    "checks": "npx eslint && npm audit && npx size-limit",
+    "example": "node .github/example/index.js",
 
-    "size": "size-limit",
-    "example": "node .github/example/index.js"
+    "start": "node .github/benchmark/bench/bind.js",
+    "benchmark": "node .github/benchmark/index.js"
   },
-  "size-limit": [{ "path": "index.js", "limit": "6 kB" }],
+  "size-limit": [
+    {
+      "path": "index.js",
+      "limit": "5 kB"
+    }
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -47,12 +53,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
+    "@inquirer/input": "^2.2.1",
     "@size-limit/preset-small-lib": "^11.1.4",
-    "benchmrk": "^0.1.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
     "ioredis": "^5.4.1",
     "ioredis-mock": "^8.9.0",
-    "size-limit": "^11.1.4"
+    "size-limit": "^11.1.4",
+    "throttleit": "^2.1.0"
   }
 }

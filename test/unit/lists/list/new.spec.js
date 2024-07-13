@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { List } from '../../../../src/list.js'
-import { Message } from '../../../utils/model/index.js'
+import { Message } from '../../../helpers/model/index.js'
 
 test('List', async t => {
   let list

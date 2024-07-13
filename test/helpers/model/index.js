@@ -4,7 +4,7 @@
 */
 
 import { List, LazyList, AppendList } from '../../../index.js'
-import { randomId } from '../utils.js'
+import { randomId } from '../../helpers/utils/index.js'
 
 class Chatroom {
   constructor({ id = randomId(), users = [], messages = [], posts = [] } = {}) {
