@@ -32,8 +32,15 @@ heroku config:set NPM_CONFIG_PRODUCTION=false -a <app-name>
 run the benchmark:
 
 ```bash
-heroku run npm run benchmark -a <app-name>
+heroku run npm run benchmark--size=performance-l -a <app-name>
 ```
+
+> Replace `<app-name>` with the Heroku app.  
+> A running Redis add-on is required.
+
+
+The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
+
 
 ### Task under test
 
@@ -79,4 +86,5 @@ The test is considered *concluded* when a worker has accumulated a
 [nicholaswmin]: https://github.com/nicholaswmin
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
+[dynos]: https://devcenter.heroku.com/articles/limits#dynos
 [bindjs]: .github/benchmark/bench/bind.js
