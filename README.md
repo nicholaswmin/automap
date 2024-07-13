@@ -119,12 +119,9 @@ const building = await repo.fetch({
   id: 'foo'
 })
 
-building.flats[0].doorbell()
-// 🔔 at flat: 101 !
-
 for (let flat of building.flats)
-  console.log(flat)
-  // { id: '101' }, { id: '102' },...
+  console.log(flat instanceof Flat, flat)
+  // true { id: '101' }, true { id: '102' },...
 ```
 
 which hydrates it back to it's correct types:
@@ -153,6 +150,18 @@ which hydrates it back to it's correct types:
 > [!NOTE]
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
+
+for example:
+
+```js
+const building = await repo.fetch({
+  id: 'foo'
+})
+
+
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
+``
 
 ... and this is how it's decomposed in Redis
 
