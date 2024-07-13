@@ -2,6 +2,9 @@
 
 > using automap
 
+> [!CAUTION]  
+> This test runs a `FLUSHALL` on its connected Redis instance.
+
 ## Run
 
 ```bash
