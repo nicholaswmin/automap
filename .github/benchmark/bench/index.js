@@ -114,8 +114,6 @@ class TaskPerformanceTracker extends EventEmitter {
         ? this.performance.current
         : new TaskPerformanceEntry()
 
-      const entries = list.getEntries()
-
       list.getEntriesByType('function').forEach(({ name, duration }) => {
         if (!this.performance.histograms.fn[name])
           this.performance.histograms.fn[name] = createHistogram()
