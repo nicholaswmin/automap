@@ -3,7 +3,7 @@
 > using automap
 
 > [!CAUTION]  
-> This test runs a `FLUSHALL` on its connected Redis instance.
+> This test runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
 ## Run
 
@@ -58,4 +58,5 @@ The test is considered *concluded* when a worker has accumulated a
 [cluster]: https://nodejs.org/api/cluster.html
 [worker]: https://nodejs.org/api/cluster.html#class-worker
 [nicholaswmin]: https://github.com/nicholaswmin
+[flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
