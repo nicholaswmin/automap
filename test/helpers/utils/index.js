@@ -56,7 +56,11 @@ const sizeBytes = item => {
 // Redis
 
 const flushall = async () => {
-  const redis = new ioredis()
+  const redis = new ioredis(process.env.REDIS_URL, {
+    tls: process.env.REDIS_URL?.includes('rediss') ? {
+      rejectUnauthorized: false
+    } : undefined
+  })
   const response = await redis.flushall()
   redis.disconnect()
 
@@ -73,9 +77,10 @@ const deleteall = (redis, id) =>
 const ioredisClient = () => ['development', undefined]
   .includes(process.env.NODE_ENV) ?
     new ioredis() :
-    new ioredis({
-      url: process.env.REDIS_URL,
-      tlsOptions: { tls: { rejectUnauthorized: false } }
+    new ioredis(process.env.REDIS_URL, {
+      tls: process.env.REDIS_URL?.includes('rediss') ? {
+        rejectUnauthorized: false
+      } : undefined
     })
 
 export {

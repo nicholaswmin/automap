@@ -39,8 +39,6 @@ if (cluster.isPrimary) {
   })
 } else {
   const tracker = new TaskPerformanceTracker({ constants })
-
-  console.log(process.env)
   const redis = new ioredis(process.env.REDIS_URL, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
