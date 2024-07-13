@@ -1,4 +1,5 @@
 import { styleText } from 'node:util'
+import throttle from 'throttleit'
 import { randomId, round } from '../../../test/helpers/utils/index.js'
 
 const primary = async ({ cluster, constants, before = () => {} }) => {
@@ -74,7 +75,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
       printUpdates()
   }
 
-  const printUpdates = () => {
+  const printUpdatesUnthrottled = () => {
     console.clear()
 
     console.log('Constants')
@@ -98,6 +99,11 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
     if (timers.warmup)
       console.log('* warmup period active *')
   }
+
+  const printUpdates = throttle(
+    printUpdatesUnthrottled,
+    Math.round(1000 / constants.MAX_UPDATE_PER_SECOND)
+  )
 
   const killWorkers = () => {
     console.info('shutting down remaining workers ...')

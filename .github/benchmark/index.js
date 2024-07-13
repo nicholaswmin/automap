@@ -25,7 +25,8 @@ const constants = {
   TASKS_PER_SECOND: 100,
   MAX_BOARDS: 100,
   ITEM_PAYLOAD_KB: 5,
-  NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism()
+  NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
+  MAX_UPDATE_PER_SECOND: 10 
 }
 
 if (cluster.isPrimary) {
