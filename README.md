@@ -139,7 +139,7 @@ for (let flat of building.flats)
 An object graph is persistable if it:
 
 1. has an `id` property set to a unique value.
-2. uses the `List` and/or `LazyListz type for list-like data,   
+2. uses the `List` and/or `LazyList` type for list-like data,   
    instead of an [`Array`][array].
 
 Same example as above, a `Building` with `Flats`:
