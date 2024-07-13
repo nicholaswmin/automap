@@ -23,10 +23,16 @@ Heroku only allows webservers on it's platform.
 To allow benchmarking, we provide a [fake webserver][bindjs] to the
 `npm start` script.
 
-To run the benchmark on Heroku after deployment, run this:
+Heroku also needs a special `.env` var set to install `devDependencies`:
 
 ```bash
-heroku run npm run benchmark
+heroku config:set NPM_CONFIG_PRODUCTION=false -a <app-name>
+```
+
+run the benchmark:
+
+```bash
+heroku run npm run benchmark -a <app-name>
 ```
 
 ### Task under test

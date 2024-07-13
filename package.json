@@ -14,7 +14,6 @@
 
     "start": "node .github/benchmark/bench/bind.js",
     "benchmark": "node .github/benchmark/index.js",
-
     "ping-redis": "node test/helpers/ping-redis/index.js"
   },
   "size-limit": [
