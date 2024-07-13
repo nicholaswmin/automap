@@ -1,23 +1,19 @@
 # benchmark
 
-> using automap
+> benchmarks the [throughput][throughput] of this module
 
 > [!CAUTION]  
 > This test runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
-## Overview
+## Run
 
-This benchmark is designed to measure the [throughput][throughput]
-of horizontally deployed instances of automap.
-
-
-## Run locally
+## Locally
 
 ```bash
 REDIS_URL=<redis-url> npm run benchmark
 ```
 
-### Run on Heroku
+## On Heroku
 
 Heroku only allows webservers on it's platform.
 
@@ -45,7 +41,12 @@ The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 > [!WARNING]  
 > Don't forget to deprovision/remove any added expensive Redis add-ons
 
-### Task under test
+## Overvie
+
+This benchmark is designed to measure the [throughput][throughput]
+of horizontally deployed instances of automap.
+
+### The task
 
 - Fetch a `paper`
 - Create a `board`
