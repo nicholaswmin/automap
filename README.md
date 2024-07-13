@@ -314,7 +314,7 @@ building:kensington:flats:0:persons
 
 ### Benchmarks
 
-@todo
+`@TODO`
 
 The closest thing to a benchmark is a concurrent load test, available
 [here][paper-benchmark].
@@ -408,7 +408,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
-@todo
+`@TODO`
 
 ## Tests
 
