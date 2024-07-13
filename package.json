@@ -2,7 +2,7 @@
   "name": "automap",
   "version": "0.1.0",
   "type": "module",
-  "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
+  "description": "save OOP object graphs in Redis",
   "main": "index.js",
   "scripts": {
     "test": "node --test test/index.spec.js",
