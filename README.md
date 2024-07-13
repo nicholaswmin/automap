@@ -91,13 +91,12 @@ await repo.save(building)
 ```js
             ┌───────────────────┐            
             │ Building          |
-            │                   |
             │ id: foo           │            
             │ flats:            │                    
-            │  - flat 1         │            
-            │  - flat 2         │            
-            │  = flat 3         │            
-            │  - flat 4         │                     
+            │  - Flat 1         │            
+            │  - Flat 2         │            
+            │  = Flat 3         │            
+            │  - Flat 4         │                     
             └─────────┬─────────┘            
 ┌───────────────────┐ │ ┌───────────────────┐
 │ Redis String      │◄┴►│ Redis Hash        │
@@ -126,6 +125,29 @@ building.flats[0].doorbell()
 for (let flat of building.flats)
   console.log(flat)
   // { id: '101' }, { id: '102' },...
+```
+
+which hydrates it back to it's correct types:
+
+```js
+┌───────────────────┐   ┌───────────────────┐
+│ Redis String      │   │ Redis Hash        │
+│                   │   │                   │
+│ id: foo           │   │  - foo:flats:1    │
+│ flats: foo:flats  |   |  - foo:flats:2    │
+│                   │   │  = foo:flats:3    │
+│                   │◄ ►│  - foo:flats:4    │
+└───────────────────┘ │ └───────────────────┘
+                      │
+            ┌───────────────────┐            
+            │ Building          |      
+            │ id: foo           │            
+            │ flats:            │                    
+            │  - Flat 1         │            
+            │  - Flat 2         │            
+            │  = Flat 3         │            
+            │  - Flat 4         │                     
+            └───────────────────┘            
 ```
 
 > [!NOTE]
