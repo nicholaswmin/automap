@@ -7,7 +7,6 @@ import ioredisMock from 'ioredis-mock'
 
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 const nanoToMs = ns => round(ns / 1e+6)
-const msToSec = ms => round(ms / 1000)
 const histogramMs = hgram => {
   const histogram = hgram.toJSON ? hgram.toJSON() : hgram
   // eslint-disable-next-line no-unused-vars

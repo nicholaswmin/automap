@@ -75,7 +75,7 @@ class TaskPerformanceTracker extends EventEmitter {
     super()
 
     this.pid = process.pid.toString()
-    this.constants = this.#validateConstants(constants)
+    this.constants = constants
 
     this.histograms =  {
       memory: createHistogram(),
@@ -229,33 +229,6 @@ class TaskPerformanceTracker extends EventEmitter {
     this.histograms.tasks.record(1)
 
     this.emit('task:run', this.toRow())
-  }
-
-  #histogramRow(histogram, convert = value => value) {
-    const min = convert(histogram.min)
-    const mean = convert(histogram.mean)
-    const max = convert(histogram.max)
-
-    return `mean: ${mean}, max: ${max}`
-  }
-
-  #validateConstants(constants) {
-    Object.entries(constants).forEach(([key, val]) => {
-      if (!val)
-        throw new Error(`${key} is a falsy value`)
-
-      if (typeof val === 'string') {
-        if (!val.includes('://'))
-          throw new Error(`${key} is non-URL string`)
-
-        return
-      }
-
-      if (isNaN(val) || val === 0)
-        throw new Error(`${key} is not a valid number`)
-    })
-
-    return constants
   }
 
   toJSON() {

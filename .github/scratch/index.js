@@ -1,5 +1,6 @@
 import cluster from 'node:cluster'
 import ioredis from 'ioredis'
+import input from '@inquirer/input'
 
 import { TaskPerformanceTracker, primary, worker, } from './bench/index.js'
 
@@ -12,7 +13,6 @@ import {
 } from '../../test/helpers/utils/index.js'
 
 const constants = {
-  REDIS_URL: process.env.REDIS_URL || '://',
   WARMUP_SECONDS: 5,
   MAX_WORKER_BACKLOG: 10,
   TASKS_PER_SECOND: 100,
@@ -22,6 +22,20 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
+  for (const key of Object.keys(constants)) {
+    const answer = await input({
+      message: `Enter ${key}`,
+      default: constants[key],
+      validate: val => {
+        return isNaN(val) || val === 0
+          ? `${key} must be a positive, non-zero number`
+          : true
+      }
+    })
+
+    constants[key] = parseInt(answer)
+  }
+
   primary({
     cluster,
     constants,

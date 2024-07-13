@@ -52,8 +52,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
+    "@inquirer/input": "^2.2.1",
     "@size-limit/preset-small-lib": "^11.1.4",
-    "benchmrk": "^0.1.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
     "ioredis": "^5.4.1",

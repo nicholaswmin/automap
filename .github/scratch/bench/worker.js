@@ -1,6 +1,6 @@
 import throttle from 'throttleit'
 
-const worker = async ({ tracker, constants, taskFn, onEnd = () => {} }) => {
+const worker = async ({ tracker, taskFn, onEnd = () => {} }) => {
   process.send = throttle(process.send, 100)
 
   tracker

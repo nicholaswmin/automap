@@ -19,7 +19,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
 
   const forkWorker = () => new Promise((resolve, reject) => {
     return cluster.fork()
-      .once('online', function(worker) { resolve(this) })
+      .once('online', function() { resolve(this) })
       .once('error', function(err) { reject(err) })
   })
 
@@ -46,7 +46,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
     process.exit(1)
   })() : 0
 
-  const onWorkerFinish = async result => {
+  const onWorkerFinish = async () => {
     console.info(process.pid, 'reached backlog limit')
 
     Object.values(timers).forEach(clearInterval)
@@ -54,14 +54,13 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
     await killWorkers()
 
     setImmediate(() => {
-      printUpdates()
-
       console.info(
         process.pid, 'reached backlog limit', '\n',
         'Test succeded! Run for:',
         round(process.uptime() - constants.WARMUP_SECONDS), 'seconds'
       )
 
+      // pass `result` as argument in func, it's available
       // console.info('Printing report for:', process.pid)
       // console.dir(result, { depth: 5 })
     })
