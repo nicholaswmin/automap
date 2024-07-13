@@ -12,7 +12,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
-  * [Bechmarks](#benchmarks)
+  * [Benchmarks](#benchmarks)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
