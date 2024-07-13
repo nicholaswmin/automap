@@ -319,11 +319,6 @@ building:kensington:flats:0:persons
 The closest thing to a benchmark is a concurrent load test, available
 [here][paper-benchmark].
 
-... plus the performance tests themselves.  
-
-You can [view the performance test files here][perf-tests].  
-Scroll to: [Tests](#tests) for more details on how to run them.
-
 ### Atomicity
 
 #### Save

@@ -5,31 +5,33 @@
 > [!CAUTION]  
 > This test runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
-## Run
-
-```bash
-REDIS_URL=<redis-url> npm run benchmark
-```
-
 ## Overview
 
 This benchmark is designed to measure the [throughput][throughput]
 of horizontally deployed instances of automap.
 
-### Deploying on cloud platforms
 
-Heroku only allows webservers on it's platform.   
+## Run locally
 
-To allow benchmarking, we provide a [fake webserver][bindjs] to the
+```bash
+REDIS_URL=<redis-url> npm run benchmark
+```
+
+### Run on Heroku
+
+Heroku only allows webservers on it's platform.
+
+To allow benchmarking, we provide a [fake webserver][fake-server] to the
 `npm start` script.
 
-Heroku also needs a special `.env` var set to install `devDependencies`:
+Heroku also needs a special configuration set to
+install `devDependencies`:
 
 ```bash
 heroku config:set NPM_CONFIG_PRODUCTION=false -a <app-name>
 ```
 
-run the benchmark:
+and to run the benchmark:
 
 ```bash
 heroku run npm run benchmark --size=performance-l -a <app-name>
@@ -42,7 +44,6 @@ The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
 > [!WARNING]  
 > Don't forget to deprovision/remove any added expensive Redis add-ons
-
 
 ### Task under test
 
@@ -89,4 +90,4 @@ The test is considered *concluded* when a worker has accumulated a
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
 [dynos]: https://devcenter.heroku.com/articles/limits#dynos
-[bindjs]: bench/bind.js
+[fake-server]: bench/fake-server.js
