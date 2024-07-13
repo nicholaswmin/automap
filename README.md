@@ -45,7 +45,7 @@ This module exports a `repository`:
 
 It transparently decomposes "list-like" data in your objects into a
 [Redis Hash][redis-hash], rather than jamming everything into a single
-Redis key/value pair][redis-string].
+Redis [key/value pair][redis-string].
 
 This provides significant performance gains, allows for lazy-loading lists
 if needed and  allows loading individual list items directly from Redis,
