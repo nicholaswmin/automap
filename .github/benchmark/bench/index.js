@@ -1,6 +1,9 @@
 import { EventEmitter } from 'node:events'
-import { round, nanoToMs, toMB } from '../../../test/helpers/utils/index.js'
 import { monitorEventLoopDelay, createHistogram } from 'node:perf_hooks'
+import input from '@inquirer/input'
+
+import { round, nanoToMs, toMB } from '../../../test/helpers/utils/index.js'
+
 import primary from './primary.js'
 import worker from './worker.js'
 
@@ -256,7 +259,24 @@ class TaskPerformanceTracker extends EventEmitter {
   }
 }
 
+const finetuneConstants = async constants => {
+  for (const key of Object.keys(constants)) {
+    const answer = await input({
+      message: `Enter ${key}`,
+      default: constants[key],
+      validate: val => {
+        return isNaN(val) || val === 0
+          ? `${key} must be a positive, non-zero number`
+          : true
+      }
+    })
+
+    constants[key] = parseInt(answer)
+  }
+}
+
 export {
+  finetuneConstants,
   TaskPerformanceTracker,
   primary,
   worker

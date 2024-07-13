@@ -1,8 +1,12 @@
 import cluster from 'node:cluster'
 import ioredis from 'ioredis'
-import input from '@inquirer/input'
 
-import { TaskPerformanceTracker, primary, worker, } from './bench/index.js'
+import {
+  finetuneConstants,
+  TaskPerformanceTracker,
+  primary,
+  worker
+} from './bench/index.js'
 
 import { Paper } from './paper/index.js'
 import { Repository } from '../../index.js'
@@ -22,19 +26,7 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-  for (const key of Object.keys(constants)) {
-    const answer = await input({
-      message: `Enter ${key}`,
-      default: constants[key],
-      validate: val => {
-        return isNaN(val) || val === 0
-          ? `${key} must be a positive, non-zero number`
-          : true
-      }
-    })
-
-    constants[key] = parseInt(answer)
-  }
+  await finetuneConstants(constants)
 
   primary({
     cluster,
