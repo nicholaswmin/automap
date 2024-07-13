@@ -1,3 +1,4 @@
+import os from 'node:os'
 import cluster from 'node:cluster'
 import ioredis from 'ioredis'
 
@@ -24,7 +25,7 @@ const constants = {
   TASKS_PER_SECOND: 100,
   MAX_BOARDS: 100,
   ITEM_PAYLOAD_KB: 5,
-  NUM_WORKERS: 8
+  NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism()
 }
 
 if (cluster.isPrimary) {

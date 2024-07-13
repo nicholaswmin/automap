@@ -38,7 +38,6 @@ heroku run npm run benchmark--size=performance-l -a <app-name>
 > Replace `<app-name>` with the Heroku app.  
 > A running Redis add-on is required.
 
-
 The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
 
