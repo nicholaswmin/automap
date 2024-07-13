@@ -42,7 +42,15 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 The test is considered *concluded* when a worker has accumulated a
 `backlog` of > 10 `tasks`.  
 
+### Context
+
+This tests are meant to be run on a cloud provider rather than locally.
+
+## Authors
+
+[@nicholaswmin][nicholaswmin]
 
 [round-robin]: https://en.wikipedia.org/wiki/Round-robin_scheduling
 [cluster]: https://nodejs.org/api/cluster.html
 [worker]: https://nodejs.org/api/cluster.html#class-worker
+[nicholaswmin]: https://github.com/nicholaswmin
