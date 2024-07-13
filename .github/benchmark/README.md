@@ -16,6 +16,19 @@ REDIS_URL=<redis-url> npm run benchmark
 This benchmark is designed to measure the [throughput][throughput]
 of horizontally deployed instances of automap.
 
+### Deploying on cloud platforms
+
+Heroku only allows webservers on it's platform.   
+
+To allow benchmarking, we provide a [fake webserver][bindjs] to the
+`npm start` script.
+
+To run the benchmark on Heroku after deployment, run this:
+
+```bash
+heroku run npm run benchmark
+```
+
 ### Task under test
 
 - Fetch a `paper`
@@ -60,3 +73,4 @@ The test is considered *concluded* when a worker has accumulated a
 [nicholaswmin]: https://github.com/nicholaswmin
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
+[bindjs]: .github/benchmark/bench/bind.js
