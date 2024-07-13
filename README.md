@@ -89,23 +89,24 @@ await repo.save(building)
 ... which decomposes it like this:
 
 ```js
-            ┌───────────────────┐            
-            │ Building          |
-            │ id: foo           │            
-            │ flats:            │                    
-            │  - Flat 1         │            
-            │  - Flat 2         │            
-            │  = Flat 3         │            
-            │  - Flat 4         │                     
-            └─────────┬─────────┘            
-┌───────────────────┐ │ ┌───────────────────┐
-│ Redis String      │◄┴►│ Redis Hash        │
-│                   │   │                   │
-│ id: foo           │   │  - foo:flats:1    │
-│ flats: foo:flats  |   |  - foo:flats:2    │
-│                   │   │  = foo:flats:3    │
-│                   │   │  - foo:flats:4    │
-└───────────────────┘   └───────────────────┘
+           ┌──────────────────┐            
+           │ Building         |
+           |                  |
+           │ id: foo          │            
+           │ flats:           │                    
+           │  - Flat          │            
+           │  - Flat          │            
+           │  - Flat          │            
+           │  - Flat          │                     
+           └─────────┬────────┘            
+┌──────────────────┐ │ ┌─────────────────┐
+│ Redis String     │◄┴►│ Redis Hash      │
+│                  │   │                 │
+│ id: foo          │   │  - foo:flats:1  │
+│ flats: foo:flats |   |  - foo:flats:2  │
+│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:4  │
+└──────────────────┘   └─────────────────┘
 ```
 
 > `List` or `LazyList` items are broken off the object-graph and saved
@@ -127,23 +128,24 @@ for (let flat of building.flats)
 ... which hydrates it back to it's correct types:
 
 ```js
-┌───────────────────┐   ┌───────────────────┐
-│ Redis String      │   │ Redis Hash        │
-│                   │   │                   │
-│ id: foo           │   │  - foo:flats:1    │
-│ flats: foo:flats  |   |  - foo:flats:2    │
-│                   │   │  = foo:flats:3    │
-│                   │◄ ►│  - foo:flats:4    │
-└───────────────────┘ │ └───────────────────┘
-                      │
+┌──────────────────┐   ┌─────────────────┐
+│ Redis String     │   │ Redis Hash      │
+│                  │   │                 │
+│ id: foo          │   │  - foo:flats:1  │
+│ flats: foo:flats |   |  - foo:flats:2  │
+│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:4  │
+└──────────────────┘◄|►└─────────────────┘
+                     |
             ┌───────────────────┐            
-            │ Building          |      
-            │ id: foo           │            
+            │ Building          |
+            |                   |
+            │ id: "foo"         │            
             │ flats:            │                    
-            │  - Flat 1         │            
-            │  - Flat 2         │            
-            │  = Flat 3         │            
-            │  - Flat 4         │                     
+            │  - Flat           │            
+            │  - Flat           │            
+            │  = Flat           │            
+            │  - Flat           │                     
             └───────────────────┘            
 ```
 
