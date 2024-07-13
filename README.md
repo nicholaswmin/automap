@@ -442,7 +442,7 @@ O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 ### Saving encoded JSONs
 
-... as [Redis String][redis-string]
+... as a [`Redis String`][redis-string].
 
 A small enough object-graph can easily get away with:
 
