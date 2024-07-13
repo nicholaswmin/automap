@@ -380,7 +380,8 @@ and can handle ~ 300 `fetch`-`edit`-`save` cycles per second without creating
 a task backlog.
 
 These results where gathered with the benchmark mentioned above  
-on a popular cloud-provider with native Redis add-ons.
+on a popular cloud-provider with native Redis add-ons and about
+`~20x` concurrency.
 
 ### Atomicity
 
