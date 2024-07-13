@@ -58,6 +58,9 @@
       appropriate/descriptive.
 - [x] Lists must be tested against a long time period - as in a lot of
       items added - is it still adding `AppendList` items in `O(1)`?
+- [ ] split the benchmarking `Paper` test infra in own module.
+  - [ ] Add at least some tests
+  - [ ] Ditch the `Paper` model, use a uniform `Building` model or something
 
 ### integration
 
