@@ -371,6 +371,13 @@ building:kensington:flats:0:persons
 The closest thing to a benchmark is a concurrent load test, available
 [here][paper-benchmark].
 
+As a rule of thumb, the `Building` example with `100 Flats` takes about:
+
+- ~ `1 ms` to `fetch`
+- ~ `2 ms` to `save`
+
+on a popular cloud-provider with native Redis add-ons.
+
 ### Atomicity
 
 #### Save
