@@ -86,26 +86,7 @@ const building = new Building({
 await repo.save(building)
 ```
 
-and fetch it back:
-
-```js
-const building = await repo.fetch({
-  id: 'foo'
-})
-
-building.flats[0].doorbell()
-// 🔔 at flat: 101 !
-
-for (let flat of building.flats)
-  console.log(flat)
-  // { id: '101' }, { id: '102' },...
-```
-
-> [!NOTE]
-> `repo.fetch` rebuilds the entire object graph using the correct type,
-> including any nested types.
-
-... and this is how it's decomposed in Redis
+... which decomposes it like this:
 
 ```js
             ┌───────────────────┐            
@@ -128,8 +109,30 @@ for (let flat of building.flats)
 └───────────────────┘   └───────────────────┘
 ```
 
-`List` or `LazyList` items are broken off the object-graph and saved
-as a [`Redis Hash`][redis-hash].
+> `List` or `LazyList` items are broken off the object-graph and saved
+> as a [`Redis Hash`][redis-hash].
+
+
+... and then fetch it back:
+
+```js
+const building = await repo.fetch({
+  id: 'foo'
+})
+
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
+
+for (let flat of building.flats)
+  console.log(flat)
+  // { id: '101' }, { id: '102' },...
+```
+
+> [!NOTE]
+> `repo.fetch` rebuilds the entire object graph using the correct type,
+> including any nested types.
+
+... and this is how it's decomposed in Redis
 
 ### Model definition
 
