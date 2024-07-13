@@ -11,9 +11,9 @@
     "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/performance/index.spec.js",
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
-
     "start": "node .github/benchmark/bench/fake-server.js",
-    "benchmark": "node .github/benchmark/index.js"
+    "benchmark": "node .github/benchmark/index.js",
+    "prepare": "husky"
   },
   "size-limit": [
     {
@@ -57,6 +57,7 @@
     "@size-limit/preset-small-lib": "^11.1.4",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
+    "husky": "^9.0.11",
     "ioredis": "^5.4.1",
     "ioredis-mock": "^8.9.0",
     "size-limit": "^11.1.4",
