@@ -1,6 +1,9 @@
 import cluster from 'node:cluster'
 import ioredis from 'ioredis'
 
+import { Paper } from './paper/index.js'
+import { Repository } from '../../index.js'
+
 import {
   finetuneConstants,
   TaskPerformanceTracker,
@@ -8,8 +11,7 @@ import {
   worker
 } from './bench/index.js'
 
-import { Paper } from './paper/index.js'
-import { Repository } from '../../index.js'
+
 import {
   flushall,
   randomId,
