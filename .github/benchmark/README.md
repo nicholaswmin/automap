@@ -1,4 +1,4 @@
-# Paper benchmark
+# load-test benchmark
 
 > using automap
 
@@ -7,6 +7,10 @@
 ```bash
 REDIS_URL=<redis-url> npm run benchmark
 ```
+
+## Overview
+
+> This benchmark is meant to be run on a cloud provider rather than locally.
 
 ### Task under test
 
@@ -41,10 +45,6 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 The test is considered *concluded* when a worker has accumulated a
 `backlog` of > 10 `tasks`.  
-
-### Context
-
-This tests are meant to be run on a cloud provider rather than locally.
 
 ## Authors
 
