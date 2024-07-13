@@ -1,3 +1,4 @@
+import { styleText } from 'node:util'
 import { randomId, round } from '../../../test/helpers/utils/index.js'
 
 const primary = async ({ cluster, constants, before = () => {} }) => {
@@ -129,6 +130,19 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
   Object.assign(timers, {
     task: setInterval(sendToRandomWorker, taskInterval),
     warmup: setInterval(cancelWarmupPeriod, 1000)
+  })
+
+  process.on('SIGINT', () => {
+    if (global.SIGINT)
+        return
+
+    global.SIGINT = true
+    console.log('\n', styleText(
+      'yellow',
+      'User stop. Dont forget to deprovision any expensive add-ons! Bye 👋'
+    ), '\n')
+
+    setTimeout(() => process.exit(0), 500)
   })
 }
 

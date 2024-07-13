@@ -32,7 +32,7 @@ heroku config:set NPM_CONFIG_PRODUCTION=false -a <app-name>
 run the benchmark:
 
 ```bash
-heroku run npm run benchmark--size=performance-l -a <app-name>
+heroku run npm run benchmark --size=performance-l -a <app-name>
 ```
 
 > Replace `<app-name>` with the Heroku app.  
