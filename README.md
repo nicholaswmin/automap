@@ -124,7 +124,7 @@ for (let flat of building.flats)
   // true { id: '101' }, true { id: '102' },...
 ```
 
-which hydrates it back to it's correct types:
+... which hydrates it back to it's correct types:
 
 ```js
 ┌───────────────────┐   ┌───────────────────┐
@@ -151,7 +151,7 @@ which hydrates it back to it's correct types:
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
 
-for example:
+... for example:
 
 ```js
 const building = await repo.fetch({
@@ -161,8 +161,6 @@ const building = await repo.fetch({
 building.flats[0].doorbell()
 // 🔔 at flat: 101 !
 ```
-
-... and this is how it's decomposed in Redis
 
 ### Model definition
 
