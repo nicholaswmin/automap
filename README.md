@@ -60,7 +60,7 @@ Assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -76,7 +76,7 @@ import { Repository } from 'automap'
 const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -90,7 +90,7 @@ and fetch it back:
 
 ```js
 const building = await repo.fetch({
-  id: 'kensington'
+  id: 'foo'
 })
 
 building.flats[0].doorbell()
@@ -105,12 +105,39 @@ for (let flat of building.flats)
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
 
+... and this is how it's decomposed in Redis
+
+```js
+            ┌───────────────────┐            
+            │ Building          |
+            │                   |
+            │ id: foo           │            
+            │ flats:            │                    
+            │  - flat 1         │            
+            │  - flat 2         │            
+            │  = flat 3         │            
+            │  - flat 4         │                     
+            └─────────┬─────────┘            
+┌───────────────────┐ │ ┌───────────────────┐
+│ Redis String      │◄┴►│ Redis Hash        │
+│                   │   │                   │
+│ id: foo           │   │  - foo:flats:1    │
+│ flats: foo:flats  |   |  - foo:flats:2    │
+│                   │   │  = foo:flats:3    │
+│                   │   │  - foo:flats:4    │
+└───────────────────┘   └───────────────────┘
+```
+
+`List` or `LazyList` items are broken off the object-graph and saved
+as a [`Redis Hash`][redis-hash].
+
 ### Model definition
 
 An object graph is persistable if it:
 
 1. has an `id` property set to a unique value.
-2. uses the `List` type for list-like data, instead of an [`Array`][array].
+2. uses the `List` and/or `LazyListz type for list-like data,   
+   instead of an [`Array`][array].
 
 Same example as above, a `Building` with `Flats`:
 
