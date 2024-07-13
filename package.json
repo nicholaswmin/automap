@@ -7,14 +7,13 @@
   "scripts": {
     "test": "node --test test/index.spec.js",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:integration": "npm run ping-redis && NODE_ENV=test node --test test/integration/index.spec.js",
-    "test:performance": "npm run ping-redis && NODE_ENV=test node --test test/performance/index.spec.js",
+    "test:integration": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/integration/index.spec.js",
+    "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/performance/index.spec.js",
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
 
     "start": "node .github/benchmark/bench/bind.js",
-    "benchmark": "node .github/benchmark/index.js",
-    "ping-redis": "node test/helpers/ping-redis/index.js"
+    "benchmark": "node .github/benchmark/index.js"
   },
   "size-limit": [
     {

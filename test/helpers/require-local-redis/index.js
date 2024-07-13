@@ -1,3 +1,6 @@
+// Throw error and `exit: 1` if no *locally* running Redis can be found.  
+// - Required for integration/performance tests.
+
 import { styleText as c } from 'node:util'
 import ioredis from 'ioredis'
 
