@@ -1,45 +1,68 @@
-// Run with: `node ./.github/scratch/index.js`
-import Benchmrk from 'benchmrk'
+import cluster from 'node:cluster'
 import ioredis from 'ioredis'
+
+import { TaskPerformanceTracker, primary, worker, } from './bench/index.js'
 
 import { Paper } from './paper/index.js'
 import { Repository } from '../../index.js'
-import { randomId, payloadKB } from '../../test/utils/utils.js'
+import {
+  flushall,
+  randomId,
+  payloadKB
+} from '../../test/helpers/utils/index.js'
 
-const redis  = new ioredis()
-const repo   = new Repository(Paper, redis)
+const constants = {
+  REDIS_URL: process.env.REDIS_URL || '://',
+  WARMUP_SECONDS: 5,
+  MAX_WORKER_BACKLOG: 10,
+  TASKS_PER_SECOND: 300,
+  MAX_BOARDS: 200,
+  ITEM_PAYLOAD_KB: 5,
+  NUM_WORKERS: 10
+}
 
-const runner = new Benchmrk()
-const fetch  = performance.timerify(repo.fetch.bind(repo))
-const save   = performance.timerify(repo.save.bind(repo))
+if (cluster.isPrimary) {
+  primary({
+    cluster,
+    constants,
+    before: async () => {
+      await flushall()
+    }
+  })
+} else {
+  const tracker = new TaskPerformanceTracker({ constants })
 
-// Findings
-// - `repo.save()` time increases linearly in relation to max num of boards.
-// -  A very big chunk of that time is taken up by the `flatten` function 
-// - `board.addItem(item)` size does not have a lot of impact on time
+  worker({
+    constants,
+    tracker,
+    beforeEnd: async () => {
+      redis.disconnect()
+    },
+    taskFn: async () => {
+      const id = process.pid.toString()
 
-await redis.flushall()
-await runner.run([
-  {
-    name: 'paper',
-    cycles: 1000,
-    fn: async () => {
-      const paper     = await fetch({ id: 'foo' }) || new Paper({ id: 'foo' })
-      const addBoard  = performance.timerify(paper.addBoard.bind(paper))
-      const lastBoard = paper.boards.at(-1)
-      const addItem   = performance.timerify(lastBoard.addItem.bind(lastBoard))
+      const redis = new ioredis()
+      const repo  = new Repository(Paper, redis)
+      const fetch = tracker.timerify(repo.fetch.bind(repo))
+      const save  = tracker.timerify(repo.save.bind(repo))
+      const latency = tracker.timerify(function redisPing() {
+        return redis.ping()
+      })
 
-      for (let i = 0; i < 200; i++)
-        paper.reachedMaxBoards() ? null : addBoard({ id: randomId() })
+      const paper = await fetch({ id }) || new Paper({ id })
+      const randBIndex = Math.floor(Math.random() * paper.boards.length)
 
-      addItem(payloadKB(5))
+      paper.boards.length < constants.MAX_BOARDS
+        ? paper.addBoard({ id: randomId() })
+        : null
+
+      paper.boards.at(randBIndex).addItem(payloadKB(constants.ITEM_PAYLOAD_KB))
+
+      //await new Promise(res => setTimeout(res, Math.ceil(Math.random() * 60)))
 
       await save(paper)
+
+      await latency()
     }
-  }
-])
-
-redis.disconnect()
-
-runner.toHistogram()
-runner.toPlots()
+  })
+}

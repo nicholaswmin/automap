@@ -3,16 +3,15 @@ import crypto from 'node:crypto'
 import ioredis from 'ioredis'
 import ioredisMock from 'ioredis-mock'
 
-// Number
+// Numbers
 
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 const nanoToMs = ns => round(ns / 1e+6)
-
-// histograms
-
-const histogramMs = histogram => {
+const msToSec = ms => round(ms / 1000)
+const histogramMs = hgram => {
+  const histogram = hgram.toJSON ? hgram.toJSON() : hgram
   // eslint-disable-next-line no-unused-vars
-  const { percentiles, exceeds, ...obj } = { ...histogram.toJSON() }
+  const { percentiles, exceeds, ...obj } = { ...histogram }
 
   return Object.keys(obj)
     .sort((a, b) => a - b)
@@ -21,13 +20,14 @@ const histogramMs = histogram => {
         (+key).toFixed(2) ]: key === 'count' ? obj[key] : nanoToMs(obj[key])
     }), {})
 }
+
 // Randoms
 
 const randomId = () => crypto.randomUUID().split('-').at(-1)
 const randomNum = (min = -300, max = 600) =>
   round(Math.random() * (max - min) + min)
 
-// Payload
+// Payloads
 
 const payloadKB = kb => {
   return JSON.stringify({
@@ -38,13 +38,13 @@ const payloadKB = kb => {
   })
 }
 
-// size value converter
+// Size converions
 
 const toMB = bytes => round(bytes / 1000 / 1000)
-
-// Size of
-
 const sizeKB = item => round(sizeBytes(item) / 1000)
+
+// Size of object
+
 const sizeBytes = item => {
   if (typeof item === 'undefined' || !item)
     throw new Error('passed item is falsy')
@@ -55,6 +55,14 @@ const sizeBytes = item => {
 }
 
 // Redis
+
+const flushall = async () => {
+  const redis = new ioredis()
+  const response = await redis.flushall()
+  redis.disconnect()
+
+  console.log('FLUSHALL:', response)
+}
 
 // deletes a key and any pattern after it,
 // i.e passing `user` deletes key `user`, `user:*`
@@ -75,6 +83,7 @@ export {
   ioredisMock,
   ioredisClient,
   deleteall,
+  flushall,
 
   round,
   nanoToMs,

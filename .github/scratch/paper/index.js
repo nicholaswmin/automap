@@ -1,5 +1,5 @@
 import { List, AppendList } from '../../../index.js'
-import { randomId } from '../../../test/utils/utils.js'
+import { randomId } from '../../../test/helpers/utils/index.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {
@@ -9,6 +9,8 @@ class ViewPosition {
 }
 
 class Board {
+  // @FIXME THE MAX BOARDS LIMIT IS TEMPORARILY REMOVED
+
   constructor({
     id = 1111111,
     viewPosition = { x: 0, y: 0 },
@@ -113,7 +115,7 @@ class Paper {
   }
 
   reachedMaxBoards() {
-    return this.boards.length >= 100
+    return this.boards.length >= Infinity
   }
 
   deleteBoard({ id }) {

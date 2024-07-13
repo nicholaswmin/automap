@@ -9,12 +9,17 @@
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
     "test:integration": "npm run ping-redis && NODE_ENV=test node --test test/integration/index.spec.js",
     "test:performance": "npm run ping-redis && NODE_ENV=test node --test test/performance/index.spec.js",
-
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
+    "benchmark": "node .github/scratch/index.js",
     "ping-redis": "node test/helpers/ping-redis/index.js"
   },
-  "size-limit": [{ "path": "index.js", "limit": "5 kB" }],
+  "size-limit": [
+    {
+      "path": "index.js",
+      "limit": "5 kB"
+    }
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -53,6 +58,7 @@
     "globals": "^15.8.0",
     "ioredis": "^5.4.1",
     "ioredis-mock": "^8.9.0",
-    "size-limit": "^11.1.4"
+    "size-limit": "^11.1.4",
+    "throttleit": "^2.1.0"
   }
 }
