@@ -48,19 +48,18 @@ if (cluster.isPrimary) {
   const redis = new ioredis()
 
   worker({
-    constants,
     tracker,
-    beforeEnd: async () => {
-      redis.disconnect()
-    },
+    beforeEnd: () => redis.disconnect(),
     taskFn: async () => {
       const id = process.pid.toString()
       const repo  = new Repository(Paper, redis)
-      const fetch = tracker.timerify(repo.fetch.bind(repo))
-      const save  = tracker.timerify(repo.save.bind(repo))
-      const latency = tracker.timerify(function redisPing() {
+
+      const fetch = performance.timerify(repo.fetch.bind(repo))
+      const save  = performance.timerify(repo.save.bind(repo))
+      const latency = performance.timerify(function redisPing() {
         return redis.ping()
       })
+
       const paper = await fetch({ id }) || new Paper({ id })
       const randBIndex = Math.floor(Math.random() * paper.boards.length)
 

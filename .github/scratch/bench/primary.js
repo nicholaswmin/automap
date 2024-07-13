@@ -75,11 +75,24 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
 
   const printUpdates = () => {
     console.clear()
+
+    console.log('Constants')
+
     console.table(constants)
+
+    console.log('Vitals')
+
     console.table(updates.slice(
       updates.length - constants.NUM_WORKERS,
       updates.length
-    ))
+    ).map(row => row.vitals))
+
+    console.log('Task/Function timings')
+
+    console.table(updates.slice(
+      updates.length - constants.NUM_WORKERS,
+      updates.length
+    ).map(row => row.timings))
 
     if (timers.warmup)
       console.log('* warmup period active *')

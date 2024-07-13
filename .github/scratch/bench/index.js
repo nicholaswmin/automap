@@ -114,6 +114,15 @@ class TaskPerformanceTracker extends EventEmitter {
         ? this.performance.current
         : new TaskPerformanceEntry()
 
+      const entries = list.getEntries()
+
+      list.getEntriesByType('function').forEach(({ name, duration }) => {
+        if (!this.performance.histograms.fn[name])
+          this.performance.histograms.fn[name] = createHistogram()
+
+        this.performance.histograms.fn[name].record(Math.ceil(duration))
+      })
+
       this.performance.current.addEntries(list.getEntries())
 
       if (this.performance.taskEntries.length > this.#maxTaskEntriesLimit)
@@ -126,7 +135,8 @@ class TaskPerformanceTracker extends EventEmitter {
 
       const taskEnd = list.getEntriesByName('task-end').pop()
 
-      this.performance.histograms.task.record(Math.ceil(taskEnd?.duration) || 1)
+      if (taskEnd)
+        this.performance.histograms.task.record(Math.ceil(taskEnd.duration))
     })
 
     this.observer.observe({ entryTypes: ['measure', 'function'] })
@@ -215,14 +225,6 @@ class TaskPerformanceTracker extends EventEmitter {
     this.histograms.loop.disable()
   }
 
-  timerify(func) {
-    const histogram = createHistogram()
-
-    this.performance.histograms.fn[func.name] = histogram
-
-    return performance.timerify(func, { histogram })
-  }
-
   #updateHistograms() {
     this.histograms.memory.record(process.memoryUsage().heapUsed || 1 )
     this.histograms.backlog.record(this.backlog.length || 1)
@@ -237,23 +239,21 @@ class TaskPerformanceTracker extends EventEmitter {
 
   toRow() {
     return {
-      'pid': this.pid,
-      'cycles': this.histograms.tasks.count,
-      'max backlog': this.histograms.backlog.max,
-      'mean mem (mb)': toMB(this.histograms.memory.mean),
-      'max mem (mb)': toMB(this.histograms.memory.max),
-      'evt loop mean (ms)': nanoToMs(this.histograms.loop.mean),
-      ...Object.entries(this.performance.histograms.fn).reduce((acc, entry) => {
-        const name = entry[0].replace('bound ', 'fn:') + ' mean (ms)'
-        const hgram = entry[1]
-
-        return {
+      vitals: {
+        'pid': this.pid,
+        'cycles': this.histograms.tasks.count,
+        'max backlog': this.histograms.backlog.max,
+        'mean mem (mb)': toMB(this.histograms.memory.mean),
+        'max mem (mb)': toMB(this.histograms.memory.max),
+        'evt loop mean (ms)': nanoToMs(this.histograms.loop.mean)
+      },
+      timings: Object.entries(this.performance.histograms.fn)
+        .reduce((acc, [k, v]) => ({
           ...acc,
-          [name]: nanoToMs(hgram.mean)
-        }
-      }, {
-        'task mean (ms)': round(this.performance.histograms.task.mean)
-      })
+          [k.replace('bound ', 'fn:') + ' mean (ms)']: round(v.mean)
+        }), {
+          'task mean (ms)': round(this.performance.histograms.task.mean)
+        })
     }
   }
 }
