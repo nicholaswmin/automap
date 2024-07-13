@@ -28,7 +28,7 @@ test('Runnable example', async t => {
     await t.test('1st log is a "repo.save()" success message', () => {
       assert.strictEqual(
         logs.at(0),
-        'saved: Building with id: kensington',
+        'saved: Building with id: foo',
         `logs.0 actually equals: "${logs.at(0)}"`
       )
     })
@@ -36,7 +36,7 @@ test('Runnable example', async t => {
     await t.test('2nd log is a "repo.fetch()" success message', () => {
       assert.strictEqual(
         logs.at(1),
-        'fetched: Building with id: kensington',
+        'fetched: Building with id: foo',
         `logs.1 actually equals: "${logs.at(1)}"`
       )
     })

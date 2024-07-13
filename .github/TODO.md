@@ -4,9 +4,11 @@
 
 ## Must have
 
-- [ ] Consecutive saves increase the saving time linearly
+- [x] Consecutive saves increase the saving time linearly
   - Run example in `.github/scratch/index.js`
   - Cannot repro this in `test/perf/append-list/add/5k-nested.spec.js`
+  - `fixed:` caused by missing `maxBoards` limit causing board count to
+    skyrocket.
 - [ ] List deletions?
 - [x] There is a bug which causes empty lists to be passed on to `save()`.
   - [x] The `map.js` code is a code smell - that whole `nodeList` thing is a
@@ -47,7 +49,7 @@
 
 ### Performance
 
-- [ ] Add performance testing for concurrency, something like artillery
+- [x] Add performance testing for concurrency, something like artillery
       but lighter.
 - [ ] Add expiration on keys created by integration/performance tests.
 - [x] Do not use `ioredis-mock` in performance/integration tests.

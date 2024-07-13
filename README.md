@@ -7,12 +7,12 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
-  * [Lazy loading](#lazy-loading)
   * [`List` instead of `Array`](#the-list-types)
+  * [Lazy-loading with `LazyList`](#lazy-loading)
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
-  * [Bechmarks](#benchmarks)
+  * [Benchmarks](#benchmarks)
   * [Atomicity](#atomicity)
   * [Time complexity](#time-complexity)
     + [Flat lists](#flat-lists)
@@ -45,7 +45,7 @@ This module exports a `repository`:
 
 It transparently decomposes "list-like" data in your objects into a
 [Redis Hash][redis-hash], rather than jamming everything into a single
-Redis key/value pair][redis-string].
+Redis [key/value pair][redis-string].
 
 This provides significant performance gains, allows for lazy-loading lists
 if needed and  allows loading individual list items directly from Redis,
@@ -60,7 +60,7 @@ Assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -76,7 +76,7 @@ import { Repository } from 'automap'
 const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
-  id: 'kensington',
+  id: 'foo',
   flats: [
     { id: 101 },
     { id: 102 }
@@ -86,31 +86,91 @@ const building = new Building({
 await repo.save(building)
 ```
 
-and fetch it back:
+... which decomposes it like this:
+
+```js
+           ┌──────────────────┐            
+           │ Building         |
+           |                  |
+           │ id: foo          │            
+           │ flats:           │                    
+           │  - Flat          │            
+           │  - Flat          │            
+           │  - Flat          │            
+           │  - Flat          │                     
+           └─────────┬────────┘            
+┌──────────────────┐ │ ┌─────────────────┐
+│ Redis String     │◄┴►│ Redis Hash      │
+│                  │   │                 │
+│ id: foo          │   │  - foo:flats:1  │
+│ flats: foo:flats |   |  - foo:flats:2  │
+│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:4  │
+└──────────────────┘   └─────────────────┘
+```
+
+> `List` or `LazyList` items are broken off the object-graph and saved
+> as a [`Redis Hash`][redis-hash].
+
+
+... and then fetch it back:
 
 ```js
 const building = await repo.fetch({
-  id: 'kensington'
+  id: 'foo'
 })
 
-building.flats[0].doorbell()
-// 🔔 at flat: 101 !
-
 for (let flat of building.flats)
-  console.log(flat)
-  // { id: '101' }, { id: '102' },...
+  console.log(flat instanceof Flat, flat)
+  // true { id: '101' }, true { id: '102' },...
+```
+
+... which hydrates it back to it's correct types:
+
+```js
+┌──────────────────┐   ┌─────────────────┐
+│ Redis String     │   │ Redis Hash      │
+│                  │   │                 │
+│ id: foo          │   │  - foo:flats:1  │
+│ flats: foo:flats |   |  - foo:flats:2  │
+│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:4  │
+└──────────────────┘◄|►└─────────────────┘
+                     |
+            ┌───────────────────┐            
+            │ Building          |
+            |                   |
+            │ id: "foo"         │            
+            │ flats:            │                    
+            │  - Flat           │            
+            │  - Flat           │            
+            │  = Flat           │            
+            │  - Flat           │                     
+            └───────────────────┘            
 ```
 
 > [!NOTE]
 > `repo.fetch` rebuilds the entire object graph using the correct type,
 > including any nested types.
 
+... for example:
+
+```js
+const building = await repo.fetch({
+  id: 'foo'
+})
+
+building.flats[0].doorbell()
+// 🔔 at flat: 101 !
+```
+
 ### Model definition
 
 An object graph is persistable if it:
 
 1. has an `id` property set to a unique value.
-2. uses the `List` type for list-like data, instead of an [`Array`][array].
+2. uses the `List` and/or `LazyList` type for list-like data,   
+   instead of an [`Array`][array].
 
 Same example as above, a `Building` with `Flats`:
 
@@ -138,43 +198,6 @@ class Flat {
 }
 ```
 
-### Lazy Loading
-
-Sometimes you won't need to load the contents of a list initially.   
-You might want to load it's contents after you fetch it, or even none at all.
-
-In that case, use a `LazyList` instead of a `List`.
-
-```js
-import { LazyList } from 'automap'
-
-class Building {
-  constructor({ id, flats = [] }) {
-    this.id = id
-    this.flats = new LazyList({
-      type: Flat,
-      from: flats
-    })
-  }
-}
-```
-
-... and load its contents by calling `list.load()`:
-
-```js
-const building = await repo.fetch({
-  id: 'kensington'
-})
-
-console.log(building.flats)
-// [] (empty)
-
-await building.flats.load(repo)
-
-console.log(building.flats)
-// [ Flat { id: '101' }, Flat { id: '102' }, ...]
-```
-
 ### The `List` types
 
 List-like data must use the `List` or `LazyList` types instead of an
@@ -189,7 +212,7 @@ class Building {
     this.id = id
 
     // ! List instead of Array
-    this.flats = new LazyList({
+    this.flats = new List({
       type: Flat,
       from: flats
     })
@@ -242,6 +265,43 @@ console.log(two)
 You can still use a regular `Array` for list-like data, which you don't
 expect to become big enough to warrant decomposition when saving in Redis.
 
+### Lazy loading
+
+Sometimes you won't need to load the contents of a list initially.   
+You might want to load it's contents after you fetch it, or even none at all.
+
+In that case, use a `LazyList` instead of a `List`.
+
+```js
+import { LazyList } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+```
+
+... and load its contents by calling `list.load()`:
+
+```js
+const building = await repo.fetch({
+  id: 'foo'
+})
+
+console.log(building.flats)
+// [] (empty)
+
+await building.flats.load(repo)
+
+console.log(building.flats)
+// [ Flat { id: '101' }, Flat { id: '102' }, ...]
+```
+
 ### Runnable example
 
 The `Building` example demonstrated above
@@ -260,7 +320,7 @@ All keys/values saved in Redis follow a canonical and *human-readable* format.
 Assuming the above example, our flats are saved under this Redis key:
 
 ```
-building:kensington:flats
+building:foo:flats
 ```
 
 which is a [Redis Hash][redis-hash] with the following shape:
@@ -277,25 +337,25 @@ If you need to access an individual flat directly from Redis,
 you can simply run:
 
 ```
-HGET building:kensington:flats 101
+HGET building:foo:flats 101
 ```
 
 or fetch all the flats:
 
 ```
-HGETALL building:kensington:flats
+HGETALL building:foo:flats
 ```
 
 The `Building` itself is saved as:
 
 ```
-building:kensington
+building:foo
 ```
 
 which you can easily get by:
 
 ```
-GET building:kensington
+GET building:foo
 ```
 
 ### List items without `id`
@@ -307,22 +367,27 @@ If the flats didn't have an `id` and they contained a list of `Persons`,
 the persons of the 1st flat would be saved under key:
 
 ```
-building:kensington:flats:0:persons
+building:foo:flats:0:persons
 ```
 
 ## Performance
 
 ### Benchmarks
 
-`@TODO`
-
 The closest thing to a benchmark is a concurrent load test, available
 [here][paper-benchmark].
 
-... plus the performance tests themselves.  
+As a rule of thumb, the `Building` example with `100 Flats` takes about:
 
-You can [view the performance test files here][perf-tests].  
-Scroll to: [Tests](#tests) for more details on how to run them.
+- ~ `1.5 ms` to `fetch`
+- ~ `3 ms` to `save`
+
+and can handle ~ `300` x `fetch`-`edit`-`save` cycles-per-second,  
+without creating a task backlog.
+
+These results were gathered with the benchmark mentioned above  
+on a popular cloud-provider with native Redis add-ons and about
+`~20x concurrency`.
 
 ### Atomicity
 
@@ -375,17 +440,24 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
+In short, don't do it.
+
+Also note that a `LazyList` nested in a `List` won't exhibit this  
+issue since it doesn't need to be fetched initially.
+
 ## Alternatives
 
 ### Saving encoded JSONs
 
+... as a [`Redis String`][redis-string].
+
 A small enough object-graph can easily get away with:
 
 - `JSON.stringify(object)`
-- `SET building:kensington json`
-- `GET building:kensington`
+- `SET building:foo json`
+- `GET building:foo`
 
-and `JSON.parse(json)`
+and `JSON.parse(json)`s
 
 This is a simple, efficient and inherently atomic operation.
 
