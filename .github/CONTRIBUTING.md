@@ -7,6 +7,7 @@
 ## Testing
 
 Unit tests, integration tests and performance tests *must* be kept separate.  
+The entire unit-testing suite *should* run in `< 1 second`, at most.
 
 ## Versioning
 
