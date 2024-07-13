@@ -7,8 +7,8 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
-  * [Lazy loading](#lazy-loading)
   * [`List` instead of `Array`](#the-list-types)
+  * [Lazy-loading with `LazyList`](#lazy-loading)
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
@@ -196,43 +196,6 @@ class Flat {
 }
 ```
 
-### Lazy Loading
-
-Sometimes you won't need to load the contents of a list initially.   
-You might want to load it's contents after you fetch it, or even none at all.
-
-In that case, use a `LazyList` instead of a `List`.
-
-```js
-import { LazyList } from 'automap'
-
-class Building {
-  constructor({ id, flats = [] }) {
-    this.id = id
-    this.flats = new LazyList({
-      type: Flat,
-      from: flats
-    })
-  }
-}
-```
-
-... and load its contents by calling `list.load()`:
-
-```js
-const building = await repo.fetch({
-  id: 'kensington'
-})
-
-console.log(building.flats)
-// [] (empty)
-
-await building.flats.load(repo)
-
-console.log(building.flats)
-// [ Flat { id: '101' }, Flat { id: '102' }, ...]
-```
-
 ### The `List` types
 
 List-like data must use the `List` or `LazyList` types instead of an
@@ -247,7 +210,7 @@ class Building {
     this.id = id
 
     // ! List instead of Array
-    this.flats = new LazyList({
+    this.flats = new List({
       type: Flat,
       from: flats
     })
@@ -299,6 +262,43 @@ console.log(two)
 
 You can still use a regular `Array` for list-like data, which you don't
 expect to become big enough to warrant decomposition when saving in Redis.
+
+### Lazy loading
+
+Sometimes you won't need to load the contents of a list initially.   
+You might want to load it's contents after you fetch it, or even none at all.
+
+In that case, use a `LazyList` instead of a `List`.
+
+```js
+import { LazyList } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+```
+
+... and load its contents by calling `list.load()`:
+
+```js
+const building = await repo.fetch({
+  id: 'kensington'
+})
+
+console.log(building.flats)
+// [] (empty)
+
+await building.flats.load(repo)
+
+console.log(building.flats)
+// [ Flat { id: '101' }, Flat { id: '102' }, ...]
+```
 
 ### Runnable example
 
