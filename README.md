@@ -438,6 +438,11 @@ performs in [quadratic-time O(n<sup>2</sup>)][qtc], at a minimum.
 Every nesting level increases the exponent by `1` so you can easily jump from
 O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
+In short, don't do it.
+
+Also note that a `LazyList` nested in a `List` won't exhibit this  
+issue since it doesn't need to be fetched initially.
+
 ## Alternatives
 
 ### Saving encoded JSONs
