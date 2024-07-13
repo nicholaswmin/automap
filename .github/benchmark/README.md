@@ -41,10 +41,10 @@ The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 > [!WARNING]  
 > Don't forget to deprovision/remove any added expensive Redis add-ons
 
-## Overvie
+## Overview
 
 This benchmark is designed to measure the [throughput][throughput]
-of horizontally deployed instances of automap.
+of horizontally deployed instances of this module.
 
 ### The task
 
