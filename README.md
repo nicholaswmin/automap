@@ -158,10 +158,9 @@ const building = await repo.fetch({
   id: 'foo'
 })
 
-
 building.flats[0].doorbell()
 // 🔔 at flat: 101 !
-``
+```
 
 ... and this is how it's decomposed in Redis
 
