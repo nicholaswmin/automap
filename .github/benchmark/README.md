@@ -89,4 +89,4 @@ The test is considered *concluded* when a worker has accumulated a
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
 [dynos]: https://devcenter.heroku.com/articles/limits#dynos
-[bindjs]: .github/benchmark/bench/bind.js
+[bindjs]: bench/bind.js
