@@ -40,6 +40,9 @@ heroku run npm run benchmark --size=performance-l -a <app-name>
 
 The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
+> [!WARNING]  
+> Don't forget to deprovision/remove any added expensive Redis add-ons
+
 
 ### Task under test
 
