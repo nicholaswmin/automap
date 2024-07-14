@@ -586,7 +586,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
-This module was tested on:
+Tested on:
 
 - [Redis 6+][r]
 - [ioredis 5+][ioredis]
