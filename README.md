@@ -609,8 +609,7 @@ npm test
 
 run integration tests:
 
-> integration & performance tests require a [redis server][redis-i] running
-> at `:6379`
+> integration & performance tests require a [redis server][r] running on `:6379`
 
 ```bash
 npm run test:integration
@@ -704,7 +703,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
 [paper-benchmark]: .github/benchmark/README.md
-[redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[r]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance
