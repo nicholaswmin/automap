@@ -504,12 +504,11 @@ As a rule of thumb, the `Building` example with `100 Flats` takes about:
 - ~ `1.5 ms` to `fetch`
 - ~ `3 ms` to `save`
 
-and can handle ~ `300` x `fetch`-`edit`-`save` cycles-per-second,  
-without creating a task backlog.
+and can handle ~ `300` x `fetch-edit-save` cycles per-second, without creating
+a backlog.
 
-These results were gathered with the benchmark mentioned above  
-on a popular cloud-provider with native Redis add-ons and about
-`~20x concurrency`.
+These results were gathered with the benchmark mentioned above on a popular
+cloud-provider with native Redis add-ons and about `20x` concurrency.
 
 ### Atomicity
 
