@@ -26,10 +26,6 @@ test('Runnable example', async t => {
       assert.strictEqual(stderrs.length, 0)
     })
 
-    await t.test('non-errors', () => {
-      assert.strictEqual(stderrs.length, 0)
-    })
-
     await t.test('a "save()" success log', () => {
       assert.ok(stdouts.includes('saved'))
     })
