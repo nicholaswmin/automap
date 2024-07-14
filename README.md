@@ -331,7 +331,7 @@ Caveats:
 An example:
 
 > Each `Flat` now has a list of `Mail` items.    
-> Across the lifetime of `Flat`, the Mail` items can reach millions of items.
+> Across the lifetime of a `Flat`, it's `Mail` items can reach millions of items.
 
 ```js
 import { LazyList } from 'automap'
