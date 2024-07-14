@@ -34,9 +34,6 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 npm i https://github.com/nicholaswmin/automap
 ```
 
-> [!IMPORTANT]  
-> unpublished WIP
-
 ## Usage
 
 This module exports a `repository`:
