@@ -2,15 +2,17 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 test('Runnable example', async t => {
-  let logs = []
+  let logs = [], infoFn = null
 
   await t.beforeEach(async () => {
     logs = []
+    infoFn = console.info
 
     await import(`../index.js?bust_cache=${Date.now()}`)
-
     console.info = (...args) => logs.push(args.join(' '))
   })
+
+  await t.afterEach(async () => console.info = infoFn)
 
   await t.test('runs without errors', async () => {
     await assert.doesNotReject(() => {
