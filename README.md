@@ -44,9 +44,9 @@ This module exports a `repository`:
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-List-like data is detached & saved as a Redis [`Hash`][redis-hash]
-or [`List`][redis-list] rather than jamming everything into a single
-Redis [Key][redis-string].  
+List-like data is detached & saved as a [`Hash`][redis-hash]
+or [`List`][redis-list] rather than jam everything into a
+single [Key][redis-string].  
 
 > Example: A `Building` with `Flats`:
 
