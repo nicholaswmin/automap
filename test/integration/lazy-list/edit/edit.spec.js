@@ -39,11 +39,11 @@ test('#repository.save()', async t => {
           await t.test('and loading its list', async t => {
             t.beforeEach(() => building.offices.load(repo))
 
-            await t.test('loads the item', async t => {
+            await t.test('loads the item', () => {
               assert.strictEqual(building.offices.length, 1)
             })
 
-            await t.test('which is edited', async t => {
+            await t.test('which is edited', () => {
               assert.strictEqual(building.offices.at(0).department, 'I.T')
             })
           })

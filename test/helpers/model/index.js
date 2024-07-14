@@ -1,5 +1,6 @@
 import { List, AppendList, LazyList } from '../../../index.js'
 
+// eslint-disable-next-line no-unused-vars
 const id = () => Math.random().toString().slice(5, 10)
 
 class Building {

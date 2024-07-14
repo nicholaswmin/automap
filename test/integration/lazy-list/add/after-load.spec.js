@@ -55,7 +55,7 @@ test('#repository.save()', async t => {
           await t.test('and loading its list', async t => {
             t.beforeEach(() => building.offices.load(repo))
 
-            await t.test('which has the previous + new items', async t => {
+            await t.test('which has the previous + new items', () => {
               assert.strictEqual(building.offices.length, 2)
             })
           })

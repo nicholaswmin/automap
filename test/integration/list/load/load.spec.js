@@ -22,15 +22,15 @@ test('#repository.save()', async t => {
       building = await repo.fetch('foo')
     })
 
-    await t.test('fetches the object', async t => {
+    await t.test('fetches the object', () => {
       assert.ok(building)
     })
 
-    await t.test('loads the list items', async t => {
+    await t.test('loads the list items', () => {
       assert.strictEqual(building.flats.length, 2)
     })
 
-    await t.test('with the correct type', async t => {
+    await t.test('with the correct type', () => {
       assert.ok(building.flats.at(0) instanceof Flat, 'not a Flat')
     })
   })

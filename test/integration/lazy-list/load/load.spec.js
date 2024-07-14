@@ -22,18 +22,18 @@ test('#repository.save()', async t => {
       building = await repo.fetch('foo')
     })
 
-    await t.test('does not preload the list', async t => {
+    await t.test('does not preload the list', () => {
       assert.strictEqual(building.offices.length, 0)
     })
 
     await t.test('loading its list once', async t => {
       t.beforeEach(() => building.offices.load(repo))
 
-      await t.test('loads the item', async t => {
+      await t.test('loads the item', () => {
         assert.strictEqual(building.offices.length, 1)
       })
 
-      await t.test('with the correct type', async t => {
+      await t.test('with the correct type', () => {
         assert.ok(building.offices.at(0) instanceof Office, 'not a Building')
       })
 
@@ -42,7 +42,7 @@ test('#repository.save()', async t => {
            building.offices.load(repo)
         })
 
-        await t.test('still loads one item', async t => {
+        await t.test('still loads one item', () => {
           assert.strictEqual(building.offices.length, 1)
         })
       })

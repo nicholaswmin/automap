@@ -33,11 +33,11 @@ test('#repository.save()', async t => {
         t.beforeEach(async () =>
           building = await repo.fetch('foo'))
 
-        await t.test('loads the item', async t => {
+        await t.test('loads the item', () => {
           assert.strictEqual(building.flats.length, 1)
         })
 
-        await t.test('which is edited', async t => {
+        await t.test('which is edited', () => {
           assert.strictEqual(building.flats.at(0).bedrooms, 4)
         })
       })
