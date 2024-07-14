@@ -24,19 +24,19 @@ test('Runnable example', async t => {
     await t.beforeEach(() =>
       import(`../index.js?bust_cache=${Date.now()}`))
 
-    await t.test('logs a save() success message', () => {
+    await t.test('logs a save() success log', () => {
       assert.ok(logs.some(log => log.includes('Building saved')))
     })
 
-    await t.test('logs a fetch() success message', () => {
+    await t.test('logs a fetch() success log', () => {
       assert.ok(logs.some(log => log.includes('Building fetched')))
     })
 
-    await t.test('logs a LazyList success message', () => {
+    await t.test('logs a LazyList success log', () => {
       assert.ok(logs.some(log => log.includes('Building has 2 flats')))
     })
 
-    await t.test('logs a Flat method called message', () => {
+    await t.test('logs a Flat method called log', () => {
       assert.ok(logs.some(log => log.includes('🔔 at flat 101')))
     })
 
