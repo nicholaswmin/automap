@@ -215,7 +215,7 @@ class Building {
 }
 ```
 
-❌ The `Building` root will be constructed OK, but its nested `flats` will not.
+❌ the `Building` root will be constructed OK, but its nested `flats` will not.
 
 the following example won't work either:
 
@@ -243,27 +243,30 @@ await repository.save(building)
 
 List-like data must use one of the `List` types instead of an [`Array`][array].  
 
-- `List`
-  - fetched with all items loaded
-  - linear-time O<sup>n</sup> additions
-  - saved as a [`Hash`][redis-hash]
+`List`
+
+- fetched with all items loaded
+- linear-time O<sup>n</sup> additions
+- saved as a [`Hash`][redis-hash]
 
 Use this when you *always* need to have the list items loaded to do any work
 with your object.
 
-- `LazyList`
-  - fetched empty
-  - can be loaded with `list.load()`
-  - linear-time O<sup>n</sup> additions
-  - saved as a [`Hash`][redis-hash]
+[`LazyList`](#lazy-loading)
+
+- fetched empty
+- can be loaded with `list.load()`
+- linear-time O<sup>n</sup> additions
+- saved as a [`Hash`][redis-hash]
 
 Use this for list that can become "large-ish", yet not always required.
 
-- `AppendList`
-  - fetched empty
-  - can be loaded with `list.load()`
-  - constant-time O<sup>1</sup> additions
-  - saved as a [`List`][redis-list]
+[`AppendList`](#infinite-lists-with-appendlist)
+
+- fetched empty
+- can be loaded with `list.load()`
+- constant-time O<sup>1</sup> additions
+- saved as a [`List`][redis-list]
 
 Use this for lists that are, or will become, way too big to carry around.
 
