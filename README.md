@@ -7,7 +7,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
-  * [`List` instead of `Array`](#the-list-types)
+  * [`List`, `LazyList` & `AppendList`](#the-list-types)
   * [Lazy-loading with `LazyList`](#lazy-loading)
   * [Infinite lists with `AppendList`](#infinite-lists-with-appendlist)
   * [Runnable example](#runnable-example)
