@@ -9,6 +9,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Model definition](#model-definition)
   * [`List` instead of `Array`](#the-list-types)
   * [Lazy-loading with `LazyList`](#lazy-loading)
+  * [Infinite lists with `AppendList`](#append-list)
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
@@ -302,6 +303,73 @@ console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
+### Infinite lists with `AppendList`
+
+Lists that can become very big, should use an `AppendList`.
+
+- meant for lists with thousands or millions of items
+- never loaded on the initial `repository.fetch`.  
+- items are saved in a [`Redis List`][redis-list] instead of a `Redis Hash`.
+- it doesn't require sorting before saving. The new items are simply
+  [`LPUSH`-ed][lpush].
+
+An `AppendList` can continuously:
+
+- get fetched
+- have items added
+- saved again
+
+with *no increases* to the `fetch` and/or `save` times.
+
+caveats:
+
+- there's no notion of item deletion.   
+  It functions as an [append-only log][append-only], hence the name.
+- you cannot get individual items directly from Redis in constant, `O(1)` time.    
+  In most cases it's just better to fetch the entire list if needed.
+
+An example:
+
+> Each `Flat` now has a list of `Mail` items.  
+> Across the lifetime of `Flat`, the Mail` items can reach millions of items.
+
+```js
+import { LazyList } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+
+class Flat {
+  constructor({ id, mail = [] }) {
+    this.id = id
+    this.mails = new AppendList({
+      type: Mail,
+      from: mail
+    })
+  }
+
+  addMail({ id, text }) {
+    this.mails.push(new Mail({ id, text }))
+  }
+}
+
+class Mail {
+  constructor({ id, text }) {
+    this.id = id
+    this.text = text
+  }
+}
+```
+
+
+
 ### Runnable example
 
 The `Building` example demonstrated above
@@ -585,6 +653,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 [redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
 [redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
+[redis-list]: https://redis.io/docs/latest/develop/data-types/lists/
+[append-only]: https://en.wikipedia.org/wiki/Append-only
+[lpush]: https://redis.io/docs/latest/commands/lpush/
 [bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
