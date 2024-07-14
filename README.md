@@ -615,6 +615,8 @@ npm run test:integration
 
 run performance tests:
 
+> these tests are slow:
+
 ```bash
 npm run test:performance
 ```
