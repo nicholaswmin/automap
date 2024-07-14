@@ -167,9 +167,9 @@ building.flats[0].doorbell()
 
 An object graph is persistable if it:
 
-1. has an `id` property set to a unique value.
-2. uses the `List` and/or `LazyList` type for list-like data,   
-   instead of an [`Array`][array].
+1. has an `id` property set to a unique value
+2. uses one of the `List` types for list-like data instead of
+   an [`Array`][array]
 3. can be constructed by calling `new` and passing it's JSON
 
 Same example as above, a `Building` with `Flats`:
@@ -198,9 +198,10 @@ class Flat {
 }
 ```
 
-> 3. can be constructed by calling `new` and passing it's JSON
-
 for example, this won't work:
+
+> It cannot be entirely constructed by calling `new` and passing
+> it's JSON.
 
 ```js
 class Building {
@@ -216,13 +217,41 @@ class Building {
 }
 ```
 
+this doesn't work either:
+
+```js
+class Building {
+  // no `id` property
+  constructor({ name, flats = [] }) {
+    this.name = name
+    this.flats = new List({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+```
+
+it's missing an `id` on the root object so it cannot be fetched back.
+
 ### The `List` types
 
-List-like data must use the `List` or `LazyList` types instead of an
-[`Array`][array].  
+List-like data must use one of the `List` types instead of an [`Array`][array].  
 
-This allows decomposing those lists into manageable pieces that can be saved
-and retrieved far more efficiently.
+- `List`
+  - is automatically fetched on `repository.fetch`
+  - saved as a [`Hash`][redis-hash]
+
+- `LazyList`
+  - is not fetched automatically
+  - saved as a [`Hash`][redis-hash]
+
+- `AppendList`
+  - is not fetched automatically
+  - allows constant-time list additions
+  - saved as a [`List`][redis-list]
+
+Example:
 
 ```js
 class Building {
@@ -238,8 +267,11 @@ class Building {
 }
 ```
 
-Both are subtypes of the native [`Array`][array]
-and behave *exactly* the same:
+You can still use a regular `Array` but it won't be decomposed from the
+main object-graph.
+
+All `List` types are subtypes of the native [`Array`][array] and
+behave *exactly* the same:
 
 ```js
 
@@ -279,9 +311,6 @@ const two = array.find(num => num === 2)
 console.log(two)
 // 2
 ```
-
-You can still use a regular `Array` for list-like data, which you don't
-expect to become big enough to warrant decomposition when saving in Redis.
 
 ### Lazy loading
 
@@ -350,7 +379,7 @@ An example:
 
 > Each `Flat` now has a list of `Mail` items.     
 > Across the lifetime of a `Flat`, it's `Mail` items can reach
-> millions of items.
+> millions of items[^2].
 
 ```js
 import { LazyList } from 'automap'
@@ -630,6 +659,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       updates a value while it's in the process of being modified by client A
       as part of a transaction.   
       Retries are not currently implemented.
+
+[^2]: The singer "Sting" lives here and gets lots of fan-mail.
+      Obviously, this isn't your run-of-the-mill apartment building.
 
 <!--- Badges -->
 
