@@ -652,7 +652,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 ## License
 
-[MIT-0: MIT "No Attribution" License][license]
+[MIT "No Attribution" License][license]
 
 ## Footnotes
 
@@ -714,4 +714,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance
-[license]: ./LICENSE.md
+[license]: ./LICENSE
