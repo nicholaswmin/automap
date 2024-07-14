@@ -214,13 +214,13 @@ class Building {
 }
 ```
 
-> The object-graph cannot be entirely constructed by calling `new` and
-> passing it's JSON.  
->
-> The `Building` root will be constructed correctly, but its nested `Flat`s
-> array will not.
+The object-graph cannot be entirely constructed by calling `new` and
+passing it's JSON.  
 
-this doesn't work either:
+The `Building` root will be constructed correctly, but its nested `Flat`s
+array will not.
+
+... and this won't work either:
 
 ```js
 class Building {
@@ -240,7 +240,7 @@ await repository.save(building)
 // throws "error: no id present"
 ```
 
-> the root object is missing an `id` property
+... because the root object is missing an `id` property.
 
 ## The `List` types
 
