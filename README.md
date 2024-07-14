@@ -207,9 +207,11 @@ class Building {
 }
 ```
 
-> cannot be entirely constructed by calling `new` and passing it's JSON.  
-> The `Building` root will be constructed correctly, but the nested `Flat`
-  will not.
+> The object-graph cannot be entirely constructed by calling `new` and
+> passing it's JSON.  
+>
+> The `Building` root will be constructed correctly, but its nested `Flat`s
+> array will not.
 
 this doesn't work either:
 
