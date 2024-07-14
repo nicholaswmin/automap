@@ -549,8 +549,9 @@ O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 In short, don't do it.
 
-Also note that a `LazyList` nested in a `List` won't exhibit this  
-issue since it doesn't need to be fetched initially.
+That being said, this problem only concerns a `List` nested in another `List`.  
+None of the 2 other types exhibit this issue, simply because they are not
+automatically fetched.
 
 ## Alternatives
 
