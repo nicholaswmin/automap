@@ -3,73 +3,58 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
-import { deleteall } from '../../../helpers/utils/index.js'
+import { Building, Flat } from '../../../helpers/model/index.js'
 
 test('#repository.save()', async t => {
-  let redis = new ioredis()
+  const repo = new Repository(Building, new ioredis())
 
-  await t.beforeEach(() => deleteall(redis, 'chatroom'))
-  await t.afterEach(() => deleteall(redis, 'chatroom'))
-  await t.after(() => redis.disconnect())
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-  await t.test('existing object with 10 list item', async t => {
-    let repo = new Repository(Chatroom, redis), room = null
+  await t.test('fetching existing object with 1 List item', async t => {
+    let building = null
 
-    await t.beforeEach(async () => {
-      await repo.save(new Chatroom({
-        id: 'foo',
-        users: Array.from({ length: 10 }, (_, i) => ({
-          id: i, name: 'John-' + i
-        }))
+    t.beforeEach(async () => {
+      await repo.save(new Building({
+        id: 'foo', flats: [{ id: 1 }]
       }))
+
+      building = await repo.fetch('foo')
     })
 
-    await t.test('add 10 new List items & repo.save()', async t => {
-      await t.beforeEach(async () => {
-        room = await repo.fetch('foo')
+    await t.test('adding a List item and saving', async t => {
+      t.beforeEach(async () => {
+        building.flats.push(new Flat({ id: 2 }))
 
-        for (let i = 10; i < 20; i++)
-          room.addUser({ id: i, name: 'John-' + i })
-
-        await repo.save(room)
+        repo.save(building)
       })
 
-      await t.test('fetching back the object', async t => {
-        await t.beforeEach(async () => {
-          room = await repo.fetch('foo')
-        })
-
-        await t.test('has the previous + new items', () => {
-          assert.strictEqual(room.users.length, 20)
-        })
-
-        await t.test('each has the specified properties', async t => {
-          await t.test('the id', () => {
-            room.users.forEach((user, i) =>
-              assert.strictEqual(user.id, i))
-          })
-
-          await t.test('the name', () => {
-            room.users.forEach((user, i) =>
-              assert.strictEqual(user.name, 'John-' + i))
-          })
-        })
-      })
-
-      await t.test('items are saved as a Redis Hash', async t => {
+      await t.test('saves in a Redis Hash', async t => {
         let items = null
 
-        await t.beforeEach(async () => {
-          items = await redis.hgetall('chatroom:foo:users')
+        t.beforeEach(async () => {
+          items = await repo.redis.hgetall('building:foo:flats')
         })
 
         await t.test('under a human readable path', () => {
-          assert.ok(items, 'cant find Redis Hash: "chatroom:foo:users"')
+          assert.ok(items, 'no such Redis key: building:foo:flats')
         })
 
-        await t.test('all items are saved', () => {
-          assert.strictEqual(Object.keys(items).length, 20)
+        await t.test('both items', () => {
+          assert.strictEqual(Object.keys(items).length, 2)
+        })
+      })
+
+      await t.test('fetching the object again', async t => {
+        t.beforeEach(async () =>
+          building = await repo.fetch('foo'))
+
+        await t.test('and loading its list', async t => {
+          t.beforeEach(() => building.flats.load(repo))
+
+          await t.test('which has the previous + new items', async t => {
+            assert.strictEqual(building.flats.length, 2)
+          })
         })
       })
     })

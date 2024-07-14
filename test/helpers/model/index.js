@@ -1,92 +1,50 @@
-/*
-  A dead simple model for testing, using 2 types of lists with some level
-  of nesting - plus a couple of OOP-y methods.
-*/
+import { List, AppendList, LazyList } from '../../../index.js'
 
-import { List, LazyList, AppendList } from '../../../index.js'
-import { randomId } from '../../helpers/utils/index.js'
+const id = () => Math.random().toString().slice(5, 10)
 
-class Chatroom {
-  constructor({ id = randomId(), users = [], messages = [], posts = [] } = {}) {
+class Building {
+  constructor({ id = id(), offices = [], flats = [] } = {}) {
     this.id = id
 
-    this.users = new List({ type: User, from: users })
-    this.messages = new AppendList({ type: Message, from: messages })
-    this.posts = new LazyList({ type: Post, from: posts })
-  }
+    this.offices = new LazyList({
+      from: offices,
+      type: Office
+    })
 
-  addPost({ id, content = 'Bonjour' } = {}) {
-    const post = new Post({ id, content })
-
-    this.posts.push(post)
-
-    return post
-  }
-
-  addMessage({ id, text = 'Hello' } = {}) {
-    const message = new Message({ id, text })
-
-    this.messages.push(message)
-
-    return message
-  }
-
-  addUser({ id = null, name }) {
-    const user = new User({ id, name })
-
-    this.users.push(user)
-
-    return user
-  }
-
-  kickUser(id) {
-    const i = this.users.findIndex(user => user.id === id)
-    const kicked = i > -1 ? this.users.splice(i, 1).pop() : null
-
-    kicked ? console.log('kicked', kicked.name) : console.log('no such user')
+    this.flats = new List({
+      from: flats,
+      type: Flat
+    })
   }
 }
 
-class User {
-  constructor({ id = randomId(), name= 'J', notes = [], messages = [] }) {
+class Office {
+  constructor({ id = id(), department = 'lawyer' } = {}) {
     this.id = id
-    this.name = name
-    this.notes = new List({ from: notes })
-    this.messages = new AppendList({ from: messages })
-  }
-
-  sendMessage({ id, text = 'hi' } = {}) {
-    const message = new Message({ id, text })
-
-    this.messages.push(message)
-
-    return message
-  }
-
-  sayHi() {
-    return this.name + ' says hi 👋'
+    this.department = department
   }
 }
 
-class Post {
-  constructor({ id = randomId(), content }) {
+class Flat {
+  constructor({ id = id(), bedrooms = 2, mail = [] } = {}) {
     this.id = id
-    this.content = content
+    this.bedrooms = bedrooms
+    this.mail = new AppendList({
+      type: Mail,
+      from: mail
+    })
+  }
+
+  addMail({ id = null, text = null } = {}) {
+    this.mail.push(new Mail({ id, text }))
   }
 }
 
-class Message {
-  constructor({ id = randomId(), text }) {
+class Mail {
+  constructor({ id = id(), text = 'hi' } = {}) {
     this.id = id
     this.text = text
   }
 }
 
-class Note {
-  constructor({ id = randomId(), content }) {
-    this.id = id
-    this.content = content
-  }
-}
-
-export { Chatroom, User, Message, Note }
+export { Building, Office, Flat, Mail }

@@ -3,67 +3,73 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
-import { deleteall } from '../../../helpers/utils/index.js'
+import { Building } from '../../../helpers/model/index.js'
 
 test('#repository.save()', async t => {
-  let redis = new ioredis()
+  const repo = new Repository(Building, new ioredis())
 
-  await t.beforeEach(() => deleteall(redis, 'chatroom'))
-  await t.afterEach(() => deleteall(redis, 'chatroom'))
-  await t.after(() => redis.disconnect())
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-  await t.test('existing object with 10 list item', async t => {
-    let repo = new Repository(Chatroom, redis), room = null
+  await t.test('existing object with 1 list item', async t => {
+    let building = null
 
-    await t.beforeEach(async () => {
-      await repo.save(new Chatroom({
-        id: 'foo',
-        messages: Array.from({ length: 10 }, (_, i) => ({
-          id: i, text: 'message-' + i
-        }))
-      }))
+    t.beforeEach(async () => {
+      building = new Building({
+        id: 'foo', flats: [{ id: 1 }]
+      })
+
+      building.flats.at(0).addMail()
+
+      await repo.save(building)
+
+      building = await repo.fetch('foo')
     })
 
-    await t.test('run 10 times', async t => {
-      await t.test('add 1 new AppendList item each time', async t => {
-        await t.beforeEach(async () => {
-          for (let i = 10; i < 20; i++) {
-            room = await repo.fetch('foo')
+    await t.test('adding another AppendList item and saving', async t => {
+      t.beforeEach(async () => {
+        building.flats.at(0).addMail()
 
-            room.addMessage({ id: i, text: 'hello-world-' + i })
+        await repo.save(building)
+      })
 
-            await repo.save(room)
-          }
+      await t.test('saves in a Redis List:', async t => {
+        let items = null
+
+        t.beforeEach(async () => {
+          items = await repo.redis
+            .lrange('building:foo:flats:1:mail', 0, -1)
         })
 
-        await t.test('calling repo.fetch()', async t => {
-          await t.beforeEach(async () => {
-            room = await repo.fetch('foo')
-          })
-
-          await t.test('fetches the object', () => {
-            assert.ok(room)
-          })
-
-          await t.test('has no items', () => {
-            assert.strictEqual(room.messages.length, 0)
-          })
+        await t.test('under a human readable path', () => {
+          assert.ok(items, 'no such Redis key: building:foo:flats:1:mail')
         })
 
-        await t.test('items are saved in a Redis List', async t => {
-          let items = null
+        await t.test('both items', () => {
+          assert.strictEqual(Object.keys(items).length, 2)
+        })
+      })
 
-          await t.beforeEach(async () => {
-            items = await redis.lrange('chatroom:foo:messages', 0, -1)
+      await t.test('fetching the object', async t => {
+        t.beforeEach(async () =>
+          building = await repo.fetch('foo'))
+
+        await t.test('fetches the object', () => {
+          assert.ok(building)
+        })
+
+        await t.test('with no preloaded items', () => {
+          assert.strictEqual(building.flats.at(0).mail.length, 0)
+        })
+
+        await t.test('loading the list:', async t => {
+          t.beforeEach(async () => {
+            await building.flats.load(repo)
+            await building.flats.at(0).mail.load(repo)
           })
 
-          await t.test('under a human readable path', () => {
-            assert.ok(items, 'cant find Redis Hash: "chatroom:foo:messages"')
-          })
-
-          await t.test('all items are saved', () => {
-            assert.strictEqual(Object.keys(items).length, 10)
+          await t.test('loads both the items', () => {
+            assert.strictEqual(building.flats.at(0).mail.length, 2)
           })
         })
       })

@@ -3,50 +3,35 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
-import { deleteall } from '../../../helpers/utils/index.js'
+import { Building, Flat } from '../../../helpers/model/index.js'
 
-test('#repository.fetch()', async t => {
-  let redis = new ioredis()
+test('#repository.save()', async t => {
+  const repo = new Repository(Building, new ioredis())
 
-  await t.beforeEach(() => deleteall(redis, 'chatroom'))
-  await t.afterEach(() => deleteall(redis, 'chatroom'))
-  await t.after(() => redis.disconnect())
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-  await t.test('existing object with 10 List items', async t => {
-    let repo = new Repository(Chatroom, redis), room = null
+  await t.test('fetching existing object with 2 List items', async t => {
+    let building = null
 
-    await t.beforeEach(async () => {
-      await repo.save(new Chatroom({
-        id: 'foo',
-        users: Array.from({ length: 10 }, (_, i) => ({
-          id: i, name: 'John-' + i
-        }))
+    t.beforeEach(async () => {
+      await repo.save(new Building({
+        id: 'foo', flats: [{ id: 1 }, { id: 2 }]
       }))
+
+      building = await repo.fetch('foo')
     })
 
-    await t.test('calling repo.fetch() with the correct id', async t => {
-      await t.beforeEach(async () => {
-        room = await repo.fetch('foo')
-      })
+    await t.test('fetches the object', async t => {
+      assert.ok(building)
+    })
 
-      await t.test('fetches back an object', () => {
-        assert.ok(room)
-      })
+    await t.test('loads the list items', async t => {
+      assert.strictEqual(building.flats.length, 2)
+    })
 
-      await t.test('with the correct type', () => {
-        assert.strictEqual(room.constructor.name, 'Chatroom')
-      })
-
-      await t.test('has the correct number of items', async t => {
-        assert.strictEqual(room.users.length, 10)
-
-        await t.test('each having a correct type', () => {
-          room.users.forEach(user => {
-            assert.strictEqual(user.constructor.name, 'User')
-          })
-        })
-      })
+    await t.test('with the correct type', async t => {
+      assert.ok(building.flats.at(0) instanceof Flat, 'not a Flat')
     })
   })
 })

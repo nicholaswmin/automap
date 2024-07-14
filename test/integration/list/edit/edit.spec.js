@@ -3,55 +3,42 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
-import { deleteall } from '../../../helpers/utils/index.js'
+import { Building } from '../../../helpers/model/index.js'
 
 test('#repository.save()', async t => {
-  let redis = new ioredis()
+  const repo = new Repository(Building, new ioredis())
 
-  await t.beforeEach(() => deleteall(redis, 'chatroom'))
-  await t.afterEach(() => deleteall(redis, 'chatroom'))
-  await t.after(() => redis.disconnect())
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-  await t.test('existing object with 10 list item', async t => {
-    let repo = new Repository(Chatroom, redis), room = null
+  await t.test('fetching existing object with 1 List item', async t => {
+    let building = null
 
-    await t.beforeEach(async () => {
-      await repo.save(new Chatroom({
-        id: 'foo',
-        users: Array.from({ length: 10 }, (_, i) => ({
-          id: i, name: 'John-' + i
-        }))
+    t.beforeEach(async () => {
+      await repo.save(new Building({
+        id: 'foo', flats: [{ id: 1 }]
       }))
+
+      building = await repo.fetch('foo')
     })
 
-    await t.test('edit 5 list item', async t => {
-      await t.beforeEach(async () => {
-        room = await repo.fetch('foo')
+    await t.test('editing its List item and saving', async t => {
+      t.beforeEach(async () => {
+        building.flats.at(0).bedrooms = 4
 
-        for (let i = 5; i < 10; i++)
-          room.users.at(i).name = 'Jane-' + i
-
-        await repo.save(room)
+        repo.save(building)
       })
 
-      await t.test('fetching back the object', async t => {
-        await t.beforeEach(async () => {
-          room = await repo.fetch('foo')
+      await t.test('fetching the object again', async t => {
+        t.beforeEach(async () =>
+          building = await repo.fetch('foo'))
+
+        await t.test('loads the item', async t => {
+          assert.strictEqual(building.flats.length, 1)
         })
 
-        await t.test('has the same number of items', () => {
-          assert.strictEqual(room.users.length, 10)
-        })
-
-        await t.test('edited items are edited', () => {
-          for (let i = 5; i < 10; i++)
-            assert.strictEqual(room.users.at(i).name, 'Jane-' + i)
-        })
-
-        await t.test('non-edited items are not edited', () => {
-          for (let i = 0; i < 5; i++)
-            assert.strictEqual(room.users.at(i).name, 'John-' + i)
+        await t.test('which is edited', async t => {
+          assert.strictEqual(building.flats.at(0).bedrooms, 4)
         })
       })
     })

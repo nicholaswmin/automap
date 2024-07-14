@@ -3,60 +3,49 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
-import { deleteall } from '../../../helpers/utils/index.js'
+import { Building } from '../../../helpers/model/index.js'
 
 test('#repository.save()', async t => {
-  let redis = new ioredis()
+  const repo = new Repository(Building, new ioredis())
 
-  await t.beforeEach(() => deleteall(redis, 'chatroom'))
-  await t.afterEach(() => deleteall(redis, 'chatroom'))
-  await t.after(() => redis.disconnect())
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-  await t.test('existing object with 10 Lazy List items', async t => {
-    let repo = null, room = null
+  await t.test('fetching existing object with 1 LazyList item', async t => {
+    let building = null
 
-    await t.beforeEach(async () => {
-      repo = new Repository(Chatroom, redis)
-
-      await repo.save(new Chatroom({
-        id: 'foo',
-        posts: Array.from({ length: 10 }, (_, i) => ({
-          id: i, content: 'Hello-' + i
-        }))
+    t.beforeEach(async () => {
+      await repo.save(new Building({
+        id: 'foo', offices: [{ id: 1 }]
       }))
+
+      building = await repo.fetch('foo')
     })
 
-    await t.test('edit 5 items and save()', async t => {
-      await t.beforeEach(async () => {
-        room = await repo.fetch('foo')
+    await t.test('loading its list', async t => {
+      t.beforeEach(() => building.offices.load(repo))
 
-        await room.posts.load(repo)
+      await t.test('editing its LazyList item and saving', async t => {
+        t.beforeEach(async () => {
+          building.offices.at(0).department = 'I.T'
 
-        for (let i = 5; i < 10; i++)
-          room.posts.at(i).content = 'post-' + i
-
-        await repo.save(room)
-      })
-
-      await t.test('calling repo.fetch(), then `.load() its List`', async t => {
-        await t.beforeEach(async () => {
-          room = await repo.fetch('foo')
-
-          await room.posts.load(repo)
+          repo.save(building)
         })
 
-        await t.test('has 10 items', async t => {
-          assert.strictEqual(room.posts.length, 10)
+        await t.test('fetching the object again', async t => {
+          t.beforeEach(async () =>
+            building = await repo.fetch('foo'))
 
-          await t.test('last 5 are edited', () => {
-            for (let i = 5; i < 10; i++)
-              assert.strictEqual(room.posts.at(i).content, 'post-' + i)
-          })
+          await t.test('and loading its list', async t => {
+            t.beforeEach(() => building.offices.load(repo))
 
-          await t.test('first 5 are not', () => {
-            for (let i = 0; i < 5; i++)
-              assert.ok(room.posts.at(i).content !== 'post-' + i)
+            await t.test('loads the item', async t => {
+              assert.strictEqual(building.offices.length, 1)
+            })
+
+            await t.test('which is edited', async t => {
+              assert.strictEqual(building.offices.at(0).department, 'I.T')
+            })
           })
         })
       })
