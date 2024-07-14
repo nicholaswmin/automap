@@ -167,9 +167,9 @@ building.flats[0].doorbell()
 
 An object graph is persistable if it:
 
-1. has an `id` property set to a unique value.
-2. uses the `List` and/or `LazyList` type for list-like data,   
-   instead of an [`Array`][array].
+1. has an `id` property set to a unique value
+2. uses one of the `List` types for list-like data instead of
+   an [`Array`][array]
 3. can be constructed by calling `new` and passing it's JSON
 
 Same example as above, a `Building` with `Flats`:
