@@ -2,10 +2,10 @@
 
 > benchmarks the [throughput][throughput] of this module
 
+## Run
+
 > [!CAUTION]  
 > This benchmark runs a [`FLUSHALL`][flushall] on its connected Redis instance.
-
-## Run
 
 ## Locally
 
