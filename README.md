@@ -45,8 +45,8 @@ This module exports a `repository`:
 - `repository.fetch({ id: 'foo' })` gets it back
 
 List-like data is broken off and saved as a
-Redis [`Hash`][redis-hash], or [`List`][redis-list], rather than jamming
-everything into a single Redis [key/value pair][redis-string].  
+Redis [`Hash`][redis-hash] or [`List`][redis-list] rather than jamming
+everything into a single Redis [Key][redis-string].  
 
 > Example: A `Building` with `Flats`:
 
