@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
+[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report] [![codeql-workflow][codeql-badge]][codeql-workflow]
 
 # automap
 
@@ -663,6 +663,10 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
+
+[codeql-badge]: https://github.com/nicholaswmin/automap/actions/workflows/codeql.yml/badge.svg
+[codeql-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/codeql.yml
+
 
 <!--- /Badges -->
 
