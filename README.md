@@ -47,8 +47,6 @@ This module exports a `repository`:
 List-like data is broken off and saved as a
 Redis [`Hash`][redis-hash], or [`List`][redis-list], rather than jamming
 everything into a single Redis [key/value pair][redis-string].  
-The object-graph is reassembled when fetching it back,
-restoring it's original types.
 
 > Example: A `Building` with `Flats`:
 
