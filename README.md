@@ -659,7 +659,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [redis-list]: https://redis.io/docs/latest/develop/data-types/lists/
 [append-only]: https://en.wikipedia.org/wiki/Append-only
 [lpush]: https://redis.io/docs/latest/commands/lpush/
-[bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
 [linear]: https://en.wikipedia.org/wiki/Linear_search
