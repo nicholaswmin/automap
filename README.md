@@ -110,9 +110,12 @@ await repo.save(building)
 └──────────────────┘   └─────────────────┘
 ```
 
-> `List` or `LazyList` items are broken off the object-graph and saved
-> as a [`Redis Hash`][redis-hash].
+> List items are broken off the object-graph and saved as a
+> [`Redis Hash`][redis-hash]; or [`Redis List`], depending on the chosen
+> type of list.
 
+> The item *order* is preserved; despite using a Hash, by storing the
+> `index` of an `item` alongside it's JSON.
 
 ... and then fetch it back:
 
