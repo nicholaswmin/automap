@@ -250,14 +250,23 @@ List-like data must use one of the `List` types instead of an [`Array`][array].
   - is automatically fetched on `repository.fetch`
   - saved as a [`Hash`][redis-hash]
 
+Use this when you always need to have the list items loaded to do any work
+with your object.
+
 - `LazyList`
   - is not fetched automatically
+  - can be loaded with `list.load()`
   - saved as a [`Hash`][redis-hash]
+
+Use this for list that can become "large"-ish yet not always required.
 
 - `AppendList`
   - is not fetched automatically
+  - can be loaded with `list.load()`
   - allows constant-time list additions
   - saved as a [`List`][redis-list]
+
+Use this for lists that are, or will become, way too big to carry around.
 
 Example:
 
