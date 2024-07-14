@@ -509,7 +509,7 @@ cloud-provider with native Redis add-ons and about `20x` concurrency.
 
 #### Save
 
-- Each found list is decomposed into a single Redis `HSET` command.
+- Each list is decomposed into a single Redis `HSET` command.
 - All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
