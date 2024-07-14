@@ -4,6 +4,8 @@
 
 ## Must have
 
+> or must fix
+
 - [x] Consecutive saves increase the saving time linearly
   - Run example in `.github/scratch/index.js`
   - Cannot repro this in `test/perf/append-list/add/5k-nested.spec.js`
@@ -12,6 +14,7 @@
 - [ ] List deletions?
 - [ ] The whole `Node` being disconnected from the `List` is confusing.
 - [ ] There is a `for..of` loop that must be pipelined when reviving.
+- [ ] [... wtf?](https://github.com/nicholaswmin/automap/blob/9979bba7c88d0a3f8647bd0c60ac00c1a59b6448/src/repository.js#L27)
 
 ## Should have
 
