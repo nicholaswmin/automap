@@ -165,7 +165,7 @@ You can use any object-graph as long as it:
 1. has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
-> same example as above, the `Building` with `Flats`:
+> same example as above, the `Building` with `Flats` ...
 
 ```js
 import { List } from 'automap'
@@ -191,7 +191,14 @@ class Flat {
 }
 ```
 
-for example, this won't work:
+The above works because:
+
+- The `Building` has an `id` set to a unique value
+- The `Building` can be entirely reconstructed by calling
+  `new Building(json)` and  passing it's JSON
+- The `flats` array is replaced with a `List` type
+
+... but the example below won't work:
 
 ```js
 class Building {
