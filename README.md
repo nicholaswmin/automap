@@ -198,9 +198,10 @@ class Flat {
 }
 ```
 
-> 3. can be constructed by calling `new` and passing it's JSON
-
 for example, this won't work:
+
+> It cannot be entirely constructed by calling `new` and passing
+> it's JSON.
 
 ```js
 class Building {
@@ -215,6 +216,23 @@ class Building {
   }
 }
 ```
+
+this doesn't work either:
+
+```js
+class Building {
+  // no `id` property
+  constructor({ name, flats = [] }) {
+    this.name = name
+    this.flats = new List({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+```
+
+it's missing an `id` on the root object so it cannot be fetched back.
 
 ### The `List` types
 
