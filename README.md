@@ -44,16 +44,16 @@ This module exports a `repository`:
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-"list-like" data in objects are broken off and saved as a
+List-like data is broken off and saved as a
 Redis [`Hash`][redis-hash], or [`List`][redis-list], rather than jamming
 everything into a single Redis [key/value pair][redis-string].
 
 The object-graph is reassembled when fetching it back,
 restoring it's original types.
 
-An example:
+Example:
 
-Assume you have a `Building` which contains `Flats`:
+> assume you have a `Building` which contains `Flats`:
 
 ```js
 const building = new Building({
