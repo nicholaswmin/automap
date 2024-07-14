@@ -218,11 +218,22 @@ class Building {
 
 ### The `List` types
 
-List-like data must use the `List` or `LazyList` types instead of an
-[`Array`][array].  
+List-like data must use one of the `List` types instead of an [`Array`][array].  
 
-This allows decomposing those lists into manageable pieces that can be saved
-and retrieved far more efficiently.
+- `List`
+  - is automatically fetched on `repository.fetch`
+  - saved as a [`Hash`][redis-hash]
+
+- `LazyList`
+  - is not fetched automatically
+  - saved as a [`Hash`][redis-hash]
+
+- `AppendList`
+  - is not fetched automatically
+  - allows constant-time list additions
+  - saved as a [`List`][redis-list]
+
+Example:
 
 ```js
 class Building {
@@ -238,8 +249,11 @@ class Building {
 }
 ```
 
-Both are subtypes of the native [`Array`][array]
-and behave *exactly* the same:
+You can still use a regular `Array` but it won't be decomposed from the
+main object-graph.
+
+All `List` types are subtypes of the native [`Array`][array] and
+behave *exactly* the same:
 
 ```js
 
@@ -279,9 +293,6 @@ const two = array.find(num => num === 2)
 console.log(two)
 // 2
 ```
-
-You can still use a regular `Array` for list-like data, which you don't
-expect to become big enough to warrant decomposition when saving in Redis.
 
 ### Lazy loading
 
