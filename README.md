@@ -537,9 +537,7 @@ Object graphs which don't have lists nested inside other lists, are fetched
 in a process that exhibits an almost
 [constant-time complexity O(1)][const].
 
-There's no network roundtrip involved for each list, or even separate requests
-since this module uses a small Lua script which allows something akin to
-an [`mget`][mget], but for hashes.
+There's no network roundtrip involved for each list, or even separate requests.
 
 #### Nested lists
 
