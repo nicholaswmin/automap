@@ -652,7 +652,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 ## License
 
-[MIT-0: MIT "No Attribution" License][mit-zero]
+[MIT-0: MIT "No Attribution" License][license]
 
 ## Footnotes
 
