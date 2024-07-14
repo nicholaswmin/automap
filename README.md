@@ -379,7 +379,7 @@ An example:
 
 > Each `Flat` now has a list of `Mail` items.     
 > Across the lifetime of a `Flat`, it's `Mail` items can reach
-> millions of items.
+> millions of items[^2].
 
 ```js
 import { LazyList } from 'automap'
@@ -659,6 +659,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       updates a value while it's in the process of being modified by client A
       as part of a transaction.   
       Retries are not currently implemented.
+
+[^2]: Maybe Sting lives here. Lots of fan-mail.
+      This isn't your run-of-the-mill apartment building.
 
 <!--- Badges -->
 
