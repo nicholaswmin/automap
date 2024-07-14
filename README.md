@@ -347,20 +347,12 @@ console.log(building.flats)
 
 Lists with thousands or millions of items should use an `AppendList`.
 
-- meant for lists with thousands or millions of items
-- never automatically loaded on `repository.fetch`
-- saves its items in a [`Redis List`][redis-list] instead of
-  [`Redis Hash`][redis-hash]
-- doesn't internally fetch its items before save
-- doesn't internally sort before save
+- not loaded on `repository.fetch`
+- saves items in a [`List`][redis-list] instead of [`Hash`][redis-hash]
+- doesn't internally fetch nor sort its items before `save`
 
-An `AppendList` can continuously:
-
-- get fetched
-- have items added to it
-- saved again
-
-with *no increases* to its `fetch` or `save` times.
+An `AppendList` can continuously have items added to it with
+*no increase* in it's `fetch` or `save` times.
 
 Caveats:
 
