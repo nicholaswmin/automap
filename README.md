@@ -98,9 +98,6 @@ await repo.save(building)
 └──────────────────┘   └─────────────────┘
 ```
 
-> List items are detached from the object graph and saved as a
-> [`Redis Hash`][redis-hash] or [`Redis List`][redis-list]
-
 > The item *order* is preserved; despite using a Hash, by storing the
 > `index` of an `item` alongside it's JSON.
 
