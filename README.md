@@ -381,7 +381,6 @@ Caveats:
 - No notion of item deletion. It functions as an [append-only log][append-only],
   hence the name.
 - No constant O<sup>1</sup> time lookups for individual list items in Redis.  
-  In some cases it's just better to fetch the entire list.
 
 An example:
 
