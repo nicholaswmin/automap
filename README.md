@@ -660,8 +660,8 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       as part of a transaction.   
       Retries are not currently implemented.
 
-[^2]: Maybe Sting lives here. Lots of fan-mail.
-      This isn't your run-of-the-mill apartment building.
+[^2]: The singer "Sting" lives here and gets lots of fan-mail.
+      Obviously, this isn't your run-of-the-mill apartment building.
 
 <!--- Badges -->
 
