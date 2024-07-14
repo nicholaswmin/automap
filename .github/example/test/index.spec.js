@@ -22,7 +22,11 @@ test('Runnable example', async t => {
 
     assert.ok(stdouts.length > 1)
 
-    await t.test('non-errors', async () => {
+    await t.test('non-errors', () => {
+      assert.strictEqual(stderrs.length, 0)
+    })
+
+    await t.test('non-errors', () => {
       assert.strictEqual(stderrs.length, 0)
     })
 
