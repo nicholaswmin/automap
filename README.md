@@ -371,7 +371,6 @@ Lists with millions of items should use an `AppendList`.
 
 - not loaded on `repository.fetch`
 - saves items in a [`List`][redis-list] instead of [`Hash`][redis-hash]
-- doesn't internally fetch nor sort its items before `save`
 
 The `repository.save` time of an `AppendList` does not increase in
 proportion to the number of items in the list.
@@ -384,9 +383,7 @@ Caveats:
 
 An example:
 
-> Each `Flat` now has a list of `Mail` items.     
-> Across the lifetime of a `Flat`, it's `Mail` items can reach
-> millions of items[^2].
+> Each `Flat` has a list of `Mail` items, which can reach millions of items[^2].
 
 ```js
 import { LazyList } from 'automap'
@@ -425,10 +422,9 @@ class Mail {
 
 ### Runnable example
 
-The `Building` example demonstrated above
-can be [found here][runnable-example].
+The `Building` example demonstrated above can be [found here][runnable-example].
 
-You can run it with:
+Run it with:
 
 ```bash
 npm run example
@@ -436,15 +432,15 @@ npm run example
 
 ## Redis data structure
 
-All keys/values saved in Redis follow a canonical and *human-readable* format.
+All keys saved in Redis follow a canonical and *human-readable* format.
 
-Assuming the above example, our flats are saved under this Redis key:
+Assuming the above example, the flats are saved under this Redis key:
 
 ```
 building:foo:flats
 ```
 
-which is a [Redis Hash][redis-hash] with the following shape:
+which is a [Hash][redis-hash] with the following shape:
 
 
 | Field 	| Value                       	  |
@@ -504,7 +500,7 @@ As a rule of thumb, the `Building` example with `100 Flats` takes about:
 - ~ `3 ms` to `save`
 
 and can handle ~ `300` x `fetch-edit-save` cycles per-second, without creating
-a backlog.
+a backlog, on a 10 minute sustained-load test.
 
 These results were gathered with the benchmark mentioned above on a popular
 cloud-provider with native Redis add-ons and about `20x` concurrency.
