@@ -588,7 +588,7 @@ A full-blown object mapper which of course requires schema definitions.
 
 This module was tested on:
 
-- [Redis 6+][redis-i]
+- [Redis 6+][r]
 - [ioredis 5+][ioredis]
 
 ## Tests
