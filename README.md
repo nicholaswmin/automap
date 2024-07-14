@@ -497,7 +497,7 @@ But you should note the following ...
 
 Object graphs which don't have lists nested inside other lists, are fetched
 in a process that exhibits an almost
-[constant-time complexity O(1)][const][^3][^4].
+[constant-time complexity O(1)][const].
 
 There's no network roundtrip involved for each list, or even separate requests
 since this module uses a small Lua script which allows something akin to
@@ -613,25 +613,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       updates a value while it's in the process of being modified by client A
       as part of a transaction.   
       Retries are not currently implemented.
-
-[^2]: This is the result of using `Array.sort` using numerical comparators,
-      which Node.js most likely implements using [Quicksort][qs]
-      ; at least Chrome does so.   
-      This is an `O(n<sup>2</sup>) operation in it's worst-case, I think.
-
-[^3]: The time complexity bounds described are in the context of fetching data
-      from a remote service (Redis).
-      As described, this module also performs a breadth-first graph traversal
-      which is `O(V + E)` but since
-      this step does not involve any network roundtrips, it's assumed to have a
-      negligible impact.  
-
-[^4]: Both `mget` and the custom `hgetall` run in [linear-time O(n)][const]
-      when the request lands in Redis but this is relative to the total number
-      of keys in Redis. This might cause issues in some cases but it's not
-      something that can be reasonably worked around anyway.
-
-
 
 <!--- Badges -->
 
