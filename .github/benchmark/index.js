@@ -49,7 +49,7 @@ if (cluster.isPrimary) {
       const id = process.pid.toString()
       const repo  = new Repository(Paper, redis)
 
-      const redis_ping = name => redis.ping()
+      const redis_ping = () => redis.ping()
       const fetch = performance.timerify(repo.fetch.bind(repo))
       const save  = performance.timerify(repo.save.bind(repo))
       const ping = performance.timerify(redis_ping)
