@@ -46,7 +46,7 @@ This module exports a `repository`:
 
 List-like data is detached & saved as a [`Hash`][redis-hash]
 or [`List`][redis-list] rather than jam everything into a
-single [Key][redis-string].  
+single [`Key`][redis-string].  
 
 > Example: A `Building` with `Flats`:
 
