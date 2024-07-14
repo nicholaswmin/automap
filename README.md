@@ -503,12 +503,12 @@ cloud-provider with native Redis add-ons and about `20x` concurrency.
 
 #### Save
 
-- Each list is decomposed into a single Redis `HSET` command.
-- All `HSET`s are then packaged into a single [pipelined][pipe] transaction
-before being sent down the wire.
+- Each list needs a single Redis `HSET` command.
+- All `HSET`s are assembled into a single [pipelined][pipe] transaction
+  then they are sent down the wire.
 
-Additionally, there's a simple Lua script which allows something akin
-to a [`mget`][mget], but for hashes.
+Additionally, there's a Lua script which allows something akin to
+a [`mget`][mget], but for hashes.
 
 These methods ensure updates are both performant and [atomic][atomic][^1].
 
