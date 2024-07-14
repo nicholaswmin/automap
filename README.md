@@ -170,6 +170,7 @@ An object graph is persistable if it:
 1. has an `id` property set to a unique value.
 2. uses the `List` and/or `LazyList` type for list-like data,   
    instead of an [`Array`][array].
+3. can be constructed by calling `new` and passing it's JSON
 
 Same example as above, a `Building` with `Flats`:
 
@@ -193,6 +194,24 @@ class Flat {
 
   doorbell() {
     console.log(`🔔 at flat: ${this.id}`)
+  }
+}
+```
+
+> 3. can be constructed by calling `new` and passing it's JSON
+
+for example, this won't work:
+
+```js
+class Building {
+  // `flats = []` is missing in the
+  // constructor arguments
+  constructor({ id }) {
+    this.id = id
+    this.flats = new List({
+      type: Flat,
+      from: flats
+    })
   }
 }
 ```
