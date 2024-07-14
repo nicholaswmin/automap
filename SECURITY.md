@@ -4,9 +4,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| latest  | :white_check_mark: |
+| latest  | no                 |
 | others  | no                 |
 
 ## Reporting a Vulnerability
 
-Open a Github issue
+N/A
