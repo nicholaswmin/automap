@@ -562,8 +562,8 @@ A small enough object-graph can easily get away with:
 - `JSON.stringify(object)`
 - `SET building:foo json`
 - `GET building:foo`
-
-and `JSON.parse(json)`s
+- `JSON.parse(json)`
+- done
 
 This is a simple, efficient and inherently atomic operation.
 
@@ -577,12 +577,6 @@ If [Redis JSON][redis-json] is available then you should use that instead.
 
 Half the issues this module attempts to solve are solved out-the-box
 by using Redis JSON directly.
-
-### Alternative modules
-
-[Redis-OM][redisom]
-
-A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
