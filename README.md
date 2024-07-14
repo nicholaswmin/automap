@@ -158,7 +158,7 @@ building.flats[0].doorbell()
 // 🔔 at flat: 101 !
 ```
 
-### Model definition
+## Model definition
 
 An object graph is persistable if it:
 
@@ -229,7 +229,7 @@ class Building {
 
 it's missing an `id` on the root object so it cannot be fetched back.
 
-### The `List` types
+## The `List` types
 
 List-like data must use one of the `List` types instead of an [`Array`][array].  
 
