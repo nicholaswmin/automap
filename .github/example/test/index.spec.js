@@ -10,7 +10,12 @@ test('Runnable example', async t => {
 
   await t.after(() => console.log = consoleLog)
 
-  await t.beforeEach(() => logs.splice(0, logs.length))
+  await t.beforeEach(() => {
+    logs.splice(0, logs.length)
+    process.stdout.on('write', () => {
+      console.log('e')
+    })
+  })
 
   await t.test('runs without errors', async () => {
     await assert.doesNotReject(() =>
