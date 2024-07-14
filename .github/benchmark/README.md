@@ -74,6 +74,11 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 - `MAX_BOARDS`: maximum number of created boards, per paper
 - `MAX_WORKER_BACKLOG`: max amount of unprocessed tasks in a `worker`
   before the test concludes.
+- `MAX_UPDATE_PER_SECOND`: How often to update the results shown on screen.  
+  Set this to ~ 2 when benchmarking to a remote server and ~ 5 when benchmarking
+  locally.
+- `WARMUP_SECONDS`: Amount of seconds to take it easy at the beginning.
+
 
 ### Breaking point
 

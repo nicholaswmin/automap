@@ -221,19 +221,6 @@ class TaskPerformanceTracker extends EventEmitter {
       : Promise.resolve()
   }
 
-  #end() {
-    this.observer.disconnect()
-    this.histograms.loop.disable()
-  }
-
-  #updateHistograms() {
-    this.histograms.memory.record(process.memoryUsage().heapUsed || 1 )
-    this.histograms.backlog.record(this.backlog.length || 1)
-    this.histograms.tasks.record(1)
-
-    this.emit('task:run', this.toRow())
-  }
-
   toJSON() {
     return this
   }
@@ -257,9 +244,22 @@ class TaskPerformanceTracker extends EventEmitter {
         })
     }
   }
+
+  #end() {
+    this.observer.disconnect()
+    this.histograms.loop.disable()
+  }
+
+  #updateHistograms() {
+    this.histograms.memory.record(process.memoryUsage().heapUsed || 1 )
+    this.histograms.backlog.record(this.backlog.length || 1)
+    this.histograms.tasks.record(1)
+
+    this.emit('task:run', this.toRow())
+  }
 }
 
-const finetuneConstants = async constants => {
+const userDefineConstants = async constants => {
   for (const key of Object.keys(constants)) {
     const answer = await input({
       message: `Enter ${key}`,
@@ -276,7 +276,7 @@ const finetuneConstants = async constants => {
 }
 
 export {
-  finetuneConstants,
+  userDefineConstants,
   TaskPerformanceTracker,
   primary,
   worker
