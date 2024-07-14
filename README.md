@@ -514,20 +514,19 @@ These methods ensure updates are both performant and [atomic][atomic][^1].
 
 #### Fetch
 
-In contrast, fetching an object graph is not atomic.  
+Fetching an object is not entirely atomic.  
 
 ### Nested Lists
 
-This module allows for an arbitrary amount of nesting of lists, so you can
-have a list, inside another list, inside another list and so on...
+An arbitrary amount of nesting-level of lists is allowed.  
+You can have a list, inside another list, inside another list and so on...
 
 But you should note the following ...
 
 ### Time-complexity
 
 > This section briefly describes the [time-complexity][time] of possible input
-> configurations.
->
+> configurations.  
 > Note that in these time-complexity speculations are solely in the context
 > of network roundtrips since they are by far the biggest bottleneck in
 > most cases.
