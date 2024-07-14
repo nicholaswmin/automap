@@ -41,7 +41,7 @@ npm run test:integration
 npm run test:performance
 ```
 
-*must* also pass, both locally and on CI.
+plus *all* additional CI workflows *must* pass, without warnings.
 
 [todos]: ./TODO.md
 [semver]: https://semver.org/
