@@ -157,8 +157,7 @@ You can use any object as long as it:
 1. it's root has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
-> ✅  Working example  
-> the same `Building` with `Flats` ...
+A working example:
 
 ```js
 import { List } from 'automap'
@@ -186,12 +185,12 @@ class Flat {
 
 The above works because:
 
-- The `Building` has an `id` set to a unique value
-- The `Building` can be entirely reconstructed by calling
+ ✅ The `Building` has an `id` set to a unique value
+ ✅ The `Building` can be entirely reconstructed by calling
   `new Building(json)` and  passing it's JSON
-- The `flats` array is replaced with a `List` type
+ ✅ The `flats` array is replaced with a `List` type
 
-... but the example below won't work:
+but this example does not work:
 
 ```js
 class Building {
@@ -209,7 +208,7 @@ class Building {
 
 ❌ the `Building` root will be constructed OK, but its nested `flats` will not.
 
-the following example won't work either:
+the following won't work either:
 
 ```js
 class Building {
