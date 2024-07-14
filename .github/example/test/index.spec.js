@@ -3,23 +3,17 @@ import { test } from 'node:test'
 
 import capcon from 'capture-console'
 
-// eslint-disable-next-line no-control-regex
-const stripAnsi = str => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
-
 test('Runnable example', async t => {
-  let logs = []
+  const logs = []
 
-  await t.beforeEach(() => {
-    logs = []
+  await t.before(() => capcon.startCapture(process.stdout, stdout => {
+    // eslint-disable-next-line no-control-regex
+    const stripAnsi = str => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+    logs.push(stripAnsi(stdout.toString()))
+  }))
 
-    capcon.startCapture(process.stdout, stdout => {
-      logs.push(stripAnsi(stdout.toString()))
-    })
-  })
-
-  await t.afterEach(() => {
-    capcon.stopCapture(process.stdout)
-  })
+  await t.after(() => capcon.stopCapture(process.stdout))
+  await t.beforeEach(() => logs.splice(0, logs.length))
 
   await t.test('runs without errors', async () => {
     await assert.doesNotReject(async () => {
