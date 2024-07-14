@@ -60,7 +60,7 @@ const building = new Building({
 })
 ```
 
-You can save it:
+... save it:
 
 ```js
 import { Repository } from 'automap'
@@ -78,7 +78,7 @@ const building = new Building({
 await repo.save(building)
 ```
 
-... which decomposes it like this:
+... saved like so:
 
 ```js
            ┌──────────────────┐            
@@ -107,7 +107,7 @@ await repo.save(building)
 > The item *order* is preserved; despite using a Hash, by storing the
 > `index` of an `item` alongside it's JSON.
 
-... and then fetch it back:
+... fetch it back:
 
 ```js
 const building = await repo.fetch({
@@ -119,7 +119,7 @@ for (let flat of building.flats)
   // true { id: '101' }, true { id: '102' },...
 ```
 
-... which hydrates it back to it's correct types:
+... reassembles it, with the correct types:
 
 ```js
 ┌──────────────────┐   ┌─────────────────┐
@@ -143,11 +143,9 @@ for (let flat of building.flats)
             └───────────────────┘            
 ```
 
-> [!NOTE]
-> `repo.fetch` rebuilds the entire object graph using the correct type,
-> including any nested types.
+it rebuilds the entire object graph including *nested* types.
 
-... for example:
+For example:
 
 ```js
 const building = await repo.fetch({
@@ -160,7 +158,7 @@ building.flats[0].doorbell()
 
 ## Model definition
 
-You can use any object-graph as long as it:
+You can use any object as long as it:
 
 1. has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
