@@ -59,8 +59,8 @@ Example:
 const building = new Building({
   id: 'foo',
   flats: [
-    { id: 101 },
-    { id: 102 }
+    new Flat({ id: 101 }),
+    new Flat({ id: 102 })
   ]
 })
 ```
@@ -75,8 +75,8 @@ const repo = new Repository(Building, new ioredis())
 const building = new Building({
   id: 'foo',
   flats: [
-    { id: 101 },
-    { id: 102 }
+    new Flat({ id: 101 }),
+    new Flat({ id: 102 })
   ]
 })
 
