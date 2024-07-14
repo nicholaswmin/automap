@@ -8,7 +8,7 @@ import { Building, Flat, Mail } from './model.js'
 
 const repo = new Repository(Building, new ioredis())
 
-// object ...
+// An object graph ...
 
 const building = new Building({
   id: 'foo',
@@ -24,23 +24,23 @@ const building = new Building({
   ]
 })
 
-// save ...
+// save it
 
 await repo.save(building)
 
-console.info('-', building.constructor.name, 'saved ...')
+console.log('-', building.constructor.name, 'saved ...')
 
-// fetch ...
+// fetch it
 
 let fetched = await repo.fetch({ id: 'foo' })
 
-console.info('-', fetched.constructor.name, 'fetched ...')
+console.log('-', fetched.constructor.name, 'fetched ...')
 
 // load lazy list via `list.load()`
 
 await fetched.flats.load(repo)
 
-console.info(
+console.log(
   '-',
   fetched.constructor.name,
   'has',
@@ -48,26 +48,24 @@ console.info(
   'flats'
 )
 
-// call a Flat method ...
+// call a Flat method
 
 fetched.flats[0].doorbell()
 
-// 🔔 at flat: 101 !
-
-// fetch again ...
+// fetch it again
 
 fetched = await repo.fetch({ id: 'foo' })
 
-// load lazy list again ...
+// load lazy list again
 
 await fetched.flats.load(repo)
 
-// add a lot of mail ...
+// add a bit of mail
 
 for (let i = 0; i < 50; i++)
   fetched.flats[0].addMail({ text: 'Hellooo' })
 
-console.info(
+console.log(
   '-',
   'Flat', fetched.flats[0].id,
   'has',
@@ -75,8 +73,8 @@ console.info(
   'mails'
 )
 
-// save it again ...
+// save it again
 
 await repo.save(building)
 
-console.info('-', building.constructor.name, 'saved again ...')
+console.log('-', building.constructor.name, 'saved again ...')

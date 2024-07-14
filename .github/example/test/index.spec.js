@@ -7,12 +7,12 @@ test('Runnable example', async t => {
   await t.beforeEach(async () => {
     logs = []
     infoFn = console.info
+    console.log = (...args) => logs.push(args.join(' '))
 
     await import(`../index.js?bust_cache=${Date.now()}`)
-    console.info = (...args) => logs.push(args.join(' '))
   })
 
-  await t.afterEach(async () => console.info = infoFn)
+  await t.afterEach(() => console.info = infoFn)
 
   await t.test('runs without errors', async () => {
     await assert.doesNotReject(() => {
@@ -49,11 +49,19 @@ test('Runnable example', async t => {
       )
     })
 
-    await t.test('4th log is an `AppendList` message', () => {
+    await t.test('4th log is a Flat method message', () => {
       assert.strictEqual(
         logs.at(3),
+        '- 🔔 at flat 101',
+        `logs.3 actually equals: "${logs.at(3)}"`
+      )
+    })
+
+    await t.test('5th log is an AppendList message', () => {
+      assert.strictEqual(
+        logs.at(4),
         '- Flat 101 has 50 mails',
-        `logs.2 actually equals: "${logs.at(3)}"`
+        `logs.4 actually equals: "${logs.at(4)}"`
       )
     })
   })
