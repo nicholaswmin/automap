@@ -5,7 +5,7 @@
   "description": "save OOP object graphs in Redis",
   "main": "index.js",
   "scripts": {
-    "test": "node --test test/index.spec.js",
+    "test": "node --test  --test-reporter=spec test/index.spec.js",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
     "test:integration": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/integration/index.spec.js",
     "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/performance/index.spec.js",
