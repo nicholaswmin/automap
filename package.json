@@ -2,7 +2,7 @@
   "name": "automap",
   "version": "0.1.0",
   "type": "module",
-  "description": "tiny and schemaless Redis ORM-\"ish\" microframework",
+  "description": "save OOP object graphs in Redis",
   "main": "index.js",
   "scripts": {
     "test": "node --test test/index.spec.js",
@@ -11,9 +11,9 @@
     "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test test/performance/index.spec.js",
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
-
     "start": "node .github/benchmark/bench/fake-server.js",
-    "benchmark": "node .github/benchmark/index.js"
+    "benchmark": "node .github/benchmark/index.js",
+    "prepare": "husky"
   },
   "size-limit": [
     {
@@ -52,11 +52,14 @@
     "pathval": "^2.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "@eslint/js": "^9.6.0",
     "@inquirer/input": "^2.2.1",
     "@size-limit/preset-small-lib": "^11.1.4",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
+    "husky": "^9.0.11",
     "ioredis": "^5.4.1",
     "ioredis-mock": "^8.9.0",
     "size-limit": "^11.1.4",

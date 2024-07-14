@@ -9,6 +9,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   * [Model definition](#model-definition)
   * [`List` instead of `Array`](#the-list-types)
   * [Lazy-loading with `LazyList`](#lazy-loading)
+  * [Infinite lists with `AppendList`](#infinite-lists-with-appendlist)
   * [Runnable example](#runnable-example)
 - [Redis data structure](#redis-data-structure)
 - [Performance](#performance)
@@ -43,16 +44,12 @@ This module exports a `repository`:
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-It transparently decomposes "list-like" data in your objects into a
-[Redis Hash][redis-hash], rather than jamming everything into a single
-Redis [key/value pair][redis-string].
+"list-like" data in objects are decomposed into a [Redis Hash][redis-hash],
+rather than jamming everything into a single Redis
+[key/value pair][redis-string].
 
-This provides significant performance gains, allows for lazy-loading lists
-if needed and  allows loading individual list items directly from Redis,
-without needing to `JSON.parse` the entire object-graph.
-
-The object-graph is fully reconstituted/hydrated when fetching it back, using
-it's original types.
+The object-graph is reconstituted/hydrated when fetching it back,
+using it's original types.
 
 An example:
 
@@ -109,9 +106,12 @@ await repo.save(building)
 └──────────────────┘   └─────────────────┘
 ```
 
-> `List` or `LazyList` items are broken off the object-graph and saved
-> as a [`Redis Hash`][redis-hash].
+> List items are broken off the object-graph and saved as a
+> [`Redis Hash`][redis-hash]; or [`Redis List`][redis-list], depending on
+> the chosen type of list.
 
+> The item *order* is preserved; despite using a Hash, by storing the
+> `index` of an `item` alongside it's JSON.
 
 ... and then fetch it back:
 
@@ -302,6 +302,74 @@ console.log(building.flats)
 // [ Flat { id: '101' }, Flat { id: '102' }, ...]
 ```
 
+### Infinite lists with `AppendList`
+
+Lists with thousands or millions of items should use an `AppendList`.
+
+- meant for lists with thousands or millions of items
+- never automatically loaded on `repository.fetch`
+- saves its items in a [`Redis List`][redis-list] instead of
+  [`Redis Hash`][redis-hash]
+- doesn't internally fetch its items before save
+- doesn't internally sort before save
+
+An `AppendList` can continuously:
+
+- get fetched
+- have items added to it
+- saved again
+
+with *no increases* to its `fetch` or `save` times.
+
+Caveats:
+
+- No notion of item deletion. It functions as an [append-only log][append-only],
+  hence the name.
+- No constant `O(1)` time lookups for individual list items in Redis.  
+  In some cases it's just better to fetch the entire list.
+
+An example:
+
+> Each `Flat` now has a list of `Mail` items.    
+> Across the lifetime of `Flat`, the Mail` items can reach millions of items.
+
+```js
+import { LazyList } from 'automap'
+
+class Building {
+  constructor({ id, flats = [] }) {
+    this.id = id
+    this.flats = new LazyList({
+      type: Flat,
+      from: flats
+    })
+  }
+}
+
+class Flat {
+  constructor({ id, mail = [] }) {
+    this.id = id
+    this.mails = new AppendList({
+      type: Mail,
+      from: mail
+    })
+  }
+
+  addMail({ id, text }) {
+    this.mails.push(new Mail({ id, text }))
+  }
+}
+
+class Mail {
+  constructor({ id, text }) {
+    this.id = id
+    this.text = text
+  }
+}
+```
+
+
+
 ### Runnable example
 
 The `Building` example demonstrated above
@@ -426,7 +494,7 @@ But you should note the following ...
 
 Object graphs which don't have lists nested inside other lists, are fetched
 in a process that exhibits an almost
-[constant-time complexity O(1)][const][^3][^4].
+[constant-time complexity O(1)][const].
 
 There's no network roundtrip involved for each list, or even separate requests
 since this module uses a small Lua script which allows something akin to
@@ -480,7 +548,8 @@ A full-blown object mapper which of course requires schema definitions.
 
 ## Minimum redis and ioredis
 
-`@TODO`
+- [Redis 6+][redis-i]
+- [ioredis 5+][ioredis]
 
 ## Tests
 
@@ -543,25 +612,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       as part of a transaction.   
       Retries are not currently implemented.
 
-[^2]: This is the result of using `Array.sort` using numerical comparators,
-      which Node.js most likely implements using [Quicksort][qs]
-      ; at least Chrome does so.   
-      This is an `O(n<sup>2</sup>) operation in it's worst-case, I think.
-
-[^3]: The time complexity bounds described are in the context of fetching data
-      from a remote service (Redis).
-      As described, this module also performs a breadth-first graph traversal
-      which is `O(V + E)` but since
-      this step does not involve any network roundtrips, it's assumed to have a
-      negligible impact.  
-
-[^4]: Both `mget` and the custom `hgetall` run in [linear-time O(n)][const]
-      when the request lands in Redis but this is relative to the total number
-      of keys in Redis. This might cause issues in some cases but it's not
-      something that can be reasonably worked around anyway.
-
-
-
 <!--- Badges -->
 
 [test-badge]: https://github.com/nicholaswmin/automap/actions/workflows/test:unit.yml/badge.svg
@@ -585,7 +635,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [pipe]: https://en.wikipedia.org/wiki/HTTP_pipelining
 [redis-hash]: https://redis.io/docs/latest/develop/data-types/hashes/
 [redis-string]: https://redis.io/docs/latest/develop/data-types/strings/
-[bfs]: https://en.wikipedia.org/wiki/Breadth-first_search
+[redis-list]: https://redis.io/docs/latest/develop/data-types/lists/
+[append-only]: https://en.wikipedia.org/wiki/Append-only
+[lpush]: https://redis.io/docs/latest/commands/lpush/
 [const]: https://en.wikipedia.org/wiki/Time_complexity#Constant_time
 [qtc]: https://en.wikipedia.org/wiki/Time_complexity#Sub-quadratic_time
 [linear]: https://en.wikipedia.org/wiki/Linear_search
@@ -600,5 +652,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [runnable-example]: .github/example/index.js
 [paper-benchmark]: .github/benchmark
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance

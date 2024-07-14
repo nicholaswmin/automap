@@ -6,7 +6,7 @@ import { Paper } from './paper/index.js'
 import { Repository } from '../../index.js'
 
 import {
-  finetuneConstants,
+  userDefineConstants,
   TaskPerformanceTracker,
   primary,
   worker
@@ -20,26 +20,26 @@ import {
 } from '../../test/helpers/utils/index.js'
 
 const constants = {
-  WARMUP_SECONDS: 5,
-  MAX_WORKER_BACKLOG: 10,
   TASKS_PER_SECOND: 100,
   MAX_BOARDS: 100,
   ITEM_PAYLOAD_KB: 5,
+  MAX_WORKER_BACKLOG: 10,
+
   NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
-  MAX_UPDATE_PER_SECOND: 10 
+  MAX_UPDATE_PER_SECOND: 10,
+  WARMUP_SECONDS: 5
 }
 
 if (cluster.isPrimary) {
-  await finetuneConstants(constants)
+  // Primary
 
-  primary({
-    cluster,
-    constants,
-    before: async () => {
-      await flushall()
-    }
-  })
+  await userDefineConstants(constants)
+
+  primary({ cluster, constants, before: async () => flushall() })
+
 } else {
+  // Worker
+
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis(process.env.REDIS_URL, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
@@ -50,7 +50,7 @@ if (cluster.isPrimary) {
   worker({
     tracker,
     beforeEnd: () => redis.disconnect(),
-    taskFn: async () => {
+    onEachTask: async () => {
       const id = process.pid.toString()
       const repo  = new Repository(Paper, redis)
 
