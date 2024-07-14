@@ -93,7 +93,7 @@ await repo.save(building)
 │                  │   │                 │
 │ id: foo          │   │  - foo:flats:1  │
 │ flats: foo:flats |   |  - foo:flats:2  │
-│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:3  │
 │                  │   │  - foo:flats:4  │
 └──────────────────┘   └─────────────────┘
 ```
@@ -121,7 +121,7 @@ for (let flat of building.flats)
 │                  │   │                 │
 │ id: foo          │   │  - foo:flats:1  │
 │ flats: foo:flats |   |  - foo:flats:2  │
-│                  │   │  = foo:flats:3  │
+│                  │   │  - foo:flats:3  │
 │                  │   │  - foo:flats:4  │
 └──────────────────┘◄|►└─────────────────┘
                      |
@@ -132,7 +132,7 @@ for (let flat of building.flats)
             │ flats:            │                    
             │  - Flat           │            
             │  - Flat           │            
-            │  = Flat           │            
+            │  - Flat           │            
             │  - Flat           │                     
             └───────────────────┘            
 ```
