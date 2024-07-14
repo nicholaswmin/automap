@@ -17,8 +17,8 @@ REDIS_URL=<redis-url> npm run benchmark
 
 Heroku only allows webservers on it's platform.
 
-To allow benchmarking, we provide a [fake webserver][fake-server] to the
-`npm start` script.
+To allow benchmarking, we provide a [fake webserver][fake-server]
+to the `npm start` script.
 
 Heroku also needs a special configuration set to
 install `devDependencies`:
@@ -81,7 +81,7 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 these "constants" are user-configurable when the benchmark starts up.
 
-### Breaking point
+### Conclusion
 
 The benchmark is considered *concluded* when a worker has accumulated a
 `backlog` of > 10 `tasks`.  
