@@ -160,14 +160,15 @@ building.flats[0].doorbell()
 
 ## Model definition
 
-An object graph is persistable if it:
+minimum-requirements for object-graphs:
 
 1. has an `id` property set to a unique value
-2. uses one of the `List` types for list-like data instead of
-   an [`Array`][array]
-3. can be constructed by calling `new` and passing it's JSON
+2. can be constructed by calling `new` and passing it's JSON
 
-Same example as above, a `Building` with `Flats`:
+Any list data that needs to be saved independently must use one
+of the `List` types, described below.
+
+> same example as above, the `Building` with `Flats`:
 
 ```js
 import { List } from 'automap'
