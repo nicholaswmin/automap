@@ -4,9 +4,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| latest  | no                 |
+| latest  | yes                |
 | others  | no                 |
 
 ## Reporting a Vulnerability
 
-N/A
+Submit a PR or open an issue
