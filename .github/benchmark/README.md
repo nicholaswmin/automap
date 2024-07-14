@@ -3,7 +3,7 @@
 > benchmarks the [throughput][throughput] of this module
 
 > [!CAUTION]  
-> This test runs a [`FLUSHALL`][flushall] on its connected Redis instance.
+> This benchmark runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
 ## Run
 
@@ -73,16 +73,17 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 - `ITEM_PAYLOAD_KB`: item size, added to a board in each task, in kilobytes
 - `MAX_BOARDS`: maximum number of created boards, per paper
 - `MAX_WORKER_BACKLOG`: max amount of unprocessed tasks in a `worker`
-  before the test concludes.
+  before the benchmark concludes.
 - `MAX_UPDATE_PER_SECOND`: How often to update the results shown on screen.  
   Set this to ~ 2 when benchmarking to a remote server and ~ 5 when benchmarking
   locally.
 - `WARMUP_SECONDS`: Amount of seconds to take it easy at the beginning.
 
+these "constants" are user-configurable when the benchmark starts up.
 
 ### Breaking point
 
-The test is considered *concluded* when a worker has accumulated a
+The benchmark is considered *concluded* when a worker has accumulated a
 `backlog` of > 10 `tasks`.  
 
 ## Authors
