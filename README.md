@@ -36,10 +36,10 @@ npm i https://github.com/nicholaswmin/automap
 
 ## Usage
 
-This module exports a `repository`:
+exports a `repository` and an array-like type, called `List`.
 
-- `repository.save(object)` saves an object graph
-- `repository.fetch({ id: 'foo' })` gets it back
+- `repository.save()` saves an object
+- `repository.fetch()` gets it back
 
 List-like data is detached & saved as a [`Hash`][redis-hash]
 or [`List`][redis-list] rather than jam everything into a
@@ -50,10 +50,13 @@ single [`Key`][redis-string].
 ```js
 const building = new Building({
   id: 'foo',
-  flats: [
-    new Flat({ id: 101 }),
-    new Flat({ id: 102 })
-  ]
+  flats: new List({
+    type: Flat,
+    from: [
+      new Flat({ id: 101 }),
+      new Flat({ id: 102 })
+    ]
+  })
 })
 ```
 
@@ -66,10 +69,13 @@ const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
   id: 'foo',
-  flats: [
-    new Flat({ id: 101 }),
-    new Flat({ id: 102 })
-  ]
+  flats: new List({
+    type: Flat,
+    from: [
+      new Flat({ id: 101 }),
+      new Flat({ id: 102 })
+    ]
+  })
 })
 
 await repo.save(building)
@@ -139,7 +145,7 @@ for (let flat of building.flats)
 
 it rebuilds the entire object graph including *nested* types.
 
-For example:
+... forr example, this works:
 
 ```js
 const building = await repo.fetch({
