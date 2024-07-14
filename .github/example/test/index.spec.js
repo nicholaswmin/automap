@@ -25,7 +25,7 @@ test('Runnable example', async t => {
       assert.ok(logs.length >= 5, `length is actually: ${logs.length}`)
     })
 
-    await t.test('1st log is a "save()" success message', () => {
+    await t.test('1st log is a save() success message', () => {
       assert.strictEqual(
         logs.at(0),
         '- Building saved ...',
@@ -33,7 +33,7 @@ test('Runnable example', async t => {
       )
     })
 
-    await t.test('2nd log is a "fetch()" success message', () => {
+    await t.test('2nd log is a fetch() success message', () => {
       assert.strictEqual(
         logs.at(1),
         '- Building fetched ...',
