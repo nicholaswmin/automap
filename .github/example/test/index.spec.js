@@ -16,15 +16,13 @@ test('Runnable example', async t => {
   await t.beforeEach(() => logs.splice(0, logs.length))
 
   await t.test('runs without errors', async () => {
-    await assert.doesNotReject(async () => {
-      await import(`../index.js?bust_cache=${Date.now()}`)
-    })
+    await assert.doesNotReject(() =>
+      import(`../index.js?bust_cache=${Date.now()}`))
   })
 
   await t.test('logs to console', async t => {
-    await t.beforeEach(async () => {
-      await import(`../index.js?bust_cache=${Date.now()}`)
-    })
+    await t.beforeEach(() =>
+      import(`../index.js?bust_cache=${Date.now()}`))
 
     await t.test('logs a save() success message', () => {
       assert.ok(logs.some(log => log.includes('Building saved')))
