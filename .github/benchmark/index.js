@@ -12,7 +12,6 @@ import {
   worker
 } from './bench/index.js'
 
-
 import {
   flushall,
   randomId,
@@ -32,14 +31,10 @@ const constants = {
 
 if (cluster.isPrimary) {
   // Primary
-
   await userDefineConstants(constants)
-
   primary({ cluster, constants, before: async () => flushall() })
-
 } else {
   // Worker
-
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis(process.env.REDIS_URL, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
@@ -49,16 +44,15 @@ if (cluster.isPrimary) {
 
   worker({
     tracker,
-    beforeEnd: () => redis.disconnect(),
-    onEachTask: async () => {
+    after: () => redis.disconnect(),
+    forEach: async () => {
       const id = process.pid.toString()
       const repo  = new Repository(Paper, redis)
 
+      const redis_ping = name => redis.ping()
       const fetch = performance.timerify(repo.fetch.bind(repo))
       const save  = performance.timerify(repo.save.bind(repo))
-      const latency = performance.timerify(function redisPing() {
-        return redis.ping()
-      })
+      const ping = performance.timerify(redis_ping)
 
       const paper = await fetch(id) || new Paper({ id })
       const randBIndex = Math.floor(Math.random() * paper.boards.length)
@@ -71,7 +65,7 @@ if (cluster.isPrimary) {
 
       await save(paper)
 
-      await latency()
+      await ping()
     }
   })
 }
