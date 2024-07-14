@@ -7,7 +7,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 - [Install](#install)
 - [Usage](#usage)
   * [Model definition](#model-definition)
-  * [`List` instead of `Array`](#the-list-types)
+  * [`List`, `LazyList` & `AppendList`](#the-list-types)
   * [Lazy-loading with `LazyList`](#lazy-loading)
   * [Infinite lists with `AppendList`](#infinite-lists-with-appendlist)
   * [Runnable example](#runnable-example)
@@ -34,9 +34,6 @@ Store [OOP][oop] object-graphs in [Redis][redis]
 npm i https://github.com/nicholaswmin/automap
 ```
 
-> [!IMPORTANT]  
-> unpublished WIP
-
 ## Usage
 
 This module exports a `repository`:
@@ -60,7 +57,7 @@ const building = new Building({
 })
 ```
 
-You can save it:
+... save it:
 
 ```js
 import { Repository } from 'automap'
@@ -78,7 +75,7 @@ const building = new Building({
 await repo.save(building)
 ```
 
-... which decomposes it like this:
+... saved like so:
 
 ```js
            ┌──────────────────┐            
@@ -107,7 +104,7 @@ await repo.save(building)
 > The item *order* is preserved; despite using a Hash, by storing the
 > `index` of an `item` alongside it's JSON.
 
-... and then fetch it back:
+... fetch it back:
 
 ```js
 const building = await repo.fetch({
@@ -119,7 +116,7 @@ for (let flat of building.flats)
   // true { id: '101' }, true { id: '102' },...
 ```
 
-... which hydrates it back to it's correct types:
+... reassembles it, with the correct types:
 
 ```js
 ┌──────────────────┐   ┌─────────────────┐
@@ -143,11 +140,9 @@ for (let flat of building.flats)
             └───────────────────┘            
 ```
 
-> [!NOTE]
-> `repo.fetch` rebuilds the entire object graph using the correct type,
-> including any nested types.
+it rebuilds the entire object graph including *nested* types.
 
-... for example:
+For example:
 
 ```js
 const building = await repo.fetch({
@@ -160,15 +155,13 @@ building.flats[0].doorbell()
 
 ## Model definition
 
-minimum-requirements for object-graphs:
+You can use any object as long as it:
 
-1. has an `id` property set to a unique value
-2. can be constructed by calling `new` and passing it's JSON
+1. it's root has an `id` property set to a unique value
+2. can be reconstructed by calling `new` and passing it's JSON
 
-Any list data that needs to be saved independently must use one
-of the `List` types, described below.
-
-> same example as above, the `Building` with `Flats`:
+> ✅  Working example  
+> the same `Building` with `Flats` ...
 
 ```js
 import { List } from 'automap'
@@ -194,9 +187,14 @@ class Flat {
 }
 ```
 
-for example, this won't work:
+The above works because:
 
-> cannot be entirely constructed by calling `new` and passing it's JSON.
+- The `Building` has an `id` set to a unique value
+- The `Building` can be entirely reconstructed by calling
+  `new Building(json)` and  passing it's JSON
+- The `flats` array is replaced with a `List` type
+
+... but the example below won't work:
 
 ```js
 class Building {
@@ -212,9 +210,9 @@ class Building {
 }
 ```
 
-this doesn't work either:
+❌ the `Building` root will be constructed OK, but its nested `flats` will not.
 
-> missing an `id` on the root object
+the following example won't work either:
 
 ```js
 class Building {
@@ -227,26 +225,49 @@ class Building {
     })
   }
 }
+
+const building = new Building({ name: 'bar' })
+
+await repository.save(building)
+// throws "error: no id present"
 ```
+
+❌ the root object is missing an `id` property.
 
 ## The `List` types
 
-List-like data must use one of the `List` types instead of an [`Array`][array].  
+List-like data must use one of the `List` types instead of an [`Array`][array].   
+You can still use a regular `Array` but it won't be decomposed from the
+main object-graph.
 
-- `List`
-  - is automatically fetched on `repository.fetch`
-  - saved as a [`Hash`][redis-hash]
+`List`
 
-- `LazyList`
-  - is not fetched automatically
-  - saved as a [`Hash`][redis-hash]
+- fetched with all items loaded
+- [linear-time O<sup>n</sup>][linear] additions
+- saved as a [`Hash`][redis-hash]
 
-- `AppendList`
-  - is not fetched automatically
-  - allows constant-time list additions
-  - saved as a [`List`][redis-list]
+used for lists that must always be loaded to do any work with the object.
 
-Example:
+[`LazyList`](#lazy-loading)
+
+- fetched empty
+- can be loaded with `list.load()`
+- [linear-time O<sup>n</sup>][linear] additions
+- saved as a [`Hash`][redis-hash]
+
+used for lists that can become "large-ish", yet not always required.
+
+[`AppendList`](#infinite-lists-with-appendlist)
+
+- fetched empty
+- can be loaded with `list.load()`
+- [constant-time O<sup>1</sup>][const] additions
+- saved as a [`List`][redis-list]
+
+used for lists that are way too big to carry around and don't need to be
+loaded to do work in most cases.
+
+> Example:
 
 ```js
 class Building {
@@ -261,9 +282,6 @@ class Building {
   }
 }
 ```
-
-You can still use a regular `Array` but it won't be decomposed from the
-main object-graph.
 
 All `List` types are subtypes of the native [`Array`][array] and
 behave *exactly* the same:
@@ -346,27 +364,23 @@ console.log(building.flats)
 
 ### Infinite lists with `AppendList`
 
-Lists with thousands or millions of items should use an `AppendList`.
+Lists with millions of items should use an `AppendList`.
 
 - not loaded on `repository.fetch`
 - saves items in a [`List`][redis-list] instead of [`Hash`][redis-hash]
-- doesn't internally fetch nor sort its items before `save`
 
-An `AppendList` can continuously have items added to it with
-*no increase* in it's `fetch` or `save` times.
+The `repository.save` time of an `AppendList` does not increase in
+proportion to the number of items in the list.
 
 Caveats:
 
 - No notion of item deletion. It functions as an [append-only log][append-only],
   hence the name.
-- No constant `O(1)` time lookups for individual list items in Redis.  
-  In some cases it's just better to fetch the entire list.
+- No constant O<sup>1</sup> time lookups for individual list items in Redis.  
 
 An example:
 
-> Each `Flat` now has a list of `Mail` items.     
-> Across the lifetime of a `Flat`, it's `Mail` items can reach
-> millions of items[^2].
+> Each `Flat` has a list of `Mail` items, which can reach millions of items[^2].
 
 ```js
 import { LazyList } from 'automap'
@@ -403,14 +417,11 @@ class Mail {
 }
 ```
 
-
-
 ### Runnable example
 
-The `Building` example demonstrated above
-can be [found here][runnable-example].
+The `Building` example demonstrated above can be [found here][runnable-example].
 
-You can run it with:
+Run it with:
 
 ```bash
 npm run example
@@ -418,15 +429,15 @@ npm run example
 
 ## Redis data structure
 
-All keys/values saved in Redis follow a canonical and *human-readable* format.
+All keys saved in Redis follow a canonical and *human-readable* format.
 
-Assuming the above example, our flats are saved under this Redis key:
+Assuming the above example, the flats are saved under this Redis key:
 
 ```
 building:foo:flats
 ```
 
-which is a [Redis Hash][redis-hash] with the following shape:
+which is a [Hash][redis-hash] with the following shape:
 
 
 | Field 	| Value                       	  |
@@ -485,18 +496,17 @@ As a rule of thumb, the `Building` example with `100 Flats` takes about:
 - ~ `1.5 ms` to `fetch`
 - ~ `3 ms` to `save`
 
-and can handle ~ `300` x `fetch`-`edit`-`save` cycles-per-second,  
-without creating a task backlog.
+and can handle ~ `300` x `fetch-edit-save` cycles per-second, without creating
+a backlog, on a 10 minute sustained-load test.
 
-These results were gathered with the benchmark mentioned above  
-on a popular cloud-provider with native Redis add-ons and about
-`~20x concurrency`.
+These results were gathered with the benchmark mentioned above on a popular
+cloud-provider with native Redis add-ons and about `20x` concurrency.
 
 ### Atomicity
 
 #### Save
 
-- Each found list is decomposed into a single Redis `HSET` command.
+- Each list is decomposed into a single Redis `HSET` command.
 - All `HSET`s are then packaged into a single [pipelined][pipe] transaction
 before being sent down the wire.
 
@@ -692,7 +702,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
-[paper-benchmark]: .github/benchmark
+[paper-benchmark]: .github/benchmark/README.md
 [redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement

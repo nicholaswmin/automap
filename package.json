@@ -12,8 +12,7 @@
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
     "start": "node .github/benchmark/bench/fake-server.js",
-    "benchmark": "node .github/benchmark/index.js",
-    "prepare": "husky"
+    "benchmark": "node .github/benchmark/index.js"
   },
   "size-limit": [
     {
