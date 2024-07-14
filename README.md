@@ -160,13 +160,10 @@ building.flats[0].doorbell()
 
 ## Model definition
 
-minimum-requirements for object-graphs:
+You can use any object-graph as long as it:
 
 1. has an `id` property set to a unique value
-2. can be constructed by calling `new` and passing it's JSON
-
-Any list data that needs to be saved independently must use one
-of the `List` types, described below.
+2. can be reconstructed by calling `new` and passing it's JSON
 
 > same example as above, the `Building` with `Flats`:
 
@@ -196,7 +193,9 @@ class Flat {
 
 for example, this won't work:
 
-> cannot be entirely constructed by calling `new` and passing it's JSON.
+> cannot be entirely constructed by calling `new` and passing it's JSON.  
+> The `Building` root will be constructed correctly, but the nested `Flat`
+  will not.
 
 ```js
 class Building {
