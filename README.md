@@ -160,7 +160,7 @@ building.flats[0].doorbell()
 
 You can use any object as long as it:
 
-1. has an `id` property set to a unique value
+1. it's root has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
 > ✅  Working example  
@@ -239,7 +239,9 @@ await repository.save(building)
 
 ## The `List` types
 
-List-like data must use one of the `List` types instead of an [`Array`][array].  
+List-like data must use one of the `List` types instead of an [`Array`][array].   
+You can still use a regular `Array` but it won't be decomposed from the
+main object-graph.
 
 `List`
 
@@ -247,8 +249,7 @@ List-like data must use one of the `List` types instead of an [`Array`][array].
 - [linear-time O<sup>n</sup>][linear] additions
 - saved as a [`Hash`][redis-hash]
 
-used when you *always* need to have the list items loaded to do any work
-with your object.
+used for lists that must always be loaded to do any work with the object.
 
 [`LazyList`](#lazy-loading)
 
@@ -266,9 +267,10 @@ used for lists that can become "large-ish", yet not always required.
 - [constant-time O<sup>1</sup>][const] additions
 - saved as a [`List`][redis-list]
 
-used for lists that are, or will become, way too big to carry around.
+used for lists that are way too big to carry around and don't need to be
+loaded to do work in most cases.
 
-Example:
+> Example:
 
 ```js
 class Building {
@@ -283,9 +285,6 @@ class Building {
   }
 }
 ```
-
-You can still use a regular `Array` but it won't be decomposed from the
-main object-graph.
 
 All `List` types are subtypes of the native [`Array`][array] and
 behave *exactly* the same:
@@ -368,14 +367,14 @@ console.log(building.flats)
 
 ### Infinite lists with `AppendList`
 
-Lists with thousands or millions of items should use an `AppendList`.
+Lists with millions of items should use an `AppendList`.
 
 - not loaded on `repository.fetch`
 - saves items in a [`List`][redis-list] instead of [`Hash`][redis-hash]
 - doesn't internally fetch nor sort its items before `save`
 
-An `AppendList` can continuously have items added to it with
-*no increase* in it's `fetch` or `save` times.
+The `repository.save` time of an `AppendList` does not increase in
+proportion to the number of items in the list.
 
 Caveats:
 
@@ -424,8 +423,6 @@ class Mail {
   }
 }
 ```
-
-
 
 ### Runnable example
 
