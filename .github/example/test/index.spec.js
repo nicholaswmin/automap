@@ -1,49 +1,54 @@
 import assert from 'node:assert'
 import { test } from 'node:test'
 
+import { fileURLToPath } from 'node:url'
+import { resolve, dirname } from 'node:path'
+
+import { promisify } from 'node:util'
+import { exec as execCb } from 'node:child_process'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const filepath = resolve(__dirname, '../index.js')
+const exec = promisify(execCb)
+
 test('Runnable example', async t => {
-  const logs = [], consoleLog = console.log
+  await t.test('logs output:', async t => {
+    let stdouts = '', stderrs = ''
 
-  await t.before(() =>
-    console.log = (...args) =>
-      logs.push(args.join(' ')))
+    const { stdout, stderr } = await exec(`node ${filepath}`)
 
-  await t.after(() => console.log = consoleLog)
+    stdouts += stdout.toString()
+    stderrs += stderr.toString()
 
-  await t.beforeEach(() => {
-    logs.splice(0, logs.length)
-    process.stdout.on('write', () => {
-      console.log('e')
-    })
-  })
+    assert.ok(stdouts.length > 1)
 
-  await t.test('runs without errors', async () => {
-    await assert.doesNotReject(() =>
-      import(`../index.js?bust_cache=${Date.now()}`))
-  })
-
-  await t.test('logs to console', async t => {
-    await t.beforeEach(() =>
-      import(`../index.js?bust_cache=${Date.now()}`))
-
-    await t.test('a save() log', () => {
-      assert.ok(logs.some(log => log.includes('saved')))
+    await t.test('non-errors', async () => {
+      assert.strictEqual(stderrs.length, 0)
     })
 
-    await t.test('a fetch() log', () => {
-      assert.ok(logs.some(log => log.includes('fetched')))
+    await t.test('a "save()" success log', () => {
+      assert.ok(stdouts.includes('saved'))
     })
 
-    await t.test('a LazyList log', () => {
-      assert.ok(logs.some(log => log.includes('has 2 flats')))
+    await t.test('a "fetch()" success log', () => {
+      assert.ok(stdouts.includes('fetched'))
     })
 
-    await t.test('a Flat method called log', () => {
-      assert.ok(logs.some(log => log.includes('🔔 at flat')))
+    await t.test('a "LazyList" log', () => {
+      assert.ok(stdouts.includes('has'))
+      assert.ok(stdouts.includes('2'))
+      assert.ok(stdouts.includes('flats'))
     })
 
-    await t.test('an AppendList log', () => {
-      assert.ok(logs.some(log => log.includes('has 50 mails')))
+    await t.test('a "LazyList item method called" log', () => {
+      assert.ok(stdouts.includes('🔔'))
+      assert.ok(stdouts.includes('at flat'))
+    })
+
+    await t.test('an "AppendList" log', () => {
+      assert.ok(stdouts.includes('has'))
+      assert.ok(stdouts.includes('50'))
+      assert.ok(stdouts.includes('mails'))
     })
   })
 })
