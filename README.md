@@ -637,7 +637,7 @@ npm run checks
 
 ## Contributing
 
-Read the [contribution guidelines][contributing].
+[Contribution Guidelines][contributing].
 
 ## Authors
 
