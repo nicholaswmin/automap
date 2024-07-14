@@ -145,7 +145,7 @@ for (let flat of building.flats)
 
 it rebuilds the entire object graph including *nested* types.
 
-... forr example, this works:
+i.e: calling a `Flat.method()` works.
 
 ```js
 const building = await repo.fetch({
