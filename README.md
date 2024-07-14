@@ -165,7 +165,8 @@ You can use any object-graph as long as it:
 1. has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
-> same example as above, the `Building` with `Flats` ...
+> ✅  Working example  
+> the same `Building` with `Flats` ...
 
 ```js
 import { List } from 'automap'
@@ -214,13 +215,9 @@ class Building {
 }
 ```
 
-The object-graph cannot be entirely constructed by calling `new` and
-passing it's JSON.  
+❌ The `Building` root will be constructed OK, but its nested `flats` will not.
 
-The `Building` root will be constructed correctly, but its nested `flats`
-will not.
-
-... and this won't work either:
+the following example won't work either:
 
 ```js
 class Building {
@@ -240,7 +237,7 @@ await repository.save(building)
 // throws "error: no id present"
 ```
 
-... because the root object is missing an `id` property.
+❌ the root object is missing an `id` property.
 
 ## The `List` types
 
