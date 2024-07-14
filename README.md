@@ -106,9 +106,8 @@ await repo.save(building)
 └──────────────────┘   └─────────────────┘
 ```
 
-> List items are broken off the object-graph and saved as a
-> [`Redis Hash`][redis-hash]; or [`Redis List`][redis-list], depending on
-> the chosen type of list.
+> List items are detached from the object graph and saved as a
+> [`Redis Hash`][redis-hash] or [`Redis List`][redis-list]
 
 > The item *order* is preserved; despite using a Hash, by storing the
 > `index` of an `item` alongside it's JSON.
@@ -330,8 +329,9 @@ Caveats:
 
 An example:
 
-> Each `Flat` now has a list of `Mail` items.    
-> Across the lifetime of a `Flat`, it's `Mail` items can reach millions of items.
+> Each `Flat` now has a list of `Mail` items.     
+> Across the lifetime of a `Flat`, it's `Mail` items can reach
+> millions of items.
 
 ```js
 import { LazyList } from 'automap'
