@@ -11,7 +11,5 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Open a Github issue or email directly at: `nik.k-y-r-i-a-k-i-d-e-s-@-gma-i-l.com`
-
-> remove all dashes from the above mail
+Open a Github issue
 
