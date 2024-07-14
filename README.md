@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report]
+[![test-workflow][test-badge]][test-workflow] [![integration-workflow][integration-badge]][integration-workflow] [![performance-workflow][performance-badge]][performance-workflow] [![coverage-workflow][coverage-badge]][coverage-report] [![codeql-workflow][codeql-badge]][codeql-workflow]
 
 # automap
 
@@ -44,16 +44,11 @@ This module exports a `repository`:
 - `repository.save(object)` saves an object graph
 - `repository.fetch({ id: 'foo' })` gets it back
 
-List-like data is broken off and saved as a
-Redis [`Hash`][redis-hash], or [`List`][redis-list], rather than jamming
-everything into a single Redis [key/value pair][redis-string].
+List-like data is detached & saved as a [`Hash`][redis-hash]
+or [`List`][redis-list] rather than jam everything into a
+single [`Key`][redis-string].  
 
-The object-graph is reassembled when fetching it back,
-restoring it's original types.
-
-Example:
-
-> assume you have a `Building` which contains `Flats`:
+> Example: A `Building` with `Flats`:
 
 ```js
 const building = new Building({
@@ -163,16 +158,17 @@ building.flats[0].doorbell()
 // 🔔 at flat: 101 !
 ```
 
-### Model definition
+## Model definition
 
-An object graph is persistable if it:
+minimum-requirements for object-graphs:
 
 1. has an `id` property set to a unique value
-2. uses one of the `List` types for list-like data instead of
-   an [`Array`][array]
-3. can be constructed by calling `new` and passing it's JSON
+2. can be constructed by calling `new` and passing it's JSON
 
-Same example as above, a `Building` with `Flats`:
+Any list data that needs to be saved independently must use one
+of the `List` types, described below.
+
+> same example as above, the `Building` with `Flats`:
 
 ```js
 import { List } from 'automap'
@@ -200,8 +196,7 @@ class Flat {
 
 for example, this won't work:
 
-> It cannot be entirely constructed by calling `new` and passing
-> it's JSON.
+> cannot be entirely constructed by calling `new` and passing it's JSON.
 
 ```js
 class Building {
@@ -219,6 +214,8 @@ class Building {
 
 this doesn't work either:
 
+> missing an `id` on the root object
+
 ```js
 class Building {
   // no `id` property
@@ -232,9 +229,7 @@ class Building {
 }
 ```
 
-it's missing an `id` on the root object so it cannot be fetched back.
-
-### The `List` types
+## The `List` types
 
 List-like data must use one of the `List` types instead of an [`Array`][array].  
 
@@ -353,20 +348,12 @@ console.log(building.flats)
 
 Lists with thousands or millions of items should use an `AppendList`.
 
-- meant for lists with thousands or millions of items
-- never automatically loaded on `repository.fetch`
-- saves its items in a [`Redis List`][redis-list] instead of
-  [`Redis Hash`][redis-hash]
-- doesn't internally fetch its items before save
-- doesn't internally sort before save
+- not loaded on `repository.fetch`
+- saves items in a [`List`][redis-list] instead of [`Hash`][redis-hash]
+- doesn't internally fetch nor sort its items before `save`
 
-An `AppendList` can continuously:
-
-- get fetched
-- have items added to it
-- saved again
-
-with *no increases* to its `fetch` or `save` times.
+An `AppendList` can continuously have items added to it with
+*no increase* in it's `fetch` or `save` times.
 
 Caveats:
 
@@ -676,6 +663,10 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [coverage-badge]: https://coveralls.io/repos/github/nicholaswmin/automap/badge.svg?branch=main
 [coverage-report]: https://coveralls.io/github/nicholaswmin/automap?branch=main
+
+[codeql-badge]: https://github.com/nicholaswmin/automap/actions/workflows/codeql.yml/badge.svg
+[codeql-workflow]: https://github.com/nicholaswmin/automap/actions/workflows/codeql.yml
+
 
 <!--- /Badges -->
 
