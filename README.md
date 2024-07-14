@@ -557,8 +557,6 @@ automatically fetched.
 
 ### Saving encoded JSONs
 
-... as a [`Redis String`][redis-string].
-
 A small enough object-graph can easily get away with:
 
 - `JSON.stringify(object)`
