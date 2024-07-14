@@ -607,7 +607,7 @@ npm test
 
 run integration tests:
 
-> integration & performance tests require a [redis server][r] running on `:6379`
+> integration & performance tests need a [redis server][r] running on `:6379`
 
 ```bash
 npm run test:integration
