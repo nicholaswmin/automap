@@ -499,6 +499,9 @@ a backlog, on a 10 minute sustained-load test.
 These results were gathered with the benchmark mentioned above on a popular
 cloud-provider with native Redis add-ons and about `20x` concurrency.
 
+For the internal-use that this module is designed for, these are satisfactory
+results.
+
 ### Atomicity
 
 #### Save
