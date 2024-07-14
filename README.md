@@ -251,7 +251,7 @@ List-like data must use one of the `List` types instead of an [`Array`][array].
   - linear-time O<sup>n</sup> additions
   - saved as a [`Hash`][redis-hash]
 
-Use this when you always need to have the list items loaded to do any work
+Use this when you *always* need to have the list items loaded to do any work
 with your object.
 
 - `LazyList`
@@ -260,7 +260,7 @@ with your object.
   - linear-time O<sup>n</sup> additions
   - saved as a [`Hash`][redis-hash]
 
-Use this for list that can become "large"-ish yet not always required.
+Use this for list that can become "large-ish", yet not always required.
 
 - `AppendList`
   - fetched empty
