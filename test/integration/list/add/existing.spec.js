@@ -27,7 +27,7 @@ test('#repository.save()', async t => {
 
     await t.test('add 10 new List items & repo.save()', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         for (let i = 10; i < 20; i++)
           room.addUser({ id: i, name: 'John-' + i })
@@ -37,7 +37,7 @@ test('#repository.save()', async t => {
 
       await t.test('fetching back the object', async t => {
         await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
+          room = await repo.fetch('foo')
         })
 
         await t.test('has the previous + new items', () => {

@@ -27,7 +27,7 @@ test('#repository.save()', async t => {
 
     await t.test('edit 5 list item', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         for (let i = 5; i < 10; i++)
           room.users.at(i).name = 'Jane-' + i
@@ -37,7 +37,7 @@ test('#repository.save()', async t => {
 
       await t.test('fetching back the object', async t => {
         await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
+          room = await repo.fetch('foo')
         })
 
         await t.test('has the same number of items', () => {

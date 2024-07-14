@@ -45,7 +45,7 @@ test('perf: edit 100 List items', async t => {
         }))
 
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' })
+          const room = await fetch('foo')
 
           if (room?.users.at(i))
             room.users.at(i).name = payloadKB(3)

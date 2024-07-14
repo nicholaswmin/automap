@@ -27,7 +27,7 @@ test('#repository.fetch()', async t => {
 
     await t.test('calling repo.fetch()', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
       })
 
       await t.test('fetches back the object', () => {
@@ -46,7 +46,7 @@ test('#repository.fetch()', async t => {
 
     await t.test('calling list.load() once', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         await room.posts.load(repo)
       })
@@ -71,7 +71,7 @@ test('#repository.fetch()', async t => {
 
     await t.test('calling list.load() multiple times', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         await room.posts.load(repo)
         await room.posts.load(repo)

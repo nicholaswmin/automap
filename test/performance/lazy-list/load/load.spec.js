@@ -52,7 +52,7 @@ test('perf: fetch, load and save LazyLists', async t => {
         }))
 
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' })
+          const room = await fetch('foo')
           const load = performance.timerify(room.posts.load.bind(room.posts), {
             histogram: histograms.load
           })

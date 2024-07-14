@@ -28,7 +28,7 @@ test('#repository.save()', async t => {
 
       await t.test('fetching back the object', async t => {
         await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
+          room = await repo.fetch('foo')
         })
 
         await t.test('fetches the object', () => {

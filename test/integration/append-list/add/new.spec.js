@@ -20,7 +20,7 @@ test('#repository.save()', async t => {
       await t.test('add 1 new AppendList item each time', async t => {
         await t.beforeEach(async () => {
           for (let i = 0; i < 10; i++) {
-            room = await repo.fetch({ id: 'foo' }) || new Chatroom({
+            room = await repo.fetch('foo') || new Chatroom({
               id: 'foo',
               messages: Array.from({ length: 10 }, (_, i) => ({
                 id: i, text: 'message-' + i
@@ -36,7 +36,7 @@ test('#repository.save()', async t => {
 
         await t.test('calling repo.fetch()', async t => {
           await t.beforeEach(async () => {
-            room = await repo.fetch({ id: 'foo' })
+            room = await repo.fetch('foo')
           })
 
           await t.test('fetches the object', () => {

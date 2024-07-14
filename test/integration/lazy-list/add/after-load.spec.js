@@ -27,7 +27,7 @@ test('#repository.save()', async t => {
 
     await t.test('fetch object, list.load() & add 10 items', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         await room.posts.load(repo)
 
@@ -41,7 +41,7 @@ test('#repository.save()', async t => {
 
       await t.test('fetch back the object', async t => {
         await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
+          room = await repo.fetch('foo')
         })
 
         await t.test('load its list', async t => {

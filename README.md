@@ -111,9 +111,7 @@ await repo.save(building)
 ... fetch it back:
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 for (let flat of building.flats)
   console.log(flat instanceof Flat, flat)
@@ -149,9 +147,7 @@ it rebuilds the entire object graph including *nested* types.
 i.e: calling a `Flat.method()` works.
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 building.flats[0].doorbell()
 // 🔔 at flat: 101 !
@@ -352,9 +348,7 @@ class Building {
 ... and load its contents by calling `list.load()`:
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 console.log(building.flats)
 // [] (empty)

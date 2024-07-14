@@ -27,7 +27,7 @@ test('#repository.save()', async t => {
 
     await t.test('add 10 new LazyList items & repo.save()', async t => {
       await t.beforeEach(async () => {
-        room = await repo.fetch({ id: 'foo' })
+        room = await repo.fetch('foo')
 
         for (let i = 10; i < 20; i++)
           room.addPost({ id: i, content: 'post-' + i })
@@ -37,7 +37,7 @@ test('#repository.save()', async t => {
 
       await t.test('fetch back the object', async t => {
         await t.beforeEach(async () => {
-          room = await repo.fetch({ id: 'foo' })
+          room = await repo.fetch('foo')
         })
 
         await t.test('load its list', async t => {

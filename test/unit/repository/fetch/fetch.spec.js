@@ -13,21 +13,11 @@ test('Repository', async t => {
       repo = new Repository(Chatroom, new ioredis())
     })
 
-    await t.test('no parameter object is passed', async t => {
+    await t.test('no parameter is passed', async t => {
       await t.test('rejects with error', async () => {
         await assert.rejects(
           async () => {
-            await repo.fetch({ foo: 'bar' })
-          }
-        )
-      })
-    })
-
-    await t.test('no "id" is passed in parameter object', async t => {
-      await t.test('rejects with error', async () => {
-        await assert.rejects(
-          async () => {
-            await repo.fetch({ foo: 'bar' })
+            await repo.fetch()
           }
         )
       })
@@ -37,7 +27,7 @@ test('Repository', async t => {
       await t.test('rejects with error', async () => {
         await assert.rejects(
           async () => {
-            await repo.fetch({ id: '' })
+            await repo.fetch('')
           }
         )
       })
@@ -47,7 +37,7 @@ test('Repository', async t => {
       await t.test('resolves', async () => {
         await assert.doesNotReject(
           async () => {
-            await repo.fetch({ id: 'ciBr8Y' })
+            await repo.fetch('ciBr8Y')
           }
         )
       })
@@ -55,7 +45,7 @@ test('Repository', async t => {
 
     await t.test('passed "id" does not exist', async t => {
       await t.beforeEach(async () => {
-        fetched = await repo.fetch({ id: 'non-existent-id' })
+        fetched = await repo.fetch('non-existent-id')
       })
 
       await t.test('resolves with null', async () => {
@@ -67,7 +57,7 @@ test('Repository', async t => {
       await t.beforeEach(async () => {
         await repo.save(new Chatroom({ id: 'foo' }))
 
-        fetched = await repo.fetch({ id: 'foo' })
+        fetched = await repo.fetch('foo')
       })
 
       await t.test('resolves with hydrated instance', async () => {

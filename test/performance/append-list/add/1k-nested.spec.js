@@ -47,7 +47,7 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
           })
 
           for (let i = 0; i < 50; i++) {
-            const room = await repo.fetch({ id: 'foo' }) || new Chatroom({
+            const room = await repo.fetch('foo') || new Chatroom({
               id: 'foo'
             })
 
@@ -57,7 +57,7 @@ test('perf: add 1k AppendList items, nested in 100 Lists', async t => {
             await repo.save(room)
 
             for (let j = 0; j < 20; j++) {
-              const room = await fetch({ id: 'foo' })
+              const room = await fetch('foo')
 
               const user = room.users.at(i)
 

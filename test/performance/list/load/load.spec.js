@@ -47,7 +47,7 @@ test('perf: fetch then save List items', async t => {
         }))
 
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' })
+          const room = await fetch('foo')
 
           loadedRooms.push(room)
 

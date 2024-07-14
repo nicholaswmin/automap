@@ -32,7 +32,7 @@ console.log('-', building.constructor.name, 'saved ...')
 
 // fetch it
 
-let fetched = await repo.fetch({ id: 'foo' })
+let fetched = await repo.fetch('foo')
 
 console.log('-', fetched.constructor.name, 'fetched ...')
 
@@ -54,7 +54,7 @@ fetched.flats[0].doorbell()
 
 // fetch it again
 
-fetched = await repo.fetch({ id: 'foo' })
+fetched = await repo.fetch('foo')
 
 // load lazy list again
 

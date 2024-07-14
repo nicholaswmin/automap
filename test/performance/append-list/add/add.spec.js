@@ -40,7 +40,7 @@ test('perf: add 100 AppendList items', async t => {
         })
 
         for (let i = 0; i < 100; i++) {
-          const room = await fetch({ id: 'foo' }) || new Chatroom({ id: 'foo' })
+          const room = await fetch('foo') || new Chatroom({ id: 'foo' })
 
           if (room)
             room.addMessage({ id: i, text: payloadKB(3) })

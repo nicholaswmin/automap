@@ -60,7 +60,7 @@ if (cluster.isPrimary) {
         return redis.ping()
       })
 
-      const paper = await fetch({ id }) || new Paper({ id })
+      const paper = await fetch(id) || new Paper({ id })
       const randBIndex = Math.floor(Math.random() * paper.boards.length)
 
       paper.boards.length < constants.MAX_BOARDS

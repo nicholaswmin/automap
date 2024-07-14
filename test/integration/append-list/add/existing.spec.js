@@ -29,7 +29,7 @@ test('#repository.save()', async t => {
       await t.test('add 1 new AppendList item each time', async t => {
         await t.beforeEach(async () => {
           for (let i = 10; i < 20; i++) {
-            room = await repo.fetch({ id: 'foo' })
+            room = await repo.fetch('foo')
 
             room.addMessage({ id: i, text: 'hello-world-' + i })
 
@@ -39,7 +39,7 @@ test('#repository.save()', async t => {
 
         await t.test('calling repo.fetch()', async t => {
           await t.beforeEach(async () => {
-            room = await repo.fetch({ id: 'foo' })
+            room = await repo.fetch('foo')
           })
 
           await t.test('fetches the object', () => {
