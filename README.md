@@ -27,6 +27,7 @@ Store [OOP][oop] object-graphs in [Redis][redis]
   + [Test Coverage](#tests)
 - [Contributing](#contributing)
 - [Authors](#authors)
+- [License](#license)
 
 ## Install
 
@@ -649,6 +650,10 @@ Read the [contribution guidelines][contributing].
 
 Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
+## License
+
+[MIT-0: MIT "No Attribution" License][mit-zero]
+
 ## Footnotes
 
 [^1]: Redis transactions do not assume the same atomicity and isolation
@@ -709,3 +714,4 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance
+[license]: ./LICENSE.md
