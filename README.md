@@ -193,10 +193,6 @@ class Flat {
 
 for example, this won't work:
 
-> cannot be entirely constructed by calling `new` and passing it's JSON.  
-> The `Building` root will be constructed correctly, but the nested `Flat`
-  will not.
-
 ```js
 class Building {
   // `flats = []` is missing in the
@@ -211,9 +207,11 @@ class Building {
 }
 ```
 
-this doesn't work either:
+> cannot be entirely constructed by calling `new` and passing it's JSON.  
+> The `Building` root will be constructed correctly, but the nested `Flat`
+  will not.
 
-> missing an `id` on the root object
+this doesn't work either:
 
 ```js
 class Building {
@@ -226,7 +224,14 @@ class Building {
     })
   }
 }
+
+const building = new Building({ name: 'bar' })
+
+await repository.save(building)
+// throws "error: no id present"
 ```
+
+> the root object is missing an `id` property
 
 ## The `List` types
 
