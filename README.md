@@ -195,8 +195,7 @@ class Flat {
 
 for example, this won't work:
 
-> It cannot be entirely constructed by calling `new` and passing
-> it's JSON.
+> cannot be entirely constructed by calling `new` and passing it's JSON.
 
 ```js
 class Building {
@@ -214,6 +213,8 @@ class Building {
 
 this doesn't work either:
 
+> missing an `id` on the root object
+
 ```js
 class Building {
   // no `id` property
@@ -226,8 +227,6 @@ class Building {
   }
 }
 ```
-
-it's missing an `id` on the root object so it cannot be fetched back.
 
 ## The `List` types
 
