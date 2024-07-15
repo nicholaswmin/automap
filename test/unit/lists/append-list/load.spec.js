@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 // Mock repository, needed when calling `list.load(repository)
 //
@@ -15,9 +15,9 @@ const mockRepos = {
   withMatchingLoader: {
     loaders: {
       list: {
-        get: key => key === 'chatroom:foo:messages' ? [
-          { id: 'u_1', text: 'Hello' },
-          { id: 'u_2', text: 'World' }
+        get: key => key === 'building:foo:flats:1:mail' ? [
+          { id: '101', text: 'hi' },
+          { id: '102', bedrooms: 'world' },
         ] : []
       }
     }
@@ -32,8 +32,8 @@ test('AppendList', async t => {
 
     await t.beforeEach(() => {
       list = new AppendList({
-        from: 'chatroom:foo:messages',
-        type: Message
+        from: 'building:foo:flats:1:mail',
+        type: Mail
       })
     })
 
@@ -87,14 +87,14 @@ test('AppendList', async t => {
       })
 
       await t.test('both are Message instances', () => {
-        assert.strictEqual(list[0].constructor.name, 'Message')
-        assert.strictEqual(list[1].constructor.name, 'Message')
+        assert.strictEqual(list[0].constructor.name, 'Mail')
+        assert.strictEqual(list[1].constructor.name, 'Mail')
       })
     })
 
     await t.test('calling #load after adding new items', async t => {
       await t.beforeEach(async () => {
-        list.push(new Message({ id: 'm_3', text: 'bonjour' }))
+        list.push(new Mail({ id: '103', text: 'Bonjour...' }))
         await list.load(mockRepos.withMatchingLoader)
       })
 
@@ -107,14 +107,14 @@ test('AppendList', async t => {
       })
 
       await t.test('the loaded items are added before the new items', () => {
-        assert.strictEqual(list[2].id, 'm_3')
+        assert.strictEqual(list[2].id, '103')
       })
 
       await t.test('there are new additions', async t => {
         assert.strictEqual(list.additions.length, 1)
 
         await t.test('corresponding to the new items', () => {
-          assert.strictEqual(list.additions[0].id, 'm_3')
+          assert.strictEqual(list.additions[0].id, '103')
         })
       })
     })

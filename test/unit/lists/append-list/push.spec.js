@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { test } from 'node:test'
 
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 import { AppendList } from '../../../../src/list.js'
 
 test('AppendList', async t => {
@@ -10,10 +10,10 @@ test('AppendList', async t => {
   await t.test('#push', async t => {
     list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new AppendList({
         from: [{ id: 'm_1', text: 'Hello' }],
-        type: Message
+        type: Mail
       })
 
       list.push({ id: 'm_2', text: 'World' })

@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('LazyList', async t => {
   let list
@@ -11,15 +11,15 @@ test('LazyList', async t => {
     let result = null
 
     await t.test('list has no items', async t => {
-      await t.beforeEach(() => {
-        list = new LazyList({ from: [], type: Message })
+      t.beforeEach(() => {
+        list = new LazyList({ from: [], type: Mail })
 
         result = list.exportForSave('sample:path')
       })
     })
 
     await t.test('list has items', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new LazyList({
           from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
         })
@@ -64,7 +64,7 @@ test('LazyList', async t => {
         await t.test('parsing the value JSONs', async t => {
           let parsed = []
 
-          await t.before(() => {
+          t.before(() => {
             parsed.push(
               JSON.parse(result.value.u_1),
               JSON.parse(result.value.u_2)

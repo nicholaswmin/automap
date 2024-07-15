@@ -2,27 +2,33 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { flatten } from '../../../../src/map.js'
-import { Chatroom } from '../../../util/model/index.js'
+import { Building } from '../../../util/model/index.js'
 
 test('#flatten()', async t => {
-  let chatroom
+  let building
 
-  await t.beforeEach(() => {
-    chatroom = new Chatroom({
-      id: 'c_1',
-      messages: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-      users: [
-        { id: 'u_1', name: 'John', notes: ['foo', 'bar'] },
-        { id: 'u_2', name: 'Mary', notes: ['baz'] }
+  t.beforeEach(() => {
+    building = new Building({
+      id: 'foo',
+      mail: [ { id: 'm1', text: 'hi' } ],
+      offices: [
+        { id: 'o1', department: 'I.T' },
+        { id: 'm1', department: 'accounting' }
+      ],
+      flats: [
+        { id: '101', bedrooms: 1 },
+        { id: '102', bedrooms: 2 }
       ]
     })
+
+    building.flats.at(0).addMail({ id: 'm1', text: 'bonjour' })
   })
 
   await t.test('root', async t => {
     let result
 
     t.beforeEach(() => {
-      result = flatten(chatroom)
+      result = flatten(building)
     })
 
     await t.test('result has a root property', () => {
@@ -33,7 +39,7 @@ test('#flatten()', async t => {
       assert.ok(Object.hasOwn(result.root, 'key'))
 
       await t.test('key property is set in "constructor:id" format', () => {
-        assert.strictEqual(result.root.key, 'chatroom:c_1')
+        assert.strictEqual(result.root.key, 'building:foo')
       })
     })
 
@@ -47,31 +53,38 @@ test('#flatten()', async t => {
       await t.test('json', async t => {
         let parsed = null
 
-        await t.beforeEach(() => {
+        t.beforeEach(() => {
           parsed = JSON.parse(result.root.value)
         })
 
         await t.test('json has same keys as root', () => {
           const keys = Object.keys(parsed)
-          assert.ok(['id', 'posts', 'users'].every(prop => keys.includes(prop)))
+          assert.ok(
+            ['offices', 'mail', 'flats', 'id']
+              .every(prop => keys.includes(prop)),
+            `keys are actually: ${keys}`
+          )
         })
 
         await t.test('AppendList is replaced with a path', () => {
-          assert.ok(parsed.messages.includes('chatroom:c_1:messages'))
+          assert.ok(parsed.mail.includes('building:foo:mail'))
         })
 
         await t.test('List is replaced with a path', () => {
-          assert.ok(parsed.users.includes('chatroom:c_1:users'))
+          assert.ok(parsed.flats.includes('building:foo:flats'))
         })
 
         await t.test('the path can be split to actual path and traits', () => {
-          assert.strictEqual(parsed.users.split(' ').length, 2)
+          assert.strictEqual(parsed.offices.split(' ').length, 2)
         })
 
         await t.test('traits part is parseable & includes trait type', () => {
-          const traitsJSON = parsed.users.split(' ')[1]
+          const traitsJSON = parsed.offices.split(' ')[1]
 
-          assert.deepStrictEqual(JSON.parse(traitsJSON), { type: 'hash' })
+          assert.deepStrictEqual(
+            JSON.parse(traitsJSON),
+            { lazy: true, type: 'hash' }
+          )
         })
       })
     })

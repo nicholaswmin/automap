@@ -2,16 +2,16 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('LazyList', async t => {
   let list
 
   await t.test('#splice (insertion)', async t => {
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new LazyList({
         from: [{ id: 'm_1', text: 'Hello' }],
-        type: Message
+        type: Mail
       })
 
       list.splice(0, 0, { id: 'm_2', text: 'World' })
@@ -29,7 +29,7 @@ test('LazyList', async t => {
   await t.test('#splice (deletion)', async t => {
     let list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new LazyList({
         from: [{ id: 'm_1', text: 'Hello' }]
       })

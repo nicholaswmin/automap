@@ -2,14 +2,14 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { List } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('List', async t => {
   let list
 
   await t.test('instantiation', async t => {
     await t.test('without passing a "type"', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new List({
           from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }]
         })
@@ -26,10 +26,10 @@ test('List', async t => {
     })
 
     await t.test('passing a "type"', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new List({
           from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-          type: Message
+          type: Mail
         })
       })
 
@@ -38,12 +38,12 @@ test('List', async t => {
       })
 
       await t.test('maps the items as instances', () => {
-        assert.strictEqual(list[0].constructor.name, 'Message')
-        assert.strictEqual(list[1].constructor.name, 'Message')
+        assert.strictEqual(list[0].constructor.name, 'Mail')
+        assert.strictEqual(list[1].constructor.name, 'Mail')
       })
     })
 
-    await t.todo('without passing an items array', async t => {
+    t.todo('without passing an items array', async t => {
       // Cannot easily test since without `items` in the initial object
       // means it wont follow the flow that wires up the instance.
       await t.test('throws', () => {
@@ -83,9 +83,9 @@ test('List', async t => {
     })
   })
 
-  await t.test('passing an empty items array', async t => {
-    await t.beforeEach(() => {
-      list = new List({ from: [], type: Message })
+  t.test('passing an empty items array', async t => {
+    t.beforeEach(() => {
+      list = new List({ from: [], type: Mail })
     })
 
     await t.test('has no items', () => {

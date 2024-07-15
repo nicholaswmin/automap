@@ -2,17 +2,17 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
-
+import { Mail } from '../../../util/model/index.js'
+2
 test('AppendList', async t => {
   let list
 
   await t.test('#exportForSave', async t => {
     let result = null
 
-    await t.test('list has non items', async t => {
-      await t.beforeEach(() => {
-        list = new AppendList({ from: [], type: Message })
+    t.test('list has non items', async t => {
+      t.beforeEach(() => {
+        list = new AppendList({ from: [], type: Mail })
 
         result = list.exportForSave('sample:path')
       })
@@ -46,10 +46,10 @@ test('AppendList', async t => {
     })
 
     await t.test('list has some items', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new AppendList({
           from: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-          type: Message
+          type: Mail
         })
 
         result = list.exportForSave('sample:path')
@@ -82,12 +82,12 @@ test('AppendList', async t => {
         })
 
         await t.test('adding a new item via `#push(item)`', async t => {
-          let message
+          let Mail
 
-          await t.beforeEach(() => {
-            message = new Message({ id: 'm_3', text: 'Hola' })
+          t.beforeEach(() => {
+            Mail = new Mail({ id: 'm3', text: 'Hola' })
 
-            list.push(message)
+            list.push(Mail)
 
             result = list.exportForSave('sample:path')
           })
@@ -105,7 +105,7 @@ test('AppendList', async t => {
           })
 
           await t.test('and matches the newly passed item', () => {
-            assert.equal(result.value[0], JSON.stringify(message))
+            assert.equal(result.value[0], JSON.stringify(Mail))
           })
         })
       })

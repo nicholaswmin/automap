@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('AppendList', async t => {
   let list
@@ -10,10 +10,10 @@ test('AppendList', async t => {
   await t.test('#splice (insertion)', async t => {
     list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new AppendList({
         from: [{ id: 'm_1', text: 'Hello' }],
-        type: Message
+        type: Mail
       })
 
       list.splice(0, 0, { id: 'm_2', text: 'World' })
@@ -31,7 +31,7 @@ test('AppendList', async t => {
   await t.test('#splice (deletion)', async t => {
     let list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new AppendList({
         from: [{ id: 'm_1', text: 'Hello' }]
       })

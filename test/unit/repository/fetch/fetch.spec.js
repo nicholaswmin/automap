@@ -3,14 +3,14 @@ import { test } from 'node:test'
 import ioredis from 'ioredis-mock'
 
 import { Repository } from '../../../../src/repository.js'
-import { Chatroom } from '../../../util/model/index.js'
+import { Building } from '../../../util/model/index.js'
 
 test('Repository', async t => {
   let repo, fetched
 
   await t.test('#fetch', async t => {
-    await t.beforeEach(() => {
-      repo = new Repository(Chatroom, new ioredis())
+    t.beforeEach(() => {
+      repo = new Repository(Building, new ioredis())
     })
 
     await t.test('no parameter is passed', async t => {
@@ -53,9 +53,9 @@ test('Repository', async t => {
       })
     })
 
-    await t.todo('passed "id" exists', async t => {
+    t.todo('passed "id" exists', async t => {
       await t.beforeEach(async () => {
-        await repo.save(new Chatroom({ id: 'foo' }))
+        await repo.save(new Building({ id: 'foo' }))
 
         fetched = await repo.fetch('foo')
       })

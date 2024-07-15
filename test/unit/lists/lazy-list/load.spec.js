@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Office } from '../../../util/model/index.js'
 
 // Mock repository, needed when calling `list.load(repository)
 //
@@ -17,11 +17,11 @@ const mockRepos = {
       hash: {
         get: key =>  {
           const hash = {
-            'm_1': JSON.stringify({ i: 0, json: { id: 'm_1', text: 'Hello' }}),
-            'm_2': JSON.stringify({ i: 1, json: { id: 'm_2', text: 'World' }})
+            'o_1': JSON.stringify({ i: 0, json: { id: 'o_1' }}),
+            'o_2': JSON.stringify({ i: 1, json: { id: 'o_2' }})
           }
 
-          return key && key === 'chatroom:foo:messages' ?
+          return key && key === 'building:foo:offices' ?
             Object.keys(hash)
             .map(key => JSON.parse(hash[key]))
             .sort((a, b) => a.i - b.i)
@@ -39,10 +39,10 @@ test('LazyList', async t => {
 
   await t.test('#load', async t => {
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new LazyList({
-        from: 'chatroom:foo:messages',
-        type: Message
+        from: 'building:foo:offices',
+        type: Office
       })
     })
 
@@ -79,7 +79,7 @@ test('LazyList', async t => {
     })
 
     await t.test('calling #load with repo with a matching loader', async t => {
-      await t.beforeEach(async () => {
+      t.beforeEach(async () => {
         await list.load(mockRepos.withMatchingLoader)
       })
 
@@ -91,9 +91,9 @@ test('LazyList', async t => {
         assert.strictEqual(list.length, 2)
       })
 
-      await t.test('both are Message instances', () => {
-        assert.strictEqual(list[0].constructor.name, 'Message')
-        assert.strictEqual(list[1].constructor.name, 'Message')
+      await t.test('both are "Office" instances', () => {
+        assert.strictEqual(list[0].constructor.name, 'Office')
+        assert.strictEqual(list[1].constructor.name, 'Office')
       })
     })
   })

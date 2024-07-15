@@ -2,16 +2,16 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { List } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('List', async t => {
   let list
 
-  await t.test('#push', async t => {
-    await t.beforeEach(() => {
+  t.test('#push', async t => {
+    t.beforeEach(() => {
       list = new List({
         from: [{ id: 'm_1', text: 'Hello' }],
-        type: Message
+        type: Mail
       })
 
       list.push({ id: 'm_2', text: 'World' })

@@ -2,23 +2,28 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { flatten } from '../../../../../src/map.js'
-import { Chatroom } from '../../../../util/model/index.js'
+import { Building } from '../../../../util/model/index.js'
 
 test('#flatten()', async t => {
   let list
 
-  await t.beforeEach(() => {
-    let chatroom = new Chatroom({
-      id: 'c_1',
-      messages: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-      users: [
-        { id: 'u_1', name: 'John', notes: ['foo', 'bar'] },
-        { id: 'u_2', name: 'Mary', notes: ['baz'] }
+  t.beforeEach(() => {
+    let building = new Building({
+      id: 'foo',
+      offices: [
+        { id: 'o1', department: 'I.T' },
+        { id: 'm1', department: 'accounting' }
+      ],
+      flats: [
+        { id: '101', bedrooms: 1 },
+        { id: '102', bedrooms: 2 }
       ]
     })
 
-    let result = flatten(chatroom)
-    list = result.lists.find(r => r.key === 'chatroom:c_1:messages')
+    building.flats.at(0).addMail({ id: 'm1', text: 'bonjour' })
+
+    let result = flatten(building)
+    list = result.lists.find(r => r.key === 'building:foo:flats:101:mail')
   })
 
   await t.test('does not export list since it has no additions', () => {

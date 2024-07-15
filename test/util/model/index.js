@@ -1,11 +1,16 @@
 import { List, AppendList, LazyList } from '../../../index.js'
 
 // eslint-disable-next-line no-unused-vars
-const id = () => Math.random().toString().slice(5, 10)
+const random = () => Math.random().toString().slice(5, 10)
 
 class Building {
-  constructor({ id = id(), offices = [], flats = [] } = {}) {
+  constructor({ id = random(), mail = [], offices = [], flats = [] } = {}) {
     this.id = id
+
+    this.mail = new AppendList({
+      from: mail,
+      type: Mail
+    })
 
     this.offices = new LazyList({
       from: offices,
@@ -20,14 +25,14 @@ class Building {
 }
 
 class Office {
-  constructor({ id = id(), department = 'lawyer' } = {}) {
+  constructor({ id = random(), department = 'lawyer' } = {}) {
     this.id = id
     this.department = department
   }
 }
 
 class Flat {
-  constructor({ id = id(), bedrooms = 2, mail = [] } = {}) {
+  constructor({ id = random(), bedrooms = 2, mail = [] } = {}) {
     this.id = id
     this.bedrooms = bedrooms
     this.mail = new AppendList({
@@ -42,7 +47,7 @@ class Flat {
 }
 
 class Mail {
-  constructor({ id = id(), text = 'hi' } = {}) {
+  constructor({ id = random(), text = 'hi' } = {}) {
     this.id = id
     this.text = text
   }

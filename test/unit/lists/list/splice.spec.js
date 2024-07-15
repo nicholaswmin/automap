@@ -7,7 +7,7 @@ test('List', async t => {
   let list
 
   await t.test('#splice (insertion)', async t => {
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new List({
         from: [{ id: 'u_1', name: 'John' }]
       })
@@ -27,7 +27,7 @@ test('List', async t => {
   await t.test('#splice (deletion)', async t => {
     let list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new List({
         from: [{ id: 'u_1', name: 'John' }]
       })

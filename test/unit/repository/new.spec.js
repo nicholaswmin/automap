@@ -3,14 +3,14 @@ import { test } from 'node:test'
 import ioredisMock from 'ioredis-mock'
 
 import { Repository } from '../../../src/repository.js'
-import { Chatroom } from '../../util/model/index.js'
+import { Building } from '../../util/model/index.js'
 
 test('repository', async t => {
   let redis, repository
 
-  await t.beforeEach(() => {
+  t.beforeEach(() => {
     redis = new ioredisMock()
-    repository = new Repository(Chatroom, redis)
+    repository = new Repository(Building, redis)
   })
 
   await t.test('instantiation', async t => {
@@ -22,7 +22,7 @@ test('repository', async t => {
 
     await t.test('"redis" argument is missing', async t => {
       await t.test('throws an error', () => {
-        assert.throws(() => new Repository(Chatroom))
+        assert.throws(() => new Repository(Building))
       })
     })
 

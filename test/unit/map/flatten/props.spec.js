@@ -2,18 +2,25 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { flatten } from '../../../../src/map.js'
-import { Chatroom } from '../../../util/model/index.js'
+import { Building } from '../../../util/model/index.js'
 
 test('#flatten()', async t => {
-  let chatroom
+  let building
 
-  await t.beforeEach(() => {
-    chatroom = new Chatroom({
-      id: 'c_1',
-      messages: [{ id: 'm_1', text: 'Hello' }, { id: 'm_2', text: 'World' }],
-      users: [
-        { id: 'u_1', name: 'John', notes: ['foo', 'bar'] },
-        { id: 'u_2', name: 'Mary', notes: ['baz'] }
+  t.beforeEach(() => {
+    building = new Building({
+      id: 'foo',
+      guests: [
+        { id: 'm1', text: 'hi' },
+        { id: 'm2', text: 'hola' }
+      ],
+      flats: [
+        { id: 'm1', text: 'hi' },
+        { id: 'm2', text: 'hola' }
+      ],
+      offices: [
+        { id: '101', bedrooms: 1 },
+        { id: '102', bedrooms: 2 }
       ]
     })
   })
@@ -22,7 +29,7 @@ test('#flatten()', async t => {
     let result = null
 
     t.beforeEach(() => {
-      result = flatten(chatroom)
+      result = flatten(building)
     })
 
     await t.test('returns a result', async t => {
@@ -37,7 +44,7 @@ test('#flatten()', async t => {
       })
 
       await t.test('containing an entry for each List in the root', () => {
-        assert.strictEqual(result.lists.length, 3)
+        assert.strictEqual(result.lists.length, 2)
       })
     })
   })

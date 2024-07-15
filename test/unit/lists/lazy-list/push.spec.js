@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
-import { Message } from '../../../util/model/index.js'
+import { Mail } from '../../../util/model/index.js'
 
 test('LazyList', async t => {
   let list
@@ -10,10 +10,10 @@ test('LazyList', async t => {
   await t.test('#push', async t => {
     list = null
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new LazyList({
         from: [{ id: 'm_1', text: 'Hello' }],
-        type: Message
+        type: Mail
       })
 
       list.push({ id: 'm_2', text: 'World' })

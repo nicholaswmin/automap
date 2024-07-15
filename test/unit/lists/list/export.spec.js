@@ -10,7 +10,7 @@ test('List', async t => {
     let result = null
 
     await t.test('list has no items', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new List({ from: [] })
 
         result = list.exportForSave()
@@ -43,7 +43,7 @@ test('List', async t => {
     })
 
     await t.test('list has some items', async t => {
-      await t.beforeEach(() => {
+      t.beforeEach(() => {
         list = new List({
           from: [{ id: 'u_1', name: 'John' }, { id: 'u_2', name: 'Mary' }]
         })
