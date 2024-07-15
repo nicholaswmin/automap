@@ -14,7 +14,7 @@ test('adding AppendList items', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('run 100 times', async t => {
+  await t.test('run 200 times', async t => {
     await t.test('adding a new item each time', async t => {
       let histograms = { fetch: null, save: null }
 
@@ -28,7 +28,7 @@ test('adding AppendList items', async t => {
           histogram: histograms.save
         })
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 200; i++) {
           const building = await fetch('foo') || new Building({
             id: 'foo', flats: [{ id: 1 }]
           })
@@ -39,29 +39,30 @@ test('adding AppendList items', async t => {
         }
       })
 
+      t.after(() => setImmediate(() => console.table({
+        '#fetch()': histogramMs(histograms.fetch),
+        '#loadLazyList()' : histogramMs(histograms.loadLazyList),
+        '#save()' : histogramMs(histograms.save)
+      })))
+
       await t.test('has saved items', async () => {
         assert.ok(await repo.redis.lrange('building:foo:flats:0:mail', 0, -1))
       })
 
       await t.test('#fetch', async t => {
-        t.before(() => console.table({
-          '#fetch()': histogramMs(histograms.fetch),
-          '#save()' : histogramMs(histograms.save)
-        }))
-
-        await t.test('ran 100 times', () => {
+        await t.test('ran 200 times', () => {
           const count = histograms.fetch.count
 
-          assert.strictEqual(count, 100, `count was: ${count}`)
+          assert.strictEqual(count, 200, `count was: ${count}`)
         })
 
-        await t.test('mean duration was < 6 ms', () => {
+        await t.test('mean duration was < 3 ms', () => {
           const mean = nanoToMs(histograms.fetch.mean)
 
-          assert.ok(mean < 6, `was: ${mean} ms`)
+          assert.ok(mean < 3, `was: ${mean} ms`)
         })
 
-        await t.test('duration deviation was < 3 ms', () => {
+        await t.test('duration deviation was < 2 ms', () => {
           const deviation = nanoToMs(histograms.fetch.stddev)
 
           assert.ok(deviation < 3, `was: ${deviation} ms`)
@@ -69,19 +70,19 @@ test('adding AppendList items', async t => {
       })
 
       await t.test('#save', async t => {
-        await t.test('ran 100 times', () => {
+        await t.test('ran 200 times', () => {
           const count = histograms.save.count
 
-          assert.strictEqual(count, 100, `ran: ${count} times`)
+          assert.strictEqual(count, 200, `ran: ${count} times`)
         })
 
-        await t.test('mean duration was < 6 ms', () => {
+        await t.test('mean duration was < 3 ms', () => {
           const mean = nanoToMs(histograms.save.mean)
 
-          assert.ok(mean < 6, `was: ${mean} ms`)
+          assert.ok(mean < 3, `was: ${mean} ms`)
         })
 
-        await t.test('duration deviation was < 5 ms', () => {
+        await t.test('duration deviation was < 2 ms', () => {
           const deviation = nanoToMs(histograms.save.stddev)
 
           assert.ok(deviation < 5, `was: ${deviation} ms`)

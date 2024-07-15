@@ -50,6 +50,12 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
            }
         })
 
+        t.after(() => setImmediate(() => console.table({
+          '#fetch()': histogramMs(histograms.fetch),
+          '#loadLazyList()' : histogramMs(histograms.loadLazyList),
+          '#save()' : histogramMs(histograms.save)
+        })))
+
         await t.test('has saved items', async () => {
           assert.ok(await repo.redis.lrange('building:foo:flats:0:mail', 0, -1))
         })
@@ -65,12 +71,12 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
             assert.strictEqual(count, 1000, `count was: ${count}`)
           })
 
-          await t.test('mean duration was < 6 ms', () => {
+          await t.test('mean duration was < 3 ms', () => {
             const mean = nanoToMs(histograms.fetch.mean)
-            assert.ok(mean < 6, `was: ${mean} ms`)
+            assert.ok(mean < 3, `was: ${mean} ms`)
           })
 
-          await t.test('duration deviation was < 3 ms', () => {
+          await t.test('duration deviation was < 2 ms', () => {
             const deviation = nanoToMs(histograms.fetch.stddev)
             assert.ok(deviation < 3, `was: ${deviation} ms`)
           })
@@ -82,12 +88,12 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
             assert.strictEqual(count, 1000, `ran: ${count} times`)
           })
 
-          await t.test('mean duration was < 6 ms', () => {
+          await t.test('mean duration was < 3 ms', () => {
             const mean = nanoToMs(histograms.save.mean)
-            assert.ok(mean < 6, `was: ${mean} ms`)
+            assert.ok(mean < 3, `was: ${mean} ms`)
           })
 
-          await t.test('duration deviation was < 5 ms', () => {
+          await t.test('duration deviation was < 2 ms', () => {
             const deviation = nanoToMs(histograms.save.stddev)
             assert.ok(deviation < 5, `was: ${deviation} ms`)
           })

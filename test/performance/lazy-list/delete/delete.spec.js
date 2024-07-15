@@ -2,18 +2,20 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 import ioredis from 'ioredis'
 
-test('perf: delete 100 LazyList items', { todo: true }, async t => {
-  let redis = null
+import { Repository } from '../../../../index.js'
+import { Building } from '../../../util/model/index.js'
 
-  await t.before(() => redis = new ioredis())
-  await t.after(() => redis.disconnect())
+test('#repository.del()', { todo: true }, async t => {
+  const repo = new Repository(Building, new ioredis())
 
-  await t.test('start with 100 items', async t => {
-    await t.after(() => redis.disconnect())
-    await t.beforeEach(() => {   })
+  t.beforeEach(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
-    await t.test('does foo', () => {
-      assert.ok(true)
+  await t.test('delete 200 Lazy List items', async t => {
+    t.beforeEach(() => { })
+
+    await t.test('@todo', () => {
+      assert.ok('foo bar')
     })
   })
 })
