@@ -11,9 +11,9 @@ test('#flatten()', async t => {
     building = new Building({
       id: 'foo',
       mail: [ { id: 'm1', text: 'hi' } ],
-      offices: [
-        { id: 'o1', department: 'I.T' },
-        { id: 'm1', department: 'accounting' }
+      visitors: [
+        { id: 'j1', name: 'John' },
+        { id: 'j2', name: 'Jane' }
       ],
       flats: [
         { id: '101', bedrooms: 1 },
@@ -60,7 +60,7 @@ test('#flatten()', async t => {
         await t.test('json has same keys as root', () => {
           const keys = Object.keys(parsed)
           assert.ok(
-            ['offices', 'mail', 'flats', 'id']
+            ['visitors', 'mail', 'flats', 'id']
               .every(prop => keys.includes(prop)),
             `keys are actually: ${keys}`
           )
@@ -75,11 +75,11 @@ test('#flatten()', async t => {
         })
 
         await t.test('the path can be split to actual path and traits', () => {
-          assert.strictEqual(parsed.offices.split(' ').length, 2)
+          assert.strictEqual(parsed.visitors.split(' ').length, 2)
         })
 
         await t.test('traits part is parseable & includes trait type', () => {
-          const traitsJSON = parsed.offices.split(' ')[1]
+          const traitsJSON = parsed.visitors.split(' ')[1]
 
           assert.deepStrictEqual(
             JSON.parse(traitsJSON),

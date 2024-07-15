@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
-import { Office } from '../../../util/model/index.js'
+import { Person } from '../../../util/model/index.js'
 
 // Mock repository, needed when calling `list.load(repository)
 //
@@ -21,7 +21,7 @@ const mockRepos = {
             'o_2': JSON.stringify({ i: 1, json: { id: 'o_2' }})
           }
 
-          return key && key === 'building:foo:offices' ?
+          return key && key === 'building:foo:visitors' ?
             Object.keys(hash)
             .map(key => JSON.parse(hash[key]))
             .sort((a, b) => a.i - b.i)
@@ -41,8 +41,8 @@ test('LazyList', async t => {
 
     t.beforeEach(() => {
       list = new LazyList({
-        from: 'building:foo:offices',
-        type: Office
+        from: 'building:foo:visitors',
+        type: Person
       })
     })
 
@@ -91,9 +91,9 @@ test('LazyList', async t => {
         assert.strictEqual(list.length, 2)
       })
 
-      await t.test('both are "Office" instances', () => {
-        assert.strictEqual(list[0].constructor.name, 'Office')
-        assert.strictEqual(list[1].constructor.name, 'Office')
+      await t.test('both are "Person" instances', () => {
+        assert.strictEqual(list[0].constructor.name, 'Person')
+        assert.strictEqual(list[1].constructor.name, 'Person')
       })
     })
   })

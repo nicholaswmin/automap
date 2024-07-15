@@ -11,9 +11,9 @@ test('#flatten()', async t => {
     building = new Building({
       id: 'foo',
       mail: [ { id: 'm1', text: 'hi' } ],
-      offices: [
-        { id: 'o1', department: 'I.T' },
-        { id: 'm1', department: 'accounting' }
+      visitors: [
+        { id: 'j1', name: 'John' },
+        { id: 'j2', name: 'Jane' }
       ],
       flats: [
         { id: '101', bedrooms: 1 },

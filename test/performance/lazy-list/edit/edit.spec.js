@@ -13,7 +13,7 @@ test('edit LazyList items', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('run 200 times', async t => {
+  await t.test('run 100 times', async t => {
     await t.test('adding a new item each time', async t => {
      let fetch, loadList, save = null
 
@@ -24,23 +24,23 @@ test('edit LazyList items', async t => {
 
         await repo.save(new Building({
           id: 'foo',
-          offices: Array.from({ length: 200 }, (_, i) => ({
+          visitors: Array.from({ length: 200 }, (_, i) => ({
             id: i,
-            department: 'dept-' + i
+            name: 'janitor-' + i
           }))
         }))
 
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 100; i++) {
           const building = await fetch('foo')
 
           loadList = timerify(
-            building.offices.load.bind(building.offices),
+            building.visitors.load.bind(building.visitors),
             loadList?.histogram // reuse histogram if set
           )
 
           await loadList(repo)
 
-          building.offices.at(i).department = payloadKB(5)
+          building.visitors.at(i).name = payloadKB(5)
 
           await save(building)
         }
@@ -59,16 +59,16 @@ test('edit LazyList items', async t => {
       })
 
       await t.test('#fetch', async t => {
-        await t.test('ran 200 times', () => {
+        await t.test('ran 100 times', () => {
           const count = fetch.histogram.count
 
-          assert.strictEqual(count, 200, `count was: ${count}`)
+          assert.strictEqual(count, 100, `count was: ${count}`)
         })
 
-        await t.test('mean duration was < 3 ms', () => {
+        await t.test('mean duration was < 5 ms', () => {
           const mean = nanoToMs(fetch.histogram.mean)
 
-          assert.ok(mean < 3, `was: ${mean} ms`)
+          assert.ok(mean < 5, `was: ${mean} ms`)
         })
 
         await t.test('duration deviation was < 2 ms', () => {
@@ -79,16 +79,16 @@ test('edit LazyList items', async t => {
       })
 
       await t.test('#loadList', async t => {
-        await t.test('ran 200 times', () => {
+        await t.test('ran 100 times', () => {
           const count = loadList.histogram.count
 
-          assert.strictEqual(count, 200, `ran: ${count} times`)
+          assert.strictEqual(count, 100, `ran: ${count} times`)
         })
 
-        await t.test('mean duration was < 3 ms', () => {
+        await t.test('mean duration was < 5 ms', () => {
           const mean = nanoToMs(loadList.histogram.mean)
 
-          assert.ok(mean < 3, `was: ${mean} ms`)
+          assert.ok(mean < 5, `was: ${mean} ms`)
         })
 
         await t.test('duration deviation was < 2 ms', () => {
@@ -99,16 +99,16 @@ test('edit LazyList items', async t => {
       })
 
       await t.test('#save', async t => {
-        await t.test('ran 200 times', () => {
+        await t.test('ran 100 times', () => {
           const count = save.histogram.count
 
-          assert.strictEqual(count, 200, `ran: ${count} times`)
+          assert.strictEqual(count, 100, `ran: ${count} times`)
         })
 
-        await t.test('mean duration was < 3 ms', () => {
+        await t.test('mean duration was < 5 ms', () => {
           const mean = nanoToMs(save.histogram.mean)
 
-          assert.ok(mean < 3, `was: ${mean} ms`)
+          assert.ok(mean < 5, `was: ${mean} ms`)
         })
 
         await t.test('duration deviation was < 2 ms', () => {

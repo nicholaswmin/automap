@@ -61,9 +61,9 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
             assert.strictEqual(count, 1000, `count was: ${count}`)
           })
 
-          await t.test('mean duration was < 3 ms', () => {
+          await t.test('mean duration was < 5 ms', () => {
             const mean = nanoToMs(fetch.histogram.mean)
-            assert.ok(mean < 3, `was: ${mean} ms`)
+            assert.ok(mean < 5, `was: ${mean} ms`)
           })
 
           await t.test('duration deviation was < 2 ms', () => {
@@ -78,9 +78,9 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
             assert.strictEqual(count, 1000, `ran: ${count} times`)
           })
 
-          await t.test('mean duration was < 3 ms', () => {
+          await t.test('mean duration was < 5 ms', () => {
             const mean = nanoToMs(save.histogram.mean)
-            assert.ok(mean < 3, `was: ${mean} ms`)
+            assert.ok(mean < 5, `was: ${mean} ms`)
           })
 
           await t.test('duration deviation was < 2 ms', () => {

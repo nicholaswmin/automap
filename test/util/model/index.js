@@ -1,10 +1,10 @@
 import { List, AppendList, LazyList } from '../../../index.js'
 
- 
+
 const random = () => Math.random().toString().slice(5, 10)
 
 class Building {
-  constructor({ id = random(), mail = [], offices = [], flats = [] } = {}) {
+  constructor({ id = random(), mail = [], visitors = [], flats = [] } = {}) {
     this.id = id
 
     this.mail = new AppendList({
@@ -12,9 +12,9 @@ class Building {
       type: Mail
     })
 
-    this.offices = new LazyList({
-      from: offices,
-      type: Office
+    this.visitors = new LazyList({
+      from: visitors,
+      type: Person
     })
 
     this.flats = new List({
@@ -24,10 +24,10 @@ class Building {
   }
 }
 
-class Office {
-  constructor({ id = random(), department = 'lawyer' } = {}) {
+class Person {
+  constructor({ id = random(), name = 'John' } = {}) {
     this.id = id
-    this.department = department
+    this.name = name
   }
 }
 
@@ -53,4 +53,4 @@ class Mail {
   }
 }
 
-export { Building, Office, Flat, Mail }
+export { Building, Person, Flat, Mail }

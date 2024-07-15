@@ -18,7 +18,7 @@ test('#flatten()', async t => {
         { id: 'm1', text: 'hi' },
         { id: 'm2', text: 'hola' }
       ],
-      offices: [
+      visitors: [
         { id: '101', bedrooms: 1 },
         { id: '102', bedrooms: 2 }
       ]

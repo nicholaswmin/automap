@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Building, Office } from '../../../util/model/index.js'
+import { Building, Person } from '../../../util/model/index.js'
 
 test('#repository.save()', async t => {
   const repo = new Repository(Building, new ioredis())
@@ -16,7 +16,7 @@ test('#repository.save()', async t => {
 
     t.beforeEach(async () => {
       await repo.save(new Building({
-        id: 'foo', offices: [{ id: 1 }]
+        id: 'foo', visitors: [{ id: 1 }]
       }))
 
       building = await repo.fetch('foo')
@@ -24,7 +24,7 @@ test('#repository.save()', async t => {
 
     await t.test('adding a LazyList item and saving', async t => {
       t.beforeEach(async () => {
-        building.offices.push(new Office({ id: 2 }))
+        building.visitors.push(new Person({ id: 2 }))
 
         repo.save(building)
       })
@@ -33,11 +33,11 @@ test('#repository.save()', async t => {
         let items = null
 
         t.beforeEach(async () => {
-          items = await repo.redis.hgetall('building:foo:offices')
+          items = await repo.redis.hgetall('building:foo:visitors')
         })
 
         await t.test('under a human readable path', () => {
-          assert.ok(items, 'no such Redis key: building:foo:offices')
+          assert.ok(items, 'no such Redis key: building:foo:visitors')
         })
 
         await t.test('both items', () => {
@@ -50,10 +50,10 @@ test('#repository.save()', async t => {
           building = await repo.fetch('foo'))
 
         await t.test('and loading its list', async t => {
-          t.beforeEach(() => building.offices.load(repo))
+          t.beforeEach(() => building.visitors.load(repo))
 
           await t.test('which has the previous + new items', () => {
-            assert.strictEqual(building.offices.length, 2)
+            assert.strictEqual(building.visitors.length, 2)
           })
         })
       })

@@ -16,18 +16,18 @@ test('#repository.save()', async t => {
 
     t.beforeEach(async () => {
       await repo.save(new Building({
-        id: 'foo', offices: [{ id: 1 }]
+        id: 'foo', visitors: [{ id: 1 }]
       }))
 
       building = await repo.fetch('foo')
     })
 
     await t.test('loading its list', async t => {
-      t.beforeEach(() => building.offices.load(repo))
+      t.beforeEach(() => building.visitors.load(repo))
 
       await t.test('editing its LazyList item and saving', async t => {
         t.beforeEach(async () => {
-          building.offices.at(0).department = 'I.T'
+          building.visitors.at(0).name = 'Jane'
 
           repo.save(building)
         })
@@ -37,14 +37,14 @@ test('#repository.save()', async t => {
             building = await repo.fetch('foo'))
 
           await t.test('and loading its list', async t => {
-            t.beforeEach(() => building.offices.load(repo))
+            t.beforeEach(() => building.visitors.load(repo))
 
             await t.test('loads the item', () => {
-              assert.strictEqual(building.offices.length, 1)
+              assert.strictEqual(building.visitors.length, 1)
             })
 
             await t.test('which is edited', () => {
-              assert.strictEqual(building.offices.at(0).department, 'I.T')
+              assert.strictEqual(building.visitors.at(0).name, 'Jane')
             })
           })
         })
