@@ -5,13 +5,13 @@ import { createHistogram } from 'node:perf_hooks'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
+import { Chatroom } from '../../../util/model/index.js'
 import {
   nanoToMs,
   deleteall,
   payloadKB,
   histogramMs
-} from '../../../helpers/utils/index.js'
+} from '../../../util/index.js'
 
 test('perf: fetch, load and save LazyLists', async t => {
   let redis = null

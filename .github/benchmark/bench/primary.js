@@ -1,6 +1,6 @@
 import { styleText } from 'node:util'
 import throttle from 'throttleit'
-import { randomId, round } from '../../../test/helpers/utils/index.js'
+import { randomId, round } from '../../../test/util/utils/index.js'
 
 const primary = async ({ cluster, constants, before = () => {} }) => {
   console.log('Started')

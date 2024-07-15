@@ -1,5 +1,5 @@
 import { List, AppendList } from '../../../index.js'
-import { randomId } from '../../../test/helpers/utils/index.js'
+import { randomId } from '../../../test/util/utils/index.js'
 
 class ViewPosition {
   constructor({ x = 0, y = 0 } = {}) {

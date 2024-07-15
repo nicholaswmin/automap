@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
-import { Building, Office } from '../../../helpers/model/index.js'
+import { Building, Office } from '../../../util/model/index.js'
 
 test('#repository.save()', async t => {
   const repo = new Repository(Building, new ioredis())

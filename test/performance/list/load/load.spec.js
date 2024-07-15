@@ -5,13 +5,13 @@ import { test } from 'node:test'
 import { createHistogram } from 'node:perf_hooks'
 
 import { Repository } from '../../../../index.js'
-import { Chatroom } from '../../../helpers/model/index.js'
+import { Chatroom } from '../../../util/model/index.js'
 import {
   nanoToMs,
   deleteall,
   payloadKB,
   histogramMs
-} from '../../../helpers/utils/index.js'
+} from '../../../util/index.js'
 
 test('perf: fetch then save List items', async t => {
   let redis = null

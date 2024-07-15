@@ -16,7 +16,7 @@ import {
   flushall,
   randomId,
   payloadKB
-} from '../../test/helpers/utils/index.js'
+} from '../../test/util/utils/index.js'
 
 const constants = {
   TASKS_PER_SECOND: 100,

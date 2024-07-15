@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
-import { Message } from '../../../helpers/model/index.js'
+import { Message } from '../../../util/model/index.js'
 
 // Mock repository, needed when calling `list.load(repository)
 //
