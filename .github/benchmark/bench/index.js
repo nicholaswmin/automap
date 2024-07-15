@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events'
 import { monitorEventLoopDelay, createHistogram } from 'node:perf_hooks'
 import input from '@inquirer/input'
 
-import { round, nanoToMs, toMB } from '../../../test/util/utils/index.js'
+import { round, nanoToMs, toMB } from '../../../test/util/index.js'
 
 import primary from './primary.js'
 import worker from './worker.js'
