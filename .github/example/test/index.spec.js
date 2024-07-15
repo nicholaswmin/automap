@@ -15,7 +15,7 @@ test('Runnable example', async t => {
   await t.test('logs output:', async t => {
     let stdouts = '', stderrs = ''
 
-    const { stdout, stderr } = await exec(`node ${filepath}`)
+    const { stdout, stderr } = await exec(`node ${filepath}`, { timeout: 5000 })
 
     stdouts += stdout.toString()
     stderrs += stderr.toString()

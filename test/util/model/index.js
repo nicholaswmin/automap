@@ -46,6 +46,10 @@ class Flat {
     })
   }
 
+  ringDoorbell() {
+    console.log('🔔 at flat', this.id)
+  }
+
   addMail({ id = null, text = null } = {}) {
     this.mail.push(new Mail({ id, text }))
   }

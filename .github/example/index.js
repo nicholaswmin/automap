@@ -1,10 +1,9 @@
-// Run this:
-// `npm run example`
+// run this: `npm run example`
 
-import ioredis from 'ioredis-mock'
+import ioredis from 'ioredis'
 
 import { Repository } from '../../index.js'
-import { Building, Flat, Mail } from './model.js'
+import { Building, Flat, Mail } from '../../test/util/model/index.js'
 
 const repo = new Repository(Building, new ioredis())
 
@@ -12,6 +11,7 @@ const repo = new Repository(Building, new ioredis())
 
 const building = new Building({
   id: 'foo',
+  visitors: [{ name: 'John' }, { name: 'Mary' }],
   flats: [
     new Flat({ id: 101, mail: [] }) ,
     new Flat({
@@ -38,19 +38,19 @@ console.log('-', fetched.constructor.name, 'fetched ...')
 
 // load lazy list via `list.load()`
 
-await fetched.flats.load(repo)
+await fetched.visitors.load(repo)
 
 console.log(
   '-',
   fetched.constructor.name,
   'has',
-  fetched.flats.length,
-  'flats'
+  fetched.visitors.length,
+  'visitors'
 )
 
-// call a Flat method
+console.log(fetched)
 
-fetched.flats[0].doorbell()
+fetched.flats[0].ringDoorbell()
 
 // fetch it again
 
@@ -78,3 +78,5 @@ console.log(
 await repo.save(building)
 
 console.log('-', building.constructor.name, 'saved again ...')
+
+await repo.redis.disconnect()
