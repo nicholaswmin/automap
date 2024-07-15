@@ -41,14 +41,12 @@ console.log('-', fetched.constructor.name, 'fetched ...')
 await fetched.visitors.load(repo)
 
 console.log(
-  '-',
+  '- LazyList loaded ...',
   fetched.constructor.name,
   'has',
-  fetched.visitors.length,
+  building.visitors.length,
   'visitors'
 )
-
-console.log(fetched)
 
 fetched.flats[0].ringDoorbell()
 

@@ -35,9 +35,10 @@ test('Runnable example', async t => {
     })
 
     await t.test('a "LazyList" log', () => {
+      assert.ok(stdouts.includes('Building'))
       assert.ok(stdouts.includes('has'))
-      assert.ok(stdouts.includes('2'))
-      assert.ok(stdouts.includes('flats'))
+      assert.ok(stdouts.includes('49'))
+      assert.ok(stdouts.includes('visitors'))
     })
 
     await t.test('a "LazyList item method called" log', () => {
