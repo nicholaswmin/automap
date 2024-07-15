@@ -5,13 +5,13 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
 
-test('delete 100 200 items', { todo: true }, async t => {
+test('deleting items from a List', { todo: true }, async t => {
   const repo = new Repository(Building, new ioredis())
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('delete a 200 item', async t => {
+  await t.test('when 100 Lists are deleted', async t => {
     t.beforeEach(() => { })
 
     await t.test('@todo', () => {

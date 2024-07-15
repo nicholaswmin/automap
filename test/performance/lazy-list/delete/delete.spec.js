@@ -5,13 +5,13 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
 
-test('#repository.del()', { todo: true }, async t => {
+test('deleting items from LazyList', { todo: true }, async t => {
   const repo = new Repository(Building, new ioredis())
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('delete 200 Lazy List items', async t => {
+  await t.test('when 100 LazyLists are deleted', async t => {
     t.beforeEach(() => { })
 
     await t.test('@todo', () => {

@@ -44,7 +44,7 @@ exports a `repository` and an array-like type, called `List`.
 
 List-like data is detached & saved as a [`Hash`][redis-hash]
 or [`List`][redis-list] rather than jam everything into a
-single [`Key`][redis-string].  
+single [`Key`][redis-string].
 
 > Example: A `Building` with `Flats`:
 
@@ -85,16 +85,16 @@ await repo.save(building)
 ... saved like so:
 
 ```js
-           ┌──────────────────┐            
+           ┌──────────────────┐
            │ Building         |
            |                  |
-           │ id: foo          │            
-           │ flats:           │                    
-           │  - Flat          │            
-           │  - Flat          │            
-           │  - Flat          │            
-           │  - Flat          │                     
-           └─────────┬────────┘            
+           │ id: foo          │
+           │ flats:           │
+           │  - Flat          │
+           │  - Flat          │
+           │  - Flat          │
+           │  - Flat          │
+           └─────────┬────────┘
 ┌──────────────────┐ │ ┌─────────────────┐
 │ Redis String     │◄┴►│ Redis Hash      │
 │                  │   │                 │
@@ -130,16 +130,16 @@ for (let flat of building.flats)
 │                  │   │  - foo:flats:4  │
 └──────────────────┘◄|►└─────────────────┘
                      |
-            ┌───────────────────┐            
+            ┌───────────────────┐
             │ Building          |
             |                   |
-            │ id: "foo"         │            
-            │ flats:            │                    
-            │  - Flat           │            
-            │  - Flat           │            
-            │  - Flat           │            
-            │  - Flat           │                     
-            └───────────────────┘            
+            │ id: "foo"         │
+            │ flats:            │
+            │  - Flat           │
+            │  - Flat           │
+            │  - Flat           │
+            │  - Flat           │
+            └───────────────────┘
 ```
 
 it rebuilds the entire object graph including *nested* types.
@@ -235,7 +235,7 @@ await repository.save(building)
 
 ## The `List` types
 
-List-like data must use one of the `List` types instead of an [`Array`][array].   
+List-like data must use one of the `List` types instead of an [`Array`][array].
 You can still use a regular `Array` but it won't be decomposed from the
 main object-graph.
 
@@ -326,7 +326,7 @@ console.log(two)
 
 ### Lazy loading
 
-Sometimes you won't need to load the contents of a list initially.   
+Sometimes you won't need to load the contents of a list initially.
 You might want to load it's contents after you fetch it, or even none at all.
 
 In that case, use a `LazyList` instead of a `List`.
@@ -373,7 +373,7 @@ Caveats:
 
 - No notion of item deletion. It functions as an [append-only log][append-only],
   hence the name.
-- No constant O<sup>1</sup> time lookups for individual list items in Redis.  
+- No constant O<sup>1</sup> time lookups for individual list items in Redis.
 
 An example:
 
@@ -423,6 +423,8 @@ Run it with:
 ```bash
 npm run example
 ```
+
+The [model][example-model] itself can be found [here].
 
 ## Redis data structure
 
@@ -517,11 +519,11 @@ These methods ensure updates are both performant and [atomic][atomic][^1].
 
 #### Fetch
 
-Fetching an object is not entirely atomic.  
+Fetching an object is not entirely atomic.
 
 ### Nested Lists
 
-An arbitrary amount of nesting-level of lists is allowed.  
+An arbitrary amount of nesting-level of lists is allowed.
 You can have a list, inside another list, inside another list and so on...
 
 But you should note the following ...
@@ -529,7 +531,7 @@ But you should note the following ...
 ### Time-complexity
 
 > This section briefly describes the [time-complexity][time] of possible input
-> configurations.  
+> configurations.
 > Note that in these time-complexity speculations are solely in the context
 > of network roundtrips since they are by far the biggest bottleneck in
 > most cases.
@@ -552,7 +554,7 @@ O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 In short, don't do it.
 
-That being said, this problem only concerns a `List` nested in another `List`.  
+That being said, this problem only concerns a `List` nested in another `List`.
 None of the 2 other types exhibit this issue, simply because they are not
 automatically fetched.
 
@@ -651,7 +653,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       By every definition they are atomic since they don't allow for
       partial updates, however the entire transaction can fail if client B
       updates a value while it's in the process of being modified by client A
-      as part of a transaction.   
+      as part of a transaction.
       Retries are not currently implemented.
 
 [^2]: The singer "Sting" lives here and gets lots of fan-mail.
@@ -699,6 +701,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
+[example-model]: ./test/util/model/index.js
 [paper-benchmark]: .github/benchmark/README.md
 [r]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [ioredis]: https://github.com/redis/ioredis

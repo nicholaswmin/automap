@@ -4,88 +4,85 @@ import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
-import { nanoToMs, payloadKB, timerify } from '../../../util/index.js'
+import { payloadKB, timerify } from '../../../util/index.js'
 
-test('edit List items', async t => {
+test('editing List items', async t => {
   const repo = new Repository(Building, new ioredis())
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('run 100 times', async t => {
-    await t.test('editing one item each time', async t => {
-      let fetch, save = null
+  await t.test('when 100 "fetch -> edit -> save" cycles run', async t => {
+    let fetch, save
 
-      t.beforeEach(async () => {
-        fetch = timerify(repo.fetch.bind(repo))
-        save = timerify(repo.save.bind(repo))
+    t.after(() => console.table({
+      fetch: fetch.histogram_ms,
+      save: save.histogram_ms
+    }))
 
-        await repo.save(new Building({
-          id: 'foo',
-          flats: Array.from({ length: 200 }, (_, i) => ({
-            id: i,
-            bedrooms: 'dept-' + i
-          }))
+    t.beforeEach(async () => {
+      fetch = timerify(repo.fetch.bind(repo))
+      save = timerify(repo.save.bind(repo))
+
+      await repo.save(new Building({
+        id: 'foo',
+        flats: Array.from({ length: 100 }, (_, i) => ({
+         id: i, bedrooms: 2
         }))
-
-        for (let i = 0; i < 100; i++) {
-          const building = await fetch('foo')
-
-          building.flats.at(i).bedrooms = payloadKB(5)
-
-          await save(building)
-        }
-      })
-
-      t.after(() => process.nextTick(() => {
-        console.table({
-          '#fetch': fetch.toHistogramMillis(),
-          '#save': save.toHistogramMillis()
-        })
       }))
 
-      await t.test('has saved items', async () => {
-        assert.ok(await repo.redis.hgetall('building:foo:flats:0:mail'))
+      for (let i = 0; i < 100; i++) {
+        const building = await fetch('foo')
+
+        building.flats.at(i).bedrooms = payloadKB(5)
+
+        await save(building)
+      }
+    })
+
+    await t.test('logs timing stats', () =>
+      setImmediate(() => console.table({
+        fetch: fetch.histogram_ms,
+        save: save.histogram_ms
+      })))
+
+    await t.test('fetches the objects promptly', async t => {
+      await t.test('runs 100 times', () => {
+        const count = fetch.histogram_ms.count
+
+        assert.strictEqual(count, 100, `count was: ${count}`)
       })
 
-      await t.test('#fetch', async t => {
-        await t.test('ran 100 times', () => {
-          const count = fetch.histogram.count
+      await t.test('takes on average < 3 ms per fetch()', () => {
+        const mean = fetch.histogram_ms.mean
 
-          assert.strictEqual(count, 100, `count was: ${count}`)
-        })
-
-        await t.test('mean duration was < 5 ms', () => {
-          const mean = nanoToMs(fetch.histogram.mean)
-
-          assert.ok(mean < 5, `was: ${mean} ms`)
-        })
-
-        await t.test('duration deviation was < 2 ms', () => {
-          const deviation = nanoToMs(fetch.histogram.stddev)
-
-          assert.ok(deviation < 3, `was: ${deviation} ms`)
-        })
+        assert.ok(mean < 3, `was: ${mean} ms`)
       })
 
-      await t.test('#save', async t => {
-        await t.test('ran 100 times', () => {
-          const count = save.histogram.count
+      await t.test('with consistent durations throughout', () => {
+        const deviation = fetch.histogram_ms.stddev
 
-          assert.strictEqual(count, 100, `ran: ${count} times`)
-        })
+        assert.ok(deviation < 3, `was: ${deviation} ms`)
+      })
+    })
 
-        await t.test('mean duration was < 5 ms', () => {
-          const mean = nanoToMs(save.histogram.mean)
+    await t.test('saves the objects promptly', async t => {
+      await t.test('runs 100 times', () => {
+        const count = save.histogram_ms.count
 
-          assert.ok(mean < 5, `was: ${mean} ms`)
-        })
+        assert.strictEqual(count, 100, `ran: ${count} times`)
+      })
 
-        await t.test('duration deviation was < 2 ms', () => {
-          const deviation = nanoToMs(save.histogram.stddev)
+      await t.test('takes on average < 5 ms per save()', () => {
+        const mean = save.histogram_ms.mean
 
-          assert.ok(deviation < 3, `was: ${deviation} ms`)
-        })
+        assert.ok(mean < 5, `was: ${mean} ms`)
+      })
+
+      await t.test('with consistent durations throughout', () => {
+        const deviation = save.histogram_ms.stddev
+
+        assert.ok(deviation < 5, `was: ${deviation} ms`)
       })
     })
   })

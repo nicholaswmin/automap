@@ -11,7 +11,13 @@ const nanoToMs = ns => round(ns / 1e+6)
 // Performance
 
 // - performance.timery-fies a function and attaches a histogram
-//   on the function itself, for easy access.
+//   on the function itself, for easy access, i.e:
+// ```js
+// const foo = timerify(fooFn)
+//
+// console.log(foo.histogram.max) // logs nanoseconds
+// console.log(foo.histogram_ms.max) // logs milliseconds
+// ````
 // - Reuse a histogram by passing a previous one as the 2nd parameter
 //
 // See: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
@@ -19,22 +25,16 @@ const timerify = (func, histogram = createHistogram()) => {
   const timerified = performance.timerify(func, { histogram })
 
   timerified.histogram = histogram
-  timerified.toHistogramMillis = () => toHistogramMillis(histogram)
+
+  timerified.histogram_ms = {
+    get count () { return histogram.count },
+    get min() { return nanoToMs(histogram.min) },
+    get mean () { return nanoToMs(histogram.mean) },
+    get max () { return nanoToMs(histogram.max) },
+    get stddev () { return nanoToMs(histogram.mean) }
+  }
 
   return timerified
-}
-
-const toHistogramMillis = hgram => {
-  const histogram = hgram.toJSON ? hgram.toJSON() : hgram
-  // eslint-disable-next-line no-unused-vars
-  const { percentiles, exceeds, ...obj } = { ...histogram }
-
-  return Object.keys(obj)
-    .sort((a, b) => a - b)
-    .reduce((acc, key) => ({
-      ...acc, [isNaN(key) ? key + (key === 'count' ? '' : ' (ms)') :
-        (+key).toFixed(2) ]: key === 'count' ? obj[key] : nanoToMs(obj[key])
-    }), {})
 }
 
 // Randoms
