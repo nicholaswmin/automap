@@ -5,7 +5,7 @@ import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
 import { Building, Flat } from '../../../util/model/index.js'
-import { nanoToMs, payloadKB, timerify } from '../../../util/index.js'
+import { nanoToMs, payloadKB, timerify } from '../../util/index.js'
 
 test('adding 1k AppendList items, nested in 100 Lists', async t => {
   const repo = new Repository(Building, new ioredis())
