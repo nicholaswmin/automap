@@ -18,7 +18,7 @@ test('fetch then save Lists', async t => {
     let building = null
 
     await t.test('fetch an object, then save it again', async t => {
-      let histograms = { fetch: null, save }
+      let histograms = { fetch: null, save: null }
 
       t.beforeEach(async () => {
         histograms = { fetch: createHistogram(), save: createHistogram() }

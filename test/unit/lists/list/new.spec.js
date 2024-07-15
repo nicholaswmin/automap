@@ -49,7 +49,7 @@ test('List', async t => {
       await t.test('throws', () => {
         assert.throws(
           () => {
-            list = new List({ type: Message })
+            list = new List({ type: Mail })
           })
       })
     })
