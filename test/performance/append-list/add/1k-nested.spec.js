@@ -13,7 +13,7 @@ test('adding 1k AppendList items, nested in 100 Lists', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('run 100 times', async t => {
+  await t.test('run 50 times', async t => {
     await t.test('run 20 times for each time', async t => {
       await t.test('each time add an item', async t => {
         let fetch, save = null
