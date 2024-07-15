@@ -20,8 +20,6 @@ test('#flatten()', async t => {
       ]
     })
 
-    building.flats.at(0).addMail({ id: 'm1', text: 'bonjour' })
-
     let result = flatten(building)
     list = result.lists.find(r => r.key === 'building:foo:flats:101:mail')
   })

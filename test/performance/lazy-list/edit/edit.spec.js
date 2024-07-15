@@ -5,7 +5,6 @@ import ioredis from 'ioredis'
 import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
 import { nanoToMs, payloadKB, timerify } from '../../../util/index.js'
-import { LOADIPHLPAPI } from 'node:dns/promises'
 
 test('edit LazyList items', async t => {
   const repo = new Repository(Building, new ioredis())

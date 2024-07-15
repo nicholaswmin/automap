@@ -7,14 +7,14 @@ import { Mail } from '../../../util/model/index.js'
 test('List', async t => {
   let list
 
-  t.test('#push', async t => {
+  await t.test('#push', async t => {
     t.beforeEach(() => {
       list = new List({
-        from: [{ id: 'm_1', text: 'Hello' }],
+        from: [{ id: 'm1', text: 'Hello' }],
         type: Mail
       })
 
-      list.push({ id: 'm_2', text: 'World' })
+      list.push({ id: 'm2', text: 'World' })
     })
 
     await t.test('adds the items', () => {

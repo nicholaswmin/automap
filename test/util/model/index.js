@@ -1,6 +1,5 @@
 import { List, AppendList, LazyList } from '../../../index.js'
 
-
 const random = () => Math.random().toString().slice(5, 10)
 
 class Building {
@@ -32,9 +31,15 @@ class Person {
 }
 
 class Flat {
-  constructor({ id = random(), bedrooms = 2, mail = [] } = {}) {
+  constructor({ id = random(), bedrooms = 2, visitors = [], mail = [] } = {}) {
     this.id = id
     this.bedrooms = bedrooms
+
+    this.visitors = new LazyList({
+      from: visitors,
+      type: Person
+    })
+
     this.mail = new AppendList({
       type: Mail,
       from: mail

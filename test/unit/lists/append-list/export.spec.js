@@ -82,12 +82,12 @@ test('AppendList', async t => {
         })
 
         await t.test('adding a new item via `#push(item)`', async t => {
-          let Mail
+          let mail
 
           t.beforeEach(() => {
-            Mail = new Mail({ id: 'm3', text: 'Hola' })
+            mail = new Mail({ id: 'm3', text: 'Hola' })
 
-            list.push(Mail)
+            list.push(mail)
 
             result = list.exportForSave('sample:path')
           })
@@ -105,7 +105,7 @@ test('AppendList', async t => {
           })
 
           await t.test('and matches the newly passed item', () => {
-            assert.equal(result.value[0], JSON.stringify(Mail))
+            assert.equal(result.value[0], JSON.stringify(mail))
           })
         })
       })

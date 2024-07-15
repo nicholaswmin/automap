@@ -83,7 +83,7 @@ test('List', async t => {
     })
   })
 
-  t.test('passing an empty items array', async t => {
+  await t.test('passing an empty items array', async t => {
     t.beforeEach(() => {
       list = new List({ from: [], type: Mail })
     })

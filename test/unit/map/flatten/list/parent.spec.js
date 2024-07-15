@@ -61,9 +61,10 @@ test('#flatten()', async t => {
       })
 
       await t.test('and have the same keys as the array item', () => {
-        assert.deepStrictEqual(Object.keys(parsed.json), [
-          'id','bedrooms','mail'
-        ])
+        assert.deepStrictEqual(
+          Object.keys(parsed.json),
+          [ 'id','bedrooms','mail', 'visitors' ]
+        )
       })
 
       await t.test('the List properties are replaced with a path', async t => {
