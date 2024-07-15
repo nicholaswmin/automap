@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-
+import { createHistogram } from 'node:perf_hooks'
 import ioredis from 'ioredis'
 import ioredisMock from 'ioredis-mock'
 
@@ -7,7 +7,24 @@ import ioredisMock from 'ioredis-mock'
 
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 const nanoToMs = ns => round(ns / 1e+6)
-const histogramMs = hgram => {
+
+// Performance
+
+// - performance.timery-fies a function and attaches a histogram
+//   on the function itself, for easy access.
+// - Reuse a histogram by passing a previous one as the 2nd parameter
+//
+// See: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
+const timerify = (func, histogram = createHistogram()) => {
+  const timerified = performance.timerify(func, { histogram })
+
+  timerified.histogram = histogram
+  timerified.toHistogramMillis = () => toHistogramMillis(histogram)
+
+  return timerified
+}
+
+const toHistogramMillis = hgram => {
   const histogram = hgram.toJSON ? hgram.toJSON() : hgram
   // eslint-disable-next-line no-unused-vars
   const { percentiles, exceeds, ...obj } = { ...histogram }
@@ -91,7 +108,8 @@ export {
 
   round,
   nanoToMs,
-  histogramMs,
+
+  timerify,
 
   randomId,
   randomNum,

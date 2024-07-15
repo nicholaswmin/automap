@@ -1,12 +1,10 @@
 import assert from 'node:assert'
-import ioredis from 'ioredis'
-
 import { test } from 'node:test'
-import { createHistogram } from 'node:perf_hooks'
+import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
-import { nanoToMs, payloadKB, histogramMs } from '../../../util/index.js'
+import { nanoToMs, payloadKB, timerify } from '../../../util/index.js'
 
 test('load LazyLists', async t => {
   const repo = new Repository(Building, new ioredis())
@@ -16,10 +14,10 @@ test('load LazyLists', async t => {
 
   await t.test('run 200 times', async t => {
     await t.test('load a LazyList each time', async t => {
-      let histograms = { loadLazyList: null }
+      let loadList = null
 
       t.beforeEach(async () => {
-        histograms = { loadLazyList: createHistogram() }
+        loadList = null
 
         await repo.save(new Building({
           id: 'foo',
@@ -32,33 +30,34 @@ test('load LazyLists', async t => {
         for (let i = 0; i < 200; i++) {
           const building = await repo.fetch('foo')
 
-          const loadLazyList = performance.timerify(
+          loadList = timerify(
             building.offices.load.bind(building.offices),
-            { histogram: histograms.loadLazyList })
+            loadList?.histogram // reuse histogram if set
+          )
 
-          await loadLazyList(repo)
+          await loadList(repo)
         }
       })
 
-      t.after(() => console.table({
-        '#loadLazyList()' : histogramMs(histograms.loadLazyList)
+      t.after(() => process.nextTick(() => {
+        console.table({ '#loadList': loadList.toHistogramMillis() })
       }))
 
-      await t.test('#loadLazyList', async t => {
+      await t.test('#loadList', async t => {
         await t.test('ran 200 times', () => {
-          const count = histograms.loadLazyList.count
+          const count = loadList.histogram.count
 
           assert.strictEqual(count, 200, `ran: ${count} times`)
         })
 
         await t.test('mean duration was < 3 ms', () => {
-          const mean = nanoToMs(histograms.loadLazyList.mean)
+          const mean = nanoToMs(loadList.histogram.mean)
 
           assert.ok(mean < 3, `was: ${mean} ms`)
         })
 
         await t.test('duration deviation was < 2 ms', () => {
-          const deviation = nanoToMs(histograms.loadLazyList.stddev)
+          const deviation = nanoToMs(loadList.histogram.stddev)
 
           assert.ok(deviation < 2, `was: ${deviation} ms`)
         })
