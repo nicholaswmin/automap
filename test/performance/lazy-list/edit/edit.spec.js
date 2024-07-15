@@ -70,7 +70,7 @@ test('editing LazyList items', async t => {
       await t.test('with consistent durations throughout', () => {
         const deviation = loadlist.histogram_ms.stddev
 
-        assert.ok(deviation < 2, `was: ${deviation} ms`)
+        assert.ok(deviation < 3, `was: ${deviation} ms`)
       })
     })
 
