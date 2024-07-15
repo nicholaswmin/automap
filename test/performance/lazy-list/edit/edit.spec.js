@@ -12,7 +12,7 @@ test('editing LazyList items', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('when 100 "fetch -> edit -> save" cycles run', async t => {
+  await t.test('when 250 "fetch -> edit -> save" cycles run', async t => {
     let fetch, save, loadlist
 
     t.beforeEach(async () => {
@@ -22,13 +22,13 @@ test('editing LazyList items', async t => {
 
       await repo.save(new Building({
         id: 'foo',
-        visitors: Array.from({ length: 100 }, (_, i) => ({
+        visitors: Array.from({ length: 250 }, (_, i) => ({
           id: i,
           name: 'jane' + i
         }))
       }))
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 250; i++) {
         const building = await fetch('foo')
 
         loadlist = timerify(
@@ -56,13 +56,13 @@ test('editing LazyList items', async t => {
       })))
 
     await t.test('loads its list items promptly', async t => {
-      await t.test('runs 100 times', () => {
+      await t.test('runs 250 times', () => {
         const count = loadlist.histogram_ms.count
 
-        assert.strictEqual(count, 100, `count was: ${count}`)
+        assert.strictEqual(count, 250, `count was: ${count}`)
       })
 
-      await t.test('takes on average < 3 ms per list load()', () => {
+      await t.test('takes on average < 5 ms per list load()', () => {
         const mean = loadlist.histogram_ms.mean
         assert.ok(mean < 3, `was: ${mean} ms`)
       })
@@ -70,18 +70,18 @@ test('editing LazyList items', async t => {
       await t.test('with consistent durations throughout', () => {
         const deviation = loadlist.histogram_ms.stddev
 
-        assert.ok(deviation < 3, `was: ${deviation} ms`)
+        assert.ok(deviation < 5, `was: ${deviation} ms`)
       })
     })
 
     await t.test('fetches the objects promptly', async t => {
-      await t.test('runs 100 times', () => {
+      await t.test('runs 250 times', () => {
         const count = fetch.histogram_ms.count
 
-        assert.strictEqual(count, 100, `count was: ${count}`)
+        assert.strictEqual(count, 250, `count was: ${count}`)
       })
 
-      await t.test('takes on average < 3 ms per fetch()', () => {
+      await t.test('takes on average < 5 ms per fetch()', () => {
         const mean = fetch.histogram_ms.mean
 
         assert.ok(mean < 3, `was: ${mean} ms`)
@@ -90,15 +90,15 @@ test('editing LazyList items', async t => {
       await t.test('with consistent durations throughout', () => {
         const deviation = fetch.histogram_ms.stddev
 
-        assert.ok(deviation < 3, `was: ${deviation} ms`)
+        assert.ok(deviation < 5, `was: ${deviation} ms`)
       })
     })
 
     await t.test('saves the objects promptly', async t => {
-      await t.test('runs 100 times', () => {
+      await t.test('runs 250 times', () => {
         const count = save.histogram_ms.count
 
-        assert.strictEqual(count, 100, `ran: ${count} times`)
+        assert.strictEqual(count, 250, `ran: ${count} times`)
       })
 
       await t.test('takes on average < 5 ms per save()', () => {

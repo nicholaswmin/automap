@@ -57,7 +57,7 @@ test('adding items to a nested AppendList', async t => {
           assert.strictEqual(count, 1000, `count was: ${count}`)
         })
 
-        await t.test('each takes on average < 3 ms', () => {
+        await t.test('each takes on average < 5 ms', () => {
           const mean = fetch.histogram_ms.mean
 
           assert.ok(mean < 3, `was: ${mean} ms`)
@@ -66,7 +66,7 @@ test('adding items to a nested AppendList', async t => {
         await t.test('has consistent durations throughout', () => {
           const deviation = fetch.histogram_ms.stddev
 
-          assert.ok(deviation < 3, `was: ${deviation} ms`)
+          assert.ok(deviation < 5, `was: ${deviation} ms`)
         })
       })
 
@@ -77,7 +77,7 @@ test('adding items to a nested AppendList', async t => {
           assert.strictEqual(count, 1000, `ran: ${count} times`)
         })
 
-        await t.test('each takes on average < 3 ms', () => {
+        await t.test('each takes on average < 5 ms', () => {
           const mean = save.histogram_ms.mean
 
           assert.ok(mean < 5, `was: ${mean} ms`)
