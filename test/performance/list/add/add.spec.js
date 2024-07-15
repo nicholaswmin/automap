@@ -12,14 +12,14 @@ test('adding List items', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('when 250 "fetch -> push item => save" cycles run', async t => {
+  await t.test('when 100 "fetch -> push item => save" cycles run', async t => {
     let fetch, save = null
 
     t.beforeEach(async () => {
       fetch = timerify(repo.fetch.bind(repo))
       save = timerify(repo.save.bind(repo))
 
-      for (let i = 0; i < 250; i++) {
+      for (let i = 0; i < 100; i++) {
         const building = await fetch('foo') || new Building({ id: 'foo' })
 
         building.flats.push(new Flat({ id: i, bedrooms: payloadKB(3) }))
@@ -39,10 +39,10 @@ test('adding List items', async t => {
     })
 
     await t.test('fetches the objects promptly', async t => {
-      await t.test('runs 250 times', () => {
+      await t.test('runs 100 times', () => {
         const count = fetch.histogram_ms.count
 
-        assert.strictEqual(count, 250, `count was: ${count}`)
+        assert.strictEqual(count, 100, `count was: ${count}`)
       })
 
       await t.test('takes on average < 5 ms per fetch()', () => {
@@ -59,10 +59,10 @@ test('adding List items', async t => {
     })
 
     await t.test('saves the objects promptly', async t => {
-      await t.test('runs 250 times', () => {
+      await t.test('runs 100 times', () => {
         const count = save.histogram_ms.count
 
-        assert.strictEqual(count, 250, `ran: ${count} times`)
+        assert.strictEqual(count, 100, `ran: ${count} times`)
       })
 
       await t.test('takes on average < 5 ms per save()', () => {

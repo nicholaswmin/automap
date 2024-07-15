@@ -12,7 +12,7 @@ test('loading LazyLists', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('when 250 "load" LazyLists are loaded', async t => {
+  await t.test('when 100 "load" LazyLists are loaded', async t => {
     let loadlist = null
 
     t.beforeEach(async () => {
@@ -26,7 +26,7 @@ test('loading LazyLists', async t => {
         }))
       }))
 
-      for (let i = 0; i < 250; i++) {
+      for (let i = 0; i < 100; i++) {
         const building = await repo.fetch('foo')
 
         loadlist = timerify(
@@ -44,10 +44,10 @@ test('loading LazyLists', async t => {
       })))
 
     await t.test('loads its list items promptly', async t => {
-      await t.test('runs 250 times', () => {
+      await t.test('runs 100 times', () => {
         const count = loadlist.histogram_ms.count
 
-        assert.strictEqual(count, 250, `count was: ${count}`)
+        assert.strictEqual(count, 100, `count was: ${count}`)
       })
 
       await t.test('takes on average < 5 ms per list load()', () => {

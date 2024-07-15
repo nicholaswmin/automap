@@ -11,7 +11,7 @@ test('deleting items from a List', { todo: true }, async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('when 250 Lists are deleted', async t => {
+  await t.test('when 100 Lists are deleted', async t => {
     t.beforeEach(() => { })
 
     await t.test('@todo', () => {

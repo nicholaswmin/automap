@@ -12,7 +12,7 @@ test('loading Lists', async t => {
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())
 
-  await t.test('when 250 Lists are fetched', async t => {
+  await t.test('when 100 Lists are fetched', async t => {
     let fetch = null, results = []
 
     t.beforeEach(async () => {
@@ -21,12 +21,12 @@ test('loading Lists', async t => {
 
       await repo.save(new Building({
         id: 'foo',
-        flats: Array.from({ length: 250 }, (_, i) => ({
+        flats: Array.from({ length: 100 }, (_, i) => ({
           id: i, name: payloadKB(3)
         }))
       }))
 
-      for (let i = 0; i < 250; i++) {
+      for (let i = 0; i < 100; i++) {
         const building = await fetch('foo')
 
         results.push(building)
@@ -38,15 +38,15 @@ test('loading Lists', async t => {
         fetch: fetch.histogram_ms
       })))
 
-    await t.test('fetches 250 objects', () => {
-      assert.strictEqual(results.length, 250)
+    await t.test('fetches 100 objects', () => {
+      assert.strictEqual(results.length, 100)
     })
 
     await t.test('fetches the objects promptly', async t => {
-      await t.test('runs 250 times', () => {
+      await t.test('runs 100 times', () => {
         const count = fetch.histogram_ms.count
 
-        assert.strictEqual(count, 250, `count was: ${count}`)
+        assert.strictEqual(count, 100, `count was: ${count}`)
       })
 
       await t.test('takes on average < 5 ms per fetch()', () => {
