@@ -6,7 +6,7 @@ import { Repository } from '../../../../index.js'
 import { Building } from '../../../util/model/index.js'
 
 test('deleting items from LazyList', { todo: true }, async t => {
-  const repo = new Repository(Building, new ioredis())
+  const repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())

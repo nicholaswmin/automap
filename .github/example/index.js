@@ -5,7 +5,7 @@ import ioredis from 'ioredis'
 import { Repository } from '../../index.js'
 import { Building, Flat, Mail } from '../../test/util/model/index.js'
 
-const repo = new Repository(Building, new ioredis())
+const repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
 // An object graph ...
 

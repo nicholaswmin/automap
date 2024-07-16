@@ -7,7 +7,7 @@ import { Building } from '../../../util/model/index.js'
 import { payloadKB, timerify } from '../../../util/index.js'
 
 test('adding items to an AppendList', async t => {
-  let repo = new Repository(Building, new ioredis())
+  let repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
   t.after(() => repo.redis.disconnect())
   t.beforeEach(() => repo.redis.flushall())

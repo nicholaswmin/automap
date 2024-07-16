@@ -7,7 +7,7 @@ import { Building, Flat } from '../../../util/model/index.js'
 import { payloadKB, timerify } from '../../../util/index.js'
 
 test('adding List items', async t => {
-  const repo = new Repository(Building, new ioredis())
+  const repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())

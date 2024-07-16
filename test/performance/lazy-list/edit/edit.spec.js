@@ -7,7 +7,7 @@ import { Building } from '../../../util/model/index.js'
 import { payloadKB, timerify } from '../../../util/index.js'
 
 test('editing LazyList items', async t => {
-  const repo = new Repository(Building, new ioredis())
+  const repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
   t.beforeEach(() => repo.redis.flushall())
   t.after(() => repo.redis.disconnect())

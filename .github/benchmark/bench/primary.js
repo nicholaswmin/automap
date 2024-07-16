@@ -145,7 +145,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
     global.SIGINT = true
     console.log('\n', styleText(
       'yellow',
-      'User stop. Dont forget to deprovision any expensive add-ons! Bye 👋'
+      'User requested stop. Dont forget to deprovision added add-ons! Bye 👋'
     ), '\n')
 
     setTimeout(() => process.exit(0), 500)
