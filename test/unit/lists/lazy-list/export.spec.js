@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 
 import { LazyList } from '../../../../src/list.js'
 import { Mail } from '../../../util/model/index.js'
@@ -27,38 +26,38 @@ test('LazyList', async t => {
         result = list.exportForSave('sample:path')
       })
 
-      await t.test('returns an object', () => {
-        assert.ok(result)
-        assert.strictEqual(typeof result, 'object')
+      await t.test('returns an object', t => {
+        t.assert.ok(result)
+        t.assert.strictEqual(typeof result, 'object')
       })
 
       await t.test('with a type property', async t => {
-        assert.ok(Object.hasOwn(result, 'type'))
+        t.assert.ok(Object.hasOwn(result, 'type'))
 
-        await t.test('set to "hash"', () => {
-          assert.strictEqual(result.type, 'hash')
+        await t.test('set to "hash"', t => {
+          t.assert.strictEqual(result.type, 'hash')
         })
       })
 
       await t.test('with a value property', async t => {
-        assert.ok(Object.hasOwn(result, 'value'))
+        t.assert.ok(Object.hasOwn(result, 'value'))
 
-        await t.test('set to an object', () => {
-          assert.strictEqual(typeof result.value, 'object')
+        await t.test('set to an object', t => {
+          t.assert.strictEqual(typeof result.value, 'object')
         })
 
-        await t.test('with 2 keys', () => {
-          assert.strictEqual(Object.keys(result.value).length, 2)
+        await t.test('with 2 keys', t => {
+          t.assert.strictEqual(Object.keys(result.value).length, 2)
         })
 
-        await t.test('matching the ids of the initial elements', () => {
-          assert.strictEqual(Object.hasOwn(result.value, 'u_1'), true)
-          assert.strictEqual(Object.hasOwn(result.value, 'u_2'), true)
+        await t.test('matching the ids of the initial elements', t => {
+          t.assert.strictEqual(Object.hasOwn(result.value, 'u_1'), true)
+          t.assert.strictEqual(Object.hasOwn(result.value, 'u_2'), true)
         })
 
-        await t.test('with values as JSON strings', () => {
-          assert.strictEqual(Object.hasOwn(result.value, 'u_1'), true)
-          assert.strictEqual(Object.hasOwn(result.value, 'u_2'), true)
+        await t.test('with values as JSON strings', t => {
+          t.assert.strictEqual(Object.hasOwn(result.value, 'u_1'), true)
+          t.assert.strictEqual(Object.hasOwn(result.value, 'u_2'), true)
         })
 
         await t.test('parsing the value JSONs', async t => {
@@ -71,26 +70,26 @@ test('LazyList', async t => {
             )
           })
 
-          await t.test('parsed results have an index', () => {
+          await t.test('parsed results have an index', t => {
             parsed.forEach(parsed => {
-              assert.ok(Object.hasOwn(parsed, 'i'))
+              t.assert.ok(Object.hasOwn(parsed, 'i'))
             })
           })
 
-          await t.test('index maps to the initial elements indices', () => {
-            assert.strictEqual(parsed[0].i, 0)
-            assert.strictEqual(parsed[1].i, 1)
+          await t.test('index maps to the initial elements indices', t => {
+            t.assert.strictEqual(parsed[0].i, 0)
+            t.assert.strictEqual(parsed[1].i, 1)
           })
 
-          await t.test('parsed results have a json property', () => {
+          await t.test('parsed results have a json property', t => {
             parsed.forEach(parsed => {
-              assert.ok(Object.hasOwn(parsed, 'json'))
+              t.assert.ok(Object.hasOwn(parsed, 'json'))
             })
           })
 
-          await t.test('result.json maps to the initial elements', () => {
-            assert.deepStrictEqual(parsed[0].json, list[0])
-            assert.deepStrictEqual(parsed[1].json, list[1])
+          await t.test('result.json maps to the initial elements', t => {
+            t.assert.deepStrictEqual(parsed[0].json, list[0])
+            t.assert.deepStrictEqual(parsed[1].json, list[1])
           })
         })
       })

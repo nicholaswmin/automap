@@ -1,4 +1,4 @@
-import './load/load.spec.js'
-import './add/add.spec.js'
-import './edit/edit.spec.js'
-import './delete/delete.spec.js'
+import './add/flat.spec.js'
+import './load/flat.spec.js'
+import './edit/flat.spec.js'
+import './delete/flat.spec.js'

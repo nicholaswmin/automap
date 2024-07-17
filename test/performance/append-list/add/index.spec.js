@@ -1,2 +1,4 @@
-import './add.spec.js'
-import './1k-nested.spec.js'
+import './sanity.spec.js'
+import './flat.spec.js'
+import './nested.spec.js'
+import './nested-10k.spec.js'

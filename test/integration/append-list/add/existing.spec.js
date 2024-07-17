@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
@@ -41,12 +40,12 @@ test('#repository.save()', async t => {
             .lrange('building:foo:flats:1:mail', 0, -1)
         })
 
-        await t.test('under a human readable path', () => {
-          assert.ok(items, 'no such Redis key: building:foo:flats:1:mail')
+        await t.test('under a human readable path', t => {
+          t.assert.ok(items, 'no such Redis key: building:foo:flats:1:mail')
         })
 
-        await t.test('both items', () => {
-          assert.strictEqual(Object.keys(items).length, 2)
+        await t.test('both items', t => {
+          t.assert.strictEqual(Object.keys(items).length, 2)
         })
       })
 
@@ -54,12 +53,12 @@ test('#repository.save()', async t => {
         t.beforeEach(async () =>
           building = await repo.fetch('foo'))
 
-        await t.test('fetches the object', () => {
-          assert.ok(building)
+        await t.test('fetches the object', t => {
+          t.assert.ok(building)
         })
 
-        await t.test('with no preloaded items', () => {
-          assert.strictEqual(building.flats.at(0).mail.length, 0)
+        await t.test('with no preloaded items', t => {
+          t.assert.strictEqual(building.flats.at(0).mail.length, 0)
         })
 
         await t.test('loading the list:', async t => {
@@ -68,8 +67,8 @@ test('#repository.save()', async t => {
             await building.flats.at(0).mail.load(repo)
           })
 
-          await t.test('loads both the items', () => {
-            assert.strictEqual(building.flats.at(0).mail.length, 2)
+          await t.test('loads both the items', t => {
+            t.assert.strictEqual(building.flats.at(0).mail.length, 2)
           })
         })
       })

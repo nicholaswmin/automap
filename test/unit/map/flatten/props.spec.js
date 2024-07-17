@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 
 import { flatten } from '../../../../src/map.js'
 import { Building } from '../../../util/model/index.js'
@@ -33,18 +32,18 @@ test('#flatten()', async t => {
     })
 
     await t.test('returns a result', async t => {
-      assert.ok(result)
+      t.assert.ok(result)
 
-      await t.test('has a list property', () => {
-        assert.ok(Object.hasOwn(result, 'lists'))
+      await t.test('has a list property', t => {
+        t.assert.ok(Object.hasOwn(result, 'lists'))
       })
 
-      await t.test('which is an Array', () => {
-        assert.ok(Array.isArray(result.lists))
+      await t.test('which is an Array', t => {
+        t.assert.ok(Array.isArray(result.lists))
       })
 
-      await t.test('containing an entry for each List in the root', () => {
-        assert.strictEqual(result.lists.length, 2)
+      await t.test('containing an entry for each List in the root', t => {
+        t.assert.strictEqual(result.lists.length, 2)
       })
     })
   })

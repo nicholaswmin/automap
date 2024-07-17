@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
 import { Mail } from '../../../util/model/index.js'
@@ -17,29 +16,29 @@ test('AppendList', async t => {
         result = list.exportForSave('sample:path')
       })
 
-      await t.test('returns an object', () => {
-        assert.ok(result)
-        assert.strictEqual(typeof result, 'object')
+      await t.test('returns an object', t => {
+        t.assert.ok(result)
+        t.assert.strictEqual(typeof result, 'object')
       })
 
       await t.test('with a type property', async t => {
-        assert.ok(Object.hasOwn(result, 'type'))
+        t.assert.ok(Object.hasOwn(result, 'type'))
 
-        await t.test('set to "list"', () => {
-          assert.strictEqual(result.type, 'list')
+        await t.test('set to "list"', t => {
+          t.assert.strictEqual(result.type, 'list')
         })
       })
 
       await t.test('with a value property', async t => {
-        assert.ok(Object.hasOwn(result, 'value'))
+        t.assert.ok(Object.hasOwn(result, 'value'))
 
-        await t.test('set to an Array', () => {
-          assert.ok(Array.isArray(result.value))
+        await t.test('set to an Array', t => {
+          t.assert.ok(Array.isArray(result.value))
         })
 
         await t.test('nothing new added to the array', async t => {
-          await t.test('with no length', () => {
-            assert.strictEqual(result.value.length, 0)
+          await t.test('with no length', t => {
+            t.assert.strictEqual(result.value.length, 0)
           })
         })
       })
@@ -55,29 +54,29 @@ test('AppendList', async t => {
         result = list.exportForSave('sample:path')
       })
 
-      await t.test('returns an object', () => {
-        assert.ok(result)
-        assert.strictEqual(typeof result, 'object')
+      await t.test('returns an object', t => {
+        t.assert.ok(result)
+        t.assert.strictEqual(typeof result, 'object')
       })
 
       await t.test('with a type property', async t => {
-        assert.ok(Object.hasOwn(result, 'type'))
+        t.assert.ok(Object.hasOwn(result, 'type'))
 
-        await t.test('set to "list"', () => {
-          assert.strictEqual(result.type, 'list')
+        await t.test('set to "list"', t => {
+          t.assert.strictEqual(result.type, 'list')
         })
       })
 
       await t.test('with a value property', async t => {
-        assert.ok(Object.hasOwn(result, 'value'))
+        t.assert.ok(Object.hasOwn(result, 'value'))
 
-        await t.test('set to an Array', () => {
-          assert.ok(Array.isArray(result.value))
+        await t.test('set to an Array', t => {
+          t.assert.ok(Array.isArray(result.value))
         })
 
         await t.test('nothing new added to the array', async t => {
-          await t.test('with no length', () => {
-            assert.strictEqual(result.value.length, 0)
+          await t.test('with no length', t => {
+            t.assert.strictEqual(result.value.length, 0)
           })
         })
 
@@ -92,20 +91,20 @@ test('AppendList', async t => {
             result = list.exportForSave('sample:path')
           })
 
-          await t.test('has a length of 1', () => {
-            assert.strictEqual(result.value.length, 1)
+          await t.test('has a length of 1', t => {
+            t.assert.strictEqual(result.value.length, 1)
           })
 
-          await t.test('with a result string as the new element', () => {
-            assert.strictEqual(typeof result.value[0], 'string')
+          await t.test('with a result string as the new element', t => {
+            t.assert.strictEqual(typeof result.value[0], 'string')
           })
 
-          await t.test('which is parseable', () => {
-            assert.doesNotThrow(() => JSON.parse(result.value))
+          await t.test('which is parseable', t => {
+            t.assert.doesNotThrow(() => JSON.parse(result.value))
           })
 
-          await t.test('and matches the newly passed item', () => {
-            assert.equal(result.value[0], JSON.stringify(mail))
+          await t.test('and matches the newly passed item', t => {
+            t.assert.equal(result.value[0], JSON.stringify(mail))
           })
         })
       })

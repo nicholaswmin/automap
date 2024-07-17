@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
@@ -39,12 +38,12 @@ test('#repository.save()', async t => {
             items = await repo.redis.hgetall('building:foo:visitors')
           })
 
-          await t.test('under a human readable path', () => {
-            assert.ok(items, 'no such Redis key: building:foo:visitors')
+          await t.test('under a human readable path', t => {
+            t.assert.ok(items, 'no such Redis key: building:foo:visitors')
           })
 
-          await t.test('both items', () => {
-            assert.strictEqual(Object.keys(items).length, 2)
+          await t.test('both items', t => {
+            t.assert.strictEqual(Object.keys(items).length, 2)
           })
         })
 
@@ -55,8 +54,8 @@ test('#repository.save()', async t => {
           await t.test('and loading its list', async t => {
             t.beforeEach(() => building.visitors.load(repo))
 
-            await t.test('which has the previous + new items', () => {
-              assert.strictEqual(building.visitors.length, 2)
+            await t.test('which has the previous + new items', t => {
+              t.assert.strictEqual(building.visitors.length, 2)
             })
           })
         })

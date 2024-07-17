@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
@@ -33,12 +32,12 @@ test('#repository.save()', async t => {
         t.beforeEach(async () =>
           building = await repo.fetch('foo'))
 
-        await t.test('loads the item', () => {
-          assert.strictEqual(building.flats.length, 1)
+        await t.test('loads the item', t => {
+          t.assert.strictEqual(building.flats.length, 1)
         })
 
-        await t.test('which is edited', () => {
-          assert.strictEqual(building.flats.at(0).bedrooms, 4)
+        await t.test('which is edited', t => {
+          t.assert.strictEqual(building.flats.at(0).bedrooms, 4)
         })
       })
     })

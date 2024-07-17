@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 
 import { flatten } from '../../../../../src/map.js'
 import { Building } from '../../../../util/model/index.js'
@@ -24,7 +23,7 @@ test('#flatten()', async t => {
     list = result.lists.find(r => r.key === 'building:foo:flats:101:mail')
   })
 
-  await t.test('does not export list since it has no additions', () => {
-    assert.strictEqual(list, undefined)
+  await t.test('does not export list since it has no additions', t => {
+    t.assert.strictEqual(list, undefined)
   })
 })

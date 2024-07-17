@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
@@ -14,8 +13,8 @@ test('#repository.del()', { todo: true }, async t => {
   await t.test('delete a Lazy List item', async t => {
     t.beforeEach(() => { })
 
-    await t.test('@todo', () => {
-      assert.ok('foo bar')
+    await t.test('@todo', t => {
+      t.assert.ok('foo bar')
     })
   })
 })

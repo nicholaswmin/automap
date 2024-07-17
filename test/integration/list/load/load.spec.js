@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis'
 
 import { Repository } from '../../../../index.js'
@@ -22,16 +21,16 @@ test('#repository.save()', async t => {
       building = await repo.fetch('foo')
     })
 
-    await t.test('fetches the object', () => {
-      assert.ok(building)
+    await t.test('fetches the object', t => {
+      t.assert.ok(building)
     })
 
-    await t.test('loads the list items', () => {
-      assert.strictEqual(building.flats.length, 2)
+    await t.test('loads the list items', t => {
+      t.assert.strictEqual(building.flats.length, 2)
     })
 
-    await t.test('with the correct type', () => {
-      assert.ok(building.flats.at(0) instanceof Flat, 'not a Flat')
+    await t.test('with the correct type', t => {
+      t.assert.ok(building.flats.at(0) instanceof Flat, 'not a Flat')
     })
   })
 })

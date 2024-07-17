@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 import ioredis from 'ioredis-mock'
 
 import { Repository } from '../../../../src/repository.js'
@@ -15,7 +14,7 @@ test('Repository', async t => {
 
     await t.test('no parameter is passed', async t => {
       await t.test('rejects with error', async () => {
-        await assert.rejects(
+        await t.assert.rejects(
           async () => {
             await repo.fetch()
           }
@@ -25,7 +24,7 @@ test('Repository', async t => {
 
     await t.test('passed "id" is an empty string', async t => {
       await t.test('rejects with error', async () => {
-        await assert.rejects(
+        await t.assert.rejects(
           async () => {
             await repo.fetch('')
           }
@@ -35,7 +34,7 @@ test('Repository', async t => {
 
     await t.test('passed "id" is a valid string', async t => {
       await t.test('resolves', async () => {
-        await assert.doesNotReject(
+        await t.assert.doesNotReject(
           async () => {
             await repo.fetch('ciBr8Y')
           }
@@ -49,7 +48,7 @@ test('Repository', async t => {
       })
 
       await t.test('resolves with null', async () => {
-        assert.ok(fetched === null, 'result is null')
+        t.assert.ok(fetched === null, 'result is null')
       })
     })
 

@@ -1,5 +1,4 @@
-import assert from 'node:assert'
-import { test } from 'node:test'
+import test from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
 import { Mail } from '../../../util/model/index.js'
@@ -38,20 +37,20 @@ test('AppendList', async t => {
     })
 
     await t.test('list is not initially loaded', async t => {
-      assert.ok(list)
+      t.assert.ok(list)
 
-      await t.test('has 0 items', () => {
-        assert.strictEqual(list.length, 0)
+      await t.test('has 0 items', t => {
+        t.assert.strictEqual(list.length, 0)
       })
 
-      await t.test('has state loaded = false', () => {
-        assert.strictEqual(list.loaded, false)
+      await t.test('has state loaded = false', t => {
+        t.assert.strictEqual(list.loaded, false)
       })
     })
 
     await t.test('calling #load without passing a repository', async t => {
       await t.test('throws with a fix-it message', async () => {
-        await assert.rejects(async () => {
+        await t.assert.rejects(async () => {
           return list.load()
         }, {
           message: 'Must pass a repository instance when calling .load()'
@@ -61,7 +60,7 @@ test('AppendList', async t => {
 
     await t.test('calling #load with repo w/o a matching loader', async t => {
       await t.test('throws with a fix-it message', async () => {
-        await assert.rejects(async () => {
+        await t.assert.rejects(async () => {
           return list.load(mockRepos.withoutMatchingLoader)
         }, {
           message: 'Cannot find loader of type: list in repo'
@@ -74,21 +73,21 @@ test('AppendList', async t => {
         await list.load(mockRepos.withMatchingLoader)
       })
 
-      await t.test('has state loaded = true', () => {
-        assert.strictEqual(list.loaded, true)
+      await t.test('has state loaded = true', t => {
+        t.assert.strictEqual(list.loaded, true)
       })
 
-      await t.test('has 2 items', () => {
-        assert.strictEqual(list.length, 2)
+      await t.test('has 2 items', t => {
+        t.assert.strictEqual(list.length, 2)
       })
 
-      await t.test('has no new additions', () => {
-        assert.strictEqual(list.additions.length, 0)
+      await t.test('has no new additions', t => {
+        t.assert.strictEqual(list.additions.length, 0)
       })
 
-      await t.test('both are Message instances', () => {
-        assert.strictEqual(list[0].constructor.name, 'Mail')
-        assert.strictEqual(list[1].constructor.name, 'Mail')
+      await t.test('both are Message instances', t => {
+        t.assert.strictEqual(list[0].constructor.name, 'Mail')
+        t.assert.strictEqual(list[1].constructor.name, 'Mail')
       })
     })
 
@@ -98,23 +97,23 @@ test('AppendList', async t => {
         await list.load(mockRepos.withMatchingLoader)
       })
 
-      await t.test('has state loaded = true', () => {
-        assert.strictEqual(list.loaded, true)
+      await t.test('has state loaded = true', t => {
+        t.assert.strictEqual(list.loaded, true)
       })
 
-      await t.test('has 3 items', () => {
-        assert.strictEqual(list.length, 3)
+      await t.test('has 3 items', t => {
+        t.assert.strictEqual(list.length, 3)
       })
 
-      await t.test('the loaded items are added before the new items', () => {
-        assert.strictEqual(list[2].id, '103')
+      await t.test('the loaded items are added before the new items', t => {
+        t.assert.strictEqual(list[2].id, '103')
       })
 
       await t.test('there are new additions', async t => {
-        assert.strictEqual(list.additions.length, 1)
+        t.assert.strictEqual(list.additions.length, 1)
 
-        await t.test('corresponding to the new items', () => {
-          assert.strictEqual(list.additions[0].id, '103')
+        await t.test('corresponding to the new items', t => {
+          t.assert.strictEqual(list.additions[0].id, '103')
         })
       })
     })
