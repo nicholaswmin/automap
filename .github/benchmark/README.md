@@ -2,6 +2,13 @@
 
 > benchmarks the [throughput][throughput] of this module
 
+## Install
+
+```bash
+npm i
+```
+
+
 ## Run
 
 > [!CAUTION]
