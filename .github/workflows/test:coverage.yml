@@ -9,7 +9,7 @@ on:
 jobs:
   report-coverage:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version: [latest]
