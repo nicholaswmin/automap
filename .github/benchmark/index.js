@@ -8,12 +8,12 @@ import { Repository } from '../../index.js'
 import {
   userDefineConstants,
   TaskPerformanceTracker,
+  loadConstants,
   primary,
   worker
 } from './bench/index.js'
 
 import {
-  flushall,
   randomId,
   payloadKB
 } from '../../test/util/index.js'
@@ -31,10 +31,20 @@ const constants = {
 
 if (cluster.isPrimary) {
   // Primary
+  const redis = new ioredis()
+
   await userDefineConstants(constants)
-  primary({ cluster, constants, before: async () => flushall() })
+
+  primary({
+    cluster,
+    constants,
+    before: async () => redis.flushall(),
+    after: async () => redis.disconnect()
+  })
 } else {
   // Worker
+  const constants = await loadConstants()
+
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis({
     url: process.env.REDIS_URL,

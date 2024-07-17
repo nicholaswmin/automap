@@ -1,4 +1,8 @@
 import { EventEmitter } from 'node:events'
+import { readFile, writeFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+
 import { monitorEventLoopDelay, createHistogram } from 'node:perf_hooks'
 import input from '@inquirer/input'
 
@@ -6,6 +10,9 @@ import { round, nanoToMs, toMB } from '../../../test/util/index.js'
 
 import primary from './primary.js'
 import worker from './worker.js'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const __filename = fileURLToPath(import.meta.url)
 
 // Performance
 
@@ -259,6 +266,12 @@ class TaskPerformanceTracker extends EventEmitter {
   }
 }
 
+const loadConstants = async () => {
+  const json = await readFile(join(__dirname, 'constants.json'), 'utf-8')
+
+  return json ? JSON.parse(json) : null
+}
+
 const userDefineConstants = async constants => {
   for (const key of Object.keys(constants)) {
     const answer = await input({
@@ -273,9 +286,16 @@ const userDefineConstants = async constants => {
 
     constants[key] = parseInt(answer)
   }
+
+  await writeFile(
+    join(__dirname, 'constants.json'),
+    JSON.stringify(constants),
+    'utf-8'
+  )
 }
 
 export {
+  loadConstants,
   userDefineConstants,
   TaskPerformanceTracker,
   primary,
