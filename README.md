@@ -188,10 +188,10 @@ class Flat {
 
 The above works because:
 
- ✅ The `Building` has an `id` set to a unique value
- ✅ The `Building` can be entirely reconstructed by calling
-  `new Building(json)` and  passing it's JSON
- ✅ The `flats` array is replaced with a `List` type
+- ✅ The `Building` has an `id` set to a unique value
+- ✅ The `Building` can be entirely reconstructed by calling
+    `new Building(json)` and  passing it's JSON
+- ✅ The `flats` array is replaced with a `List` type
 
 but this example does not work:
 
