@@ -12,7 +12,6 @@ import primary from './primary.js'
 import worker from './worker.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-const __filename = fileURLToPath(import.meta.url)
 
 // Performance
 
