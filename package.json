@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
-    "@nicholaswmin/timerify": "^0.6.2",
+    "@nicholaswmin/timerify": "^0.6.5",
     "@size-limit/preset-small-lib": "^11.1.4",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
