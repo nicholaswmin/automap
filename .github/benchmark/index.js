@@ -18,12 +18,12 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
+const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
 const constants = {
   TASKS_PER_SECOND: 100,
   MAX_FLATS: 100,
   ITEM_PAYLOAD_KB: 5,
   MAX_WORKER_BACKLOG: 10,
-
   NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
   MAX_STATS_UPDATE_PER_SECOND: 10,
   WARMUP_SECONDS: 5
@@ -31,7 +31,7 @@ const constants = {
 
 if (cluster.isPrimary) {
   const redis = new ioredis({
-    url: process.env.REDIS_URL,
+    url: constants.REDIS_URL,
     keyPrefix: 'test:'
   }, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
@@ -53,7 +53,7 @@ if (cluster.isPrimary) {
 
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis({
-    url: process.env.REDIS_URL,
+    url: constants.REDIS_URL,
     keyPrefix: 'test:'
   }, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
