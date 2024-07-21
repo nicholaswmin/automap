@@ -1,13 +1,13 @@
 {
   "environments": {
     "review": {
-      "addons": ["heroku-redis:premium-5"],
-      "formation": {
-        "web": {
-          "quantity": 1,
-          "size": "standard-2x"
-        }
-      }
+      "addons": ["heroku-redis:premium-5"]
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-2x"
     }
   }
 }
