@@ -1,9 +1,5 @@
   "environments": {
     "review": {
-      "addons": [
-        {
-          "plan": "heroku-redis:premium-5"
-        }
-      ]
+      "addons": ["heroku-redis:premium-5"]
     }
   }
