@@ -8,7 +8,6 @@
 npm i
 ```
 
-
 ## Run
 
 > [!CAUTION]
@@ -16,37 +15,51 @@ npm i
 
 ## Locally
 
+> assuming you're in root and this resides in a folder: `.github/benchmmark`
+
 ```bash
-REDIS_URL=<redis-url> npm run benchmark
+npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start
 ```
 
-## On Heroku
+
+## Benchmarking on Heroku
+
+
+### Fake server
 
 Heroku only allows webservers on it's platform.
 
 To allow benchmarking, we provide a [fake webserver][fake-server]
-to the `npm start` script.
+to the `npm start` script of the root of the project.
 
-Heroku also needs a special configuration set to
-install `devDependencies`:
+### Use a Pipeline Review app
+
+Don't run this benchmark on a regular Heroku App app.
+There is a big risk of leaving expensive add-ons running.
+
+Instead:
+
+- Create a Pipeline, name it `benchmark`
+- Connect it to this repo
+- Create a Review App
+- Mark it to autodestroy in 1 day when stale
+- Provision necessary add:ons (Redis) on the Review App
+  - Choose Standard 1x for dynos; the dyno is chosen when we
+    run the benchmark but bigger dynos require at least a `Standard-1x`
+    on the Review App itself.
+- Use the Review App as `--app` intead of a standard Heroku app
+
+### Run on Heroku
+
+To run the benchmark:
 
 ```bash
-heroku config:set NPM_CONFIG_PRODUCTION=false -a <app-name>
+heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
 ```
 
-and to run the benchmark:
-
-```bash
-heroku run npm run benchmark --size=performance-l -a <app-name>
-```
-
-> Replace `<app-name>` with the Heroku app.
-> A running Redis add-on is required.
-
-The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
-
-> [!WARNING]
-> Don't forget to deprovision/remove any added expensive Redis add-ons
+> Replace `<app-name>` with the Heroku Review App `name`:
+> Replace `--size=<size>` with with the desired size:
+> The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
 ## Overview
 
@@ -79,6 +92,8 @@ This rate is *global* and independent of the number of workers.
 Workers are chosen using [*round-robin* scheduling][round-robin]
 
 ### Factors
+
+> This are out of date
 
 - `TASKS_PER_SECOND`: message rate of the primary
 - `NUM_WORKERS`: number of workers

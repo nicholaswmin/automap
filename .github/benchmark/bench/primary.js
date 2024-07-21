@@ -16,6 +16,7 @@ const primary = async ({
   const taskIntervalRounded = Math.ceil(taskInterval)
   const timers = { warmup: null, task: null }
   const stats = {
+    workers: {},
     messaging: {
       'Tasks Sent': 0,
       'Tasks Received': 0,
@@ -129,9 +130,11 @@ const primary = async ({
       updates.length
     ).map(row => row.vitals)
 
-    stats.messaging['Tasks Completed'] = vitals.reduce((sum, item) => {
-      return sum += item.cycles
-    }, 0)
+    console.log(stats.workers)
+    stats.messaging['Tasks Completed'] = Object.values(stats.workers)
+        .reduce((sum, finishedCount) => {
+          return sum += finishedCount
+        }, 0)
 
     console.table(vitals.sort((a, b) => b['max backlog'] - a['max backlog']))
 
@@ -143,8 +146,9 @@ const primary = async ({
     ).map(row => row.timings))
   }
 
-  const onTaskReceived = () => {
+  const onTaskReceived = ({ completedCount, pid }) => {
     stats.messaging['Tasks Received']++
+    stats.workers[pid] = completedCount
   }
 
   const printUpdates = throttle(
