@@ -6,7 +6,7 @@
 
 ## Testing
 
-Unit tests, integration tests and performance tests *must* be kept separate.  
+Unit tests, integration tests and performance tests *must* be kept separate.
 
 The integration & performance tests don't need to run fast, nor run locally,
 but unit tests should run in *milliseconds*.
@@ -23,28 +23,18 @@ follows [GitHub flow][github-flow]
 
 follows [conventional commits][conv-comm]
 
-### before commit
+### before merging to `main`
 
 ```bash
 npm test
+npm run test:integration
+npm run test:performance
 npm run checks
 ```
 
-*must* pass locally
-
-### before merging to `main`
-
-In addition to the above:
-
-```bash
-npm run test:integration
-npm run test:performance
-```
-
-plus *all* additional CI workflows *must* pass, without warnings.
+*must* pass, without warnings.
 
 [todos]: ./TODO.md
 [semver]: https://semver.org/
 [conv-comm]: https://www.conventionalcommits.org/en/v1.0.0/#summary
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
-[non-func-req]: https://en.wikipedia.org/wiki/Non-functional_requirement
