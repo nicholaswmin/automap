@@ -19,25 +19,25 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
-let constants = {
-  TASKS_PER_SECOND: 100,
-  MAX_FLATS: 100,
-  ITEM_PAYLOAD_KB: 5,
-  MAX_WORKER_BACKLOG: 10,
-  NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
-  MAX_STATS_UPDATE_PER_SECOND: 10,
-  WARMUP_SECONDS: 5
-}
-
 if (cluster.isPrimary) {
-  constants = await userDefineConstants({
-    ...constants,
-    REDIS_URL: await getRedisURL()
+ const constants = await userDefineConstants({
+    public: {
+      TASKS_PER_SECOND: 100,
+      MAX_FLATS: 100,
+      ITEM_PAYLOAD_KB: 5,
+      MAX_WORKER_BACKLOG: 10,
+      NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
+      MAX_STATS_UPDATE_PER_SECOND: 10,
+      WARMUP_SECONDS: 5
+    },
+    private: {
+      REDIS_URL: await getRedisURL()
+    }
   })
 
-  const redis = new ioredis(constants.REDIS_URL, {
+  const redis = new ioredis(constants.private.REDIS_URL, {
     keyPrefix: 'test:',
-    tls: constants.REDIS_URL?.includes('rediss') ? {
+    tls: constants.private.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
@@ -52,9 +52,9 @@ if (cluster.isPrimary) {
   // Worker
   const constants = await loadConstants()
   const tracker = new TaskPerformanceTracker({ constants })
-  const redis = new ioredis(constants.REDIS_URL, {
+  const redis = new ioredis(constants.private.REDIS_URL, {
     keyPrefix: 'test:',
-    tls: constants.REDIS_URL?.includes('rediss') ? {
+    tls: constants.private.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
@@ -74,13 +74,13 @@ if (cluster.isPrimary) {
       const building = await fetch(id) || new Building({ id })
       const randIndex = Math.floor(Math.random() * building.flats.length)
 
-      building.flats.length < constants.MAX_FLATS
+      building.flats.length < constants.public.MAX_FLATS
         ? building.flats.push(new Flat({ id: randomId() }))
         : null
 
       building.flats.at(randIndex).addMail({
         id: randomId(),
-        text: payloadKB(constants.ITEM_PAYLOAD_KB)
+        text: payloadKB(constants.public.ITEM_PAYLOAD_KB)
       })
 
       await save(building)

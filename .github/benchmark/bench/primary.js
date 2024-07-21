@@ -12,7 +12,7 @@ const primary = async ({
   console.log(constants)
 
   let startedMs = null
-  const taskInterval = 1000 / constants.TASKS_PER_SECOND
+  const taskInterval = 1000 / constants.public.TASKS_PER_SECOND
   const taskIntervalRounded = Math.ceil(taskInterval)
   const timers = { warmup: null, task: null }
   const stats = {
@@ -40,7 +40,7 @@ const primary = async ({
 
   const cancelWarmupPeriod = () => {
     const uptime = startedMs ? (Date.now() - startedMs) / 1000 : 0
-    if (uptime > constants.WARMUP_SECONDS) {
+    if (uptime > constants.public.WARMUP_SECONDS) {
       clearInterval(timers.warmup)
       return timers.warmup = null
     }
@@ -98,7 +98,7 @@ const primary = async ({
         round(process.uptime()),
         'seconds,',
         'warmup period:',
-        constants.WARMUP_SECONDS,
+        constants.public.WARMUP_SECONDS,
         'seconds'
       )
     })
@@ -107,7 +107,7 @@ const primary = async ({
   const onWorkerUpdate = async result => {
     updates.push(result)
 
-    if (updates.length >= constants.NUM_WORKERS)
+    if (updates.length >= constants.public.NUM_WORKERS)
       printUpdates()
   }
 
@@ -116,7 +116,7 @@ const primary = async ({
 
     console.log('Constants')
 
-    console.table(constants)
+    console.table(constants.public)
 
     console.log('Messaging Stats:')
 
@@ -125,7 +125,7 @@ const primary = async ({
     console.log('Worker Vitals')
 
     const vitals = updates.slice(
-      updates.length - constants.NUM_WORKERS,
+      updates.length - constants.public.NUM_WORKERS,
       updates.length
     ).map(row => row.vitals)
 
@@ -138,7 +138,7 @@ const primary = async ({
     console.log('Worker timings')
 
     console.table(updates.slice(
-      updates.length - constants.NUM_WORKERS,
+      updates.length - constants.public.NUM_WORKERS,
       updates.length
     ).map(row => row.timings))
   }
@@ -149,7 +149,7 @@ const primary = async ({
 
   const printUpdates = throttle(
     printUpdatesUnthrottled,
-    Math.round(1000 / constants.MAX_STATS_UPDATE_PER_SECOND)
+    Math.round(1000 / constants.public.MAX_STATS_UPDATE_PER_SECOND)
   )
 
   const killWorkers = () => {
@@ -171,7 +171,7 @@ const primary = async ({
       .then(() => console.info('All workers gracefully shutdown'))
   }
 
-  for (let i = 0; i < constants.NUM_WORKERS; i++)
+  for (let i = 0; i < constants.public.NUM_WORKERS; i++)
     await forkWorker()
       .then(worker => worker.on('message', msg => ({
         'finish': onWorkerFinish,

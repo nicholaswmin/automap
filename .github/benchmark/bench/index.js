@@ -272,20 +272,18 @@ const loadConstants = async () => {
 }
 
 const userDefineConstants = async constants => {
-  for (const key of Object.keys(constants)) {
-    if (!key.toLowerCase().includes('url')) {
-      const answer = await input({
-        message: `Enter ${key}`,
-        default: constants[key],
-        validate: val => {
-          return isNaN(val) || val === 0
-            ? `${key} must be a positive, non-zero number`
-            : true
-        }
-      })
+  for (const key of Object.keys(constants.public)) {
+    const answer = await input({
+      message: `Enter ${key}`,
+      default: constants.public[key],
+      validate: val => {
+        return isNaN(val) || val === 0
+          ? `${key} must be a positive, non-zero number`
+          : true
+      }
+    })
 
-      constants[key] = parseInt(answer)
-    }
+    constants[key] = parseInt(answer)
   }
 
   await writeFile(
