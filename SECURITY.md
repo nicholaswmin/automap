@@ -4,9 +4,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| latest  | :white_check_mark: |
+| latest  | yes                |
 | others  | no                 |
 
 ## Reporting a Vulnerability
 
-Open a Github issue
+Submit a PR or open an issue

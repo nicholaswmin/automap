@@ -1,6 +1,6 @@
 import throttle from 'throttleit'
 
-const worker = async ({ tracker, onEachTask, onEnd = () => {} }) => {
+const worker = async ({ tracker, forEach = () => {}, after = () => {} }) => {
   process.send = throttle(process.send, 100)
 
   tracker
@@ -16,13 +16,10 @@ const worker = async ({ tracker, onEachTask, onEnd = () => {} }) => {
 
   process.on('SIGTERM', () =>
     tracker.stop()
-      .then(() => onEnd())
-      .then(() => {
-        console.info(process.pid, 'exited')
-        process.exit(0)
-      }))
+      .then(() => after())
+      .then(() => process.exit(0)))
 
-  tracker.start(onEachTask)
+  tracker.start(forEach)
 
   process.on('message', tracker.enqueue.bind(tracker))
 

@@ -1,17 +1,17 @@
-// Run this:
-// `npm run example`
+// run this: `npm run example`
 
-import ioredis from 'ioredis-mock'
+import ioredis from 'ioredis'
 
 import { Repository } from '../../index.js'
-import { Building, Flat, Mail } from './model.js'
+import { Building, Flat, Mail } from '../../test/util/model/index.js'
 
-const repo = new Repository(Building, new ioredis())
+const repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
 // An object graph ...
 
 const building = new Building({
   id: 'foo',
+  visitors: [{ name: 'John' }, { name: 'Mary' }],
   flats: [
     new Flat({ id: 101, mail: [] }) ,
     new Flat({
@@ -32,29 +32,27 @@ console.log('-', building.constructor.name, 'saved ...')
 
 // fetch it
 
-let fetched = await repo.fetch({ id: 'foo' })
+let fetched = await repo.fetch('foo')
 
 console.log('-', fetched.constructor.name, 'fetched ...')
 
 // load lazy list via `list.load()`
 
-await fetched.flats.load(repo)
+await fetched.visitors.load(repo)
 
 console.log(
-  '-',
+  '- LazyList loaded ...',
   fetched.constructor.name,
   'has',
-  fetched.flats.length,
-  'flats'
+  building.visitors.length,
+  'visitors'
 )
 
-// call a Flat method
-
-fetched.flats[0].doorbell()
+fetched.flats[0].ringDoorbell()
 
 // fetch it again
 
-fetched = await repo.fetch({ id: 'foo' })
+fetched = await repo.fetch('foo')
 
 // load lazy list again
 
@@ -78,3 +76,5 @@ console.log(
 await repo.save(building)
 
 console.log('-', building.constructor.name, 'saved again ...')
+
+await repo.redis.disconnect()

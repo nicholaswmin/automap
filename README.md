@@ -44,7 +44,7 @@ exports a `repository` and an array-like type, called `List`.
 
 List-like data is detached & saved as a [`Hash`][redis-hash]
 or [`List`][redis-list] rather than jam everything into a
-single [`Key`][redis-string].  
+single [`Key`][redis-string].
 
 > Example: A `Building` with `Flats`:
 
@@ -85,16 +85,16 @@ await repo.save(building)
 ... saved like so:
 
 ```js
-           ┌──────────────────┐            
+           ┌──────────────────┐
            │ Building         |
            |                  |
-           │ id: foo          │            
-           │ flats:           │                    
-           │  - Flat          │            
-           │  - Flat          │            
-           │  - Flat          │            
-           │  - Flat          │                     
-           └─────────┬────────┘            
+           │ id: foo          │
+           │ flats:           │
+           │  - Flat          │
+           │  - Flat          │
+           │  - Flat          │
+           │  - Flat          │
+           └─────────┬────────┘
 ┌──────────────────┐ │ ┌─────────────────┐
 │ Redis String     │◄┴►│ Redis Hash      │
 │                  │   │                 │
@@ -111,9 +111,7 @@ await repo.save(building)
 ... fetch it back:
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 for (let flat of building.flats)
   console.log(flat instanceof Flat, flat)
@@ -132,16 +130,16 @@ for (let flat of building.flats)
 │                  │   │  - foo:flats:4  │
 └──────────────────┘◄|►└─────────────────┘
                      |
-            ┌───────────────────┐            
+            ┌───────────────────┐
             │ Building          |
             |                   |
-            │ id: "foo"         │            
-            │ flats:            │                    
-            │  - Flat           │            
-            │  - Flat           │            
-            │  - Flat           │            
-            │  - Flat           │                     
-            └───────────────────┘            
+            │ id: "foo"         │
+            │ flats:            │
+            │  - Flat           │
+            │  - Flat           │
+            │  - Flat           │
+            │  - Flat           │
+            └───────────────────┘
 ```
 
 it rebuilds the entire object graph including *nested* types.
@@ -149,9 +147,7 @@ it rebuilds the entire object graph including *nested* types.
 i.e: calling a `Flat.method()` works.
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 building.flats[0].doorbell()
 // 🔔 at flat: 101 !
@@ -161,7 +157,7 @@ building.flats[0].doorbell()
 
 You can use any object as long as it:
 
-1. it's root has an `id` property set to a unique value
+1. has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
 A working example:
@@ -192,10 +188,10 @@ class Flat {
 
 The above works because:
 
- ✅ The `Building` has an `id` set to a unique value
- ✅ The `Building` can be entirely reconstructed by calling
-  `new Building(json)` and  passing it's JSON
- ✅ The `flats` array is replaced with a `List` type
+- ✅ The `Building` has an `id` set to a unique value
+- ✅ The `Building` can be entirely reconstructed by calling
+    `new Building(json)` and  passing it's JSON
+- ✅ The `flats` array is replaced with a `List` type
 
 but this example does not work:
 
@@ -239,7 +235,7 @@ await repository.save(building)
 
 ## The `List` types
 
-List-like data must use one of the `List` types instead of an [`Array`][array].   
+List-like data must use one of the `List` types instead of an [`Array`][array].
 You can still use a regular `Array` but it won't be decomposed from the
 main object-graph.
 
@@ -330,7 +326,7 @@ console.log(two)
 
 ### Lazy loading
 
-Sometimes you won't need to load the contents of a list initially.   
+Sometimes you won't need to load the contents of a list initially.
 You might want to load it's contents after you fetch it, or even none at all.
 
 In that case, use a `LazyList` instead of a `List`.
@@ -352,9 +348,7 @@ class Building {
 ... and load its contents by calling `list.load()`:
 
 ```js
-const building = await repo.fetch({
-  id: 'foo'
-})
+const building = await repo.fetch('foo')
 
 console.log(building.flats)
 // [] (empty)
@@ -379,7 +373,7 @@ Caveats:
 
 - No notion of item deletion. It functions as an [append-only log][append-only],
   hence the name.
-- No constant O<sup>1</sup> time lookups for individual list items in Redis.  
+- No constant O<sup>1</sup> time lookups for individual list items in Redis.
 
 An example:
 
@@ -429,6 +423,8 @@ Run it with:
 ```bash
 npm run example
 ```
+
+The [model][example-model] itself can be found [here].
 
 ## Redis data structure
 
@@ -505,27 +501,30 @@ a backlog, on a 10 minute sustained-load test.
 These results were gathered with the benchmark mentioned above on a popular
 cloud-provider with native Redis add-ons and about `20x` concurrency.
 
+For the internal-use that this module is designed for, these are satisfactory
+results.
+
 ### Atomicity
 
 #### Save
 
-- Each list is decomposed into a single Redis `HSET` command.
-- All `HSET`s are then packaged into a single [pipelined][pipe] transaction
-before being sent down the wire.
+- Each list needs a single Redis `HSET` command.
+- All `HSET`s are assembled into a single [pipelined][pipe] transaction
+  then they are sent down the wire.
 
-Additionally, there's a simple Lua script which allows something akin
-to a [`mget`][mget], but for hashes.
+Additionally, there's a Lua script which allows something akin to
+a [`mget`][mget], but for hashes.
 
 These methods ensure updates are both performant and [atomic][atomic][^1].
 
 #### Fetch
 
-In contrast, fetching an object graph is not atomic.  
+Fetching an object is not entirely atomic.
 
 ### Nested Lists
 
-This module allows for an arbitrary amount of nesting of lists, so you can
-have a list, inside another list, inside another list and so on...
+An arbitrary amount of nesting-level of lists is allowed.
+You can have a list, inside another list, inside another list and so on...
 
 But you should note the following ...
 
@@ -533,7 +532,6 @@ But you should note the following ...
 
 > This section briefly describes the [time-complexity][time] of possible input
 > configurations.
->
 > Note that in these time-complexity speculations are solely in the context
 > of network roundtrips since they are by far the biggest bottleneck in
 > most cases.
@@ -544,9 +542,7 @@ Object graphs which don't have lists nested inside other lists, are fetched
 in a process that exhibits an almost
 [constant-time complexity O(1)][const].
 
-There's no network roundtrip involved for each list, or even separate requests
-since this module uses a small Lua script which allows something akin to
-an [`mget`][mget], but for hashes.
+There's no network roundtrip involved for each list, or even separate requests.
 
 #### Nested lists
 
@@ -558,22 +554,21 @@ O(n) to O(n<sup>2</sup>) then O(n<sup>3</sup>) and so on.
 
 In short, don't do it.
 
-Also note that a `LazyList` nested in a `List` won't exhibit this  
-issue since it doesn't need to be fetched initially.
+That being said, this problem only concerns a `List` nested in another `List`.
+None of the 2 other types exhibit this issue, simply because they are not
+automatically fetched.
 
 ## Alternatives
 
 ### Saving encoded JSONs
-
-... as a [`Redis String`][redis-string].
 
 A small enough object-graph can easily get away with:
 
 - `JSON.stringify(object)`
 - `SET building:foo json`
 - `GET building:foo`
-
-and `JSON.parse(json)`s
+- `JSON.parse(json)`
+- done
 
 This is a simple, efficient and inherently atomic operation.
 
@@ -588,15 +583,11 @@ If [Redis JSON][redis-json] is available then you should use that instead.
 Half the issues this module attempts to solve are solved out-the-box
 by using Redis JSON directly.
 
-### Alternative modules
-
-[Redis-OM][redisom]
-
-A full-blown object mapper which of course requires schema definitions.
-
 ## Minimum redis and ioredis
 
-- [Redis 6+][redis-i]
+Tested on:
+
+- [Redis 6+][r]
 - [ioredis 5+][ioredis]
 
 ## Tests
@@ -615,14 +606,15 @@ npm test
 
 run integration tests:
 
-> integration & performance tests require a [redis server][redis-i] running
-> at `:6379`
+> integration & performance tests need a [redis server][r] running on `:6379`
 
 ```bash
 npm run test:integration
 ```
 
 run performance tests:
+
+> these tests are slow:
 
 ```bash
 npm run test:performance
@@ -644,7 +636,7 @@ npm run checks
 
 ## Contributing
 
-Read the [contribution guidelines][contributing].
+[Contribution Guidelines][contributing].
 
 ## Authors
 
@@ -661,7 +653,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
       By every definition they are atomic since they don't allow for
       partial updates, however the entire transaction can fail if client B
       updates a value while it's in the process of being modified by client A
-      as part of a transaction.   
+      as part of a transaction.
       Retries are not currently implemented.
 
 [^2]: The singer "Sting" lives here and gets lots of fan-mail.
@@ -709,8 +701,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [nicholaswmin]: https://github.com/nicholaswmin
 [contributing]: .github/CONTRIBUTING.md
 [runnable-example]: .github/example/index.js
+[example-model]: ./test/util/model/index.js
 [paper-benchmark]: .github/benchmark/README.md
-[redis-i]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+[r]: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 [ioredis]: https://github.com/redis/ioredis
 [non-func]: https://en.wikipedia.org/wiki/Non-functional_requirement
 [perf-tests]: ./test/performance

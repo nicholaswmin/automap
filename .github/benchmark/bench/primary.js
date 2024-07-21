@@ -1,16 +1,28 @@
 import { styleText } from 'node:util'
 import throttle from 'throttleit'
-import { randomId, round } from '../../../test/helpers/utils/index.js'
+import { randomId, round } from '../../../test/util/index.js'
 
-const primary = async ({ cluster, constants, before = () => {} }) => {
+const primary = async ({
+  cluster,
+  constants,
+  before = () => {},
+  after = () => {}
+}) => {
   console.log('Started')
   console.log(constants)
-
-  await before()
 
   const taskInterval = Math.ceil(1000 / constants.TASKS_PER_SECOND)
   const timers = { warmup: null, task: null }
   const updates = []
+
+  const onProcessStart = async () => {
+    await before()
+  }
+
+  const onProcessExit = async () => {
+    await killWorkers()
+    await after()
+  }
 
   const cancelWarmupPeriod = () => {
     if (process.uptime() > constants.WARMUP_SECONDS) {
@@ -41,7 +53,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
 
     console.error('error in worker', worker.process.pid)
 
-    await killWorkers()
+    await onProcessExit()
 
     console.error('Test failed')
 
@@ -53,7 +65,7 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
 
     Object.values(timers).forEach(clearInterval)
 
-    await killWorkers()
+    await onProcessExit()
 
     setImmediate(() => {
       console.info(
@@ -145,11 +157,13 @@ const primary = async ({ cluster, constants, before = () => {} }) => {
     global.SIGINT = true
     console.log('\n', styleText(
       'yellow',
-      'User stop. Dont forget to deprovision any expensive add-ons! Bye 👋'
+      'User requested stop. Dont forget to deprovision added add-ons! Bye 👋'
     ), '\n')
 
     setTimeout(() => process.exit(0), 500)
   })
+
+  await onProcessStart()
 }
 
 export default primary

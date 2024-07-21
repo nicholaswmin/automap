@@ -5,14 +5,14 @@
   "description": "save OOP object graphs in Redis",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --test-reporter=spec test/index.spec.js",
-    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.spec.js",
-    "test:integration": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test --test-reporter=spec test/integration/index.spec.js",
-    "test:performance": "node test/helpers/require-local-redis/index.js && NODE_ENV=test node --test --test-reporter=spec test/performance/index.spec.js",
+    "test": "NODE_ENV=test node --test --test-reporter=spec test/index.test.js",
+    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.test.js",
+    "test:integration": "NODE_ENV=test node --test --test-reporter=spec test/integration/index.test.js",
+    "test:performance": "NODE_ENV=test node --test --test-reporter=spec test/performance/index.test.js",
     "checks": "npx eslint && npm audit && npx size-limit",
     "example": "node .github/example/index.js",
-    "start": "node .github/benchmark/bench/fake-server.js",
-    "benchmark": "node .github/benchmark/index.js"
+    "benchmark": "npm --prefix .github/benchmark/bench install && node .github/benchmark/index.js",
+    "start": "node .github/benchmark/bench/fake-server.js"
   },
   "size-limit": [
     {
@@ -21,7 +21,7 @@
     }
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "os": [
     "darwin",
@@ -51,17 +51,13 @@
     "pathval": "^2.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
     "@eslint/js": "^9.6.0",
-    "@inquirer/input": "^2.2.1",
+    "@nicholaswmin/timerify": "^0.6.5",
     "@size-limit/preset-small-lib": "^11.1.4",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
-    "husky": "^9.0.11",
     "ioredis": "^5.4.1",
     "ioredis-mock": "^8.9.0",
-    "size-limit": "^11.1.4",
-    "throttleit": "^2.1.0"
+    "size-limit": "^11.1.4"
   }
 }

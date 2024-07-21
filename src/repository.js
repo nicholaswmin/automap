@@ -86,7 +86,7 @@ class Repository {
       .then(res => !!res.flat(10).filter(res => !!res).length)
   }
 
-  async fetch({ id }) {
+  async fetch(id) {
     this.#throwOnInvalidId(id)
 
     const key = this.Class.name.toLowerCase() + ':' + id
