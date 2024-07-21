@@ -20,7 +20,9 @@ const primary = async ({
       'Tasks Sent': 0,
       'Tasks Received': 0,
       'Tasks Completed': 0,
-      'Tasks Dropped': 0,
+      get ['Uptime seconds']() {
+        return process.uptime()
+      },
       get ['Warming Up']() {
         return !!timers.warmup
       }
@@ -60,8 +62,6 @@ const primary = async ({
       const randomWorker = workers[Math.floor(Math.random() * workers.length)]
 
       if (timers.warmup && Math.random() < 0.90) {
-        stats.messaging['Tasks Dropped']++
-
         return
       }
 
