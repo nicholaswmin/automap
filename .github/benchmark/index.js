@@ -32,7 +32,7 @@ const constants = {
 if (cluster.isPrimary) {
   const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
 
-  console.log(REDIS_URL)
+  console.log('Primary', REDIS_URL)
 
   const redis = new ioredis({
     url: REDIS_URL,
@@ -54,7 +54,7 @@ if (cluster.isPrimary) {
 } else {
   const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
 
-  console.log(REDIS_URL)
+  console.log('Worker', REDIS_URL)
 
   // Worker
   const constants = await loadConstants()
