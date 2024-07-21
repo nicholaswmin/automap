@@ -31,7 +31,7 @@ if (cluster.isPrimary) {
       ITEM_PAYLOAD_KB: 5,
       MAX_WORKER_BACKLOG: 100,
       NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
-      MAX_STATS_UPDATE_PER_SECOND: 10,
+      MAX_STATS_UPDATE_PER_SECOND: 5,
       MAX_WORKERS_DISPLAY: 5,
       WARMUP_SECONDS: 5
     },
