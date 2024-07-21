@@ -46,7 +46,7 @@ if (cluster.isPrimary) {
 } else {
   // Worker
   const constants = await loadConstants()
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+  const REDIS_URL = process.env.REDIS_URL || null
   const IS_HEROKU = Object.hasOwn(process.env, 'HEROKU_APP_NAME')
 
   const tracker = new TaskPerformanceTracker({ constants })
