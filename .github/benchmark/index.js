@@ -18,6 +18,8 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
+const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+
 const constants = {
   TASKS_PER_SECOND: 100,
   MAX_FLATS: 100,
@@ -29,11 +31,11 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-  const REDIS_URL =  process.env.REDIS_URL || null
-  const IS_HEROKU = Object.hasOwn(process.env, 'HEROKU_APP_NAME')
-
   const redis = new ioredis(REDIS_URL, {
-    keyPrefix: 'test:'
+    keyPrefix: 'test:',
+    tls: REDIS_URL?.includes('rediss') ? {
+      rejectUnauthorized: false
+    } : undefined
   })
 
   await userDefineConstants(constants)
@@ -41,23 +43,26 @@ if (cluster.isPrimary) {
   primary({
     cluster,
     constants,
-    before: async () => redis.flushall()
+    before: async () => redis.flushall(),
+    after: async () => redis.disconnect()
   })
 } else {
+  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+
   // Worker
   const constants = await loadConstants()
-  const REDIS_URL = process.env.REDIS_URL || null
-  const IS_HEROKU = Object.hasOwn(process.env, 'HEROKU_APP_NAME')
 
   const tracker = new TaskPerformanceTracker({ constants })
-
   const redis = new ioredis(REDIS_URL, {
-    keyPrefix: 'test:'
+    keyPrefix: 'test:',
+    tls: REDIS_URL?.includes('rediss') ? {
+      rejectUnauthorized: false
+    } : undefined
   })
 
   worker({
     tracker,
-    after: () => {},
+    after: () => redis.disconnect(),
     forEach: async () => {
       const id = process.pid.toString()
       const repo  = new Repository(Building, redis)
