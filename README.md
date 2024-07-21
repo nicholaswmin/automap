@@ -157,7 +157,7 @@ building.flats[0].doorbell()
 
 You can use any object as long as it:
 
-1. it's root has an `id` property set to a unique value
+1. has an `id` property set to a unique value
 2. can be reconstructed by calling `new` and passing it's JSON
 
 A working example:
