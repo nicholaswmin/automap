@@ -29,14 +29,11 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+  const REDIS_URL =  process.env.REDIS_URL || null
   const IS_HEROKU = Object.hasOwn(process.env, 'HEROKU_APP_NAME')
 
   const redis = new ioredis(REDIS_URL, {
-    keyPrefix: 'test:',
-    tls: {
-      rejectUnauthorized: false
-    }
+    keyPrefix: 'test:'
   })
 
   await userDefineConstants(constants)
@@ -55,10 +52,7 @@ if (cluster.isPrimary) {
   const tracker = new TaskPerformanceTracker({ constants })
 
   const redis = new ioredis(REDIS_URL, {
-    keyPrefix: 'test:',
-    tls: {
-      rejectUnauthorized: false
-    }
+    keyPrefix: 'test:'
   })
 
   worker({
