@@ -293,6 +293,8 @@ const userDefineConstants = async constants => {
     JSON.stringify(constants),
     'utf-8'
   )
+
+  return constants
 }
 
 export {

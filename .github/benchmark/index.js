@@ -19,7 +19,7 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
-const constants = {
+let constants = {
   TASKS_PER_SECOND: 100,
   MAX_FLATS: 100,
   ITEM_PAYLOAD_KB: 5,
@@ -30,16 +30,16 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
+  constants = await userDefineConstants({
+    ...constants,
+    REDIS_URL: await getRedisURL()
+  })
+
   const redis = new ioredis(constants.REDIS_URL, {
     keyPrefix: 'test:',
     tls: constants.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
-  })
-
-  await userDefineConstants({
-    ...constants,
-    REDIS_URL: await getRedisURL()
   })
 
   primary({
