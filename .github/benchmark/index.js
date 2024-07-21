@@ -31,9 +31,7 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-
   const redis = new ioredis(REDIS_URL, {
-    url: REDIS_URL,
     keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
@@ -49,14 +47,11 @@ if (cluster.isPrimary) {
     after: async () => redis.disconnect()
   })
 } else {
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
-
   // Worker
   const constants = await loadConstants()
 
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis(REDIS_URL, {
-    url: REDIS_URL,
     keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
