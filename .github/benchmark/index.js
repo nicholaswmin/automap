@@ -1,10 +1,10 @@
 import os from 'node:os'
 import cluster from 'node:cluster'
-import select, { Separator } from '@inquirer/select'
 import ioredis from 'ioredis'
 
 import { Building, Flat } from '../../test/util/model/index.js'
 import { Repository } from '../../index.js'
+import { getRedisURL } from './redis-url.js'
 
 import {
   userDefineConstants,
@@ -29,21 +29,7 @@ const constants = {
   WARMUP_SECONDS: 5
 }
 
-const redisEnvVars = Object.keys(process.env)
-    .filter(key => key.toLowerCase().includes('redis') &&
-      key.toLowerCase().includes('redis'))
-const REDIS_URL = redisEnvVars <= 1 ? redisEnvVars[0] : await select({
-  message: 'Found multiple Redis URL env vars. Select one:',
-  choices: redisEnvVars.map(key => {
-    return {
-      name: key,
-      value: process.env[key],
-      description: process.env[key]
-    }
-  })
-})
-
-console.log('REDIS_URL', REDIS_URL)
+const REDIS_URL = await getRedisURL()
 
 if (cluster.isPrimary) {
   const redis = new ioredis(REDIS_URL, {
