@@ -55,6 +55,7 @@ if (cluster.isPrimary) {
   })
 } else {
   // Worker
+
   const constants = await loadConstants()
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis(constants.private.REDIS_URL, {
@@ -64,18 +65,18 @@ if (cluster.isPrimary) {
     } : undefined
   })
 
+  const id = process.pid.toString()
+  const repo  = new Repository(Building, redis)
+
+  const redis_ping = () => redis.ping()
+  const fetch = performance.timerify(repo.fetch.bind(repo))
+  const save  = performance.timerify(repo.save.bind(repo))
+  const ping = performance.timerify(redis_ping)
+
   worker({
     tracker,
     after: () => redis.disconnect(),
-    forEach: async () => {
-      const id = process.pid.toString()
-      const repo  = new Repository(Building, redis)
-
-      const redis_ping = () => redis.ping()
-      const fetch = performance.timerify(repo.fetch.bind(repo))
-      const save  = performance.timerify(repo.save.bind(repo))
-      const ping = performance.timerify(redis_ping)
-
+    taskFn: async () => {
       const building = await fetch(id) || new Building({ id })
       const randIndex = Math.floor(Math.random() * building.flats.length)
 

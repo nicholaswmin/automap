@@ -138,11 +138,17 @@ const primary = async ({
     console.table(vitals.sort((a, b) => b['max backlog'] - a['max backlog']))
 
     console.log('Worker timings')
-
-    console.table(updates.slice(
+    const displayedTimings = updates.slice(
       updates.length - constants.public.MAX_WORKERS_DISPLAY,
       updates.length
-    ).map(row => row.timings))
+    ).map(row => row.timings)
+    console.table(displayedTimings)
+
+    console.log(
+      '... plus:',
+      constants.public.NUM_WORKERS - constants.public.MAX_WORKERS_DISPLAY,
+      'extra hidden workers'
+    )
   }
 
   const onTaskReceived = ({ completedCount, pid }) => {
