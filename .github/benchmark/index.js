@@ -73,6 +73,7 @@ if (cluster.isPrimary) {
     tracker,
     after: () => redis.disconnect(),
     forEach: async () => {
+      /*
       const id = process.pid.toString()
       const repo  = new Repository(Building, redis)
 
@@ -96,6 +97,7 @@ if (cluster.isPrimary) {
       await save(building)
 
       await ping()
+       */
     }
   })
 }
