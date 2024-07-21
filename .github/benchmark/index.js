@@ -44,8 +44,7 @@ if (cluster.isPrimary) {
   primary({
     cluster,
     constants,
-    before: async () => redis.flushall(),
-    after: async () => redis.disconnect()
+    before: async () => redis.flushall()
   })
 } else {
   // Worker
