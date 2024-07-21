@@ -136,4 +136,4 @@ keep up.
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
 [dynos]: https://devcenter.heroku.com/articles/limits#dynos
 [fake-server]: bench/fake-server.js
-[test-data]: /test/model/index.js
+[test-data]: /test/util/model/index.js
