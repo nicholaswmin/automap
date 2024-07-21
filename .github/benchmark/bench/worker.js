@@ -1,17 +1,17 @@
 import throttle from 'throttleit'
 
 const worker = async ({ tracker, forEach = () => {}, after = () => {} }) => {
-  process.send = throttle(process.send, 100)
+  process.sendThrottled = throttle(process.send, 100)
 
   tracker
     .on('task:run', async row => {
-      process.send({
+      process.sendThrottled({
         name: 'update',
         result: row
       })
     })
     .once('finish', result => {
-      process.send({ name: 'finish', result })
+      process.sendThrottled({ name: 'finish', result })
     })
 
   process.on('SIGTERM', () =>
@@ -22,6 +22,7 @@ const worker = async ({ tracker, forEach = () => {}, after = () => {} }) => {
   tracker.start(forEach)
 
   process.on('message', tracker.enqueue.bind(tracker))
+  process.on('message', () => process.send({ name: 'received' }))
 
   process.on('error', err => {
     setTimeout(() => {

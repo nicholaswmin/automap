@@ -25,7 +25,7 @@ const constants = {
   MAX_WORKER_BACKLOG: 10,
 
   NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
-  MAX_UPDATE_PER_SECOND: 10,
+  MAX_STATS_UPDATE_PER_SECOND: 10,
   WARMUP_SECONDS: 5
 }
 
@@ -70,7 +70,7 @@ if (cluster.isPrimary) {
       const building = await fetch(id) || new Building({ id })
       const randIndex = Math.floor(Math.random() * building.flats.length)
 
-      building.flats < constants.MAX_FLATS
+      building.flats.length < constants.MAX_FLATS
         ? building.flats.push(new Flat({ id: randomId() }))
         : null
 

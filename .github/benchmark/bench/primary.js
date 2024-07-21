@@ -11,8 +11,22 @@ const primary = async ({
   console.log('Started')
   console.log(constants)
 
-  const taskInterval = Math.ceil(1000 / constants.TASKS_PER_SECOND)
+  let startedMs = null
+  const taskInterval = 1000 / constants.TASKS_PER_SECOND
+  const taskIntervalRounded = Math.ceil(taskInterval)
   const timers = { warmup: null, task: null }
+  const stats = {
+    messaging: {
+      'Tasks Sent': 0,
+      'Tasks Received': 0,
+      'Tasks Completed': 0,
+      'Tasks Dropped': 0,
+      get ['Warming Up']() {
+        return !!timers.warmup
+      }
+    }
+  }
+
   const updates = []
 
   const onProcessStart = async () => {
@@ -25,9 +39,10 @@ const primary = async ({
   }
 
   const cancelWarmupPeriod = () => {
-    if (process.uptime() > constants.WARMUP_SECONDS) {
+    const uptime = startedMs ? (Date.now() - startedMs) / 1000 : 0
+    if (uptime > constants.WARMUP_SECONDS) {
       clearInterval(timers.warmup)
-      timers.warmup = null
+      return timers.warmup = null
     }
   }
 
@@ -38,14 +53,23 @@ const primary = async ({
   })
 
   const sendToRandomWorker = () => {
-    const workers = Object.values(cluster.workers)
-    const randomWorker = workers[Math.floor(Math.random() * workers.length)]
+    const cycles = taskInterval < 1 ? 1 / taskInterval : 1
 
-    if (timers.warmup && Math.random() < 0.75)
-      return
+    for (let i = 0; i < cycles; i++) {
+      const workers = Object.values(cluster.workers)
+      const randomWorker = workers[Math.floor(Math.random() * workers.length)]
 
-    if (randomWorker)
-      randomWorker.send({ detail: 'Task' + '-' + randomId() })
+      if (timers.warmup && Math.random() < 0.90) {
+        stats.messaging['Tasks Dropped']++
+
+        return
+      }
+
+      if (randomWorker)
+        randomWorker.send({ detail: 'Task' + '-' + randomId() })
+
+      stats.messaging['Tasks Sent']++
+    }
   }
 
   const onClusterExit = (worker, code) => code > 0 ? (async () => {
@@ -71,12 +95,12 @@ const primary = async ({
       console.info(
         process.pid, 'reached backlog limit', '\n',
         'Test succeded! Run for:',
-        round(process.uptime() - constants.WARMUP_SECONDS), 'seconds'
+        round(process.uptime()),
+        'seconds,',
+        'warmup period:',
+        constants.WARMUP_SECONDS,
+        'seconds'
       )
-
-      // pass `result` as argument in func, it's available
-      // console.info('Printing report for:', process.pid)
-      // console.dir(result, { depth: 5 })
     })
   }
 
@@ -94,27 +118,38 @@ const primary = async ({
 
     console.table(constants)
 
-    console.log('Vitals')
+    console.log('Messaging Stats:')
 
-    console.table(updates.slice(
+    console.table(stats.messaging)
+
+    console.log('Worker Vitals')
+
+    const vitals = updates.slice(
       updates.length - constants.NUM_WORKERS,
       updates.length
-    ).map(row => row.vitals))
+    ).map(row => row.vitals)
 
-    console.log('Task/Function timings')
+    stats.messaging['Tasks Completed'] = vitals.reduce((sum, item) => {
+      return sum += item.cycles
+    }, 0)
+
+    console.table(vitals)
+
+    console.log('Worker timings')
 
     console.table(updates.slice(
       updates.length - constants.NUM_WORKERS,
       updates.length
     ).map(row => row.timings))
+  }
 
-    if (timers.warmup)
-      console.log('* warmup period active *')
+  const onTaskReceived = () => {
+    stats.messaging['Tasks Received']++
   }
 
   const printUpdates = throttle(
     printUpdatesUnthrottled,
-    Math.round(1000 / constants.MAX_UPDATE_PER_SECOND)
+    Math.round(1000 / constants.MAX_STATS_UPDATE_PER_SECOND)
   )
 
   const killWorkers = () => {
@@ -140,21 +175,18 @@ const primary = async ({
     await forkWorker()
       .then(worker => worker.on('message', msg => ({
         'finish': onWorkerFinish,
-        'update': onWorkerUpdate
+        'update': onWorkerUpdate,
+        'received': onTaskReceived
       }[msg.name](msg.result))))
 
   cluster.on('exit', onClusterExit)
 
   Object.assign(timers, {
-    task: setInterval(sendToRandomWorker, taskInterval),
+    task: setInterval(sendToRandomWorker, taskIntervalRounded),
     warmup: setInterval(cancelWarmupPeriod, 1000)
   })
 
-  process.on('SIGINT', () => {
-    if (global.SIGINT)
-        return
-
-    global.SIGINT = true
+  process.once('SIGINT', () => {
     console.log('\n', styleText(
       'yellow',
       'User requested stop. Dont forget to deprovision added add-ons! Bye 👋'
@@ -164,6 +196,7 @@ const primary = async ({
   })
 
   await onProcessStart()
+  startedMs = Date.now()
 }
 
 export default primary
