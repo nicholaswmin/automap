@@ -26,8 +26,7 @@ const constants = {
   MAX_WORKER_BACKLOG: 10,
   NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
   MAX_STATS_UPDATE_PER_SECOND: 10,
-  WARMUP_SECONDS: 5,
-  REDIS_URL: await getRedisURL()
+  WARMUP_SECONDS: 5
 }
 
 if (cluster.isPrimary) {
@@ -38,7 +37,10 @@ if (cluster.isPrimary) {
     } : undefined
   })
 
-  await userDefineConstants(constants)
+  await userDefineConstants({
+    ...constants,
+    REDIS_URL: await getRedisURL()
+  })
 
   primary({
     cluster,
