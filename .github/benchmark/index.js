@@ -64,7 +64,7 @@ if (cluster.isPrimary) {
 
   worker({
     tracker,
-    after: () => redis.disconnect(),
+    after: () => {},
     forEach: async () => {
       const id = process.pid.toString()
       const repo  = new Repository(Building, redis)
