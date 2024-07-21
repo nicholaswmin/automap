@@ -28,6 +28,7 @@ if (cluster.isPrimary) {
       MAX_WORKER_BACKLOG: 10,
       NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
       MAX_STATS_UPDATE_PER_SECOND: 10,
+      MAX_WORKERS_DISPLAY: process.env.WEB_CONCURRENCY || os.availableParallelism(),
       WARMUP_SECONDS: 5
     },
     private: {

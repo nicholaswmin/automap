@@ -283,7 +283,7 @@ const userDefineConstants = async constants => {
       }
     })
 
-    constants[key] = parseInt(answer)
+    constants.public[key] = parseInt(answer)
   }
 
   await writeFile(

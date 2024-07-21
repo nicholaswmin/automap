@@ -125,7 +125,7 @@ const primary = async ({
     console.log('Worker Vitals')
 
     const vitals = updates.slice(
-      updates.length - constants.public.NUM_WORKERS,
+      updates.length - constants.public.MAX_WORKERS_DISPLAY,
       updates.length
     ).map(row => row.vitals)
 
@@ -138,7 +138,7 @@ const primary = async ({
     console.log('Worker timings')
 
     console.table(updates.slice(
-      updates.length - constants.public.NUM_WORKERS,
+      updates.length - constants.public.MAX_WORKERS_DISPLAY,
       updates.length
     ).map(row => row.timings))
   }
