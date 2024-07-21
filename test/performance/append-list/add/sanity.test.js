@@ -19,7 +19,8 @@ test('AppendList, sanity test', async t => {
 
   await t.before(async () => {
     await repo.redis.flushall()
-    console.log(styleText('yellow', 'note: running a slow test ( > 1 minute)'))
+
+    console.log(styleText('yellow', 'note: slow test ( > 1 minute)'))
   })
 
   await t.after(async () => {
