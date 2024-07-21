@@ -34,7 +34,7 @@ if (cluster.isPrimary) {
     url: REDIS_URL,
     keyPrefix: 'test:'
   }, {
-    tls: process.env.REDIS_URL?.includes('rediss') ? {
+    tls: REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
@@ -56,7 +56,7 @@ if (cluster.isPrimary) {
     url: REDIS_URL,
     keyPrefix: 'test:'
   }, {
-    tls: process.env.REDIS_URL?.includes('rediss') ? {
+    tls: REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
