@@ -26,15 +26,14 @@ const constants = {
   MAX_WORKER_BACKLOG: 10,
   NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
   MAX_STATS_UPDATE_PER_SECOND: 10,
-  WARMUP_SECONDS: 5
+  WARMUP_SECONDS: 5,
+  REDIS_URL: await getRedisURL()
 }
 
-const REDIS_URL = await getRedisURL()
-
 if (cluster.isPrimary) {
-  const redis = new ioredis(REDIS_URL, {
+  const redis = new ioredis(constants.REDIS_URL, {
     keyPrefix: 'test:',
-    tls: REDIS_URL?.includes('rediss') ? {
+    tls: constants.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
@@ -51,9 +50,9 @@ if (cluster.isPrimary) {
   // Worker
   const constants = await loadConstants()
   const tracker = new TaskPerformanceTracker({ constants })
-  const redis = new ioredis(REDIS_URL, {
+  const redis = new ioredis(constants.REDIS_URL, {
     keyPrefix: 'test:',
-    tls: REDIS_URL?.includes('rediss') ? {
+    tls: constants.REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
   })
