@@ -1,7 +1,7 @@
 {
   "environments": {
     "review": {
-      "addons": ["heroku-redis:premium"]
+      "addons": ["heroku-redis:premium-1"]
     }
   }
 }
