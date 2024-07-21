@@ -18,6 +18,7 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
+const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
 
 const constants = {
   TASKS_PER_SECOND: 100,
@@ -30,9 +31,6 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
-
-  console.log('Primary', REDIS_URL)
 
   const redis = new ioredis(REDIS_URL, {
     url: REDIS_URL,
@@ -53,13 +51,10 @@ if (cluster.isPrimary) {
 } else {
   const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
 
-  console.log('Worker', REDIS_URL)
-
   // Worker
   const constants = await loadConstants()
 
   const tracker = new TaskPerformanceTracker({ constants })
-  /*
   const redis = new ioredis(REDIS_URL, {
     url: REDIS_URL,
     keyPrefix: 'test:',
@@ -67,12 +62,11 @@ if (cluster.isPrimary) {
       rejectUnauthorized: false
     } : undefined
   })
-*/
+
   worker({
     tracker,
     after: () => redis.disconnect(),
     forEach: async () => {
-      /*
       const id = process.pid.toString()
       const repo  = new Repository(Building, redis)
 
@@ -96,7 +90,6 @@ if (cluster.isPrimary) {
       await save(building)
 
       await ping()
-       */
     }
   })
 }
