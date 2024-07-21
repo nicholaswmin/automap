@@ -18,8 +18,7 @@ import {
   payloadKB
 } from '../../test/util/index.js'
 
-const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
-console.log(process.env)
+
 const constants = {
   TASKS_PER_SECOND: 100,
   MAX_FLATS: 100,
@@ -31,6 +30,10 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
+  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+
+  console.log(REDIS_URL)
+
   const redis = new ioredis({
     url: REDIS_URL,
     keyPrefix: 'test:'
@@ -49,6 +52,10 @@ if (cluster.isPrimary) {
     after: async () => redis.disconnect()
   })
 } else {
+  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+
+  console.log(REDIS_URL)
+
   // Worker
   const constants = await loadConstants()
 
