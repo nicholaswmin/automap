@@ -26,10 +26,10 @@ if (cluster.isPrimary) {
 
   const constants = await userDefineConstants({
     public: {
-      TASKS_PER_SECOND: 100,
+      TASKS_PER_SECOND: 3000,
       MAX_FLATS: 100,
       ITEM_PAYLOAD_KB: 5,
-      MAX_WORKER_BACKLOG: 10,
+      MAX_WORKER_BACKLOG: 100,
       NUM_WORKERS: process.env.WEB_CONCURRENCY || os.availableParallelism(),
       MAX_STATS_UPDATE_PER_SECOND: 10,
       MAX_WORKERS_DISPLAY: process.env.WEB_CONCURRENCY || os.availableParallelism(),
