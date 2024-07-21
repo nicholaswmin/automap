@@ -34,10 +34,9 @@ if (cluster.isPrimary) {
 
   console.log('Primary', REDIS_URL)
 
-  const redis = new ioredis({
+  const redis = new ioredis(REDIS_URL, {
     url: REDIS_URL,
-    keyPrefix: 'test:'
-  }, {
+    keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
       rejectUnauthorized: false
     } : undefined
