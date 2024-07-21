@@ -1,0 +1,14 @@
+{
+  "name": "@nicholaswmin/benchmark",
+  "type": "module",
+  "version": "0.1.0",
+  "author": "@nicholaswmin",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "npm --prefix bench install",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  }
+}

@@ -14,8 +14,7 @@
   ],
   "author": "@nicholaswmin",
   "license": "MIT",
-  "dependences": {
-    "ioredis": "^5.4.1",
+  "dependencies": {
     "@inquirer/input": "^2.2.2",
     "throttleit": "^2.1.0"
   }
