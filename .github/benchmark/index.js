@@ -19,6 +19,7 @@ import {
 } from '../../test/util/index.js'
 
 const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
+console.log(process.env)
 const constants = {
   TASKS_PER_SECOND: 100,
   MAX_FLATS: 100,
