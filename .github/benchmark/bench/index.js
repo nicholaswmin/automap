@@ -162,7 +162,7 @@ class TaskPerformanceTracker extends EventEmitter {
       return this.emit('finish', this.toJSON())
     }
 
-    if (this.backlog.length >= this.constants.MAX_WORKER_BACKLOG)
+    if (this.backlog.length >= this.constants.public.MAX_WORKER_BACKLOG)
       this.state.finished = new Date()
 
     if (this.state.running)
