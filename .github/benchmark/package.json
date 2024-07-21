@@ -5,7 +5,7 @@
   "author": "@nicholaswmin",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm --prefix bench install",
+    "postinstall": "npm --prefix bench install --omit=dev",
     "start": "node index.js"
   },
   "dependencies": {
