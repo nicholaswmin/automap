@@ -31,7 +31,7 @@ const constants = {
 
 if (cluster.isPrimary) {
   const redis = new ioredis({
-    url: constants.REDIS_URL,
+    url: REDIS_URL,
     keyPrefix: 'test:'
   }, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
@@ -53,7 +53,7 @@ if (cluster.isPrimary) {
 
   const tracker = new TaskPerformanceTracker({ constants })
   const redis = new ioredis({
-    url: constants.REDIS_URL,
+    url: REDIS_URL,
     keyPrefix: 'test:'
   }, {
     tls: process.env.REDIS_URL?.includes('rediss') ? {
