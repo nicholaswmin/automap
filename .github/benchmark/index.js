@@ -34,9 +34,9 @@ if (cluster.isPrimary) {
 
   const redis = new ioredis(REDIS_URL, {
     keyPrefix: 'test:',
-    tls: IS_HEROKU ? {
+    tls: {
       rejectUnauthorized: false
-    } : undefined
+    }
   })
 
   await userDefineConstants(constants)
@@ -57,9 +57,9 @@ if (cluster.isPrimary) {
 
   const redis = new ioredis(REDIS_URL, {
     keyPrefix: 'test:',
-    tls: IS_HEROKU ? {
+    tls: {
       rejectUnauthorized: false
-    } : undefined
+    }
   })
 
   worker({
