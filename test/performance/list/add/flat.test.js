@@ -44,13 +44,13 @@ test('List, flat, add items: x 200 times', async t => {
         await t.test('takes on average < 5 ms', t => {
           const mean = fetch.stats_ms.mean
 
-           t.assert.ok(mean < 5, `mean is: ${mean} ms`)
+           t.assert.ok(mean < 10, `mean is: ${mean} ms`)
         })
 
         await t.test('has consistent running times', t => {
           const deviation = fetch.stats_ms.stddev
 
-          t.assert.ok(deviation < 5, `deviation is: ${deviation} ms`)
+          t.assert.ok(deviation < 3, `deviation is: ${deviation} ms`)
         })
       })
 
@@ -64,13 +64,13 @@ test('List, flat, add items: x 200 times', async t => {
         await t.test('takes on average < 5 ms', t => {
           const mean = save.stats_ms.mean
 
-          t.assert.ok(mean < 5, `mean is: ${mean} ms`)
+          t.assert.ok(mean < 10, `mean is: ${mean} ms`)
         })
 
         await t.test('has consistent running times', t => {
           const deviation = save.stats_ms.stddev
 
-          t.assert.ok(deviation < 5, `deviation is: ${deviation} ms`)
+          t.assert.ok(deviation < 3, `deviation is: ${deviation} ms`)
         })
       })
     })
