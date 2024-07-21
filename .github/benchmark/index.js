@@ -30,8 +30,14 @@ const constants = {
 }
 
 if (cluster.isPrimary) {
-  // Primary
-  const redis = new ioredis()
+  const redis = new ioredis({
+    url: process.env.REDIS_URL,
+    keyPrefix: 'test:'
+  }, {
+    tls: process.env.REDIS_URL?.includes('rediss') ? {
+      rejectUnauthorized: false
+    } : undefined
+  })
 
   await userDefineConstants(constants)
 
