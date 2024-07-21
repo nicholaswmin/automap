@@ -50,8 +50,9 @@ test('#repository.save()', async t => {
       })
 
       await t.test('fetching the object', async t => {
-        t.beforeEach(async () =>
-          building = await repo.fetch('foo'))
+        t.beforeEach(async () => {
+          building = await repo.fetch('foo')
+        })
 
         await t.test('fetches the object', t => {
           t.assert.ok(building)

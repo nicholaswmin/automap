@@ -43,7 +43,7 @@ test('Repository', async t => {
     })
 
     await t.test('passed "id" does not exist', async t => {
-      await t.beforeEach(async () => {
+      t.beforeEach(async () => {
         fetched = await repo.fetch('non-existent-id')
       })
 
@@ -53,7 +53,7 @@ test('Repository', async t => {
     })
 
     t.todo('passed "id" exists', async t => {
-      await t.beforeEach(async () => {
+      t.beforeEach(async () => {
         await repo.save(new Building({ id: 'foo' }))
 
         fetched = await repo.fetch('foo')

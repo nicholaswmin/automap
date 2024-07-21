@@ -18,10 +18,10 @@ test('#repository.save()', async t => {
     }))
 
     await t.test('adding an AppendList item and saving', async t => {
-      t.beforeEach(() => {
+      t.beforeEach(async () => {
         building.flats.at(0).addMail()
 
-        return repo.save(building)
+        return await repo.save(building)
       })
 
       await t.test('saves in a Redis List:', async t => {
@@ -41,8 +41,9 @@ test('#repository.save()', async t => {
       })
 
       await t.test('fetching the object', async t => {
-        t.beforeEach(async () =>
-          building = await repo.fetch('foo'))
+        t.beforeEach(async () => {
+          building = await repo.fetch('foo')
+        })
 
         await t.test('fetches the object', t => {
           t.assert.ok(building)

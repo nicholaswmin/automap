@@ -15,8 +15,8 @@ test('LazyList, flat, edit items: x 200 times', async t => {
         fetch = timerify(repo.fetch.bind(repo)),
         save = timerify(repo.save.bind(repo))
 
-  await t.before(() => repo.redis.flushall())
-  await t.after(async () => repo.redis.disconnect())
+  t.before(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
   await t.test('has existing LazyList with 200 x 1 5kb items', async t => {
     await repo.save(new Building({

@@ -25,7 +25,7 @@ test('#repository.save()', async t => {
       t.beforeEach(async () => {
         building.visitors.push(new Person({ id: 2 }))
 
-        repo.save(building)
+        await repo.save(building)
       })
 
       await t.test('saves in a Redis Hash', async t => {
@@ -45,8 +45,9 @@ test('#repository.save()', async t => {
       })
 
       await t.test('fetching the object again', async t => {
-        t.beforeEach(async () =>
-          building = await repo.fetch('foo'))
+        t.beforeEach(async () => {
+          building = await repo.fetch('foo')
+        })
 
         await t.test('and loading its list', async t => {
           t.beforeEach(() => building.visitors.load(repo))

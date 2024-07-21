@@ -13,8 +13,8 @@ test('LazyList, flat, load list: x 200 times', async t => {
   const title = t.fullName,
         repo = new Repository(Building, new ioredis({ keyPrefix: 'test:' }))
 
-  await t.before(() => repo.redis.flushall())
-  await t.after(async () => repo.redis.disconnect())
+  t.before(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
   await t.test('has existing LazyList with 200 x 5kb items', async t => {
     await repo.save(new Building({

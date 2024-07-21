@@ -37,8 +37,8 @@ test('#repository.save()', async t => {
       })
 
       await t.test('loading its list again', async t => {
-        t.beforeEach(() => {
-           building.visitors.load(repo)
+        t.beforeEach(async () => {
+           await building.visitors.load(repo)
         })
 
         await t.test('still loads one item', t => {

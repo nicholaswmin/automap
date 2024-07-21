@@ -14,13 +14,13 @@ test('AppendList, nested, 1-level, add items: x 10000 times', async t => {
         fetch = timerify(repo.fetch.bind(repo)),
         save = timerify(repo.save.bind(repo))
 
-  await t.before(async () => {
+  t.before(async () => {
     await repo.redis.flushall()
 
     console.log(styleText('yellow', 'note: slow test ( > 1 minute)'))
   })
 
-  await t.after(async () => {
+  t.after(async () => {
     repo.redis.disconnect()
   })
 

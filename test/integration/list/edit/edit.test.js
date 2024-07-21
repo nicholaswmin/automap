@@ -25,12 +25,13 @@ test('#repository.save()', async t => {
       t.beforeEach(async () => {
         building.flats.at(0).bedrooms = 4
 
-        repo.save(building)
+        await repo.save(building)
       })
 
       await t.test('fetching the object again', async t => {
-        t.beforeEach(async () =>
-          building = await repo.fetch('foo'))
+        t.beforeEach(async () => {
+          building = await repo.fetch('foo')
+        })
 
         await t.test('loads the item', t => {
           t.assert.strictEqual(building.flats.length, 1)

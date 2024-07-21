@@ -2,7 +2,7 @@ import test from 'node:test'
 
 import { AppendList } from '../../../../src/list.js'
 import { Mail } from '../../../util/model/index.js'
-2
+
 test('AppendList', async t => {
   let list
 

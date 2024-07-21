@@ -21,7 +21,7 @@ test('#repository.save()', async t => {
       t.beforeEach(async () => {
         building.flats.push(new Flat({ id: 1 }))
 
-        repo.save(building)
+        await repo.save(building)
       })
 
       await t.test('saves in a Redis Hash', async t => {
@@ -41,8 +41,9 @@ test('#repository.save()', async t => {
       })
 
       await t.test('fetching the object again', async t => {
-        t.beforeEach(async () =>
-          building = await repo.fetch('foo'))
+        t.beforeEach(async () => {
+          building = await repo.fetch('foo')
+        })
 
         await t.test('fetches the object', t => {
           t.assert.ok(building)

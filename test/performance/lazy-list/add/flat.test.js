@@ -13,8 +13,8 @@ test('LazyList, flat, add items: x 200 times', async t => {
         fetch = timerify(repo.fetch.bind(repo)),
         save = timerify(repo.save.bind(repo))
 
-  await t.before(() => repo.redis.flushall())
-  await t.after(async () => repo.redis.disconnect())
+  t.before(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
   await t.test('x 200 times', async t => {
     await t.test('add 1 LazyList with 1 x 5kb item & save()', async t => {

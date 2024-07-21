@@ -13,8 +13,8 @@ test('AppendList, flat, add items: x 200 times', async t => {
         fetch = timerify(repo.fetch.bind(repo)),
         save = timerify(repo.save.bind(repo))
 
-  await t.before(async () => await repo.redis.flushall())
-  await t.after(() => repo.redis.disconnect())
+  t.before(async () => await repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
   await t.test('x 5 times', async t => {
     await t.test('add 1 AppendList with 1 item & save()', async t => {

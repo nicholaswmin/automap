@@ -87,7 +87,7 @@ test('List', async t => {
         await t.test('parsing the value JSONs', async t => {
           let parsed = []
 
-          await t.before(() => {
+          t.before(() => {
             parsed.push(
               JSON.parse(result.value.u_1),
               JSON.parse(result.value.u_2)

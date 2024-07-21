@@ -13,8 +13,8 @@ test('List, flat, load list, x 200 times', async t => {
         fetch = timerify(repo.fetch.bind(repo)),
         results = []
 
-  await t.before(() => repo.redis.flushall())
-  await t.after(async () => repo.redis.disconnect())
+  t.before(() => repo.redis.flushall())
+  t.after(() => repo.redis.disconnect())
 
   await t.test('for each existing List', async t => {
     await repo.save(new Building({

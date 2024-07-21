@@ -29,7 +29,7 @@ test('AppendList', async t => {
 
   await t.test('#load', async t => {
 
-    await t.beforeEach(() => {
+    t.beforeEach(() => {
       list = new AppendList({
         from: 'building:foo:flats:1:mail',
         type: Mail
@@ -69,7 +69,7 @@ test('AppendList', async t => {
     })
 
     await t.test('calling #load with repo with a matching loader', async t => {
-      await t.beforeEach(async () => {
+      t.beforeEach(async () => {
         await list.load(mockRepos.withMatchingLoader)
       })
 
@@ -92,7 +92,7 @@ test('AppendList', async t => {
     })
 
     await t.test('calling #load after adding new items', async t => {
-      await t.beforeEach(async () => {
+      t.beforeEach(async () => {
         list.push(new Mail({ id: '103', text: 'Bonjour...' }))
         await list.load(mockRepos.withMatchingLoader)
       })
