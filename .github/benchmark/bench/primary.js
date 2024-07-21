@@ -130,7 +130,6 @@ const primary = async ({
       updates.length
     ).map(row => row.vitals)
 
-    console.log(stats.workers)
     stats.messaging['Tasks Completed'] = Object.values(stats.workers)
         .reduce((sum, finishedCount) => {
           return sum += finishedCount

@@ -40,25 +40,33 @@ There is a big risk of leaving expensive add-ons running.
 Instead:
 
 - Create a Pipeline, name it `benchmark`
-- Connect it to this repo
-- Create a Review App
-- Mark it to autodestroy in 1 day when stale
+- Checkout this repo to a branch, i.e `benchmark` and create a Pull Request
+  - review apps function best as ephemeral apps of a PR
+- Connect the pipeline to this repo
+- Create a Review App spceifying this repo and branch `benchmark`
+- Mark the Review App to `autodestroy=1day` when stale
 - Provision necessary add:ons (Redis) on the Review App
-  - Choose Standard 1x for dynos; the dyno is chosen when we
+  - Choose `Standard 1x` for dynos; the actual  dyno is chosen when we
     run the benchmark but bigger dynos require at least a `Standard-1x`
     on the Review App itself.
-- Use the Review App as `--app` intead of a standard Heroku app
+- Use the Review App as `--app` intead of a standard Heroku app when issuing
+  the run commands, as seen below:
 
-### Run on Heroku
+### Heroku run
 
-To run the benchmark:
+- Push everything in the `benchmark` branch
+- Make sure all add:ons are ready
+
+and then:
 
 ```bash
 heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
 ```
 
 > Replace `<app-name>` with the Heroku Review App `name`:
+>
 > Replace `--size=<size>` with with the desired size:
+>
 > The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
 ## Overview
