@@ -1,5 +1,6 @@
 import os from 'node:os'
 import cluster from 'node:cluster'
+import select, { Separator } from '@inquirer/select'
 import ioredis from 'ioredis'
 
 import { Building, Flat } from '../../test/util/model/index.js'
@@ -28,14 +29,23 @@ const constants = {
   WARMUP_SECONDS: 5
 }
 
-if (cluster.isPrimary) {
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
-  console.log('PRIMARY', REDIS_URL, {
-    keyPrefix: 'test:',
-    tls: REDIS_URL?.includes('rediss') ? {
-      rejectUnauthorized: false
-    } : undefined
+const redisEnvVars = Object.keys(process.env)
+    .filter(key => key.toLowerCase().includes('redis') &&
+      key.toLowerCase().includes('redis'))
+const REDIS_URL = redisEnvVars <= 1 ? redisEnvVars[0] : await select({
+  message: 'Found multiple Redis URL env vars. Select one:',
+  choices: rediskeys.map(key => {
+    return {
+      name: key,
+      value: process.env[key],
+      description: process.env[key]
+    }
   })
+})
+
+console.log('REDIS_URL', REDIS_URL)
+
+if (cluster.isPrimary) {
   const redis = new ioredis(REDIS_URL, {
     keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
@@ -52,18 +62,9 @@ if (cluster.isPrimary) {
     after: async () => redis.disconnect()
   })
 } else {
-  const REDIS_URL = process.env.REDIS_TLS_URL || process.env.REDIS_URL || null
-
   // Worker
   const constants = await loadConstants()
   const tracker = new TaskPerformanceTracker({ constants })
-
-  console.log('PRIMARY', REDIS_URL, {
-    keyPrefix: 'test:',
-    tls: REDIS_URL?.includes('rediss') ? {
-      rejectUnauthorized: false
-    } : undefined
-  })
   const redis = new ioredis(REDIS_URL, {
     keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
