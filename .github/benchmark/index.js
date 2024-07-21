@@ -34,7 +34,7 @@ const redisEnvVars = Object.keys(process.env)
       key.toLowerCase().includes('redis'))
 const REDIS_URL = redisEnvVars <= 1 ? redisEnvVars[0] : await select({
   message: 'Found multiple Redis URL env vars. Select one:',
-  choices: rediskeys.map(key => {
+  choices: redisEnvVars.map(key => {
     return {
       name: key,
       value: process.env[key],
