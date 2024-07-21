@@ -60,7 +60,7 @@ if (cluster.isPrimary) {
   const constants = await loadConstants()
 
   const tracker = new TaskPerformanceTracker({ constants })
-  const redis = new ioredis({
+  const redis = new ioredis(REDIS_URL, {
     url: REDIS_URL,
     keyPrefix: 'test:',
     tls: REDIS_URL?.includes('rediss') ? {
