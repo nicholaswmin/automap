@@ -20,8 +20,8 @@ const primary = async ({
       'Tasks Sent': 0,
       'Tasks Received': 0,
       'Tasks Completed': 0,
-      get ['Uptime seconds']() {
-        return process.uptime()
+      get ['Uptime Seconds']() {
+        return Math.round(process.uptime())
       },
       get ['Warming Up']() {
         return !!timers.warmup
@@ -133,7 +133,7 @@ const primary = async ({
       return sum += item.cycles
     }, 0)
 
-    console.table(vitals)
+    console.table(vitals.sort((a, b) => b['max backlog'] - a['max backlog']))
 
     console.log('Worker timings')
 
