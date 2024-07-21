@@ -1,5 +1,6 @@
 import os from 'node:os'
 import cluster from 'node:cluster'
+import { styleText as c } from 'node:util'
 import ioredis from 'ioredis'
 
 import { Building, Flat } from '../../test/util/model/index.js'
@@ -20,7 +21,10 @@ import {
 } from '../../test/util/index.js'
 
 if (cluster.isPrimary) {
- const constants = await userDefineConstants({
+  console.clear()
+  console.log(c('blueBright', 'Starting up...'))
+
+  const constants = await userDefineConstants({
     public: {
       TASKS_PER_SECOND: 100,
       MAX_FLATS: 100,
