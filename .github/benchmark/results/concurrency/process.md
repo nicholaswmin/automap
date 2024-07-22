@@ -46,7 +46,7 @@
 - `3000` tasks per second
 - Dyno size: Heroku `Performance-2XL`
 - Redis: Heroku Redis `Premium-7`
-- Dyno concurrency `61x`
+- Dyno concurrency `63x`
 - Set concurrency: `300x`
 - Status: `Failed` in `68 seconds`
 
