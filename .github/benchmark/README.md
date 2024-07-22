@@ -104,14 +104,13 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 > This are out of date
 
 - `TASKS_PER_SECOND`: message rate of the primary
-- `NUM_WORKERS`: number of workers
-- `ITEM_PAYLOAD_KB`: item size, added as `Mail` payload in each task, in kb's.
-- `MAX_FLATS`: maximum number of created flats, per paper
-- `MAX_WORKER_BACKLOG`: max amount of unprocessed tasks in a `worker`
-  before the benchmark concludes.
-- `MAX_UPDATE_PER_SECOND`: How often to update the results shown on screen.
-  Set this to ~ 2 when benchmarking to a remote server and ~ 5 when benchmarking
-  locally.
+- `TEST_DURATION_SECONDS`: max test duration. If still running, `test=success`
+- `NUM_WORKERS`: number of concurrent threads processing tasks
+- `ITEM_PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
+- `MAX_FLATS`: maximum number of created List Items, per paper
+- `MAX_WORKER_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
+- `MAX_UPDATE_PER_SECOND`: How often to update the results shown on screen
+- `MAX_WORKERS_DISPLAY`: How many workers to show in the runtime results
 - `WARMUP_SECONDS`: Amount of seconds to take it easy at the beginning.
 
 these "constants" are user-configurable when the benchmark starts up.

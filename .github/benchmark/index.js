@@ -26,7 +26,8 @@ if (cluster.isPrimary) {
 
   const constants = await userDefineConstants({
     public: {
-      TASKS_PER_SECOND: 3000,
+      TASKS_PER_SECOND: 1000,
+      TEST_DURATION_SECONDS: 240,
       MAX_FLATS: 100,
       ITEM_PAYLOAD_KB: 5,
       MAX_WORKER_BACKLOG: 100,

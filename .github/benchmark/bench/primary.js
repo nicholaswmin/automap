@@ -37,6 +37,8 @@ const primary = async ({
   }
 
   const onProcessExit = async () => {
+    Object.values(timers).forEach(clearInterval)
+    await new Promise(res => setTimeout(res, 2000))
     await killWorkers()
     await after()
   }
@@ -73,14 +75,30 @@ const primary = async ({
     }
   }
 
-  const onClusterExit = (worker, code) => code > 0 ? (async () => {
-    Object.values(timers).forEach(clearInterval)
+  const onTestDurationEnded = async () => {
+    await onProcessExit()
 
+    setImmediate(() => {
+      console.log(styleText(['greenBright'], 'status: Test succeded'))
+      console.info(
+        'Test has elapsed its running time',
+        round(process.uptime()),
+        'seconds,',
+        'warmup period:',
+        constants.public.WARMUP_SECONDS,
+        'seconds'
+      )
+
+      process.exit(0)
+    })
+  }
+
+  const onClusterExit = (worker, code) => code > 0 ? (async () => {
     console.error('error in worker', worker.process.pid)
 
     await onProcessExit()
 
-    console.error('Test failed')
+    console.log(styleText(['redBright'], 'status: Test failed'))
 
     process.exit(1)
   })() : 0
@@ -93,15 +111,19 @@ const primary = async ({
     await onProcessExit()
 
     setImmediate(() => {
+      console.log(styleText(['redBright'], 'status: Test failed'))
+
       console.info(
         process.pid, 'reached backlog limit', '\n',
-        'Test succeded! Run for:',
+        'Run for:',
         round(process.uptime()),
         'seconds,',
         'warmup period:',
         constants.public.WARMUP_SECONDS,
         'seconds'
       )
+
+      process.exit(1)
     })
   }
 
@@ -130,10 +152,16 @@ const primary = async ({
       updates.length
     ).map(row => row.vitals)
 
+    console.log(
+      '... plus:',
+      constants.public.NUM_WORKERS - constants.public.MAX_WORKERS_DISPLAY,
+      'extra hidden workers'
+    )
+
     stats.messaging['Tasks Completed'] = Object.values(stats.workers)
-        .reduce((sum, finishedCount) => {
-          return sum += finishedCount
-        }, 0)
+      .reduce((sum, finishedCount) => {
+        return sum += finishedCount
+      }, 0)
 
     console.table(vitals.sort((a, b) => b['max backlog'] - a['max backlog']))
 
@@ -205,7 +233,13 @@ const primary = async ({
   })
 
   await onProcessStart()
+
   startedMs = Date.now()
+
+  setTimeout(
+    onTestDurationEnded,
+    Math.ceil(constants.public.TEST_DURATION_SECONDS * 1000)
+  )
 }
 
 export default primary
