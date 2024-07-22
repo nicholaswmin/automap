@@ -115,14 +115,6 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 these "constants" are user-configurable when the benchmark starts up.
 
-### Benchmark conclusion/threshold limits
-
-The benchmark is considered *concluded* when a worker has accumulated a
-`backlog` of > `MAX_WORKER_BACKLOG` `tasks`.
-
-We assume that if this rate continues the worker will be entirely unable to
-keep up.
-
 ## Authors
 
 [@nicholaswmin][nicholaswmin]
