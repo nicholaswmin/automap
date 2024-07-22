@@ -103,7 +103,7 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 ### Factors
 
-> This are out of date
+> These might be out of date
 
 - `TASKS_PER_SECOND`: message rate of the primary
 - `TEST_DURATION_SECONDS`: max test duration. If still running, `test=success`
