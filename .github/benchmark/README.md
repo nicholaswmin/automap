@@ -2,6 +2,8 @@
 
 > benchmarks the [throughput][throughput] of this module
 
+> Recorded results can be [found here][results]
+
 ## Install
 
 ```bash
@@ -128,3 +130,4 @@ these "constants" are user-configurable when the benchmark starts up.
 [dynos]: https://devcenter.heroku.com/articles/limits#dynos
 [fake-server]: bench/fake-server.js
 [test-data]: /test/util/model/index.js
+[results]: results/

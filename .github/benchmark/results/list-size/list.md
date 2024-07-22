@@ -1,56 +1,61 @@
-# Test A: Concurrency tweaks
+# Parent List size
 
-> Testing the effects of upping process concurrency\
-> Fixed some messaging stats issues, added a test duration
+> Varying the size of the parent `List`.\
+>
+> Reminder: Each task adds a payload to an `AppendList`.\
+> Each AppendList is nested within a `List` which\
+> can reach up to `100 items`.
+
+> Tests 1,2,3 are set at `1000 tasks per second`,
+> 4 is set at `2000 tasks per second`.
+
+> `MAX_LIST` refers to the same constant as `MAX_FLATS`
 
 ## Parameters
 
-- `240 seconds` duration
+- `240 seconds` test duration
 - `5KB` payloads
-- `100` max list items (flats?)
+- `100` max list/flats items
+- Dyno size: Heroku `Performance-L`
+- Redis: Heroku Redis `Premium-7`
+- Dyno concurrency `28x` each
+- Redis `FLUSHALL` before each test
 
 ### Test 1
 
-- `1k` tasks per second
-- Dyno size: Heroku `Performance-L`
-- Redis: Heroku Redis `Premium-7`
-- Dyno reported concurrency `28x`
-- Set concurrency: `28x`
+- `MAX_LIST` 100
+- `1000` tasks per second
 - Status: **Success*
 
 ### Test 2
 
-- `2k` tasks per second
-- Dyno size: Heroku `Performance-L`
-- Redis: Heroku Redis `Premium-7`
-- Dyno reported concurrency `28x`
-- Set concurrency: `28x`
-- Status: **Failed* after `25 seconds`
+- `MAX_LIST` 200
+- `1000` tasks per second
+- Status: **Failed* in `35 seconds`
 
 ### Test 3
 
-- `2k` tasks
-- Dyno size: Heroku `Performance-L`
-- Redis: Heroku Redis `Premium-7`
-- Dyno reported concurrency `28x`
-- Set concurrency: `28x`
-- Set concurrency: `100x`
-- Status: **Success*
+- `MAX_LIST` 300
+- `1000` tasks per second
+- Status: **Failed* in `25 seconds`
 
 ### Test 4
 
-- `3k` tasks
-- Dyno size: Heroku `Performance-2XL`
-- Redis: Heroku Redis `Premium-7`
-- Dyno reported concurrency `61x`
-- Set concurrency: `300x`
-- Status: **Failed* after `68 seconds`
+- `MAX_LIST` 100
+- `2000` tasks per second
+- Status: **Success*
+
+> For some reason the above test ended\
+> at `300 seconds` instead of `240 seconds`
+
 
 ## Results
 
 ### Test 1
 
 ```js
+├─────────────────────────────┼────────┤
+Constants
 ┌─────────────────────────────┬────────┐
 │ (index)                     │ Values │
 ├─────────────────────────────┼────────┤
@@ -68,10 +73,10 @@ Messaging Stats:
 ┌─────────────────┬────────┐
 │ (index)         │ Values │
 ├─────────────────┼────────┤
-│ Tasks Sent      │ 201335 │
-│ Tasks Received  │ 201335 │
-│ Tasks Completed │ 201302 │
-│ Uptime Seconds  │ 247    │
+│ Tasks Sent      │ 204095 │
+│ Tasks Received  │ 204095 │
+│ Tasks Completed │ 204058 │
+│ Uptime Seconds  │ 245    │
 │ Warming Up      │ false  │
 └─────────────────┴────────┘
 Worker Vitals
@@ -79,33 +84,40 @@ Worker Vitals
 ┌─────────┬───────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
 │ (index) │ pid   │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
 ├─────────┼───────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
-│ 0       │ '139' │ 7002   │ 7           │ 21.23         │ 54.39        │ 10.36              │
-│ 1       │ '216' │ 7069   │ 4           │ 22.44         │ 54.72        │ 10.35              │
-│ 2       │ '106' │ 7165   │ 4           │ 20.33         │ 33           │ 10.35              │
-│ 3       │ '260' │ 7071   │ 4           │ 20.39         │ 33.23        │ 10.36              │
-│ 4       │ '205' │ 7266   │ 3           │ 20.55         │ 33.46        │ 10.35              │
+│ 0       │ '293' │ 7291   │ 6           │ 20.84         │ 49.97        │ 10.34              │
+│ 1       │ '84'  │ 7226   │ 3           │ 21.16         │ 47.78        │ 10.33              │
+│ 2       │ '315' │ 7332   │ 3           │ 20.47         │ 33.28        │ 10.34              │
+│ 3       │ '326' │ 7259   │ 3           │ 20.39         │ 33.03        │ 10.35              │
+│ 4       │ '128' │ 7303   │ 3           │ 20.98         │ 47.94        │ 10.33              │
 └─────────┴───────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
 Worker timings
 ┌─────────┬────────────────┬────────────────────┬───────────────────┬──────────────────────┐
 │ (index) │ task mean (ms) │ fn:fetch mean (ms) │ fn:save mean (ms) │ redis_ping mean (ms) │
 ├─────────┼────────────────┼────────────────────┼───────────────────┼──────────────────────┤
-│ 0       │ 8.63           │ 3.29               │ 4.53              │ 1.21                 │
-│ 1       │ 8.64           │ 3.3                │ 4.54              │ 1.21                 │
-│ 2       │ 8.42           │ 3.2                │ 4.47              │ 1.19                 │
-│ 3       │ 8.8            │ 3.4                │ 4.54              │ 1.23                 │
-│ 4       │ 8.62           │ 3.3                │ 4.51              │ 1.23                 │
+│ 0       │ 7.31           │ 2.6                │ 4.06              │ 1.09                 │
+│ 1       │ 7.32           │ 2.57               │ 4.12              │ 1.07                 │
+│ 2       │ 7.37           │ 2.6                │ 4.13              │ 1.08                 │
+│ 3       │ 7.17           │ 2.5                │ 4.08              │ 1.08                 │
+│ 4       │ 7.27           │ 2.57               │ 4.08              │ 1.08                 │
 └─────────┴────────────────┴────────────────────┴───────────────────┴──────────────────────┘
+... plus: 23 extra hidden workers
+shutting down remaining workers ...
+All workers gracefully shutdown
+status: Test succeded
+Test has elapsed its running time 246.44 seconds, warmup period: 5 seconds
 ```
 
 ### Test 2
 
+
 ```js
+Constants
 ┌─────────────────────────────┬────────┐
 │ (index)                     │ Values │
 ├─────────────────────────────┼────────┤
-│ TASKS_PER_SECOND            │ 2000   │
+│ TASKS_PER_SECOND            │ 1000   │
 │ TEST_DURATION_SECONDS       │ 240    │
-│ MAX_FLATS                   │ 100    │
+│ MAX_FLATS                   │ 200    │
 │ ITEM_PAYLOAD_KB             │ 5      │
 │ MAX_WORKER_BACKLOG          │ 100    │
 │ NUM_WORKERS                 │ 28     │
@@ -117,10 +129,10 @@ Messaging Stats:
 ┌─────────────────┬────────┐
 │ (index)         │ Values │
 ├─────────────────┼────────┤
-│ Tasks Sent      │ 6801   │
-│ Tasks Received  │ 6801   │
-│ Tasks Completed │ 4694   │
-│ Uptime Seconds  │ 23     │
+│ Tasks Sent      │ 11858  │
+│ Tasks Received  │ 11858  │
+│ Tasks Completed │ 9942   │
+│ Uptime Seconds  │ 34     │
 │ Warming Up      │ false  │
 └─────────────────┴────────┘
 Worker Vitals
@@ -128,31 +140,28 @@ Worker Vitals
 ┌─────────┬───────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
 │ (index) │ pid   │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
 ├─────────┼───────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
-│ 0       │ '106' │ 254    │ 94          │ 17.67         │ 31.72        │ 11.91              │
-│ 1       │ '84'  │ 250    │ 93          │ 16.53         │ 29.7         │ 11.76              │
-│ 2       │ '238' │ 258    │ 90          │ 17.22         │ 30.97        │ 11.7               │
-│ 3       │ '117' │ 259    │ 89          │ 18.1          │ 31.67        │ 11.61              │
-│ 4       │ '227' │ 250    │ 89          │ 17.09         │ 30.95        │ 11.74              │
+│ 0       │ '304' │ 417    │ 74          │ 17.18         │ 29.56        │ 13.55              │
+│ 1       │ '55'  │ 390    │ 68          │ 17.99         │ 37.78        │ 13.11              │
+│ 2       │ '95'  │ 401    │ 67          │ 15.19         │ 26.57        │ 13.39              │
+│ 3       │ '249' │ 401    │ 59          │ 18.58         │ 39.88        │ 13.19              │
+│ 4       │ '128' │ 421    │ 51          │ 14.78         │ 26.05        │ 13.24              │
 └─────────┴───────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
 Worker timings
 ┌─────────┬────────────────┬────────────────────┬───────────────────┬──────────────────────┐
 │ (index) │ task mean (ms) │ fn:fetch mean (ms) │ fn:save mean (ms) │ redis_ping mean (ms) │
 ├─────────┼────────────────┼────────────────────┼───────────────────┼──────────────────────┤
-│ 0       │ 20.3           │ 6.44               │ 10.31             │ 3.38                 │
-│ 1       │ 21.91          │ 8.16               │ 10.58             │ 3.11                 │
-│ 2       │ 21.95          │ 7.38               │ 10.86             │ 3.57                 │
-│ 3       │ 21.27          │ 7.04               │ 10.43             │ 3.73                 │
-│ 4       │ 21.54          │ 6.93               │ 10.93             │ 3.51                 │
+│ 0       │ 28.28          │ 7.46               │ 17.42             │ 3.43                 │
+│ 1       │ 28.51          │ 7.65               │ 17.53             │ 3.37                 │
+│ 2       │ 29.44          │ 7.5                │ 18.45             │ 3.7                  │
+│ 3       │ 28.96          │ 8                  │ 17.33             │ 3.69                 │
+│ 4       │ 28.94          │ 7.38               │ 18.37             │ 3.33                 │
 └─────────┴────────────────┴────────────────────┴───────────────────┴──────────────────────┘
 ... plus: 23 extra hidden workers
-shutting down remaining workers ...
-shutting down remaining workers ...
-All workers gracefully shutdown
 All workers gracefully shutdown
 status: Test failed
 44 reached backlog limit
- Run for: 24.45 seconds, warmup period: 5 seconds
-```
+ Run for: 34.71 seconds, warmup period: 5 seconds
+````
 
 ### Test 3
 
@@ -161,65 +170,12 @@ Constants
 ┌─────────────────────────────┬────────┐
 │ (index)                     │ Values │
 ├─────────────────────────────┼────────┤
-│ TASKS_PER_SECOND            │ 2000   │
+│ TASKS_PER_SECOND            │ 1000   │
 │ TEST_DURATION_SECONDS       │ 240    │
-│ MAX_FLATS                   │ 100    │
+│ MAX_FLATS                   │ 300    │
 │ ITEM_PAYLOAD_KB             │ 5      │
 │ MAX_WORKER_BACKLOG          │ 100    │
-│ NUM_WORKERS                 │ 100    │
-│ MAX_STATS_UPDATE_PER_SECOND │ 5      │
-│ MAX_WORKERS_DISPLAY         │ 4      │
-│ WARMUP_SECONDS              │ 5      │
-└─────────────────────────────┴────────┘
-Messaging Stats:
-┌─────────────────┬────────┐
-│ (index)         │ Values │
-├─────────────────┼────────┤
-│ Tasks Sent      │ 235164 │
-│ Tasks Received  │ 235164 │
-│ Tasks Completed │ 235045 │
-│ Uptime Seconds  │ 256    │
-│ Warming Up      │ false  │
-└─────────────────┴────────┘
-Worker Vitals
-... plus: 96 extra hidden workers
-┌─────────┬────────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
-│ (index) │ pid    │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
-├─────────┼────────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
-│ 0       │ '865'  │ 2357   │ 5           │ 18.95         │ 31.56        │ 11.04              │
-│ 1       │ '722'  │ 2317   │ 4           │ 18.88         │ 31.65        │ 11.07              │
-│ 2       │ '480'  │ 2254   │ 4           │ 18.8          │ 31.03        │ 11.16              │
-│ 3       │ '1008' │ 2339   │ 3           │ 18.89         │ 31.57        │ 11.17              │
-└─────────┴────────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
-Worker timings
-┌─────────┬────────────────┬────────────────────┬───────────────────┬──────────────────────┐
-│ (index) │ task mean (ms) │ fn:fetch mean (ms) │ fn:save mean (ms) │ redis_ping mean (ms) │
-├─────────┼────────────────┼────────────────────┼───────────────────┼──────────────────────┤
-│ 0       │ 16.88          │ 5.82               │ 8.5               │ 2.58                 │
-│ 1       │ 15.26          │ 5.34               │ 7.82              │ 2.24                 │
-│ 2       │ 15.37          │ 5.42               │ 7.62              │ 2.37                 │
-│ 3       │ 16.64          │ 5.77               │ 8.32              │ 2.6                  │
-└─────────┴────────────────┴────────────────────┴───────────────────┴──────────────────────┘
-... plus: 96 extra hidden workers
-shutting down remaining workers ...
-All workers gracefully shutdown
-status: Test succeded
-Test has elapsed its running time 258.16 seconds, warmup period: 5 seconds
-````
-
-### Test 4
-
-```js
-Constants
-┌─────────────────────────────┬────────┐
-│ (index)                     │ Values │
-├─────────────────────────────┼────────┤
-│ TASKS_PER_SECOND            │ 3000   │
-│ TEST_DURATION_SECONDS       │ 240    │
-│ MAX_FLATS                   │ 100    │
-│ ITEM_PAYLOAD_KB             │ 5      │
-│ MAX_WORKER_BACKLOG          │ 100    │
-│ NUM_WORKERS                 │ 300    │
+│ NUM_WORKERS                 │ 28     │
 │ MAX_STATS_UPDATE_PER_SECOND │ 5      │
 │ MAX_WORKERS_DISPLAY         │ 5      │
 │ WARMUP_SECONDS              │ 5      │
@@ -228,36 +184,91 @@ Messaging Stats:
 ┌─────────────────┬────────┐
 │ (index)         │ Values │
 ├─────────────────┼────────┤
-│ Tasks Sent      │ 78442  │
-│ Tasks Received  │ 78441  │
-│ Tasks Completed │ 62158  │
-│ Uptime Seconds  │ 68     │
+│ Tasks Sent      │ 10320  │
+│ Tasks Received  │ 10317  │
+│ Tasks Completed │ 7955   │
+│ Uptime Seconds  │ 35     │
 │ Warming Up      │ false  │
 └─────────────────┴────────┘
 Worker Vitals
-... plus: 295 extra hidden workers
-┌─────────┬────────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
-│ (index) │ pid    │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
-├─────────┼────────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
-│ 0       │ '1327' │ 211    │ 72          │ 13.54         │ 26.53        │ 10.96              │
-│ 1       │ '3109' │ 200    │ 64          │ 12.91         │ 25.07        │ 10.99              │
-│ 2       │ '469'  │ 206    │ 59          │ 13.33         │ 25.62        │ 10.87              │
-│ 3       │ '3274' │ 205    │ 53          │ 13.21         │ 25.58        │ 11.23              │
-│ 4       │ '3307' │ 243    │ 19          │ 14.29         │ 28.3         │ 11.1               │
-└─────────┴────────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
+... plus: 23 extra hidden workers
+┌─────────┬───────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
+│ (index) │ pid   │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
+├─────────┼───────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
+│ 0       │ '161' │ 316    │ 98          │ 14.64         │ 29.57        │ 14.35              │
+│ 1       │ '326' │ 337    │ 89          │ 16.42         │ 29.87        │ 14.97              │
+│ 2       │ '95'  │ 350    │ 85          │ 17.15         │ 29.92        │ 14.61              │
+│ 3       │ '271' │ 319    │ 77          │ 16.45         │ 28.97        │ 14.49              │
+│ 4       │ '150' │ 314    │ 73          │ 14.76         │ 28.44        │ 13.99              │
+└─────────┴───────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
 Worker timings
 ┌─────────┬────────────────┬────────────────────┬───────────────────┬──────────────────────┐
 │ (index) │ task mean (ms) │ fn:fetch mean (ms) │ fn:save mean (ms) │ redis_ping mean (ms) │
 ├─────────┼────────────────┼────────────────────┼───────────────────┼──────────────────────┤
-│ 0       │ 146.11         │ 58.69              │ 58.3              │ 29.33                │
-│ 1       │ 159.41         │ 63.17              │ 63.04             │ 32.9                 │
-│ 2       │ 162.01         │ 64.97              │ 63.03             │ 34.16                │
-│ 3       │ 163.58         │ 66.33              │ 62.88             │ 34.58                │
-│ 4       │ 164.71         │ 65.76              │ 64.84             │ 34.29                │
+│ 0       │ 32.7           │ 6.93               │ 22.51             │ 3                    │
+│ 1       │ 32.28          │ 7.47               │ 21.96             │ 2.67                 │
+│ 2       │ 32.02          │ 7.02               │ 22.48             │ 2.75                 │
+│ 3       │ 32.25          │ 7.04               │ 22.4              │ 2.88                 │
+│ 4       │ 31.65          │ 7.31               │ 21.79             │ 2.8                  │
 └─────────┴────────────────┴────────────────────┴───────────────────┴──────────────────────┘
-... plus: 295 extra hidden workers
+... plus: 23 extra hidden workers
+All workers gracefully shutdown
 All workers gracefully shutdown
 status: Test failed
 44 reached backlog limit
- Run for: 68.83 seconds, warmup period: 5 seconds
+ Run for: 35.78 seconds, warmup period: 5 seconds
+````
+
+### Test 4
+
+```js
+┌─────────────────────────────┬────────┐
+│ (index)                     │ Values │
+├─────────────────────────────┼────────┤
+│ TASKS_PER_SECOND            │ 2000   │
+│ TEST_DURATION_SECONDS       │ 240    │
+│ MAX_FLATS                   │ 25     │
+│ ITEM_PAYLOAD_KB             │ 5      │
+│ MAX_WORKER_BACKLOG          │ 100    │
+│ NUM_WORKERS                 │ 28     │
+│ MAX_STATS_UPDATE_PER_SECOND │ 5      │
+│ MAX_WORKERS_DISPLAY         │ 5      │
+│ WARMUP_SECONDS              │ 5      │
+└─────────────────────────────┴────────┘
+Messaging Stats:
+┌─────────────────┬────────┐
+│ (index)         │ Values │
+├─────────────────┼────────┤
+│ Tasks Sent      │ 425602 │
+│ Tasks Received  │ 425602 │
+│ Tasks Completed │ 425488 │
+│ Uptime Seconds  │ 297    │
+│ Warming Up      │ false  │
+└─────────────────┴────────┘
+Worker Vitals
+... plus: 23 extra hidden workers
+┌─────────┬───────┬────────┬─────────────┬───────────────┬──────────────┬────────────────────┐
+│ (index) │ pid   │ cycles │ max backlog │ mean mem (mb) │ max mem (mb) │ evt loop mean (ms) │
+├─────────┼───────┼────────┼─────────────┼───────────────┼──────────────┼────────────────────┤
+│ 0       │ '139' │ 15240  │ 5           │ 21.67         │ 35.06        │ 10.15              │
+│ 1       │ '326' │ 15251  │ 5           │ 21.7          │ 35.13        │ 10.15              │
+│ 2       │ '161' │ 15332  │ 5           │ 22.21         │ 47.74        │ 10.15              │
+│ 3       │ '293' │ 15259  │ 4           │ 22.23         │ 47.71        │ 10.15              │
+│ 4       │ '150' │ 14967  │ 4           │ 21.48         │ 34.47        │ 10.15              │
+└─────────┴───────┴────────┴─────────────┴───────────────┴──────────────┴────────────────────┘
+Worker timings
+┌─────────┬────────────────┬────────────────────┬───────────────────┬──────────────────────┐
+│ (index) │ task mean (ms) │ fn:fetch mean (ms) │ fn:save mean (ms) │ redis_ping mean (ms) │
+├─────────┼────────────────┼────────────────────┼───────────────────┼──────────────────────┤
+│ 0       │ 3.99           │ 1.84               │ 1.98              │ 1.02                 │
+│ 1       │ 3.92           │ 1.77               │ 1.95              │ 1.02                 │
+│ 2       │ 3.96           │ 1.79               │ 1.96              │ 1.03                 │
+│ 3       │ 4.01           │ 1.86               │ 1.97              │ 1.02                 │
+│ 4       │ 3.95           │ 1.78               │ 1.95              │ 1.02                 │
+└─────────┴────────────────┴────────────────────┴───────────────────┴──────────────────────┘
+... plus: 23 extra hidden workers
+shutting down remaining workers ...
+All workers gracefully shutdown
+status: Test succeded
+Test has elapsed its running time 299.18 seconds, warmup period: 5 seconds
 ```
