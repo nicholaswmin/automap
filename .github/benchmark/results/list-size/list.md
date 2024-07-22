@@ -25,25 +25,25 @@
 
 - `MAX_LIST` 100
 - `1000` tasks per second
-- Status: **Success*
+- Status: `Success`
 
 ### Test 2
 
 - `MAX_LIST` 200
 - `1000` tasks per second
-- Status: **Failed* in `35 seconds`
+- Status: `Failed` in `35 seconds`
 
 ### Test 3
 
 - `MAX_LIST` 300
 - `1000` tasks per second
-- Status: **Failed* in `25 seconds`
+- Status: `Failed` in `25 seconds`
 
 ### Test 4
 
 - `MAX_LIST` 100
 - `2000` tasks per second
-- Status: **Success*
+- Status: `Success`
 
 > For some reason the above test ended\
 > at `300 seconds` instead of `240 seconds`

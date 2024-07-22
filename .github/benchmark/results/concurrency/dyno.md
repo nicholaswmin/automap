@@ -17,12 +17,12 @@
 ### Test 1
 
 - `1000` tasks per second, per dyno = `2000` tasks per second
-- Status: **Success*
+- Status: `Success`
 
 ### Test 2
 
 - `2000` tasks per second, per dyno = `4000` tasks per second
-- Status: **Failed*
+- Status: `Failed`:
   - dyno A in `85 seconds`
   - dyno B in `105 seconds`
 

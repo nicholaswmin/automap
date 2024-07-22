@@ -15,27 +15,27 @@
 ### Test 1
 
 - `PAYLOAD_KB`: 0.1 KB
-- Status: **Success*
+- Status: `Success`
 
 ### Test 2
 
 - `PAYLOAD_KB`: 1 KB
-- Status: **Success*
+- Status: `Success`
 
 ### Test 3
 
 - `PAYLOAD_KB`: 5 KB
-- Status: **Success*
+- Status: `Success`
 
 ### Test 4
 
 - `PAYLOAD_KB`: 30 KB
-- Status: **Success*
+- Status: `Success`
 
 ### Test 5
 
 - `PAYLOAD_KB`: 100 KB
-- Status: **Failed* in `108 seconds`
+- Status: `Failed` in `108 seconds`
 
 
 ## Results

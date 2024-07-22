@@ -21,7 +21,7 @@
 - Redis: Heroku Redis `Premium-7`
 - Dyno concurrency `28x`
 - Set concurrency: `28x`
-- Status: **Success*
+- Status: `Success`
 
 ### Test 2
 
@@ -30,7 +30,7 @@
 - Redis: Heroku Redis `Premium-7`
 - Dyno concurrency `28x`
 - Set concurrency: `28x`
-- Status: **Failed* in `25 seconds`
+- Status: `Failed` in `25 seconds`
 
 ### Test 3
 
@@ -39,7 +39,7 @@
 - Redis: Heroku Redis `Premium-7`
 - Dyno concurrency `28x`
 - Set concurrency: `100x`
-- Status: **Success*
+- Status: `Success`
 
 ### Test 4
 
@@ -48,7 +48,7 @@
 - Redis: Heroku Redis `Premium-7`
 - Dyno concurrency `61x`
 - Set concurrency: `300x`
-- Status: **Failed* in `68 seconds`
+- Status: `Failed` in `68 seconds`
 
 ## Results
 
