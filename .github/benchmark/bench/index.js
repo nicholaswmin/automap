@@ -283,7 +283,7 @@ const userDefineConstants = async constants => {
       }
     })
 
-    constants.public[key] = answer > 0 && answer < 1 ? answer : parseInt(answer)
+    constants.public[key] = Number(answer)
   }
 
   await writeFile(
