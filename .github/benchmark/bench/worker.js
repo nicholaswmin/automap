@@ -1,8 +1,10 @@
+import { styleText as c } from 'node:util'
+import { TaskRunner } from './task-runner.js'
+
 import {
   WorkerStatsTracker,
   WorkerObservedStatsTracker
 } from './stats/stats-tracker.js'
-import { TaskRunner } from './task-runner.js'
 
 const worker = async ({ taskFn, after = async () => { } }) => {
   const runner = new TaskRunner()
@@ -40,6 +42,7 @@ const worker = async ({ taskFn, after = async () => { } }) => {
   }
 
   const onError = async error => {
+    console.log(c(['red'], `error:thread:${process.pid}`))
     console.error(error)
     await shutdown(1)
   }

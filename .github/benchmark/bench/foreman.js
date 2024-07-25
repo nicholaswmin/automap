@@ -1,5 +1,5 @@
 class Foreman {
-  constructor({ cluster, numWorkers }) {
+  constructor(cluster, { numWorkers }) {
     this.workers = {}
     this.cluster = cluster
     this.numWorkers = numWorkers > 0 ? numWorkers : (() => {

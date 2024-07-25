@@ -28,12 +28,11 @@ class Firehose {
 
     Object.values(workers).forEach(worker => {
       worker.on('message', message => {
-        if (message.type !== 'ack')
-          return null
-
-        this.stats.replies.tick()
-        this.stats.memory.record(process.memoryUsage().heapUsed)
-        this.stats.publish()
+        if (message.type === 'ack') {
+          this.stats.replies.tick()
+          this.stats.memory.record(process.memoryUsage().heapUsed)
+          this.stats.publish()
+        }
       })
     })
 
@@ -54,11 +53,11 @@ class Firehose {
       const workers = Object.values(this.workers)
       const randomWorker = workers[Math.floor(Math.random() * workers.length)]
 
-      if (this.isWarmingUp && Math.random() < this.droppedRandomFactor)
-        return false
-
-      if (randomWorker.state === 'alive')
-        randomWorker.send({ type: 'task:execute', task: ++this.counter })
+      this.isWarmingUp && Math.random() < this.droppedRandomFactor
+        ? null
+        : randomWorker.state === 'online'
+          ? randomWorker.send({ type: 'task:execute', task: ++this.counter })
+          : null
 
       this.stats.sent.tick()
     }
