@@ -7,6 +7,7 @@ import TestTimer from './test-timer.js'
 
 const primary = async ({
   cluster,
+  constants,
   fields,
   numWorkers,
   tasksPerSecond,
@@ -80,7 +81,7 @@ const primary = async ({
     process.once('SIGINT', onSIGINT)
     cluster.once('exit', onClusterExit)
 
-    const workers = await foreman.start()
+    const workers = await foreman.start(constants)
 
     firehose.start(workers)
     testTimer.start()

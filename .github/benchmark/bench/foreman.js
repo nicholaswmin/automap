@@ -7,9 +7,9 @@ class Foreman {
     })()
   }
 
-  async start() {
+  async start(constants) {
     for (let i = 0; i < this.numWorkers; i++) {
-      const worker = await this.#forkWorker()
+      const worker = await this.#forkWorker(constants)
       this.workers[worker.process.pid] = worker
     }
 
@@ -37,9 +37,9 @@ class Foreman {
     return await Promise.all(deaths)
   }
 
-  #forkWorker() {
+  #forkWorker(constants) {
     return new Promise((resolve, reject) => {
-      return this.cluster.fork()
+      return this.cluster.fork({ constants: JSON.stringify(constants) })
         .once('online', function() { resolve(this) })
         .once('error', function(err) { reject(err) })
     })
