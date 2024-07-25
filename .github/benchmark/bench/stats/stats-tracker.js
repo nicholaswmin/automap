@@ -1,16 +1,16 @@
-import { Recordable } from './recordable.js'
+import { Histogram } from './histogram.js'
 import { localbus } from './local-bus.js'
 
 class PrimaryStatsTracker {
   constructor(keys = []) {
     Object.assign(this, keys.reduce((acc, key) => {
-      return { ...acc, [key]: new Recordable({ name: key }) }
+      return { ...acc, [key]: new Histogram({ name: key }) }
     }, {}))
   }
 
   getRow() {
     return Object.values(this)
-      .filter(val => val instanceof Recordable)
+      .filter(val => val instanceof Histogram)
       .reduce((acc, member) => {
         return {
           ...acc, [member.name]: member.histogram.toJSON()
@@ -41,7 +41,7 @@ class WorkerObservedStatsTracker extends WorkerStatsTracker {
       const json = list.getEntries().pop().toJSON()
       const entry = { ...json, name: json.name.replace('bound ', '').trim() }
 
-      this[entry.name] = this[entry.name] || new Recordable(entry)
+      this[entry.name] = this[entry.name] || new Histogram(entry)
       this[entry.name].record(entry.duration)
     })
 

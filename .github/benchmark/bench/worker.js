@@ -4,7 +4,7 @@ import {
 } from './stats/stats-tracker.js'
 import { TaskRunner } from './task-runner.js'
 
-const worker = async ({ taskFn, after = () => { } }) => {
+const worker = async ({ taskFn, after = async () => { } }) => {
   const runner = new TaskRunner()
   const stats = {
     general: new WorkerStatsTracker(['task', 'memory', 'backlog']),
@@ -19,22 +19,37 @@ const worker = async ({ taskFn, after = () => { } }) => {
     stats.functions.publish()
   })
 
-  process.on('SIGTERM', () =>
-    runner.stop().then(() =>
-      after()).then(() =>
-        process.exit(0)))
+  const onPrimaryMessage = message => {
+    if (message.type === 'shutdown')
+      return process.exit(0)
+
+    if (message.type === 'task:execute') {
+      runner.enqueue(message.task)
+
+      return process.send({ type: 'ack' })
+    }
+
+    throw new Error(`Unknown type. Got: ${JSON.stringify(message)}`)
+  }
+
+  const shutdown = async exitCode => {
+    await runner.stop()
+    await after()
+
+    return process.exit(exitCode)
+  }
+
+  const onError = async error => {
+    console.error(error)
+    await shutdown(1)
+  }
+
+  process.on('message', onPrimaryMessage)
+  process.on('error', onError)
+  ;['SIGINT', 'SIGTERM', 'disconnect']
+    .forEach(signal => process.on(signal, () => shutdown(0)))
 
   runner.start(taskFn)
-
-  process.on('message', message => {
-    if (message.type !== 'task:execute')
-      return
-
-    runner.enqueue(message.task)
-    process.send({ type: 'ack' })
-  })
-
-  process.on('error', console.error.bind(console))
 }
 
 export default worker

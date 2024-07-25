@@ -1,6 +1,6 @@
 import { createHistogram } from 'node:perf_hooks'
 
-class Recordable {
+class Histogram {
   constructor({ name, values = [] }  = {}) {
     this.name = name
     this.values = values
@@ -113,4 +113,4 @@ class Recordable {
   }
 }
 
-export { Recordable }
+export { Histogram }

@@ -6,12 +6,15 @@ import { TimeoutTimer } from './timers.js'
 class TestTimer {
   constructor({ durationSeconds }, cb = () => {}) {
     this.timer = new TimeoutTimer(async () => {
-      console.log(c(['greenBright'], 'status: Test succeded'))
+      console.log(c(['greenBright'], 'Test ended with status: success'))
 
       console.info(
-        'Test has elapsed its running time',
+        'target duration:',
+        round(durationSeconds),
+        'seconds.',
+        'actual duration:',
         round(process.uptime()),
-        'seconds'
+        'seconds.'
       )
 
       await this.stop()

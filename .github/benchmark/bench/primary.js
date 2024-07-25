@@ -20,9 +20,14 @@ const primary = async ({
 
   const firehose = new Firehose({ tasksPerSecond })
 
-  const testTimer = new TestTimer({ durationSeconds }, () => exit(0))
+  const testTimer = new TestTimer({ durationSeconds }, () => shutdown(0))
 
-  const exit = async (exitCode = 0) => {
+  const observer = new StatsObserver({ fields, statsPerSecond })
+
+  const shutdown = async (code = 0) => {
+    observer.stop()
+    console.log(c(['yellow'], `stats observer stopped ...`))
+
     await firehose.stop()
     console.log(c(['yellow'], `firehose stopped ...`))
 
@@ -30,31 +35,28 @@ const primary = async ({
     console.log(c(['yellow'], `test timer stopped ...`))
 
     await foreman.stop()
-    console.log(c(['yellow'], `workers stopped ...`))
+    console.log(c(['yellow'], `workers gracefully shutdown ...`))
 
     console.log(c(['yellow'], 'Dont forget to deprovision any add-ons! Bye 👋'))
-    process.exit(exitCode)
+    process.exit(code)
   }
 
-  const observer = new StatsObserver({ fields, statsPerSecond })
-
+  const onSIGTERM = () => shutdown(0)
   const onSIGINT = async () => {
-    const text = 'User requested stop'
-    const warn = 'Dont forget to deprovision added add-ons! Bye 👋'
-
     console.log(c(['yellow'], 'User requested stop ...'))
 
-    await exit(0)
+    await shutdown(0)
   }
 
   const start = async () => {
+    process.once('SIGTERM', onSIGTERM)
     process.once('SIGINT', onSIGINT)
 
     await foreman.start()
 
     firehose.start(foreman.workers)
     testTimer.start()
-    observer.observe()
+    observer.start()
   }
 
   await start()

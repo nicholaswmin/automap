@@ -41,11 +41,11 @@ class StatsObserver {
     })
   }
 
-  observe() {
+  start() {
     this.timer.start()
   }
 
-  disconnect() {
+  stop() {
     this.timer.stop()
     this.rows.primary = []
     this.rows.workers = []

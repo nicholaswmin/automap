@@ -24,11 +24,20 @@ class Foreman {
   }
 
   async stop() {
-    const deaths = Object.values(this.workers).map(worker => {
-      return new Promise((resolve, reject) => {
-        return worker.isDead() ? resolve()
-          : worker.on('exit', resolve).on('error', reject).kill()
-      })
+    const deaths = Object.values(this.workers)
+      .map(worker => {
+        return new Promise((resolve, reject) => {
+          return worker.isDead() ? resolve()
+            : worker
+              .on('exit', code => {
+                const pid = worker.process.pid
+                return worker.exitedAfterDisconnect
+                  ? resolve()
+                  : reject(new Error(`${pid} exited abnormally, code: ${code}`))
+              })
+              .on('error', reject)
+              .disconnect(() => worker.send('shutdown'))
+        })
     })
 
     return await Promise.all(deaths)
