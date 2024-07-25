@@ -13,11 +13,5 @@
     "performance"
   ],
   "author": "@nicholaswmin",
-  "license": "MIT",
-  "dependencies": {
-    "@inquirer/input": "^2.2.2",
-    "@nicholaswmin/recordable": "github:nicholaswmin/recordable#plot-b",
-    "bench": "^0.3.6",
-    "throttleit": "^2.1.0"
-  }
+  "license": "MIT"
 }

@@ -1,8 +1,6 @@
 import cluster from 'node:cluster'
 
-import constants from './process/constants/constants.js'
-import primary from './process/primary.js'
-import worker from './process/worker.js'
+import { constants, primary, worker } from './process/index.js'
 
 cluster.isPrimary
   ? primary(cluster, await constants(cluster))
