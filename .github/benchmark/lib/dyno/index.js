@@ -10,21 +10,21 @@ import TestTimer from './src/test-timer.js'
 
 class Dyno {
   constructor({
-    path,
+    task,
     parameters,
     fields,
     before = async () => {},
     after = async () => {}
   }) {
-    this.path = typeof path === 'string' && path.length && path.endsWith('.js')
-      ? path
-      : (() => { throw new Error('path must be a valid .js filepath') })()
+    this.task = typeof task === 'string' && task.length && task.endsWith('.js')
+      ? task
+      : (() => { throw new Error('task must be a valid .js filepath') })()
 
     this.parameters = parameters
     this.fields = fields
     this.hooks = { before, after }
     this.stopping = false
-    this.foreman = new Foreman(this.path, {
+    this.foreman = new Foreman(this.task, {
       count: this.parameters.THREAD_COUNT,
       parameters: this.parameters
     })

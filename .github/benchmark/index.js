@@ -8,7 +8,7 @@ const toMB = bytes => round(bytes / 1000 / 1000)
 const redis = ioredis()
 
 const dyno = new Dyno({
-  path: './task.js',
+  task: './task.js',
   before: () => {
     return redis.flushall()
   },
