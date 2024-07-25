@@ -9,8 +9,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@inquirer/input": "^2.2.4",
-    "@inquirer/select": "^2.4.1",
     "ioredis": "^5.4.1"
   }
 }

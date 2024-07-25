@@ -9,10 +9,10 @@ class Firehose {
     })()
 
     this.counter = 0
-    this.workers = []
+    this.threads = []
 
     this.warmupSeconds = 5
-    this.droppedRandomFactor = 0.90
+    this.droppedRandomizationFactor = 0.90
     this.isWarmingUp = true
 
     this.timers = [
@@ -23,11 +23,11 @@ class Firehose {
     ]
   }
 
-  start(workers) {
-    this.workers = workers
+  start(threads) {
+    this.threads = threads
 
-    Object.values(workers).forEach(worker => {
-      worker.on('message', message => {
+    Object.values(threads).forEach(thread => {
+      thread.on('message', message => {
         if (message.type === 'ack') {
           this.stats.replies.tick()
           this.stats.memory.record(process.memoryUsage().heapUsed)
@@ -40,9 +40,11 @@ class Firehose {
   }
 
   stop() {
-    this.timers.forEach(timer => timer.stop())
+    const interval = Math.round(1000 / this.tasksPerSecond)
+    const waitForDrain = 1000 + interval
 
-    return new Promise(resolve => setImmediate(resolve))
+    this.timers.forEach(timer => timer.stop())
+    return new Promise(resolve => setTimeout(resolve, waitForDrain))
   }
 
   sendToRandom() {
@@ -50,13 +52,16 @@ class Firehose {
     const cycles = interval < 1 ? 1 / interval : 1
 
     for (let i = 0; i < cycles; i++) {
-      const workers = Object.values(this.workers)
-      const randomWorker = workers[Math.floor(Math.random() * workers.length)]
+      const threads = Object.values(this.threads)
+      const random = threads[Math.floor(Math.random() * threads.length)]
 
-      this.isWarmingUp && Math.random() < this.droppedRandomFactor
+      this.isWarmingUp && Math.random() < this.droppedRandomizationFactor
         ? null
-        : randomWorker.state === 'online'
-          ? randomWorker.send({ type: 'task:execute', task: ++this.counter })
+        : random.connected
+          ? random.send({
+            type: 'task:execute',
+            task: this.stats.sent.count + 1
+          }, null, { keepOpen: true })
           : null
 
       this.stats.sent.tick()

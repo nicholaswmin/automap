@@ -1,5 +1,5 @@
-import { Histogram } from './histogram.js'
-import { localbus } from './local-bus.js'
+import Histogram from './histogram.js'
+import localbus from './local-bus.js'
 
 class PrimaryStatsTracker {
   constructor(keys = []) {
@@ -23,17 +23,21 @@ class PrimaryStatsTracker {
   }
 }
 
-class WorkerStatsTracker extends PrimaryStatsTracker {
+class ThreadStatsTracker extends PrimaryStatsTracker {
   constructor(...args) {
     super(...args)
   }
 
   publish() {
-    process.send({ type: 'stats:row:update', row: this.getRow() })
+    return process.connected
+      ? process.send({ type: 'stats:row:update', row: this.getRow() }, null, {
+          keepOpen: true
+        })
+      : false
   }
 }
 
-class WorkerObservedStatsTracker extends WorkerStatsTracker {
+class ThreadObservedStatsTracker extends ThreadStatsTracker {
   constructor(entryTypes) {
     super()
 
@@ -47,10 +51,6 @@ class WorkerObservedStatsTracker extends WorkerStatsTracker {
 
     this.observer.observe({ entryTypes })
   }
-
-  publish() {
-    process.send({ type: 'stats:row:update', row: this.getRow() })
-  }
 }
 
-export { PrimaryStatsTracker, WorkerStatsTracker, WorkerObservedStatsTracker }
+export { PrimaryStatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }

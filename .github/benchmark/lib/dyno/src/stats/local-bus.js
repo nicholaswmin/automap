@@ -7,4 +7,4 @@ if (process.isWorker) {
   process.exit(1)
 }
 
-export { localbus }
+export default localbus

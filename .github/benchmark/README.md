@@ -26,7 +26,6 @@ npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchm
 
 ## Benchmarking on Heroku
 
-
 ### Fake server
 
 Heroku only allows webservers on it's platform.
@@ -36,7 +35,7 @@ to the `npm start` script of the root of the project.
 
 ### Use a Pipeline Review app
 
-Don't run this benchmark on a regular Heroku App app.  
+Don't run this benchmark on a regular Heroku App app.
 
 There is a big risk of leaving expensive add-ons running.
 
@@ -92,8 +91,8 @@ You can find it [here][test-data]
 
 ### Setup
 
-Tasks are run on [`worker`][worker] processes, created by the
-[`cluster`][cluster] module.
+Tasks are run on separate threads, created as [`fork()`][fork]-ed processes via
+the [`child_process`][child_process] module.
 
 - The `primary` sends a message to a `worker`
 - A worker then runs the `task` *once* and captures timing information.
@@ -124,8 +123,8 @@ these "constants" are user-configurable when the benchmark starts up.
 [@nicholaswmin][nicholaswmin]
 
 [round-robin]: https://en.wikipedia.org/wiki/Round-robin_scheduling
-[cluster]: https://nodejs.org/api/cluster.html
-[worker]: https://nodejs.org/api/cluster.html#class-worker
+[child_process]: https://nodejs.org/api/child_process.html
+[fork]: https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options
 [nicholaswmin]: https://github.com/nicholaswmin
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput

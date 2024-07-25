@@ -7,6 +7,7 @@ const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 class TestTimer {
   constructor({ durationSeconds }, cb = () => {}) {
     this.timer = new TimeoutTimer(async () => {
+      console.log('\n')
       console.log(c(['greenBright'], 'Test timer elapsed'))
       console.log(c(['greenBright'], 'Test ended with status: success'))
       console.info('target:', round(durationSeconds), 'seconds.')

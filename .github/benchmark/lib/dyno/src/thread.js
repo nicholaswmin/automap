@@ -2,15 +2,16 @@ import { styleText as c } from 'node:util'
 import { TaskRunner } from './task-runner.js'
 
 import {
-  WorkerStatsTracker,
-  WorkerObservedStatsTracker
+  ThreadStatsTracker,
+  ThreadObservedStatsTracker
 } from './stats/stats-tracker.js'
 
-const worker = async ({ taskFn, after = async () => { } }) => {
+const thread = async taskFn => {
+  const parameters = JSON.parse(process.env.parameters)
   const runner = new TaskRunner()
   const stats = {
-    general: new WorkerStatsTracker(['task', 'memory', 'backlog']),
-    functions: new WorkerObservedStatsTracker(['function'])
+    general: new ThreadStatsTracker(['task', 'memory', 'backlog']),
+    functions: new ThreadObservedStatsTracker(['function'])
   }
 
   runner.on('task:run', async runner => {
@@ -28,7 +29,7 @@ const worker = async ({ taskFn, after = async () => { } }) => {
     if (message.type === 'task:execute') {
       runner.enqueue(message.task)
 
-      return process.send({ type: 'ack' })
+      return process.send({ type: 'ack' }, null, { keepOpen: true })
     }
 
     throw new Error(`Unknown type. Got: ${JSON.stringify(message)}`)
@@ -36,8 +37,6 @@ const worker = async ({ taskFn, after = async () => { } }) => {
 
   const shutdown = async exitCode => {
     await runner.stop()
-    await after()
-
     return process.exit(exitCode)
   }
 
@@ -52,7 +51,8 @@ const worker = async ({ taskFn, after = async () => { } }) => {
   ;['SIGINT', 'SIGTERM', 'disconnect']
     .forEach(signal => process.on(signal, () => shutdown(0)))
 
-  runner.start(taskFn)
+
+  runner.start(taskFn.bind(this, parameters))
 }
 
-export default worker
+export default thread

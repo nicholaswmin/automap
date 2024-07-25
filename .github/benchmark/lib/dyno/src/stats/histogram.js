@@ -113,4 +113,4 @@ class Histogram {
   }
 }
 
-export { Histogram }
+export default Histogram

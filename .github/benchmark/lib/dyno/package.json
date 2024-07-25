@@ -1,8 +1,8 @@
 {
-  "name": "@nicholaswmin/automap_bench",
+  "name": "@nicholaswmin/dyno",
   "type": "module",
   "version": "0.1.0",
-  "description": "Benchmark for @nicholaswmin/automap module",
+  "description": "A multithreaded benchmarker",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,5 +13,8 @@
     "performance"
   ],
   "author": "@nicholaswmin",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/input": "^2.2.4"
+  }
 }
