@@ -41,7 +41,7 @@ const primary = async ({
     await foreman.stop()
     console.log(c(['yellow'], `workers gracefully shutdown ...`))
 
-    console.log(c(['yellow'], 'Dont forget to deprovision any add-ons! Bye 👋'))
+    console.log(c(['yellow'], 'Remember to deprovision all add-ons! Bye 👋'))
     process.exit(code)
   }
 
