@@ -87,17 +87,18 @@ class StatsObserver {
 
     if (Object.keys(this.rows.workers).length) {
       Object.keys(this.fields.workers).forEach(key => {
-        console.log('\n')
-        console.log(key, '\n')
-
+        const sortby = this.fields.workers[key].sortby || 'thread'
         const workers = Object.keys(this.rows.workers)
         const start = workers.length - this.maxWorkerRows
         const end = workers.length
 
+        console.log('\n')
+        console.log(`${key}, sorted by: "${sortby}"`, '\n')
+
         console.table(workers.slice(start, end).map(pid => {
           return {
-            worker: pid,
-            ...this.fields.workers[key].reduce((acc, field) => {
+            thread: pid,
+            ...this.fields.workers[key].fields.reduce((acc, field) => {
               const split = field[0].split('.')
               const rows = this.rows.workers[pid][split[0]]
               const mapped = rows
@@ -112,7 +113,7 @@ class StatsObserver {
               }
             }, {})
           }
-        }))
+        }).sort((a, b) => +b[sortby] - +a[sortby]))
       })
     }
   }

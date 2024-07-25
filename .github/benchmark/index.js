@@ -60,17 +60,23 @@ if (cluster.isPrimary) {
         ['memory.mean', 'memory (mean/mb)', toMB]
       ],
       workers: {
-        'Worker stats': [
-          ['task.count', 'tasks run'],
-          ['memory.mean', 'memory (mean/mb)', toMB],
-          ['backlog.max', 'max backlog']
-        ],
-        'Worker timings': [
-          ['task.mean', 'task (mean/ms)', round],
-          ['redis_ping.mean', 'latency (mean/ms)', round],
-          ['fetch.mean', 'fetch (mean/ms)', round],
-          ['save.mean', 'save (mean/ms)', round]
-        ]
+        'Worker stats': {
+          sortby: 'max backlog',
+          fields: [
+            ['task.count', 'tasks run'],
+            ['memory.mean', 'memory (mean/mb)', toMB],
+            ['backlog.max', 'max backlog']
+          ]
+        },
+        'Worker timings': {
+          sortby: 'task (mean/ms)',
+          fields: [
+            ['task.mean', 'task (mean/ms)', round],
+            ['redis_ping.mean', 'latency (mean/ms)', round],
+            ['fetch.mean', 'fetch (mean/ms)', round],
+            ['save.mean', 'save (mean/ms)', round]
+          ]
+        }
       }
     },
     numWorkers: constants.public.NUM_WORKERS,
