@@ -20,7 +20,7 @@ npm i
 > assuming you're in root and this resides in a folder: `.github/benchmmark`
 
 ```bash
-npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start
+npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start
 ```
 
 
@@ -36,12 +36,14 @@ to the `npm start` script of the root of the project.
 
 ### Use a Pipeline Review app
 
-Don't run this benchmark on a regular Heroku App app.
+Don't run this benchmark on a regular Heroku App app.  
+
 There is a big risk of leaving expensive add-ons running.
 
-Instead:
+Instead create a [Review App][review-app] which autodestroys itself
+on inactivity.
 
-- Create a Pipeline, name it `benchmark`
+- Create a [Pipeline][pipeline] first, name it `benchmark`
 - Checkout this repo to a branch, i.e `benchmark` and create a Pull Request
   - review apps function best as ephemeral apps of a PR
 - Connect the pipeline to this repo
@@ -131,3 +133,5 @@ these "constants" are user-configurable when the benchmark starts up.
 [fake-server]: bench/fake-server.js
 [test-data]: /test/util/model/index.js
 [results]: results/
+[review-app]: https://devcenter.heroku.com/articles/github-integration-review-apps
+[pipeline]: https://devcenter.heroku.com/articles/pipelines
