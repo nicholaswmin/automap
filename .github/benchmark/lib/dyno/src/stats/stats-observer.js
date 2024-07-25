@@ -6,19 +6,16 @@ class StatsObserver {
     this.bufferSize = 100
     this.statsPerSecond = 5
     this.maxThreadRows = 5
-    this.interval = Math.round(1000 / statsPerSecond)
-    this.timer = new Timer(this.render.bind(this), this.interval)
+    this.interval = Math.round(1000 / this.statsPerSecond)
+    this.timer = null
     this.extraFields = extraFields
     this.fields = fields || { general: {}, primary: [], threads: {} }
     this.rows = { primary: {}, threads: {} }
-    this.started = false
   }
 
   start(threads) {
-    if (this.started)
+    if (this.timer)
       throw new Error('already started')
-
-    this.timer.start()
 
     localbus.on('stats:row:update', row => {
       Object.keys(row).forEach(key => {
@@ -50,13 +47,14 @@ class StatsObserver {
       })
     })
 
-    this.started = true
+    this.timer = setInterval(this.render.bind(this), this.interval)
   }
 
   stop() {
-    this.timer.stop()
     this.rows.primary = []
     this.rows.threads = []
+    localbus.removeAllListeners('stats:row:update')
+    clearInterval(this.timer)
   }
 
   render() {
@@ -73,8 +71,13 @@ class StatsObserver {
         this.fields.primary.reduce((acc, field) => {
           const split = field[0].split('.')
           const mapped = field[2]
-            ? field[2](this.rows.primary[split[0]].at(-1)[split[1]])
-            : this.rows.primary[split[0]].at(-1)[split[1]]
+            ? this.rows.primary[split[0]]
+              ? field[2](this.rows.primary[split[0]] .at(-1)[split[1]])
+              : 'no data'
+            : this.rows.primary[split[0]]
+              ? this.rows.primary[split[0]].at(-1)[split[1]]
+              : 'no data'
+
           return {
             ...acc,
             [field[1]]: mapped

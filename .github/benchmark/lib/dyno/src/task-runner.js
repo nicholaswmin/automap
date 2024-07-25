@@ -35,6 +35,12 @@ class TaskRunner extends EventEmitter {
       process.exit(1)
     }
 
+    if (this.state.stopped) {
+      this.backlog = []
+
+      return
+    }
+
     performance.mark('t-1')
 
     this.measure = performance.measure('task-end', {
@@ -66,19 +72,7 @@ class TaskRunner extends EventEmitter {
   stop() {
     this.state.stopped = new Date()
 
-    return this.backlog.length || this.state.running
-      ? new Promise(resolve => {
-        const timer = setTimeout(() => {
-          this.off('task:run', resolve)
-          resolve()
-        }, 1000)
-
-        this.once('task:run', () => {
-          clearTimeout(timer)
-          resolve()
-        })
-      })
-      : Promise.resolve()
+    return this.removeAllListeners('task:run')
   }
 }
 

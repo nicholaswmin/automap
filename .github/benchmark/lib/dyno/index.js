@@ -1,5 +1,4 @@
-
-import { styleText as c } from 'node:util'
+import { styleText } from 'node:util'
 import StatsObserver from './src/stats/stats-observer.js'
 import configure from './src/configure.js'
 import thread from './src/thread.js'
@@ -34,8 +33,8 @@ class Dyno {
     })
 
     this.testTimer = new TestTimer({
-      durationSeconds: this.parameters.DURATION_SECONDS
-    }, () => this.stop(0))
+      seconds: this.parameters.DURATION_SECONDS
+    })
 
     this.observer = new StatsObserver({
       extraFields: {
@@ -43,6 +42,14 @@ class Dyno {
       },
       fields: this.fields
     })
+
+    this.log = {
+      success: message => console.warn(styleText(['green'], message)),
+      error: message => console.warn(styleText(['red'], message)),
+      warn: message => console.warn(styleText(['yellow'], message)),
+      info: message => console.info(styleText(['blueBright'], message)),
+      log: message => console.log(styleText(['normal'], message))
+    }
   }
 
   async start() {
@@ -56,74 +63,63 @@ class Dyno {
 
     this.firehose.start(threads)
     this.observer.start(threads)
-    this.testTimer.start()
+
+    await this.testTimer.start()
+    await this.stop(0)
+    await this.log.success('test timer elapsed: success')
+
+    return true
   }
 
   async stop(code = 0) {
     console.log('\n')
 
-    if (this.stopping) {
-      console.warn(c(['red'], 'WARN: process already stopping ...'))
-    }
+    if (this.stopping)
+      this.log.warn('process already stopping')
 
     this.stopping = true
 
-    const timer = setTimeout(() => {
-      console.log(c(['red'], 'graceful shutdown timed out. Force exiting ...'))
-      return this.exit(1)
-    }, 5 * 1000)
-
-    console.log(c(['yellow'], 'shutting down ...'))
-
-    this.observer.stop()
-    console.log(c(['yellow'], 'stats observer stopped ...'))
-
-    await this.firehose.stop()
-    console.log(c(['yellow'], 'firehose stopped ...'))
-
-    await this.testTimer.stop()
-    console.log(c(['yellow'], 'test timer stopped ...'))
+    this.log.info('shutting down ...')
 
     await this.foreman.stop()
-    console.log(c(['yellow'], 'threads gracefully shutdown ...'))
+    this.log.info('threads shutdown ...')
+
+    this.observer.stop()
+    this.log.info('stats observer stopped ...')
+
+    await this.firehose.stop()
+    this.log.info('firehose stopped ...')
+
+    await this.testTimer.stop()
+    this.log.info('test timer stopped ...')
 
     await this.#runAfterHooks()
-    console.log(c(['yellow'], 'after hooks run ...'))
-
-    console.log(c(['yellow'], 'bye 👋'))
-
-    clearTimeout(timer)
+    this.log.info('run after hooks ...')
 
     this.stopping = false
+
+    code === 0
+      ? this.log.success(`exiting with code: ${code}`)
+      : this.log.error(`exiting with code: ${code}`)
   }
 
   #onThreadExit({ pid, code, signal }) {
     if (code === 0)
       return false
 
-    console.log(
-      c(['red'], `thread: ${pid} exited with code: ${code}`)
-    )
+    this.log.error(`thread: ${pid} exited with code: ${code}`)
 
     return this.stop(code)
   }
 
   #onSIGTERM() {
-    console.log('\n')
-    console.log(c(['yellow'], 'received signal: SIGTERM'))
+    this.log.info('received signal: SIGTERM')
     this.stop(0)
   }
 
   #onSIGINT() {
-    console.log('\n')
-    console.log(c(['yellow'], 'received signal: SIGINT'))
+    this.log.info('received signal: SIGINT')
     this.stop(0)
-  }
-
-  #exit(code) {
-    console.log(c([code !== 0 ? 'red' : 'green'], `exited with code: ${code}`))
-
-    process.exit(code)
   }
 
   async #runBeforeHooks() {

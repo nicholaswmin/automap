@@ -22,20 +22,19 @@ class Foreman extends EventEmitter {
     return this.threads
   }
 
-  async stop() {
-    const deaths = Object.values(this.threads)
-      .map(thread => {
-        return new Promise((resolve, reject) => {
-          return thread.exitCode || !thread.connected
-            ? resolve()
-            : thread
-              .once('exit', resolve)
-              .once('error', reject)
-              .disconnect()
+  stop() {
+    const deaths = Object.values(this.threads).map(thread => {
+      return new Promise((resolve => {
+        thread.once('exit', resolve)
+        setImmediate(() => {
+          return thread.connected
+            ? thread.send({ type: 'shutdown' })
+            : resolve()
         })
+      }))
     })
 
-    return await Promise.all(deaths)
+    return Promise.all(deaths)
   }
 
   #forkThread(path, parameters) {

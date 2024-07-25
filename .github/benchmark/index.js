@@ -22,11 +22,11 @@ const dyno = new Dyno({
     },
     THREAD_COUNT: {
       configurable: true,
-      value: process.env.WEB_CONCURRENCY || os.availableParallelism()
+      value: 2
     },
     DURATION_SECONDS: {
       configurable: true,
-      value: 10
+      value: 5
     },
     MAX_ITEMS: {
       configurable: false,
@@ -46,7 +46,8 @@ const dyno = new Dyno({
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/mb)', toMB]
+      ['memory.mean', 'memory (mean/mb)', toMB],
+      ['uptime.count', 'seconds']
     ],
     threads: {
       'thread stats': {

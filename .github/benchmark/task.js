@@ -30,4 +30,6 @@ thread(async parameters => {
   await save(building)
 
   await ping()
+}, {
+  after: () => redis.disconnect()
 })

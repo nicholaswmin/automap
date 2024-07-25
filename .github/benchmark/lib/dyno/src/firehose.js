@@ -1,5 +1,4 @@
 import { PrimaryStatsTracker } from './stats/stats-tracker.js'
-import { Timer, TimeoutTimer } from './timers.js'
 
 class Firehose {
   constructor({ tasksPerSecond }) {
@@ -8,19 +7,8 @@ class Firehose {
       throw new RangeError(`Must be an int > 0. Got: ${tasksPerSecond}`)
     })()
 
-    this.counter = 0
     this.threads = []
-
-    this.warmupSeconds = 5
-    this.droppedRandomizationFactor = 0.90
-    this.isWarmingUp = true
-
-    this.timers = [
-      new Timer(this.sendToRandom.bind(this), 1000 / tasksPerSecond),
-      new TimeoutTimer(() => {
-        this.isWarmingUp = false
-      }, this.warmupSeconds * 1000)
-    ]
+    this.taskTimer = null
   }
 
   start(threads) {
@@ -36,15 +24,15 @@ class Firehose {
       })
     })
 
-    this.timers.forEach(timer => timer.start())
+    this.taskTimer = setInterval(
+      this.sendToRandom.bind(this),
+       Math.round(1000 / this.tasksPerSecond)
+    )
   }
 
   stop() {
-    const interval = Math.round(1000 / this.tasksPerSecond)
-    const waitForDrain = 1000 + interval
-
-    this.timers.forEach(timer => timer.stop())
-    return new Promise(resolve => setTimeout(resolve, waitForDrain))
+    clearInterval(this.taskTimer)
+    this.stats.stop()
   }
 
   sendToRandom() {
@@ -55,14 +43,10 @@ class Firehose {
       const threads = Object.values(this.threads)
       const random = threads[Math.floor(Math.random() * threads.length)]
 
-      this.isWarmingUp && Math.random() < this.droppedRandomizationFactor
-        ? null
-        : random.connected
-          ? random.send({
-            type: 'task:execute',
-            task: this.stats.sent.count + 1
-          }, null, { keepOpen: true })
-          : null
+      random && random.connected ? random.send({
+        type: 'task:execute',
+        task: this.stats.sent.count + 1
+      }) : null
 
       this.stats.sent.tick()
     }

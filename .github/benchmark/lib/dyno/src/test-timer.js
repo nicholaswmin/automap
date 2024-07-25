@@ -1,31 +1,27 @@
-import { setImmediate } from 'timers/promises'
-import { styleText as c } from 'node:util'
-import { TimeoutTimer } from './timers.js'
-
-const round = num => Math.round((num + Number.EPSILON) * 100) / 100
+import { setTimeout } from 'timers/promises'
+import { PrimaryStatsTracker } from './stats/stats-tracker.js'
 
 class TestTimer {
-  constructor({ durationSeconds }, cb = () => {}) {
-    this.timer = new TimeoutTimer(async () => {
-      console.log('\n')
-      console.log(c(['greenBright'], 'Test timer elapsed'))
-      console.log(c(['greenBright'], 'Test ended with status: success'))
-      console.info('target:', round(durationSeconds), 'seconds.')
-      console.info('elapsed:', round(process.uptime()), 'seconds.')
-
-      await this.stop()
-
-      return cb()
-    }, durationSeconds * 1000)
+  constructor({ seconds }) {
+    this.timer = null
+    this.interval = null
+    this.seconds = seconds
+    this.stats = new PrimaryStatsTracker(['uptime'])
   }
 
-  start() {
-    this.timer.start()
+  async start() {
+    this.interval = setInterval(() => {
+      this.stats.uptime.tick()
+      this.stats.publish()
+    }, 1000)
+
+    this.timer = await setTimeout(parseInt(this.seconds * 1000))
   }
 
   async stop() {
-    this.timer.stop()
-    await setImmediate()
+    clearTimeout(this.timer)
+    clearInterval(this.interval)
+    this.stats.stop()
   }
 }
 

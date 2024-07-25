@@ -3,6 +3,8 @@ import localbus from './local-bus.js'
 
 class PrimaryStatsTracker {
   constructor(keys = []) {
+    this.stopped = false
+
     Object.assign(this, keys.reduce((acc, key) => {
       return { ...acc, [key]: new Histogram({ name: key }) }
     }, {}))
@@ -21,6 +23,10 @@ class PrimaryStatsTracker {
   publish() {
     localbus.emit('stats:row:update', this.getRow())
   }
+
+  stop() {
+    localbus.removeAllListeners('stats:row:update')
+  }
 }
 
 class ThreadStatsTracker extends PrimaryStatsTracker {
@@ -30,10 +36,13 @@ class ThreadStatsTracker extends PrimaryStatsTracker {
 
   publish() {
     return process.connected
-      ? process.send({ type: 'stats:row:update', row: this.getRow() }, null, {
-          keepOpen: true
-        })
-      : false
+      ? process.send({ type: 'stats:row:update', row: this.getRow() })
+      : null
+  }
+
+
+  stop() {
+    // noop
   }
 }
 
@@ -50,6 +59,11 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
     })
 
     this.observer.observe({ entryTypes })
+  }
+
+  stop() {
+    super.stop()
+    this.observer.disconnect()
   }
 }
 

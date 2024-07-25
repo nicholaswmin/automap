@@ -1,4 +1,5 @@
 import { styleText as c } from 'node:util'
+import { setTimeout } from 'timers/promises'
 import { TaskRunner } from './task-runner.js'
 
 import {
@@ -6,7 +7,7 @@ import {
   ThreadObservedStatsTracker
 } from './stats/stats-tracker.js'
 
-const thread = async taskFn => {
+const thread = async (taskFn, { after } = {}) => {
   const parameters = JSON.parse(process.env.parameters)
   const runner = new TaskRunner()
   const stats = {
@@ -24,20 +25,25 @@ const thread = async taskFn => {
 
   const onPrimaryMessage = message => {
     if (message.type === 'shutdown')
-      return process.exit(0)
+      return shutdown(0)
 
     if (message.type === 'task:execute') {
       runner.enqueue(message.task)
 
-      return process.send({ type: 'ack' }, null, { keepOpen: true })
+      if (process.connected)
+        return process.send({ type: 'ack' }, null, { keepOpen: true })
     }
 
     throw new Error(`Unknown type. Got: ${JSON.stringify(message)}`)
   }
 
-  const shutdown = async exitCode => {
-    await runner.stop()
-    return process.exit(exitCode)
+  const shutdown = async (code) => {
+    runner.removeAllListeners('task:run')
+    runner.stop()
+    Object.values(stats).forEach(stat => stat.stop())
+    await setTimeout(1000)
+    after ? await after() : null
+    return process.exit(code)
   }
 
   const onError = async error => {
