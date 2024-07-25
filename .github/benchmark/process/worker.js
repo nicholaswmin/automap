@@ -1,6 +1,6 @@
 import ioredis from 'ioredis'
 
-import { worker } from '../bench/index.js'
+import { worker } from '../lib/bench/index.js'
 import { randomId, payloadKB } from '../../../test/util/index.js'
 import { Building, Flat } from '../../../test/util/model/index.js'
 import { Repository } from '../../../index.js'

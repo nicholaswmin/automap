@@ -1,6 +1,6 @@
 import ioredis from 'ioredis'
 
-import { primary } from '../bench/index.js'
+import { primary } from '../lib/bench/index.js'
 
 export default async (cluster, constants) => {
   const round = num => Math.round((num + Number.EPSILON) * 100) / 100
