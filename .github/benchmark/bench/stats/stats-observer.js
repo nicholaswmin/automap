@@ -8,7 +8,7 @@ class StatsObserver {
     this.maxWorkerRows = 5
     this.interval = Math.round(1000 / statsPerSecond)
     this.timer = new Timer(this.render.bind(this), this.interval)
-    this.fields = fields || { primary: [], workers: [] }
+    this.fields = fields || { general: {}, primary: [], workers: {} }
     this.rows = { primary: {}, workers: {} }
 
     cluster.on('online', worker => {
