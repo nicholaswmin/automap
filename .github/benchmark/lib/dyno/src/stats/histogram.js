@@ -1,14 +1,11 @@
 import { createHistogram } from 'node:perf_hooks'
 
 class Histogram {
-  constructor({ name, values = [] }  = {}) {
+  constructor({ name }  = {}) {
     this.name = name
-    this.values = values
     this.deltaKeys = {}
     this.percentiles = {}
-    this.histogram = values.length
-      ? this.#createHistogramFromValues(values)
-      : createHistogram()
+    this.histogram = createHistogram()
 
     ;[
       ['count', ''],
@@ -44,8 +41,6 @@ class Histogram {
     this.histogram.record = val => {
       const result = this.histogramRecord(Math.ceil(val))
 
-      this.values.push(Math.ceil(val))
-
       return result
     }
   }
@@ -71,8 +66,6 @@ class Histogram {
 
   tick() {
     this.record(1)
-
-    return this.values.length
   }
 
   record(val) {
@@ -80,36 +73,7 @@ class Histogram {
   }
 
   reset() {
-    this.values = []
     return this.histogram.reset()
-  }
-
-  toClampedAverages(maxLength) {
-    if (!Number.isSafeInteger(maxLength))
-      throw new RangeError('"maxLength" must be a positive integer')
-
-    return this.values.length < maxLength
-      ? this.values
-      : this.values.reduce((acc, value, i, arr) => {
-        if (i % Math.ceil(this.values.length / maxLength) === 0)
-          acc.push(createHistogram())
-
-        acc.at(-1).record(value)
-
-        return i === arr.length - 1
-          ? [this.values.at(0)]
-            .concat(acc.map(histogram => histogram.mean)).slice(0, acc.length - 1)
-            .concat(this.values.at(-1))
-          : acc
-      }, [])
-  }
-
-  #createHistogramFromValues(values) {
-    return values.reduce((histogram, value) => {
-      histogram.record(value)
-
-      return histogram
-    }, createHistogram())
   }
 }
 
