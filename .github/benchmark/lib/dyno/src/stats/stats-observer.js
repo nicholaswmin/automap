@@ -2,8 +2,9 @@ import localbus from './local-bus.js'
 import { Timer } from '../timers.js'
 
 class StatsObserver {
-  constructor({ fields = null, extraFields, statsPerSecond = 5 } = {}) {
+  constructor({ fields = null, extraFields } = {}) {
     this.bufferSize = 100
+    this.statsPerSecond = 5
     this.maxThreadRows = 5
     this.interval = Math.round(1000 / statsPerSecond)
     this.timer = new Timer(this.render.bind(this), this.interval)
