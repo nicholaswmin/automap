@@ -1,37 +1,40 @@
-import throttle from 'throttleit'
+import {
+  WorkerStatsTracker,
+  WorkerObservedStatsTracker
+} from './stats/stats-tracker.js'
+import { TaskRunner } from './task-runner.js'
 
-const worker = async ({ tracker, taskFn = () => {}, after = () => {} }) => {
-  process.sendThrottled = throttle(process.send, 100)
-  const result = { completedCount: 0, pid: process.pid }
+const worker = async ({ taskFn, after = () => { } }) => {
+  const runner = new TaskRunner()
+  const stats = {
+    general: new WorkerStatsTracker(['task', 'memory', 'backlog']),
+    functions: new WorkerObservedStatsTracker(['function'])
+  }
 
-  tracker
-    .on('task:run', async row => {
-      ++result.completedCount
-
-      process.sendThrottled({
-        name: 'update',
-        result: row
-      })
-    })
-    .once('finish', result => {
-      process.sendThrottled({ name: 'finish', result })
-    })
+  runner.on('task:run', async runner => {
+    stats.general.task.record(runner.measure.duration)
+    stats.general.memory.record(process.memoryUsage().heapUsed)
+    stats.general.backlog.record(runner.backlog.length || 1)
+    stats.general.publish()
+    stats.functions.publish()
+  })
 
   process.on('SIGTERM', () =>
-    tracker.stop()
-      .then(() => after())
-      .then(() => process.exit(0)))
+    runner.stop().then(() =>
+      after()).then(() =>
+        process.exit(0)))
 
-  tracker.start(taskFn)
+  runner.start(taskFn)
 
-  process.on('message', tracker.enqueue.bind(tracker))
-  process.on('message', () => process.send({ name: 'received', result }))
+  process.on('message', message => {
+    if (message.type !== 'task:execute')
+      return
 
-  process.on('error', err => {
-    setTimeout(() => {
-      console.error(process.pid, err)
-    })
-  }, 100)
+    runner.enqueue(message.task)
+    process.send({ type: 'ack' })
+  })
+
+  process.on('error', console.error.bind(console))
 }
 
 export default worker

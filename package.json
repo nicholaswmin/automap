@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/nicholaswmin/automap#readme",
   "dependencies": {
+    "@nicholaswmin/recordable": "github:nicholaswmin/recordable#plot-b",
     "dot-object": "^2.1.5",
     "object-traversal": "^1.0.1",
     "pathval": "^2.0.0"

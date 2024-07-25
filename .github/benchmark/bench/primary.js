@@ -1,245 +1,63 @@
-import { styleText } from 'node:util'
-import throttle from 'throttleit'
-import { randomId, round } from '../../../test/util/index.js'
+import { styleText as c } from 'node:util'
+import { StatsObserver } from './stats/stats-observer.js'
+
+import Firehose from './firehose.js'
+import Foreman from './foreman.js'
+import TestTimer from './test-timer.js'
 
 const primary = async ({
   cluster,
-  constants,
-  before = () => {},
-  after = () => {}
+  fields,
+  numWorkers,
+  tasksPerSecond,
+  durationSeconds,
+  statsPerSecond,
+  before = async () => {}
 }) => {
-  console.log('Started')
-  console.log(constants)
+  await before()
 
-  let startedMs = null
-  const taskInterval = 1000 / constants.public.TASKS_PER_SECOND
-  const taskIntervalRounded = Math.ceil(taskInterval)
-  const timers = { warmup: null, task: null }
-  const stats = {
-    workers: {},
-    messaging: {
-      'Tasks Sent': 0,
-      'Tasks Received': 0,
-      'Tasks Completed': 0,
-      get ['Uptime Seconds']() {
-        return Math.round(process.uptime())
-      },
-      get ['Warming Up']() {
-        return !!timers.warmup
-      }
-    }
+  const foreman = new Foreman({ cluster: cluster, numWorkers })
+
+  const firehose = new Firehose({ tasksPerSecond })
+
+  const testTimer = new TestTimer({ durationSeconds }, () => exit(0))
+
+  const exit = async (exitCode = 0) => {
+    await firehose.stop()
+    console.log(c(['yellow'], `firehose stopped ...`))
+
+    await testTimer.stop()
+    console.log(c(['yellow'], `test timer stopped ...`))
+
+    await foreman.stop()
+    console.log(c(['yellow'], `workers stopped ...`))
+
+    console.log(c(['yellow'], 'Dont forget to deprovision any add-ons! Bye 👋'))
+    process.exit(exitCode)
   }
 
-  const updates = []
+  const observer = new StatsObserver({ fields, statsPerSecond })
 
-  const onProcessStart = async () => {
-    await before()
+  const onSIGINT = async () => {
+    const text = 'User requested stop'
+    const warn = 'Dont forget to deprovision added add-ons! Bye 👋'
+
+    console.log(c(['yellow'], 'User requested stop ...'))
+
+    await exit(0)
   }
 
-  const onProcessExit = async () => {
-    Object.values(timers).forEach(clearInterval)
-    await new Promise(res => setTimeout(res, 2000))
-    await killWorkers()
-    await after()
+  const start = async () => {
+    process.once('SIGINT', onSIGINT)
+
+    await foreman.start()
+
+    firehose.start(foreman.workers)
+    testTimer.start()
+    observer.observe()
   }
 
-  const cancelWarmupPeriod = () => {
-    const uptime = startedMs ? (Date.now() - startedMs) / 1000 : 0
-    if (uptime > constants.public.WARMUP_SECONDS) {
-      clearInterval(timers.warmup)
-      return timers.warmup = null
-    }
-  }
-
-  const forkWorker = () => new Promise((resolve, reject) => {
-    return cluster.fork()
-      .once('online', function() { resolve(this) })
-      .once('error', function(err) { reject(err) })
-  })
-
-  const sendToRandomWorker = () => {
-    const cycles = taskInterval < 1 ? 1 / taskInterval : 1
-
-    for (let i = 0; i < cycles; i++) {
-      const workers = Object.values(cluster.workers)
-      const randomWorker = workers[Math.floor(Math.random() * workers.length)]
-
-      if (timers.warmup && Math.random() < 0.90) {
-        return
-      }
-
-      if (randomWorker)
-        randomWorker.send({ detail: 'Task' + '-' + randomId() })
-
-      stats.messaging['Tasks Sent']++
-    }
-  }
-
-  const onTestDurationEnded = async () => {
-    await onProcessExit()
-
-    setImmediate(() => {
-      console.log(styleText(['greenBright'], 'status: Test succeded'))
-      console.info(
-        'Test has elapsed its running time',
-        round(process.uptime()),
-        'seconds,',
-        'warmup period:',
-        constants.public.WARMUP_SECONDS,
-        'seconds'
-      )
-
-      process.exit(0)
-    })
-  }
-
-  const onClusterExit = (worker, code) => code > 0 ? (async () => {
-    console.error('error in worker', worker.process.pid)
-
-    await onProcessExit()
-
-    console.log(styleText(['redBright'], 'status: Test failed'))
-
-    process.exit(1)
-  })() : 0
-
-  const onWorkerFinish = async () => {
-    console.info(process.pid, 'reached backlog limit')
-
-    Object.values(timers).forEach(clearInterval)
-
-    await onProcessExit()
-
-    setImmediate(() => {
-      console.log(styleText(['redBright'], 'status: Test failed'))
-
-      console.info(
-        process.pid, 'reached backlog limit', '\n',
-        'Run for:',
-        round(process.uptime()),
-        'seconds,',
-        'warmup period:',
-        constants.public.WARMUP_SECONDS,
-        'seconds'
-      )
-
-      process.exit(1)
-    })
-  }
-
-  const onWorkerUpdate = async result => {
-    updates.push(result)
-
-    if (updates.length >= constants.public.NUM_WORKERS)
-      printUpdates()
-  }
-
-  const printUpdatesUnthrottled = () => {
-    console.clear()
-
-    console.log('Constants')
-
-    console.table(constants.public)
-
-    console.log('Messaging Stats:')
-
-    console.table(stats.messaging)
-
-    console.log('Worker Vitals')
-
-    const vitals = updates.slice(
-      updates.length - constants.public.MAX_WORKERS_DISPLAY,
-      updates.length
-    ).map(row => row.vitals)
-
-    console.log(
-      '... plus:',
-      constants.public.NUM_WORKERS - constants.public.MAX_WORKERS_DISPLAY,
-      'extra hidden workers'
-    )
-
-    stats.messaging['Tasks Completed'] = Object.values(stats.workers)
-      .reduce((sum, finishedCount) => {
-        return sum += finishedCount
-      }, 0)
-
-    console.table(vitals.sort((a, b) => b['max backlog'] - a['max backlog']))
-
-    console.log('Worker timings')
-    const displayedTimings = updates.slice(
-      updates.length - constants.public.MAX_WORKERS_DISPLAY,
-      updates.length
-    ).map(row => row.timings)
-    console.table(displayedTimings)
-
-    console.log(
-      '... plus:',
-      constants.public.NUM_WORKERS - constants.public.MAX_WORKERS_DISPLAY,
-      'extra hidden workers'
-    )
-  }
-
-  const onTaskReceived = ({ completedCount, pid }) => {
-    stats.messaging['Tasks Received']++
-    stats.workers[pid] = completedCount
-  }
-
-  const printUpdates = throttle(
-    printUpdatesUnthrottled,
-    Math.round(1000 / constants.public.MAX_STATS_UPDATE_PER_SECOND)
-  )
-
-  const killWorkers = () => {
-    console.info('shutting down remaining workers ...')
-
-    const deaths = Object.values(cluster.workers)
-      .map(worker =>
-        new Promise((resolve, reject) =>
-          worker.isDead()
-            ? resolve()
-            : worker
-              .on('exit', resolve)
-              .on('error', reject)
-              .kill()
-        )
-      )
-
-    return Promise.all(deaths)
-      .then(() => console.info('All workers gracefully shutdown'))
-  }
-
-  for (let i = 0; i < constants.public.NUM_WORKERS; i++)
-    await forkWorker()
-      .then(worker => worker.on('message', msg => ({
-        'finish': onWorkerFinish,
-        'update': onWorkerUpdate,
-        'received': onTaskReceived
-      }[msg.name](msg.result))))
-
-  cluster.on('exit', onClusterExit)
-
-  Object.assign(timers, {
-    task: setInterval(sendToRandomWorker, taskIntervalRounded),
-    warmup: setInterval(cancelWarmupPeriod, 1000)
-  })
-
-  process.once('SIGINT', () => {
-    console.log('\n', styleText(
-      'yellow',
-      'User requested stop. Dont forget to deprovision added add-ons! Bye 👋'
-    ), '\n')
-
-    setTimeout(() => process.exit(0), 500)
-  })
-
-  await onProcessStart()
-
-  startedMs = Date.now()
-
-  setTimeout(
-    onTestDurationEnded,
-    Math.ceil(constants.public.TEST_DURATION_SECONDS * 1000)
-  )
+  await start()
 }
 
 export default primary
