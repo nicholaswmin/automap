@@ -16,9 +16,6 @@ class Timer {
   }
 
   stop() {
-    if (!this.timer)
-      throw new Error('Cannot stop a timer that did not start')
-
     clearTimeout(this.timer)
     clearInterval(this.timer)
     clearImmediate(this.timer)

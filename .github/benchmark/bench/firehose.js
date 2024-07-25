@@ -57,7 +57,8 @@ class Firehose {
       if (this.isWarmingUp && Math.random() < this.droppedRandomFactor)
         return false
 
-      randomWorker.send({ type: 'task:execute', task: ++this.counter })
+      if (randomWorker.state === 'alive')
+        randomWorker.send({ type: 'task:execute', task: ++this.counter })
 
       this.stats.sent.tick()
     }

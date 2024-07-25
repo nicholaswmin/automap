@@ -42,10 +42,18 @@ const primary = async ({
     console.log(c(['yellow'], `workers gracefully shutdown ...`))
 
     console.log(c(['yellow'], 'Remember to deprovision all add-ons! Bye 👋'))
+
+    console.log(c([code === 0 ? 'green' : 'red'], `exit code: ${code}`))
+
     process.exit(code)
   }
 
+  const onClusterExit = (worker, code, signal) => {
+    return code > 0 ? shutdown(code) : null
+  }
+
   const onSIGTERM = () => shutdown(0)
+
   const onSIGINT = async () => {
     console.log('\n')
     console.log(c(['yellow'], 'user requested stop ...'))
@@ -56,6 +64,7 @@ const primary = async ({
   const start = async () => {
     process.once('SIGTERM', onSIGTERM)
     process.once('SIGINT', onSIGINT)
+    cluster.once('exit', onClusterExit)
 
     await foreman.start()
 
