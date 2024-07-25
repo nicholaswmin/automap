@@ -11,7 +11,7 @@ import { Building, Flat } from '../../test/util/model/index.js'
 import { Repository } from '../../index.js'
 
 if (cluster.isPrimary) {
-  console.log(c('blueBright', 'Starting up...'))
+  console.log(c('blueBright', 'Starting up...'), '\n')
 
   const concurrency = process.env.WEB_CONCURRENCY || os.availableParallelism()
   const round = num => Math.round((num + Number.EPSILON) * 100) / 100

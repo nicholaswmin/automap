@@ -25,6 +25,10 @@ const primary = async ({
   const observer = new StatsObserver({ fields, statsPerSecond })
 
   const shutdown = async (code = 0) => {
+    console.log('\n')
+
+    console.log(c(['yellow'], `shutting down ...`))
+
     observer.stop()
     console.log(c(['yellow'], `stats observer stopped ...`))
 
@@ -43,7 +47,8 @@ const primary = async ({
 
   const onSIGTERM = () => shutdown(0)
   const onSIGINT = async () => {
-    console.log(c(['yellow'], 'User requested stop ...'))
+    console.log('\n')
+    console.log(c(['yellow'], 'user requested stop ...'))
 
     await shutdown(0)
   }
