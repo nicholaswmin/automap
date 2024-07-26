@@ -1,6 +1,6 @@
 [![test-workflow][test-badge]][test-workflow]
 
-# dyno
+# :wrench: dyno
 
 A multithreaded benchmarker
 
@@ -22,7 +22,7 @@ run unit tests:
 npm test
 ```
 
-> note: these are very slow tests
+> note: these are slowwww tests
 
 ## Authors
 
@@ -34,7 +34,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 <!--- Badges -->
 
-[test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml/badge.svg
+[test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml
 
 [nicholaswmin]: https://github.com/nicholaswmin
