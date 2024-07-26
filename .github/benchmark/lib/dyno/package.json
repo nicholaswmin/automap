@@ -5,7 +5,7 @@
   "description": "A multithreaded benchmarker",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test node --test --experimental-sqlite --test-reporter=spec test/index.test.js --no-warnings"
+    "test": "NODE_ENV=test node --test --experimental-sqlite --test-reporter=spec test/index.test.js"
   },
   "engines": {
     "node": ">=22.5.1"
