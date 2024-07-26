@@ -1,1 +1,2 @@
-this folder saves the temp sqlite3 db we create for testing
+- this folder saves a temporary `sqlite3` db we create for testing.
+- uses NodeJS v22.5.1 experimental native sqlite3, not a module
