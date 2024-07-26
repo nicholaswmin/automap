@@ -18,26 +18,28 @@ const dyno = new Dyno({
   parameters: await configure({
     TASKS_SECOND: {
       configurable: true,
+      type: Number,
       value: 1000
     },
     THREAD_COUNT: {
       configurable: true,
+      type: Number,
       value: 2
     },
     DURATION_SECONDS: {
       configurable: true,
-      value: 5
+      type: Number,
+      value: 60
     },
     MAX_ITEMS: {
       configurable: false,
+      type: Number,
       value: 100
     },
-    PAYLOAD_KB: {
-      configurable: true,
-      value: 5
-    },
+    PAYLOAD_KB: 5, // its valid, non-configurable
     MAX_BACKLOG: {
       configurable: true,
+      type: Number,
       value: 10
     }
   }),

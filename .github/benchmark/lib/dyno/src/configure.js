@@ -7,7 +7,6 @@ export default async obj => {
         message: `Enter ${key}:`,
         default: obj[key].value,
         validate: answer => {
-          const expr = 'Papayas';
           switch (obj[key].type) {
             case Number:
               return !Number.isInteger(parseInt(answer)) || parseInt(answer) <= 0
