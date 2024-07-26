@@ -51,13 +51,14 @@ class StatsObserver {
   }
 
   stop() {
-    this.rows.primary = []
-    this.rows.threads = []
     localbus.removeAllListeners('stats:row:update')
     clearInterval(this.timer)
   }
 
   render() {
+    if (process.env.NODE_ENV === 'test')
+      return
+
     console.log('\n')
     Object.keys(this.extraFields).forEach(key => {
       console.log(key, '\n')
@@ -117,6 +118,10 @@ class StatsObserver {
         }).sort((a, b) => +b[sortby] - +a[sortby]))
       })
     }
+  }
+
+  getRows() {
+    return this.rows
   }
 }
 

@@ -44,15 +44,18 @@ class Dyno {
     })
 
     this.log = {
-      success: message => console.warn(styleText(['green'], message)),
-      error: message => console.warn(styleText(['red'], message)),
-      warn: message => console.warn(styleText(['yellow'], message)),
-      info: message => console.info(styleText(['blueBright'], message)),
-      log: message => console.log(styleText(['normal'], message))
+      success: message => process.env.NODE_ENV === 'test' ||
+        console.info(styleText(['green'], message)),
+      info: message => process.env.NODE_ENV === 'test' ||
+        console.info(styleText(['blueBright'], message)),
+      error: message => console.error(styleText(['red'], message)),
+      warn: message => console.warn(styleText(['yellow'], message))
     }
   }
 
   async start() {
+    this.log.info('starting up ...')
+
     process.once('SIGTERM', this.#onSIGTERM.bind(this))
     process.once('SIGINT', this.#onSIGINT.bind(this))
     this.foreman.once('exit', this.#onThreadExit.bind(this))
@@ -68,7 +71,7 @@ class Dyno {
     await this.stop(0)
     await this.log.success('test timer elapsed: success')
 
-    return true
+    return this.observer.getRows()
   }
 
   async stop(code = 0) {

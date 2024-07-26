@@ -7,7 +7,12 @@ import {
   ThreadObservedStatsTracker
 } from './stats/stats-tracker.js'
 
-const thread = async (taskFn, { after } = {}) => {
+const thread = async (
+  taskFn,
+  {
+    before = async () => {},
+    after = async () => {}
+  } = {}) => {
   const parameters = JSON.parse(process.env.parameters)
   const runner = new TaskRunner()
   const stats = {
@@ -41,8 +46,8 @@ const thread = async (taskFn, { after } = {}) => {
     runner.removeAllListeners('task:run')
     runner.stop()
     Object.values(stats).forEach(stat => stat.stop())
-    await setTimeout(1000)
-    after ? await after() : null
+    await setTimeout(500)
+    after ? await after(parameters) : null
     return process.exit(code)
   }
 
@@ -52,13 +57,15 @@ const thread = async (taskFn, { after } = {}) => {
     await shutdown(1)
   }
 
-  process.on('message', onPrimaryMessage)
   process.on('error', onError)
   ;['SIGINT', 'SIGTERM', 'disconnect']
     .forEach(signal => process.on(signal, () => shutdown(0)))
 
+  before ? await before(parameters) : null
 
   runner.start(taskFn.bind(this, parameters))
+
+  process.on('message', onPrimaryMessage)
 }
 
 export default thread

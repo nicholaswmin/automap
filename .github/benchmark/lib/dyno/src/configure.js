@@ -7,16 +7,39 @@ export default async obj => {
         message: `Enter ${key}:`,
         default: obj[key].value,
         validate: answer => {
-          const number = parseInt(answer)
-          return !Number.isInteger(parseInt(number)) || parseInt(number) <= 0
-            ? `${key} must be a positive, non-zero number`
-            : true
+          const expr = 'Papayas';
+          switch (obj[key].type) {
+            case Number:
+              return !Number.isInteger(parseInt(answer)) || parseInt(answer) <= 0
+                ? `${key} must be a positive, non-zero number`
+                : true
+              break;
+
+            case String:
+              return typeof answer !== 'string' || answer.length < 1
+                ? `${key} must be a string with some length`
+                : true
+              break;
+
+            case Boolean:
+              return answer === true || answer === false
+                ? `${key} must be either true or false`
+                : true
+              break;
+            default:
+              true
+          }
         }
       })
 
-      obj[key] = parseInt(answer)
+      console.log(answer)
+      obj[key] = obj[key].type
+        ? obj[key].type(answer)
+        : answer
     } else {
-      obj[key] = parseInt(obj[key].value)
+      obj[key] = obj[key].type
+        ? obj[key].type(obj[key].value)
+        : obj[key].value || obj[key]
     }
   }
 
