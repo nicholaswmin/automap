@@ -1,5 +1,4 @@
 import localbus from './local-bus.js'
-import { Timer } from '../timers.js'
 
 class StatsObserver {
   constructor({ fields = null, extraFields } = {}) {
