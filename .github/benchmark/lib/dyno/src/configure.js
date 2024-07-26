@@ -31,7 +31,6 @@ export default async obj => {
         }
       })
 
-      console.log(answer)
       obj[key] = obj[key].type
         ? obj[key].type(answer)
         : answer
