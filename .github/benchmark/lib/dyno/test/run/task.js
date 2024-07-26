@@ -1,6 +1,5 @@
-// The task file for the tests
-//
-// - Each task simply adds a row to an SQLite3 DB
+// Basic task file
+// simply adds a row to an SQLite3 DB
 
 import { DatabaseSync } from 'node:sqlite'
 import { thread } from '../../index.js'

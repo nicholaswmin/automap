@@ -1,7 +1,7 @@
-// Task file for testing calculation of the mean.
+// Task file for testing calculation of a distribution.
 //
-// - If this is run enough times we expect the mean to fall somewhere around
-//   ~5ms because of the distribution.
+// - If this is run enough times we expect the "mean" to fall somewhere around
+//   ~ 50 ms because of the distribution.
 
 import { thread } from '../../index.js'
 
