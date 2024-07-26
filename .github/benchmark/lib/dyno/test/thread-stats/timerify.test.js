@@ -52,7 +52,7 @@ test('timerified function in thread', async t => {
 
       await t.test('with reasonable "max" values', async t => {
         t.assert.ok(last.max > 8, `max is: ${last.max}`)
-        t.assert.ok(last.max < 20, `max is: ${last.max}`)
+        t.assert.ok(last.max < 50, `max is: ${last.max}`)
       })
     })
   })

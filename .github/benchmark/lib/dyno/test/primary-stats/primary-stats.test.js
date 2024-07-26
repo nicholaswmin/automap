@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB } from '../utils/sqlite.js'
 
-test('#start() - primary-stats logging', async t => {
+test('primary stats', async t => {
   let dyno = null, result = null, randomId = randomUUID()
 
   t.before(async () => {
