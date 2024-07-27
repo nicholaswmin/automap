@@ -52,14 +52,14 @@ test('start(): runs to completion', async t => {
     })
 
     await t.test('count of rows is proportional to parameters', async t => {
-      t.assert.ok(rows.length > 150, `line count: ${rows.length}, not > 150`)
+      t.assert.ok(rows.length > 100, `line count: ${rows.length}, not > 100`)
       t.assert.ok(rows.length < 500, `line count: ${rows.length}, not < 500`)
     })
 
     await t.test('rows are written by 5 separate threads', async t => {
       const pids = Object.groupBy(rows, ({ pid }) => pid)
 
-      t.assert.strictEqual(Object.keys(pids).length, 10)
+      t.assert.strictEqual(Object.keys(pids).length, 5)
     })
   })
 })

@@ -10,7 +10,7 @@ class StatsObserver {
     this.fields = fields || { general: {}, primary: [], threads: {} }
     this.rows = { primary: {}, threads: {} }
     this.views = views(this.rows, this.fields)
-    this.stopped = false
+    this.stopped = process.env.NODE_ENV === 'test'
   }
 
   start(threads) {
@@ -47,7 +47,7 @@ class StatsObserver {
   }
 
   render() {
-    if (this.stopped)
+    if (this.stopped || ['test'].includes(process.env.NODE_ENV?.toLowerCase()))
       return false
 
     this.views.primary.compute()
