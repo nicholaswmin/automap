@@ -23,7 +23,12 @@ const dyno = new Dyno({
     TASKS_SECOND: 100,
     THREAD_COUNT: 2,
     DURATION_SECONDS: 5,
-    RANDOM_ID: randomId
+    FOO_PAMETER: {
+      // if value of parameter is in the following structure
+      type: Number,
+      value: 20,
+      configurable: true
+    }
   }),
   // What to print out
   fields: {
