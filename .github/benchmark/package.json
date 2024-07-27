@@ -9,6 +9,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "ioredis": "^5.4.1"
+    "ioredis": "^5.4.1",
+    "throttleit": "^2.1.0"
   }
 }

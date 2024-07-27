@@ -1,30 +1,29 @@
+import throttle from 'throttleit'
 import localbus from './local-bus.js'
+import views from './views/index.js'
 
 class StatsObserver {
   constructor({ fields = null, extraFields } = {}) {
     this.bufferSize = 100
-    this.statsPerSecond = 5
-    this.maxThreadRows = 5
-    this.interval = Math.round(1000 / this.statsPerSecond)
-    this.timer = null
+    this.renderThrottled = throttle(this.render.bind(this), 100)
     this.extraFields = extraFields
     this.fields = fields || { general: {}, primary: [], threads: {} }
     this.rows = { primary: {}, threads: {} }
+    this.views = views(this.rows, this.fields)
+    this.stopped = false
   }
 
   start(threads) {
-    if (this.timer)
-      throw new Error('already started')
-
     localbus.on('stats:row:update', row => {
       Object.keys(row).forEach(key => {
         this.rows.primary[key] = this.rows.primary[key] || []
         this.rows.primary[key].push(row[key])
-
         this.rows.primary[key].length >= this.bufferSize
-          ? this.rows.primary[key].shift()
+          ? this.rows.primary[key].slice(1, this.rows.primary[key].length)
           : null
       })
+
+      this.renderThrottled()
     })
 
     Object.values(threads).forEach(thread => {
@@ -40,83 +39,36 @@ class StatsObserver {
           this.rows.threads[pid][key].push(row[key])
 
           this.rows.threads[pid][key].length >= this.bufferSize
-            ? this.rows.threads[pid][key].shift()
+            ? this.rows.threads[pid][key].splice(1, 1) // keep the 1st
             : null
         })
       })
     })
+  }
 
-    this.timer = setInterval(this.render.bind(this), this.interval)
+  render() {
+    if (this.stopped)
+      return false
+
+    this.views.primary.compute()
+    this.views.tables.forEach(view => view.compute())
+    this.views.plots.forEach(view => view.compute())
+
+    console.clear()
+
+    this.views.primary.render()
+    this.views.tables.forEach(view => view.render())
+
+    console.log('\n')
+
+    this.views.plots.forEach(view => view.render())
+
+    console.log('\n')
   }
 
   stop() {
     localbus.removeAllListeners('stats:row:update')
-    clearInterval(this.timer)
-  }
-
-  render() {
-    if (process.env.NODE_ENV === 'test')
-      return
-
-    console.log('\n')
-    Object.keys(this.extraFields).forEach(key => {
-      console.log(key, '\n')
-      console.table([this.extraFields[key]])
-    })
-
-    console.log('\n')
-    console.log('primary stats', '\n')
-    if (Object.keys(this.rows.primary).length) {
-      console.table([
-        this.fields.primary.reduce((acc, field) => {
-          const split = field[0].split('.')
-          const mapped = field[2]
-            ? this.rows.primary[split[0]]
-              ? field[2](this.rows.primary[split[0]] .at(-1)[split[1]])
-              : 'no data'
-            : this.rows.primary[split[0]]
-              ? this.rows.primary[split[0]].at(-1)[split[1]]
-              : 'no data'
-
-          return {
-            ...acc,
-            [field[1]]: mapped
-          }
-        }, {})
-      ])
-    }
-
-    if (Object.keys(this.rows.threads).length) {
-      Object.keys(this.fields.threads).forEach(key => {
-        const sortby = this.fields.threads[key].sortby || 'thread'
-        const threads = Object.keys(this.rows.threads)
-        const start = threads.length - this.maxThreadRows
-        const end = threads.length
-
-        console.log('\n')
-        console.log(`${key}, sorted by: "${sortby}"`, '\n')
-
-        console.table(threads.slice(start, end).map(pid => {
-          return {
-            thread: pid,
-            ...this.fields.threads[key].fields.reduce((acc, field) => {
-              const split = field[0].split('.')
-              const rows = this.rows.threads[pid][split[0]]
-              const mapped = rows
-                ? field[2]
-                  ? field[2](rows.at(-1)[split[1]])
-                  : rows.at(-1)[split[1]]
-                : 'no data'
-
-              return {
-                ...acc,
-                [field[1]]: mapped
-              }
-            }, {})
-          }
-        }).sort((a, b) => +b[sortby] - +a[sortby]))
-      })
-    }
+    this.stopped = true
   }
 
   getRows() {

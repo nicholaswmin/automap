@@ -19,12 +19,12 @@ const dyno = new Dyno({
     TASKS_SECOND: {
       configurable: true,
       type: Number,
-      value: 1000
+      value: 50
     },
     THREAD_COUNT: {
       configurable: true,
       type: Number,
-      value: 2
+      value: process.env.WEB_CONCURRENCY || os.availableParallelism()
     },
     DURATION_SECONDS: {
       configurable: true,
@@ -49,25 +49,30 @@ const dyno = new Dyno({
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
       ['memory.mean', 'memory (mean/mb)', toMB],
-      ['uptime.count', 'seconds']
+      ['uptime.count', 'uptime seconds']
     ],
     threads: {
-      'thread stats': {
+      stats: {
         sortby: 'max backlog',
-        fields: [
-          ['task.count', 'tasks run'],
-          ['memory.mean', 'memory (mean/mb)', toMB],
-          ['backlog.max', 'max backlog']
-        ]
+        labels: {
+          logged: [
+            ['task.count', 'tasks run'],
+            ['memory.mean', 'memory (mean/mb)', toMB],
+            ['backlog.max', 'max backlog']
+          ]
+        }
       },
-      'thread timings': {
+      timings: {
         sortby: 'task (mean/ms)',
-        fields: [
-          ['task.mean', 'task (mean/ms)', round],
-          ['redis_ping.mean', 'latency (mean/ms)', round],
-          ['fetch.mean', 'fetch (mean/ms)', round],
-          ['save.mean', 'save (mean/ms)', round]
-        ]
+        labels: {
+          plotted: [ ['task'], ['redis_ping', 'latency'], ['fetch'], ['save'] ],
+          logged: [
+            ['task.mean', 'task (mean/ms)', round],
+            ['redis_ping.mean', 'latency (mean/ms)', round],
+            ['fetch.mean', 'fetch (mean/ms)', round],
+            ['save.mean', 'save (mean/ms)', round]
+          ]
+        }
       }
     }
   }

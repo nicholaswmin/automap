@@ -13,7 +13,7 @@ const thread = async (
     before = async () => {},
     after = async () => {}
   } = {}) => {
-  const parameters = JSON.parse(process.env.parameters)
+  const parameters = Object.freeze(JSON.parse(process.env.parameters))
   const runner = new TaskRunner()
   const stats = {
     general: new ThreadStatsTracker(['task', 'memory', 'backlog']),

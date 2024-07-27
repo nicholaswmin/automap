@@ -1,15 +1,15 @@
 import input from '@inquirer/input'
 
-export default async obj => {
-  for (const key of Object.keys(obj)) {
-    if (obj[key].configurable) {
+export default async parameters => {
+  for (const key of Object.keys(parameters)) {
+    if (parameters[key].configurable) {
       const answer = await input({
         message: `Enter ${key}:`,
-        default: obj[key].value,
+        default: parameters[key].value,
         validate: answer => {
-          switch (obj[key].type) {
+          switch (parameters[key].type) {
             case Number:
-              return !Number.isInteger(parseInt(answer)) || parseInt(answer) <= 0
+              return !Number.isInteger(+answer) || +answer <= 0
                 ? `${key} must be a positive, non-zero number`
                 : true
               break;
@@ -31,15 +31,15 @@ export default async obj => {
         }
       })
 
-      obj[key] = obj[key].type
-        ? obj[key].type(answer)
+      parameters[key] = parameters[key].type
+        ? parameters[key].type(answer)
         : answer
     } else {
-      obj[key] = obj[key].type
-        ? obj[key].type(obj[key].value)
-        : obj[key].value || obj[key]
+      parameters[key] = parameters[key].type
+        ? parameters[key].type(parameters[key].value)
+        : parameters[key].value || parameters[key]
     }
   }
 
-  return obj
+  return Object.freeze(parameters)
 }
