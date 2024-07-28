@@ -9,7 +9,7 @@ import { Dyno, configure } from '../../index.js'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const filepath = path.join(__dirname, 'temp/params.json')
 
-test('parameters propagate to the worker', async t => {
+test('setting parameters', async t => {
   let dyno, randomId = randomUUID()
 
   t.after(() => {
@@ -18,7 +18,7 @@ test('parameters propagate to the worker', async t => {
 
   t.beforeEach(async () => {
     dyno = new Dyno({
-      task: './test/parameters/task.js',
+      task: './test/parameters/tasks/task.js',
       parameters: await configure({
         TASKS_SECOND: 10,
         THREAD_COUNT: 2,
@@ -32,7 +32,7 @@ test('parameters propagate to the worker', async t => {
     await dyno.start()
   })
 
-  await t.test('who then saves them in a file', async t => {
+  await t.test('propagates them to the worker', async t => {
     let file, json
 
     t.beforeEach(() => {
@@ -40,7 +40,7 @@ test('parameters propagate to the worker', async t => {
       json = file ? JSON.parse(file) : null
     })
 
-    await t.test('who then saves them in a file', t => {
+    await t.test('which saves them in a file', t => {
       t.assert.ok(file, 'File does not seem to exist')
       t.assert.ok(json, 'File did not seem to get parsed into JSON')
     })

@@ -11,7 +11,7 @@ test('start(): runs to completion', async t => {
     resetDB()
 
     dyno = new Dyno({
-      task: './test/run/task.js',
+      task: './test/run/tasks/task.js',
       parameters: await configure({
         TASKS_SECOND: 50,
         THREAD_COUNT: 5,
@@ -51,12 +51,12 @@ test('start(): runs to completion', async t => {
       t.assert.ok(rows)
     })
 
-    await t.test('count of rows is proportional to parameters', async t => {
+    await t.test('row count is proportional to parameters', async t => {
       t.assert.ok(rows.length > 60, `line count: ${rows.length}, not > 60`)
       t.assert.ok(rows.length < 500, `line count: ${rows.length}, not < 500`)
     })
 
-    await t.test('rows are written by 5 separate threads', async t => {
+    await t.test('are written by X number of separate threads', async t => {
       const pids = Object.groupBy(rows, ({ pid }) => pid)
 
       t.assert.strictEqual(Object.keys(pids).length, 5)

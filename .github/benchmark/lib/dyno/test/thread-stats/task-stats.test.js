@@ -11,7 +11,7 @@ test('thread-task timings', async t => {
 
   t.before(async () => {
     dyno = new Dyno({
-      task: './test/thread-stats/task.js',
+      task: './test/thread-stats/tasks/task.js',
       parameters: await configure({
         TASKS_SECOND: 100,
         THREAD_COUNT: 5,

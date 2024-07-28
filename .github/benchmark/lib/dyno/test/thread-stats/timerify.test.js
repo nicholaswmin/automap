@@ -11,7 +11,7 @@ test('timerified function in thread', async t => {
 
   t.before(async () => {
     dyno = new Dyno({
-      task: './test/thread-stats/task-timerify.js',
+      task: './test/thread-stats/tasks/task-timerify.js',
       parameters: await configure({
         TASKS_SECOND: 50,
         THREAD_COUNT: 2,

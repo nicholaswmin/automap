@@ -11,7 +11,7 @@ test('primary stats', async t => {
     resetDB()
 
     dyno = new Dyno({
-      task: './test/primary-stats/task.js',
+      task: './test/primary-stats/tasks/task.js',
       parameters: await configure({
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
