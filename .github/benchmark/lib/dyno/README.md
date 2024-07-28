@@ -89,7 +89,7 @@ task(async parameters => {
 
 #### Configuration file
 
-Configure the test parameters and what needs to be logged in the report
+Configure the test parameters and what should be logged in the output:
 
 ```js
 // primary.js
