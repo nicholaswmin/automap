@@ -177,13 +177,13 @@ const dyno = new Dyno({
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
           // - the `performance.measure('sleep')` max duration
-          // .. all rounded to nearest integer
+          // ... all rounded to the nearest integer
           logged: [
             ['task.mean'],
             ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
             ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
             ['fibonacci.mean', 'fib() average (in ms)', Math.round],
-            ['sleep.max', 'sleep() maximum (in ms)', Math.round ]
+            ['sleep.max', 'sleep() maximum (in ms)', Math.round]
           ]
         }
       }
