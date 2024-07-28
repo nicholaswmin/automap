@@ -80,27 +80,28 @@ when inactive > 1 day.
 >
 > note: the "review app name" is *not* the same as the "pipeline name".\
 > A review app name is usually the name of the branch + some random characters,
-> i.e `"my-branch-y45ngb8xyeadcqcxhc"`.
+> i.e `"mybranch-abc123efg456"`.
 
 ### Provision necessary add-ons
 
 [Heroku Redis][heroku-redis]:
 
 ```bash
-heroku addons:create heroku-redis:premium-5 --app repro-repro-y45ngb8xyeadcqcxhc
+heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
+> replace `<app-name>` with the Heroku Review App name.\
 > provisions a [Heroku Redis, Premium 5][redis-plans] instance
 
 ### Run the benchmark
 
 ```bash
-heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
+heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
-> Replace `<app-name>` with the Heroku Review App name.\
-> Replace `--size=<size>` with with the desired dyno size.\
-> Heroku dyno sizes for the `--size=<size>` parameter can be [found here][dynos].
+> replace `<review-app-name>` with the Heroku Review App name.\
+> replace `<dyno-size>` with with the desired dyno size.\
+> available dyno sizes can be [found here][dynos].
 
 ## Overview
 
