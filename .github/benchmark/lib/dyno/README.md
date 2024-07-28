@@ -101,8 +101,8 @@ thread(parameters => {
   // can be timerified using native `performance.timerify`
   const timed_fibonacci = timerify(fibonacci)
 
-  timed_fibonacci()  // recorded a run
-  timed_fibonacci()  // recorded another run
+  timed_fibonacci()
+  timed_fibonacci()
 })
 ```
 
