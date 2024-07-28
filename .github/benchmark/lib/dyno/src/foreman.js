@@ -41,7 +41,12 @@ class Foreman extends EventEmitter {
     const self = this
 
     return new Promise((resolve, reject) => {
-      return child_process.fork(path, { env: { BY_PRIMARY: true, parameters } })
+      return child_process.fork(path, {
+        env: {
+          ...process.env,
+          BY_PRIMARY: true, parameters
+        }
+      })
         .once('spawn', function() { resolve(this) })
         .once('error', function(err) { reject(err) })
         .once('exit', function(code, signal) {
