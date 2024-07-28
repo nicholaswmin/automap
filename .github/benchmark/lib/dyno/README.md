@@ -118,7 +118,9 @@ const dyno = new Dyno({
 
   // Declare what should be included in the output, in this format:
   //
-  // `[<metric-name>, <human-readable-name>, <transformer-function>]`
+  // `[<metric-name>.<metric.unit>, <human-readable-name>, <transformer-function>]`
+  //
+  // note: <metric-unit> can by any of: 'count', 'min', 'max', 'mean', 'stddev'
   fields: {
     // General fields:
 
