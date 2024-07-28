@@ -2,7 +2,7 @@
   "name": "@nicholaswmin/dyno",
   "type": "module",
   "version": "0.1.0",
-  "description": "Benchmark/load test on multiple threads",
+  "description": "runs code on separate threads and logs runtime measurements",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test node --test --experimental-sqlite --test-reporter=spec test/index.test.js",
