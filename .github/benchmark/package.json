@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm --prefix bench install --omit=dev",
-    "start": "node index.js"
+    "start": "node primary.js"
   },
   "dependencies": {
     "ioredis": "^5.4.1",

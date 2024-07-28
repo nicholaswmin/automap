@@ -124,6 +124,24 @@ const dyno = new Dyno({
 
     // per-task fields
     threads: {
+      // Overall task stats
+      stats: {
+        sortby: 'max backlog',
+        labels: {
+          logged: [
+            // Log:
+            //
+            // - the tasks run by all threads
+            // - memory usage average
+            // - number of tasks sent but still unprocessed
+            ['task.count', 'tasks run'],
+            ['memory.mean', 'memory (mean/mb)', toMB],
+            ['backlog.max', 'max backlog']
+          ]
+        }
+      },
+
+      //
       measures: {
         // sort by minimum duration, descending
         sortby: 'foo.min',
