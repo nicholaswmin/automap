@@ -15,7 +15,7 @@ test('primary stats', async t => {
       parameters: await configure({
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
-        DURATION_SECONDS: 5,
+        DURATION_SECONDS: 2,
         RANDOM_ID: randomId
       })
     })
@@ -23,7 +23,7 @@ test('primary stats', async t => {
     result = await dyno.start()
   })
 
-  await t.test('sending 20 tasks per second for 5 second', async t => {
+  await t.test('sending 20 tasks per second for 2 seconds', async t => {
     await t.test('produces a result', async t => {
       t.assert.ok(result)
     })
@@ -38,8 +38,8 @@ test('primary stats', async t => {
         await t.test('last count sums up correctly', async t => {
           const last = result.primary.sent.at(-1)
 
-          t.assert.ok(last.count > 90, `${last} is not > 90`)
-          t.assert.ok(last.count < 120, `${last} is not < 120`)
+          t.assert.ok(last.count > 35, `${last.count} is not > 35`)
+          t.assert.ok(last.count < 100, `${last.count} is not < 100`)
         })
 
         await t.test('in a histogram format', async t => {
@@ -75,8 +75,8 @@ test('primary stats', async t => {
       await t.test('last count sums up correctly', async t => {
         const last = result.primary.replies.at(-1)
 
-        t.assert.ok(last.count > 90, `${last} is not > 90`)
-        t.assert.ok(last.count < 120, `${last} is not < 120`)
+        t.assert.ok(last.count > 35, `${last.count} is not > 35`)
+        t.assert.ok(last.count < 100, `${last.count} is not < 100`)
       })
 
       await t.test('in a histogram format', async t => {

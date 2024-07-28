@@ -15,7 +15,7 @@ test('start(): runs to completion', async t => {
       parameters: await configure({
         TASKS_SECOND: 50,
         THREAD_COUNT: 5,
-        DURATION_SECONDS: 5,
+        DURATION_SECONDS: 2,
         RANDOM_ID: randomId
       })
     })
@@ -26,18 +26,18 @@ test('start(): runs to completion', async t => {
   })
 
   await t.test('runs for specified amount of time', {
-    timeout: 8000
+    timeout: 5000
   }, async t => {
     const start = performance.now()
     const result = await dyno.start()
     const duration = performance.now() - start
 
-    t.assert.ok(duration > 4500, `duration: ${duration} is not > 4500`)
-    t.assert.ok(duration < 6500, `duration: ${duration} is not < 6500`)
+    t.assert.ok(duration > 1500, `duration: ${duration} is not > 1500`)
+    t.assert.ok(duration < 4000, `duration: ${duration} is not < 4000`)
   })
 
   await t.test('task saves rows into an SQLite DB', {
-    timeout: 8000
+    timeout: 5000
   }, async t => {
     let rows
 
@@ -52,7 +52,7 @@ test('start(): runs to completion', async t => {
     })
 
     await t.test('count of rows is proportional to parameters', async t => {
-      t.assert.ok(rows.length > 100, `line count: ${rows.length}, not > 100`)
+      t.assert.ok(rows.length > 60, `line count: ${rows.length}, not > 60`)
       t.assert.ok(rows.length < 500, `line count: ${rows.length}, not < 500`)
     })
 

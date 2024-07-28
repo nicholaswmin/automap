@@ -15,7 +15,7 @@ test('thread-backlog stats', async t => {
       parameters: await configure({
         TASKS_SECOND: 100,
         THREAD_COUNT: 2,
-        DURATION_SECONDS: 5,
+        DURATION_SECONDS: 2,
         RANDOM_ID: randomId
       })
     })

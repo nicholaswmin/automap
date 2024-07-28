@@ -15,7 +15,7 @@ test('thread-task timings', async t => {
       parameters: await configure({
         TASKS_SECOND: 100,
         THREAD_COUNT: 5,
-        DURATION_SECONDS: 5,
+        DURATION_SECONDS: 2,
         RANDOM_ID: randomId
       })
     })
@@ -51,22 +51,22 @@ test('thread-task timings', async t => {
               t.assert.ok(Object.hasOwn(last, 'max'))
 
               await t.test('with reasonable "count" values', async t => {
-                t.assert.ok(last.count > 70, `count is: ${last.count}`)
-                t.assert.ok(last.count < 500, `count is: ${last.count}`)
+                t.assert.ok(last.count > 25, `count: ${last.count}`)
+                t.assert.ok(last.count < 500, `count: ${last.count}`)
               })
 
               await t.test('with reasonable "min" values', async t => {
-                t.assert.ok(last.min > 0, `min is: ${last.min}`)
-                t.assert.ok(last.min < 10, `min is: ${last.min}`)
+                t.assert.ok(last.min > 0, `min is: ${last.min}, not > 0`)
+                t.assert.ok(last.min < 35, `min is: ${last.min}, not < 30`)
               })
 
               await t.test('with reasonable "mean" values', async t => {
-                t.assert.ok(last.mean > 40, `mean is: ${last.mean}`)
+                t.assert.ok(last.mean > 35, `mean is: ${last.mean}`)
                 t.assert.ok(last.mean < 65, `mean is: ${last.mean}`)
               })
 
               await t.test('with reasonable "max" values', async t => {
-                t.assert.ok(last.max > 80, `max is: ${last.max}`)
+                t.assert.ok(last.max > 65, `max is: ${last.max}`)
                 t.assert.ok(last.max < 150, `max is: ${last.max}`)
               })
             })

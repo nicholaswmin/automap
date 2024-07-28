@@ -12,7 +12,8 @@ const insertDBRow = (pid, random_id, random_num = Math.random()) => {
       const insert = database.prepare(s)
       insert.run(pid, random_id, random_num)
     } catch (err) {
-      // ignore DB locked complaints
+      // ignore "DB locked" errors because of
+      // concurrent access
       if (err.errcode !== 5)
         throw new Error(err)
     }
