@@ -1,6 +1,4 @@
 // Task file with `performance.timerify`-wrapped function
-// - check if it appears in thread stats
-
 
 import { task } from '../../../index.js'
 

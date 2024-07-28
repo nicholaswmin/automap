@@ -1,7 +1,7 @@
 // Task file for testing calculation of a distribution.
 //
 // - If this is run enough times we expect the "mean" to fall somewhere around
-//   ~ 50 ms because of the distribution.
+//   ~ 50 ms because of statistical distribution.
 
 import { task } from '../../../index.js'
 
