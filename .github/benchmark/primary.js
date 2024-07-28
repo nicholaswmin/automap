@@ -53,7 +53,7 @@ const dyno = new Dyno({
     ],
     threads: {
       stats: {
-        sortby: 'max backlog',
+        sortby: 'backlog.max',
         labels: {
           logged: [
             ['task.count', 'tasks run'],
@@ -63,7 +63,7 @@ const dyno = new Dyno({
         }
       },
       measures: {
-        sortby: 'task (mean/ms)',
+        sortby: 'task.mean',
         labels: {
           plotted: [ ['task'], ['redis_ping', 'latency'], ['fetch'], ['save'] ],
           logged: [

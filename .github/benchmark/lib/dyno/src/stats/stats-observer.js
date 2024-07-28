@@ -54,7 +54,9 @@ class StatsObserver {
     this.views.tables.forEach(view => view.compute())
     this.views.plots.forEach(view => view.compute())
 
-    console.clear()
+    process.argv.some(a => a.includes('no-console-clear'))
+      ?  null
+      : console.clear()
 
     this.views.primary.render()
     this.views.tables.forEach(view => view.render())

@@ -149,7 +149,8 @@ const dyno = new Dyno({
       // task statistics:
 
       stats: {
-        sortby: 'max backlog',
+        //  key by which the results are sorted (max value first, descending)
+        sortby: 'backlog.max',
         labels: {
           logged: [
             // Log:
@@ -167,6 +168,8 @@ const dyno = new Dyno({
       //
       // any measures taken in the task must be declared here.
       measures: {
+        //  key by which the results are sorted (max value first, descending)
+        sortby: 'task.mean',
         labels: {
           // Log:
           // - the overall task duration

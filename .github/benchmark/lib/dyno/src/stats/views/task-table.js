@@ -2,15 +2,15 @@ import Table from './src/table.js'
 
 class TaskTable extends Table {
   compute() {
+    this.hiddenCount = Object.keys(this.rows).length - this.maxRows > 0
+      ? Object.keys(this.rows).length - this.maxRows
+      : 0
+
     this.threads = Object.keys(this.fields).map(key => {
-      const sortby = this.fields[key].sortby || 'thread'
-      const threads = Object.keys(this.rows)
-      const start = threads.length - this.maxRows
-      const end = threads.length
+      const sortby = this.fields[key].sortby
 
-      this.excluded = Math.abs(start)
+      return Object.keys(this.rows).map(pid => {
 
-      return threads.slice(start, end).map(pid => {
         return {
           thread: pid,
           ...this.fields[key].labels.logged.reduce((acc, field) => {
@@ -24,18 +24,29 @@ class TaskTable extends Table {
 
             return {
               ...acc,
-              [field[1]]: mapped
+              [field[0]]: {
+                human_readable: field[1],
+                value: mapped
+              }
             }
           }, {})
         }
-      }).sort((a, b) => +b[sortby] - +a[sortby])
+      })
+        .sort((a, b) =>  b[sortby].value - a[sortby].value)
+        .map(row => Object.keys(row).reduce((acc, key) => ({
+          ...acc,
+          [row[key].human_readable || key]: row[key].value || row[key]
+        }), {}))
+        .slice(0, this.maxRows)
     })
   }
 
   render() {
     this.threads ? this.threads.forEach(thread => console.table(thread)) : 0
-    this.excluded ? console.log(`.. + ${this.excluded} hidden threads`) : 0
-    this.threads = null
+    this.hiddenCount ? console.log(`... + ${this.hiddenCount} hidden rows`) : 0
+
+    this.hiddenCount = 0
+    this.threads = []
   }
 }
 

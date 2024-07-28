@@ -2,7 +2,7 @@
     constructor(fields, rows) {
       this.fields = fields
       this.rows = rows
-      this.maxRows = 3
+      this.maxRows = 10
     }
 
     compute() {
