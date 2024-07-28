@@ -136,10 +136,9 @@ const dyno = new Dyno({
   // `<metric-unit>` can by any of: `count`, `min`, `max`, `mean`, `stddev`
   // Read more: https://nodejs.org/api/perf_hooks.html#class-histogram
   fields: {
-    // General fields:
-    // Required
+    // General test fields
 
-    // General test statistics:
+    // test statistics:
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
@@ -150,8 +149,8 @@ const dyno = new Dyno({
     // Per-task fields
 
     threads: {
-      // General task statistics.
-      // Optional.
+      // task statistics:
+
       stats: {
         sortby: 'max backlog',
         labels: {
@@ -167,9 +166,9 @@ const dyno = new Dyno({
         }
       },
 
-      // Custom task measures.
-      // Required.
-      // Any measures taken in the task must be declared here.
+      // custom measures:
+      //
+      // any measures taken in the task must be declared here.
       measures: {
         // sort by min duration, descending
         sortby: 'foo.min',
