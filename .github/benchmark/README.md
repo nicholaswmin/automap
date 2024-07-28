@@ -90,10 +90,10 @@ heroku addons:create heroku-redis:premium-5 --app repro-repro-y45ngb8xyeadcqcxhc
 
 > provisions a [Heroku Redis, Premium 5][redis-plans] instance
 
-### Heroku run
+### Run the benchmark
 
 - Push everything to the `benchmark` branch
-- Make sure all provisioned addons are ready
+- Make sure all provisioned add-ons are ready
 
 and then:
 
