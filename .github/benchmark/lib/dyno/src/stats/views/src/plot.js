@@ -1,4 +1,3 @@
-import { createHistogram } from 'node:perf_hooks'
 import asciichart from 'asciichart'
 
 const padRight = text => text ? ` ${text}` : ''

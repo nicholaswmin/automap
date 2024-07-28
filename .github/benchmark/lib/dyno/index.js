@@ -106,7 +106,7 @@ class Dyno {
       : this.log.error(`exiting with code: ${code}`)
   }
 
-  #onThreadExit({ pid, code, signal }) {
+  #onThreadExit({ pid, code }) {
     if (code === 0)
       return false
 

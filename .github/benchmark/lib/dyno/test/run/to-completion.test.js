@@ -29,7 +29,7 @@ test('start(): runs to completion', async t => {
     timeout: 5000
   }, async t => {
     const start = performance.now()
-    const result = await dyno.start()
+    await dyno.start()
     const duration = performance.now() - start
 
     t.assert.ok(duration > 1500, `duration: ${duration} is not > 1500`)
@@ -47,7 +47,7 @@ test('start(): runs to completion', async t => {
       rows = await selectDBRows(randomId)
     })
 
-    await t.test('the rows exist', async t => {
+    await t.test('DB rows are inserted', async t => {
       t.assert.ok(rows)
     })
 

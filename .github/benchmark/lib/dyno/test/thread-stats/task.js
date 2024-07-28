@@ -5,7 +5,7 @@
 
 import { thread } from '../../index.js'
 
-thread(async parameters => {
+thread(async () => {
   const delay = Math.round(Math.random() * 100)
   await new Promise(resolve => setTimeout(resolve, delay))
 }, {

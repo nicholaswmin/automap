@@ -6,7 +6,6 @@ import path from 'node:path'
 
 import { Dyno, configure } from '../../index.js'
 
-const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const filepath = path.join(__dirname, 'temp/params.json')
 

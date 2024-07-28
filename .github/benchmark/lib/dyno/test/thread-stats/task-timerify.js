@@ -4,7 +4,7 @@
 
 import { thread } from '../../index.js'
 
-thread(async parameters => {
+thread(async () => {
   const foo = () => new Promise(resolve => setTimeout(
     resolve, Math.round(Math.random() * 10)
   ))

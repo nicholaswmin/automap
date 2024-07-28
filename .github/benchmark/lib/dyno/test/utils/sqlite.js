@@ -2,7 +2,6 @@ import { unlinkSync } from 'node:fs'
 import { DatabaseSync } from 'node:sqlite'
 
 const path = './test/temp/db.sqlite'
-const database = new DatabaseSync('./test/temp/db.sqlite')
 
 const insertDBRow = (pid, random_id, random_num = Math.random()) => {
   const database = new DatabaseSync(path)

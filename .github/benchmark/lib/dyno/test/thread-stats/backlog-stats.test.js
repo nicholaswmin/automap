@@ -28,8 +28,6 @@ test('thread-backlog stats', async t => {
     const pid = pids[0]
 
     await t.test('its backlog of tasks', async t => {
-      const rows = result.threads[pid].backlog
-
       await t.test('in a histogram format', async t => {
         const last = result.threads[pid].backlog.at(-1)
 

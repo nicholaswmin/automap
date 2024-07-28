@@ -12,19 +12,16 @@ export default async parameters => {
               return !Number.isInteger(+answer) || +answer <= 0
                 ? `${key} must be a positive, non-zero number`
                 : true
-              break;
 
             case String:
               return typeof answer !== 'string' || answer.length < 1
                 ? `${key} must be a string with some length`
                 : true
-              break;
 
             case Boolean:
               return answer === true || answer === false
                 ? `${key} must be either true or false`
                 : true
-              break;
             default:
               true
           }
