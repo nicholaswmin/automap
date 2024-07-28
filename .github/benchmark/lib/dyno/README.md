@@ -145,7 +145,7 @@ const dyno = new Dyno({
       //
       // Any measures taken in the task must be declared here.
       measures: {
-        // sort by minimum duration, descending
+        // sort by min duration, descending
         sortby: 'foo.min',
         labels: {
           // also include its average duration in the plot
