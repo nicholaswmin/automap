@@ -10,7 +10,7 @@ class StatsObserver {
     this.fields = fields || { general: {}, primary: [], threads: {} }
     this.rows = { primary: {}, threads: {} }
     this.views = views(this.rows, this.fields)
-    this.stopped = process.env.NODE_ENV === 'test'
+    this.stopped = false
   }
 
   start(threads) {
