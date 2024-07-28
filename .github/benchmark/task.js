@@ -1,4 +1,4 @@
-import { thread } from './lib/dyno/index.js'
+import { task } from './lib/dyno/index.js'
 import ioredis from './lib/ioredis/index.js'
 
 import { randomId, payloadKB } from '../../test/util/index.js'
@@ -14,7 +14,7 @@ const fetch = performance.timerify(repo.fetch.bind(repo))
 const save  = performance.timerify(repo.save.bind(repo))
 const ping  = performance.timerify(redis_ping)
 
-thread(async parameters => {
+task(async parameters => {
   const building = await fetch(id) || new Building({ id })
   const randIndex = Math.floor(Math.random() * building.flats.length)
 

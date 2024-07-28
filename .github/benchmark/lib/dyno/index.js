@@ -1,7 +1,7 @@
 import { styleText } from 'node:util'
 import StatsObserver from './src/stats/stats-observer.js'
 import configure from './src/configure.js'
-import thread from './src/thread.js'
+import task from './src/task.js'
 
 import Firehose from './src/firehose.js'
 import Foreman from './src/foreman.js'
@@ -134,4 +134,4 @@ class Dyno {
   }
 }
 
-export { configure, Dyno, thread }
+export { configure, Dyno, task }

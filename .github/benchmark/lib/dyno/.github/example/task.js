@@ -1,8 +1,8 @@
 // task.js
 
-import { thread } from '../../index.js'
+import { task } from '../../index.js'
 
-thread(async parameters => {
+task(async parameters => {
   // 'parameters' configured in the primary are available here
 
   // function under test

@@ -58,9 +58,9 @@ these [PerformanceMeasurement APIs][perf-api]:
 ```js
 // task.js
 
-import { thread } from '@nicholaswmin/dyno'
+import { task } from '@nicholaswmin/dyno'
 
-thread(async parameters => {
+task(async parameters => {
   // 'parameters' configured in the primary are available here
 
   // function under test
