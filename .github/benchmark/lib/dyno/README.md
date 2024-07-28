@@ -80,14 +80,15 @@ const dyno = new Dyno({
           //
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
-          // - the `performance.measure('sleep')` measure
+          // - the `performance.measure('sleep')` max duration
           //
           // all rounded to nearest integer
           logged: [
             ['task.mean'],
-            ['fibonacci.min', 'minimum (in ms)', Math.round],
-            ['fibonacci.max', 'maximum (in ms)', Math.round],
-            ['fibonacci.mean', 'average (in ms)', Math.round],
+            ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
+            ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
+            ['fibonacci.mean', 'fib() average (in ms)', Math.round],
+            ['sleep.max', 'sleep() maximum (in ms)', Math.round ]
           ]
         }
       }
@@ -151,19 +152,19 @@ thread(parameters => {
 │ 1       │ '36333' │ 54        │ 10.94            │ 1           │
 │ 2       │ '36335' │ 54        │ 10.71            │ 1           │
 └─────────┴─────────┴───────────┴──────────────────┴─────────────┘
-┌─────────┬─────────┬────────────────┬───────────────────┬─────────────────┬────────────────┐
-│ (index) │ thread  │ task (mean/ms) │ minimum (in ms)   │ maximum (in ms) │ average(in ms) │
-├─────────┼─────────┼────────────────┼───────────────────┼─────────────────┼────────────────┤
-│ 0       │ '36333' │ 3.44           │ 1.11              │ 1.54            │ 1.63           │
-│ 1       │ '36335' │ 3.44           │ 1                 │ 1.72            │ 1.81           │
-│ 2       │ '36334' │ 3.14           │ 1                 │ 1.49            │ 1.63           │
-└─────────┴─────────┴────────────────┴───────────────────┴─────────────────┴────────────────┘
+┌─────────┬─────────┬────────────────┬─────────────────────────────┬─────────────────────┬───────────────────────────┐
+│ (index) │ thread  │ task (mean/ms) │ fib() minimum (in ms)       │ fib() average (in ms) │ sleep() maximum (in ms) │
+├─────────┼─────────┼────────────────┼─────────────────────────────┼─────────────────────┼───────────────────────────┤
+│ 0       │ '36333' │ 3.44           │ 1.11                        │ 1.54                │ 100.13                    │
+│ 1       │ '36335' │ 3.44           │ 1                           │ 1.72                │ 103.81                    │
+│ 2       │ '36334' │ 3.14           │ 1                           │ 1.49                │ 101.63                    │
+└─────────┴─────────┴────────────────┴─────────────────────────────┴─────────────────────┴───────────────────────────┘
 .. + 5 hidden threads
 
 
- Task timings (mean/ms)
+ Task timings (in ms)
 
- Legend: task, fibonacci
+ Legend: - task  - fibonacci   - sleep
 
   12.00 ┼╮
   11.27 ┤│
