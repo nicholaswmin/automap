@@ -191,7 +191,6 @@ const dyno = new Dyno({
   }
 })
 
-// start the dyno
 await dyno.start()
 ```
 
