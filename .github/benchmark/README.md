@@ -69,10 +69,6 @@ when inactive > 1 day.
   - Connect the pipeline to this repo
 - Create a Review App on the pipeline, for this repo and branch `benchmark`
   - Configure the Review App to `autodestroy=1day` when stale
-  - Provision necessary add-ons (i.e Redis) on the Review App
-  - Choose at least `Standard 1x` as the size of the "webservice" dyno;
-    the actual dyno is chosen when we run the benchmark but bigger dynos
-    require at least a `Standard-1x` on the Review App itself.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
   the run commands.
 
@@ -81,6 +77,19 @@ when inactive > 1 day.
 > Note: A "review app name" is *not* the same as the "pipeline name".\
 > A review app name is usually the name of the branch + some random characters,
 > i.e `"mybranch-abc123efg456"`.
+
+#### Set appropriate dyno type
+
+Heroku requires at least a `Standard 1x` as the type of the "webservice" dyno.
+
+The actual benchmark dyno is chosen when we run the benchmark but bigger dynos
+require at least a `Standard-1x` on the Review App itself.
+
+```bash
+heroku ps:type standard-1x --app <review-app-name>
+```
+
+> Note: Replace `<app-name>` with the Heroku Review App name.
 
 #### Provision necessary add-ons
 

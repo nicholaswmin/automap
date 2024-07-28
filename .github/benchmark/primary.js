@@ -16,12 +16,6 @@ const dyno = new Dyno({
     return redis.disconnect()
   },
   parameters: await configure({
-    REDIS_URL: process.env.REDIS_URL
-    ? {
-      configurable: true,
-      type: String,
-      value: process.env.REDIS_URL
-    } : undefined,
     TASKS_SECOND: {
       configurable: true,
       type: Number,
