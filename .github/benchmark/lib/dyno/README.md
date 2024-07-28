@@ -77,7 +77,7 @@ task(async parameters => {
   // Measure something using `performance.measure`
   performance.mark('start')
 
-  await new Promise(resolve => setTimeout(resolve, 100))
+  await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
 
   performance.mark('end')
   performance.measure('sleep', 'start', 'end')
@@ -173,8 +173,6 @@ const dyno = new Dyno({
         // sort by min duration, descending
         sortby: 'foo.min',
         labels: {
-          // also include its average duration in the plot
-          plotted: [ ['task'], ['fibonacci'], ['sleep'] ],
           // Log:
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
@@ -186,7 +184,11 @@ const dyno = new Dyno({
             ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
             ['fibonacci.mean', 'fib() average (in ms)', Math.round],
             ['sleep.max', 'sleep() maximum (in ms)', Math.round]
-          ]
+          ],
+          // include these average durations in the plot
+          // note: the plot only logs the value 'mean' (average) and this
+          // is non-configurable for now
+          plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
         }
       }
     }
@@ -198,7 +200,7 @@ await dyno.start()
 
 ### Example output
 
-```console
+```js
 Test statistics:
 ┌─────────┬────────────┬─────────────┬──────────────────┬────────────────┐
 │ (index) │ tasks sent │ tasks acked │ memory (mean/mb) │ uptime seconds │
@@ -228,24 +230,24 @@ Task measurements:
 
  Task measurement timeline (ms)
 
- Legend: - task  - fibonacci  - sleep
+ Legend: task, fibonacci, sleep
 
-  12.00 ┼╮
-  11.27 ┤│
-  10.53 ┤│
-   9.80 ┤│
-   9.07 ┤│
-   8.33 ┤╰╮
-   7.60 ┼╮│
-   6.87 ┤││
-   6.13 ┤│╰╮
-   5.40 ┤│ ╰╮
-   4.67 ┤╰╮ ╰──╮
-   3.93 ┼╮╰╮   ╰──────────╮                                          ╭─
-   3.20 ┤╰╮╰─╮            ╰──────────────────────────────────────────╯
-   2.47 ┤ ╰─╮╰───────╮
-   1.73 ┤   ╰──────────────────────────────────────────────────────────
-   1.00 ┼─────────────────────────────────────────────────────────────
+   9.00 ┼╮
+   8.47 ┤╰╮
+   7.93 ┤ │
+   7.40 ┤ │╭╮
+   6.87 ┤ │││            ╭╮               ╭─╮──╮╭╮     ╭──
+   6.33 ┤╭╮╯╰─╮   ╭──╮╭───╮╭╮──╮╭╮  ╭─────╯╯╰──────────╯
+   5.80 ┤││   ╰─╭──╮╭─╯   ╰╯╰───────╯
+   5.27 ┤││╭╮ ╭─╯  ╰╯
+   4.73 ┤│╰╯╰─╯
+   4.20 ┤│
+   3.67 ┤│
+   3.13 ┤│
+   2.60 ┤│
+   2.07 ┼╯
+   1.53 ┤
+   1.00 ┼─────────────────────────────────────────────────
 ```
 
 ## Tests

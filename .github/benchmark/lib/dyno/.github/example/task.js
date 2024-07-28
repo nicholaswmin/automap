@@ -19,7 +19,7 @@ task(async parameters => {
   // Measure something using `performance.measure`
   performance.mark('start')
 
-  await new Promise(resolve => setTimeout(resolve, 100))
+  await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
 
   performance.mark('end')
   performance.measure('sleep', 'start', 'end')

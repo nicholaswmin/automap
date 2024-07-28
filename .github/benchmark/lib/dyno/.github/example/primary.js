@@ -77,20 +77,22 @@ const dyno = new Dyno({
         // sort by min duration, descending
         sortby: 'foo.min',
         labels: {
-          // also include its average duration in the plot
-          plotted: [ ['task'], ['fibonacci'], ['sleep'] ],
           // Log:
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
           // - the `performance.measure('sleep')` max duration
-          // .. all rounded to nearest integer
+          // ... all rounded to the nearest integer
           logged: [
             ['task.mean'],
             ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
             ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
             ['fibonacci.mean', 'fib() average (in ms)', Math.round],
-            ['sleep.max', 'sleep() maximum (in ms)', Math.round ]
-          ]
+            ['sleep.max', 'sleep() maximum (in ms)', Math.round]
+          ],
+          // include these average durations in the plot
+          // note: the plot only logs the value 'mean' (average) and this
+          // is non-configurable for now
+          plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
         }
       }
     }
