@@ -73,6 +73,9 @@ thread(parameters => {
 })
 ```
 
+> **note:** Measures must also be declared in `fields` configuration in the
+> primary file. See below:
+
 #### Configuration file
 
 Configure the test parameters and what needs to be logged in the report
@@ -172,9 +175,6 @@ const dyno = new Dyno({
 // start the dyno
 await dyno.start()
 ```
-
-> **note:** Measures must also be declared in `fields` configuration in the
-> primary file
 
 ### Example output
 
