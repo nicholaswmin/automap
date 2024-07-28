@@ -78,7 +78,7 @@ const dyno = new Dyno({
         sortby: 'foo.min',
         labels: {
           // also include its average duration in the plot
-          plotted: [ ['task'], ['fibonacci'] ],
+          plotted: [ ['task'], ['fibonacci'], ['sleep'] ],
           // Log:
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
