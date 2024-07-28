@@ -119,6 +119,10 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 [@nicholaswmin][nicholaswmin]
 
+## License
+
+MIT-0 License
+
 [round-robin]: https://en.wikipedia.org/wiki/Round-robin_scheduling
 [child_process]: https://nodejs.org/api/child_process.html
 [fork]: https://nodejs.org/api/child_process.html#child_processforkmodulepath-args-options
