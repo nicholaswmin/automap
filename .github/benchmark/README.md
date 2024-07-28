@@ -106,17 +106,14 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 > These might be out of date
 
-- `TASKS_PER_SECOND`: message rate of the primary
-- `TEST_DURATION_SECONDS`: max test duration. If still running, `test=success`
-- `NUM_WORKERS`: number of concurrent threads processing tasks
-- `ITEM_PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
-- `MAX_FLATS`: maximum number of created List Items, per paper
-- `MAX_WORKER_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
-- `MAX_UPDATE_PER_SECOND`: How often to update the results shown on screen
-- `MAX_WORKERS_DISPLAY`: How many workers to show in the runtime results
-- `WARMUP_SECONDS`: Amount of seconds to take it easy at the beginning.
+- `TASKS_SECOND`: message rate of the primary
+- `DURATION_SECONDS`: max test duration. If still running, `test=success`
+- `THREAD_COUNT`: number of concurrent threads processing tasks
+- `PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
+- `MAX_ITEMS`: maximum number of created List Items, per paper
+- `MAX_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
 
-these "constants" are user-configurable when the benchmark starts up.
+these constants are user-configurable when the benchmark starts up.
 
 ## Authors
 
