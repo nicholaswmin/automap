@@ -10,9 +10,11 @@ To run a benchmark you need 2 separate files:
 
 `primary.js`
 
-Mostly sets up the configuration for the test:
+> includes configuration for for the test
 
 `task.js`
+
+> includes the code under test
 
 ### Configuration
 
