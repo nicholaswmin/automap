@@ -2,7 +2,7 @@
 
 > benchmarks the [throughput][throughput] of this module
 
-> Recorded results can be [found here][results]
+> Recorded results from previous runs can be [found here][results]
 
 ## Install
 
@@ -15,7 +15,7 @@ npm i
 > [!CAUTION]
 > This benchmark runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
-## Locally
+### Locally
 
 > assuming you're in root and this resides in a folder: `.github/benchmmark`
 
@@ -23,11 +23,11 @@ npm i
 npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start
 ```
 
-## Benchmarking on Heroku
+### on Heroku
 
 ### Install prerequisites
 
-Requires the Heroku CLI
+Requires the [Heroku CLI][heroku-cli]
 
 MacOS
 
@@ -168,6 +168,7 @@ MIT-0 License
 [fake-server]: bench/fake-server.js
 [test-data]: /test/util/model/index.js
 [results]: results/
+[heroku-cli]: https://devcenter.heroku.com/articles/heroku-cli
 [heroku-dash]: https://dashboard.heroku.com/apps
 [heroku-redis]: https://devcenter.heroku.com/articles/heroku-redis
 [redis-plans]: https://elements.heroku.com/addons/heroku-redis#pricing
