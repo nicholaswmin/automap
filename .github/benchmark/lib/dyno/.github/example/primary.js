@@ -74,8 +74,6 @@ const dyno = new Dyno({
       // Required.
       // Any measures taken in the task must be declared here.
       measures: {
-        // sort by min duration, descending
-        sortby: 'foo.min',
         labels: {
           // Log:
           // - the overall task duration
