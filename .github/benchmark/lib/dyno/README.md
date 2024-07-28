@@ -262,8 +262,8 @@ run unit tests:
 npm test
 ```
 
-> note: tests use the experimental native `sqlite` module therefore they
-> require `node version >= v22.5.1`
+> note: tests use the experimental [native `sqlite`][sqlite] module therefore
+> they require `node version >= v22.5.1`
 
 > note: these are slow tests
 
@@ -287,6 +287,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
 [v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
+[sqlite]: https://nodejs.org/api/sqlite.html
 
 [example-code]: .github/example
 [nicholaswmin]: https://github.com/nicholaswmin
