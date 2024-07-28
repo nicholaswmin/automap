@@ -85,7 +85,7 @@ task(async parameters => {
 ```
 
 > **note:** Measures must also be declared in the `fields` configuration in the
-> primary file. See below:
+> primary file.\ See below:
 
 #### Configuration file
 
