@@ -9,7 +9,7 @@ export default (rows, fields) => {
       new TaskTable(fields.threads, rows.threads)
     ],
     plots: [
-      new TaskPlot(fields.threads.timings, rows.threads)
+      new TaskPlot(fields.threads.measures, rows.threads)
     ]
   }
 }

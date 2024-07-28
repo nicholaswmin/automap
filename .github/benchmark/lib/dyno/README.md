@@ -24,7 +24,45 @@ node primary.js
 
 ### Configuration
 
-An example setup, benchmarking a `Fibonacci` function on 8 threads:
+An example setup, benchmarking a [`Fibonacci function`][fib] on 8 threads
+
+#### Taskfile
+
+The task file declares where "task" that needs to be benchmarked.
+This file runs in its own process `times x THREAD_COUNT`.
+
+Measures can be taken using these [PerformanceMeasurement APIs][perf-api]:
+
+- [`performance.timerify`][timerify]
+- [`performance.measure`][measure]
+
+```js
+// task.js
+
+import { thread } from '@nicholaswmin/dyno'
+
+thread(parameters => {
+  // 'parameters' configured in the primary are available here
+
+  // function under test
+  const fibonacci = n => n < 1 ? 0 : n <= 2
+    ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
+
+  // can be timerified using `performance.timerify`
+  const timed_fibonacci = performance.timerify(fibonacci)
+
+  timed_fibonacci()
+  timed_fibonacci()
+
+  // Measure something using `performance.measure`
+  performance.mark('t1')
+  await new Promise(resolve => setTimeout(resolve, 100))
+  performance.mark('t2')
+  performance.measure('sleep', 't1', 't2')
+})
+```
+
+#### Configuration file
 
 ```js
 // primary.js
@@ -59,18 +97,21 @@ const dyno = new Dyno({
   }),
 
   // What to include in the report print-out, in this format:
-  // [<metric-name>, <human-readable-name>, <transformer-function>]
-  //
-  // Example using `performance.timerify`:
-  //
-  // `const fibonacci = n => { ... }`
-  // `performance.timerify(fibonacci)`
-  //
-  // ... then declare it here in this format:
+  // `[<metric-name>, <human-readable-name>, <transformer-function>]`
   //
   fields: {
+    // overall test fields
+
+    primary: [
+      ['sent.count', 'tasks sent'],
+      ['replies.count', 'tasks acked'],
+      ['memory.mean', 'memory (mean/mb)', toMB],
+      ['uptime.count', 'uptime seconds']
+    ],
+
+    // per-task fields
     threads: {
-      stats: {
+      measures: {
         // sort by minimum duration, descending
         sortby: 'foo.min',
         labels: {
@@ -98,40 +139,6 @@ const dyno = new Dyno({
 
 // start the dyno
 await dyno.start()
-```
-
-The task file, where code that needs to be benchmarked runs.
-This file runs in its own process `times x THREAD_COUNT`.
-
-Measures can be taken using these [PerformanceMeasurement APIs][perf-api]:
-
-- [`performance.timerify`][timerify]
-- [`performance.measure`][measure]
-
-```js
-// task.js
-
-import { thread } from '@nicholaswmin/dyno'
-
-thread(parameters => {
-  // 'parameters' configured in the primary are available here
-
-  // function under test
-  const fibonacci = n => n < 1 ? 0 : n <= 2
-    ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
-
-  // can be timerified using `performance.timerify`
-  const timed_fibonacci = performance.timerify(fibonacci)
-
-  timed_fibonacci()
-  timed_fibonacci()
-
-  // Measure something using `performance.measure`
-  performance.mark('t1')
-  await new Promise(resolve => setTimeout(resolve, 100))
-  performance.mark('t2')
-  performance.measure('sleep', 't1', 't2')
-})
 ```
 
 > **Note:** Measures must also be declared in `fields` configuration in the
@@ -223,6 +230,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [perf-api]: https://nodejs.org/api/perf_hooks.html#performance-measurement-apis
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
 [measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
+[fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
 
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
