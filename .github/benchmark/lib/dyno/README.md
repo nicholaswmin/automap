@@ -101,7 +101,8 @@ const dyno = new Dyno({
   // Required.
   task: './task.js',
   parameters: await configure({
-    // Required:
+    // Test parameters
+    // Required.
 
     // tasks per second across all threads
     TASKS_SECOND: 100,
@@ -110,7 +111,9 @@ const dyno = new Dyno({
     // total test duration
     DURATION_SECONDS: 5,
 
-    // Optional:
+    // Custom parameters
+    // Optional.
+    //
     // Note: you can access these parameters in your task file
 
     FOO: 2,
