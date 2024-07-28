@@ -113,7 +113,7 @@ const dyno = new Dyno({
   // `[<metric-name>, <human-readable-name>, <transformer-function>]`
   //
   fields: {
-    // overall test fields
+    // General test statistics:
 
     primary: [
       ['sent.count', 'tasks sent'],
@@ -124,7 +124,7 @@ const dyno = new Dyno({
 
     // per-task fields
     threads: {
-      // Overall task stats
+      // General task statistics:
       stats: {
         sortby: 'max backlog',
         labels: {
@@ -141,8 +141,7 @@ const dyno = new Dyno({
         }
       },
 
-      // Task measures
-      //
+      // Custom task measures:
       // Any measures taken in the task must be declared here.
       measures: {
         // sort by min duration, descending
