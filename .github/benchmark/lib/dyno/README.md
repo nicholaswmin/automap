@@ -39,7 +39,7 @@ Benchmarking a [`Fibonacci function`][fib] on 8 threads
 The task file declares the *task* that needs to be benchmarked.
 
 Code declared here runs in its own isolated [V8][v8]
-process `times x THREAD_COUNT`
+process `times x THREAD_COUNT`.
 
 Within the task file, measures can be taken using
 these [PerformanceMeasurement APIs][perf-api]:
