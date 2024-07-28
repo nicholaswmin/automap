@@ -84,8 +84,9 @@ task(async parameters => {
 })
 ```
 
-> **note:** measures must also be declared in the `fields` configuration in the
-> primary file, otherwise the won't appear in the output.\
+> **note:** measures must also be declared in the
+> `fields.threads.labels.logged` field within the
+> primary file, otherwise they won't appear in the output.\
 > See below:
 
 #### Configuration file
