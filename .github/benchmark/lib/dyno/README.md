@@ -62,8 +62,9 @@ thread(parameters => {
   // can be timerified using `performance.timerify`
   const timed_fibonacci = performance.timerify(fibonacci)
 
-  timed_fibonacci()
-  timed_fibonacci()
+  timed_fibonacci(parameters.FOO)
+  timed_fibonacci(parameters.BAR)
+  timed_fibonacci(parameters.BAZ)
 
   // Measure something using `performance.measure`
   performance.mark('t1')
