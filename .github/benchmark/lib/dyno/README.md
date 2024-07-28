@@ -16,6 +16,12 @@ To run a benchmark you need 2 separate files:
 
 > includes the code under test
 
+then run:
+
+```bash
+node primary.js
+```
+
 ### Configuration
 
 An example setup, benchmarking a `Fibonacci` function on 8 threads:
@@ -28,9 +34,8 @@ import { Dyno, configure } from '@nicholaswmin/dyno'
 const dyno = new Dyno({
   // path of the task file
   task: './task.js',
-  // Test parameters
   parameters: await configure({
-    // required:
+    // Required:
 
     // tasks per second across all threads
     TASKS_SECOND: 100,
@@ -39,35 +44,41 @@ const dyno = new Dyno({
     // total test duration
     DURATION_SECONDS: 5,
 
-    // optional:
+    // Optional:
+    // note: you can access these parameters in your task file
 
-    FOO_PAMETER: {
-      // if value of parameter is in the following format,
-      // the user will be promted to tweak/edit it on startup
-      type: Number,
+    FOO: 50,
+    BAR: 25,
+    BAZ: {
+      // Optional: Declare a parameter as "user-configurable" on startup.
+      // You'll be prompted to tweak it when the test starts:
       value: 20,
+      type: Number,
       configurable: true
     },
-    // non-user-configurable, use as-is:
-    BAR_PARAMETER: 50
   }),
 
   // What to include in the report print-out, in this format:
   // [<metric-name>, <human-readable-name>, <transformer-function>]
   //
-  // Example with performance.timerify:
+  // Example using `performance.timerify`:
   //
   // `const fibonacci = n => { ... }`
   // `performance.timerify(fibonacci)`
   //
-  // ... you need to declare it here in this format:
+  // ... then declare it here in this format:
   //
   fields: {
     threads: {
       stats: {
+        // sort by minimum duration, descending
         sortby: 'foo.min',
         labels: {
+          // also include its average duration in the plot
           plotted: [ ['task'], ['fibonacci'] ],
+          // log the average task duration and the function
+          // `min`/`max`/`mean` durations,
+          // rounded to nearest integer
           logged: [
             ['task.mean'],
             ['fibonacci.min', 'minimum (in ms)', Math.round],
@@ -133,10 +144,9 @@ thread(parameters => {
 .. + 5 hidden threads
 
 
-
  Task timings (mean/ms)
 
- Legend: task, min, max, average
+ Legend: task, fibonacci
 
   12.00 ┼╮
   11.27 ┤│
@@ -170,7 +180,7 @@ run unit tests:
 npm test
 ```
 
-> note: these are very slow tests
+> note: these are slow tests
 
 ## Authors
 
