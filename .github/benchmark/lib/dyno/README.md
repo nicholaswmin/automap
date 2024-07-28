@@ -67,10 +67,12 @@ thread(parameters => {
   timed_fibonacci(parameters.BAZ)
 
   // Measure something using `performance.measure`
-  performance.mark('t1')
+  performance.mark('start')
+
   await new Promise(resolve => setTimeout(resolve, 100))
-  performance.mark('t2')
-  performance.measure('sleep', 't1', 't2')
+
+  performance.mark('end')
+  performance.measure('sleep', 'start', 'end')
 })
 ```
 
