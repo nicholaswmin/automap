@@ -284,6 +284,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
 [v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
 
-[example-code]: ./github/example
+[example-code]: .github/example
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
