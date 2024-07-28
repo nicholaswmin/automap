@@ -120,7 +120,7 @@ thread(parameters => {
     ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
 
   // can be timerified using `performance.timerify`
-  const timed_fibonacci = timerify(fibonacci)
+  const timed_fibonacci = performance.timerify(fibonacci)
 
   timed_fibonacci()
   timed_fibonacci()
