@@ -12,7 +12,7 @@ A multithreaded benchmarker
 npm i @nicholaswmin/dyno
 ```
 
-### Benchmarking
+### Setup
 
 To run a benchmark you need 2 separate files:
 
