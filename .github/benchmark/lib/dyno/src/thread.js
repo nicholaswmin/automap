@@ -12,7 +12,14 @@ const thread = async (
   {
     before = async () => {},
     after = async () => {}
-  } = {}) => {
+  } = {}) =>
+  if (!process.env.RUNNER) {
+    throw new Error([
+      'Cannot run this file directly',
+      'Setup a primary.js which declares this as a task and run that instead',
+      'The task file needs to be run by the primary'
+    ].join('. '))
+  }
   const parameters = Object.freeze(JSON.parse(process.env.parameters))
   const runner = new TaskRunner()
   const stats = {
