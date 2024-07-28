@@ -145,7 +145,7 @@ for a total of at least `120 seconds`.
 
 > note: these constants are user-configurable when the benchmark starts up.
 
-> note these might be out of date.
+> note: these might be out of date.
 
 ## Authors
 
