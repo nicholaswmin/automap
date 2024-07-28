@@ -18,7 +18,7 @@ To run a benchmark you need 2 separate files:
 
 ### Configuration
 
-An example setup, benchmarking a `Fibonacci` function on 4 threads:
+An example setup, benchmarking a `Fibonacci` function on 8 threads:
 
 ```js
 // primary.js
@@ -35,7 +35,7 @@ const dyno = new Dyno({
     // tasks per second across all threads
     TASKS_SECOND: 100,
     // total num of threads, ideally = number of CPU cores
-    THREAD_COUNT: 4,
+    THREAD_COUNT: 8,
     // total test duration
     DURATION_SECONDS: 5,
 
