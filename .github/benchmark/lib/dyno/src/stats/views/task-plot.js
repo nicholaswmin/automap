@@ -17,7 +17,7 @@ class TaskPlot extends Plot {
       title: 'Task timings (mean/ms)',
       colors: this.fields.labels.plotted.map(fieldAsHeader).map(randomColor),
       labels: this.fields.labels.plotted.map(fieldAsHeader).map(colorLabel),
-      height: 15
+      height: 13
     }))
   }
 
