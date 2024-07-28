@@ -32,7 +32,15 @@ node primary.js
 
 ### Example
 
-Benchmarking a [`Fibonacci function`][fib] on 8 threads
+Benchmarking a [`Fibonacci function`][fib] on 8 threads.
+
+You can run this example via:
+
+```bash
+npm run example
+```
+
+it's code is [available here][example-code].
 
 #### Task file
 
@@ -52,7 +60,7 @@ these [PerformanceMeasurement APIs][perf-api]:
 
 import { thread } from '@nicholaswmin/dyno'
 
-thread(parameters => {
+thread(async parameters => {
   // 'parameters' configured in the primary are available here
 
   // function under test
@@ -105,18 +113,17 @@ const dyno = new Dyno({
     // Optional:
     // Note: you can access these parameters in your task file
 
-    FOO: 50,
-    BAR: 25,
+    FOO: 2,
+    BAR: 5,
     BAZ: {
       // Optional:
       // Declare a parameter as user-configurable on startup.
       // You'll be prompted to tweak it when the test starts:
-      value: 20,
+      value: 10,
       type: Number,
       configurable: true
     }
   }),
-
 
   // Declare what should be included in the output, in this format:
   //
@@ -133,7 +140,7 @@ const dyno = new Dyno({
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/mb)', toMB],
+      ['memory.mean', 'memory (mean/bytes)'],
       ['uptime.count', 'uptime seconds']
     ],
 
@@ -151,7 +158,7 @@ const dyno = new Dyno({
             // - memory usage average
             // - number of tasks sent but still unprocessed
             ['task.count', 'tasks run'],
-            ['memory.mean', 'memory (mean/mb)', toMB],
+            ['memory.mean', 'memory (mean/bytes)'],
             ['backlog.max', 'max backlog']
           ]
         }
@@ -277,5 +284,6 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
 [v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
 
+[example-code]: ./github/example
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
