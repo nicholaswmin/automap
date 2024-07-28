@@ -141,7 +141,9 @@ const dyno = new Dyno({
         }
       },
 
+      // Task measures
       //
+      // Any measures taken in the task must be declared here.
       measures: {
         // sort by minimum duration, descending
         sortby: 'foo.min',
