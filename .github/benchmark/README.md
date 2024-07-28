@@ -92,7 +92,7 @@ This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> note: replace `<app-name>` with the Heroku Review App name.\
+> note: replace `<app-name>` with the Heroku Review App name.
 
 ### Run the benchmark
 
