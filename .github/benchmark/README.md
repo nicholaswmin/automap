@@ -101,10 +101,8 @@ and then:
 heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
 ```
 
-> Replace `<app-name>` with the Heroku Review App `name`:
->
-> Replace `--size=<size>` with with the desired size:
->
+> Replace `<app-name>` with the Heroku Review App `name`:\
+> Replace `--size=<size>` with with the desired size:\
 > The Heroku dynos for the `--size=<size>` parameter can be [found here][dynos].
 
 ## Overview
