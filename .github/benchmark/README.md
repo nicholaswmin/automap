@@ -29,7 +29,7 @@ npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchm
 
 Requires the [Heroku CLI][heroku-cli]
 
-MacOS
+on MacOS:
 
 ```bash
 # Install latest Homebrew
@@ -76,9 +76,9 @@ when inactive > 1 day.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
   the run commands.
 
-> note: review apps can take > 10 minutes to prepare when first created.
+> Note: Review Apps can take > 10 minutes to prepare when first created.
 >
-> note: the "review app name" is *not* the same as the "pipeline name".\
+> Note: A "review app name" is *not* the same as the "pipeline name".\
 > A review app name is usually the name of the branch + some random characters,
 > i.e `"mybranch-abc123efg456"`.
 
@@ -92,7 +92,7 @@ This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> note: replace `<app-name>` with the Heroku Review App name.
+> Note: Replace `<app-name>` with the Heroku Review App name.
 
 #### Run the benchmark
 
@@ -100,9 +100,9 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
-> note: replace `<review-app-name>` with the Heroku Review App name.\
+> Note: Replace `<review-app-name>` with the Heroku Review App name.\
 >
-> note: replace `<dyno-size>` with with the desired dyno size.\
+> Note: Replace `<dyno-size>` with with the desired dyno size.\
 > available dyno sizes can be [found here][dynos].
 
 ## Overview
@@ -143,9 +143,9 @@ for a total of at least `120 seconds`.
 - `MAX_ITEMS`: maximum number of created List Items, per paper
 - `MAX_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
 
-> note: these constants are user-configurable when the benchmark starts up.
+> Note: These constants are user-configurable when the benchmark starts up.
 
-> note: these might be out of date.
+> Note: These might be out of date.
 
 ## Authors
 
