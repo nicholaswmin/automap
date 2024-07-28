@@ -77,7 +77,7 @@ when inactive > 1 day.
   the run commands, as seen below
 
 > note: review apps can take > 10 minutes to prepare when first created.\
-> note: The review app name is not the same as the pipeline name.
+> note: the review "app name" is not the same as the "pipeline name".
 
 ### Provision necessary add-ons
 
