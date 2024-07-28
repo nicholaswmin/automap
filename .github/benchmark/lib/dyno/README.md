@@ -145,7 +145,7 @@ const dyno = new Dyno({
 await dyno.start()
 ```
 
-> **Note:** Measures must also be declared in `fields` configuration in the
+> **note:** Measures must also be declared in `fields` configuration in the
 > primary file
 
 ### Example output
@@ -180,7 +180,7 @@ Task measurements:
 
  Task measurement timeline (ms)
 
- Legend: - task  - fibonacci   - sleep
+ Legend: - task  - fibonacci  - sleep
 
   12.00 ┼╮
   11.27 ┤│
