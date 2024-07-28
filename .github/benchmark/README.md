@@ -125,11 +125,7 @@ You can find it [here][test-data]
 ### Setup
 
 The benchmark is run using the [`dyno` module][dyno-module], which runs
-specified *tasks* on separate threads.
-
-A `TASK_SECOND` parameter is set which sets how many *tasks per second*
-will be scheduled for processing. A thread will then pick up a task and
-run it.
+specified *tasks* on separate threads at a specified *task rate*.
 
 The test should be considered a failure when a backlog of tasks is created,
 since this means that the current code can't keep up with that particular
