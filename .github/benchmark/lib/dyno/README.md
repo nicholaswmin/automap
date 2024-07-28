@@ -119,8 +119,9 @@ const dyno = new Dyno({
   // `[<metric-name>, <human-readable-name>, <transformer-function>]`
   //
   fields: {
-    // General test statistics:
+    // General fields:
 
+    // General test statistics:
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
@@ -128,7 +129,8 @@ const dyno = new Dyno({
       ['uptime.count', 'uptime seconds']
     ],
 
-    // per-task fields
+    // Per-task fields
+
     threads: {
       // General task statistics:
       stats: {
