@@ -115,9 +115,10 @@ const dyno = new Dyno({
     },
   }),
 
-  // What to include in the report print-out, in this format:
-  // `[<metric-name>, <human-readable-name>, <transformer-function>]`
+
+  // Declare what should be included in the output, in this format:
   //
+  // `[<metric-name>, <human-readable-name>, <transformer-function>]`
   fields: {
     // General fields:
 
