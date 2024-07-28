@@ -25,7 +25,7 @@ npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchm
 
 ### on Heroku
 
-### Install prerequisites
+#### Install prerequisites
 
 Requires the [Heroku CLI][heroku-cli]
 
@@ -44,7 +44,7 @@ brew tap heroku/brew && brew install heroku
 brew install heroku/brew/heroku
 ```
 
-### Fake server
+#### Fake server
 
 Heroku only allows webservers on it's platform. To run a benchmark on Heroku
 we need to "trick" it into thinking this is actually a web server.
@@ -94,7 +94,7 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 
 > note: replace `<app-name>` with the Heroku Review App name.
 
-### Run the benchmark
+#### Run the benchmark
 
 ```bash
 heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app <review-app-name>
