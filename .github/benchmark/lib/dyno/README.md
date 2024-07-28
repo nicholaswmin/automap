@@ -18,7 +18,7 @@ To run a benchmark you need 2 separate files:
 
 `primary.js`
 
-> includes test configuration and runs the benchmarked task via the task file
+> Includes test configuration and runs the benchmarked task via the task file
 
 `task.js`
 
