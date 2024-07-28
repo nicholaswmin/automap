@@ -170,7 +170,7 @@ run unit tests:
 npm test
 ```
 
-> note: these are slowwww tests
+> note: these are very slow tests
 
 ## Authors
 
