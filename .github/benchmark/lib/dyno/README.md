@@ -2,7 +2,7 @@
 
 # :wrench: dyno
 
-A multithreaded benchmarker
+runs code/tasks on separate threads and logs runtime measurements
 
 ## Usage
 
@@ -18,11 +18,11 @@ To run a benchmark you need 2 separate files:
 
 `primary.js`
 
-> Includes test configuration and runs the benchmarked task via the task file
+> Includes test configuration and runs the task file
 
 `task.js`
 
-> The task file. Includes the code under test.
+> Includes the actual code under test
 
 then run:
 
