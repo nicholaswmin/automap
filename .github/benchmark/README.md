@@ -52,7 +52,7 @@ we need to "trick" it into thinking this is actually a web server.
 To do so we provide a [fake webserver][fake-server] to the `npm start`
 script of the root of the project.
 
-### Use a Pipeline Review app
+#### Use a Pipeline Review app
 
 Don't run this benchmark on a regular Heroku App app.\
 There is a big risk of forgetting expensive provisioned add-ons (i.e Redis)
@@ -82,7 +82,7 @@ when inactive > 1 day.
 > A review app name is usually the name of the branch + some random characters,
 > i.e `"mybranch-abc123efg456"`.
 
-### Provision necessary add-ons
+#### Provision necessary add-ons
 
 [Heroku Redis][heroku-redis]:
 
