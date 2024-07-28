@@ -9,7 +9,7 @@ runs code/tasks on separate threads and logs runtime measurements
 ### Install
 
 ```bash
-npm i @nicholaswmin/dyno
+npm i https://github.com/nicholaswmin/automap.git
 ```
 
 ### Setup
