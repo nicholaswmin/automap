@@ -134,7 +134,7 @@ task rate.
 A succesful test should be able to keep a maximum `task backlog <= 1`
 for a total of at least `120 seconds`.
 
-### Factors
+### Constants
 
 - `TASKS_SECOND`: task rate, per second.
 - `DURATION_SECONDS`: max test duration.
