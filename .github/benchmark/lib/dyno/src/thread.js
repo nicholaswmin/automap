@@ -23,7 +23,7 @@ const thread = async (
   const runner = new TaskRunner()
   const stats = {
     general: new ThreadStatsTracker(['task', 'memory', 'backlog']),
-    functions: new ThreadObservedStatsTracker(['function'])
+    measures: new ThreadObservedStatsTracker(['function', 'measure'])
   }
 
   runner.on('task:run', async runner => {
@@ -31,7 +31,7 @@ const thread = async (
     stats.general.memory.record(process.memoryUsage().heapUsed)
     stats.general.backlog.record(runner.backlog.length || 1)
     stats.general.publish()
-    stats.functions.publish()
+    stats.measures.publish()
   })
 
   const onPrimaryMessage = message => {

@@ -76,9 +76,13 @@ const dyno = new Dyno({
         labels: {
           // also include its average duration in the plot
           plotted: [ ['task'], ['fibonacci'] ],
-          // log the average task duration and the function
-          // `min`/`max`/`mean` durations,
-          // rounded to nearest integer
+          // Include/log in the report:
+          //
+          // - the overall task duration
+          // - the `fibonacci` `min`/`max`/`mean` durations
+          // - the `performance.measure('sleep')` measure
+          //
+          // all rounded to nearest integer
           logged: [
             ['task.mean'],
             ['fibonacci.min', 'minimum (in ms)', Math.round],
@@ -96,8 +100,12 @@ await dyno.start()
 ```
 
 The task file, where code that needs to be benchmarked runs.
+This file runs in its own process `times x THREAD_COUNT`.
 
-This file runs in its own process `times x THREAD_COUNT`
+Measures can be taken using these [PerformanceMeasurement APIs][perf-api]:
+
+- [`performance.timerify`][timerify]
+- [`performance.measure`][measure]
 
 ```js
 // task.js
@@ -105,19 +113,28 @@ This file runs in its own process `times x THREAD_COUNT`
 import { thread } from '@nicholaswmin/dyno'
 
 thread(parameters => {
-  // - parameters configured in primary are available here
+  // 'parameters' configured in the primary are available here
 
   // function under test
   const fibonacci = n => n < 1 ? 0 : n <= 2
     ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
 
-  // can be timerified using native `performance.timerify`
+  // can be timerified using `performance.timerify`
   const timed_fibonacci = timerify(fibonacci)
 
   timed_fibonacci()
   timed_fibonacci()
+
+  // Measure something using `performance.measure`
+  performance.mark('t1')
+  await new Promise(resolve => setTimeout(resolve, 100))
+  performance.mark('t2')
+  performance.measure('sleep', 't1', 't2')
 })
 ```
+
+> **Note:** Measures must also be declared in `fields` configuration in the
+> primary file
 
 ### Example output
 
@@ -194,6 +211,12 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml
+
+<!--- General Refs -->
+
+[perf-api]: https://nodejs.org/api/perf_hooks.html#performance-measurement-apis
+[timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
+[measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
 
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
