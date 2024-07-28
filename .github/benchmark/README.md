@@ -61,15 +61,15 @@ running and thus incurring charges.
 Instead, create a [Review App][review-app] which autodestroys itself
 when inactive > 1 day.
 
-- Go to [Heroku Dashboard][heroku-dash]
-- Create a [Pipeline][pipeline] first, name it i.e: `benchmark`
 - Checkout this repo to a branch, i.e `benchmark`, push all changes
   and create a Pull Request
   - review apps function best as ephemeral apps of a PR
-- Connect the pipeline to this repo
-- Create a Review App spceifying this repo and branch `benchmark`
-- Configure the Review App to `autodestroy=1day` when stale
-- Provision necessary add:ons (Redis) on the Review App
+- Go to [Heroku Dashboard][heroku-dash]
+- Create a [Pipeline][pipeline] first, name it i.e: `benchmark`
+  - Connect the pipeline to this repo
+- Create a Review App on the pipeline, for this repo and branch `benchmark`
+  - Configure the Review App to `autodestroy=1day` when stale
+  - Provision necessary add:ons (Redis) on the Review App
   - Choose at least `Standard 1x` as the size of the "webservice" dyno;
     the actual dyno is chosen when we run the benchmark but bigger dynos
     require at least a `Standard-1x` on the Review App itself.
