@@ -26,12 +26,14 @@ node primary.js
 
 An example setup, benchmarking a [`Fibonacci function`][fib] on 8 threads
 
-#### Taskfile
+#### Task file
 
-The task file declares where "task" that needs to be benchmarked.
+The task file declares the "task" that needs to be benchmarked.
+
 This file runs in its own process `times x THREAD_COUNT`.
 
-Measures can be taken using these [PerformanceMeasurement APIs][perf-api]:
+Within the task file, measures can be taken using
+these [PerformanceMeasurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
@@ -63,6 +65,8 @@ thread(parameters => {
 ```
 
 #### Configuration file
+
+Configure the test parameters and what needs to be logged in the report
 
 ```js
 // primary.js
