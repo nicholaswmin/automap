@@ -65,7 +65,9 @@ const dyno = new Dyno({
       stats: {
         sortby: 'foo.min',
         labels: {
+          plotted: [ ['task'], ['fibonacci'] ],
           logged: [
+            ['task.mean'],
             ['fibonacci.min', 'minimum (in ms)', Math.round],
             ['fibonacci.max', 'maximum (in ms)', Math.round],
             ['fibonacci.mean', 'average (in ms)', Math.round],
@@ -132,7 +134,7 @@ thread(parameters => {
 
  Task timings (mean/ms)
 
- Legend: task, latency, fetch, save
+ Legend: task, min, max, average
 
   12.00 ┼╮
   11.27 ┤│
