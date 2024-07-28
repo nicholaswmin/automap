@@ -131,6 +131,9 @@ The test should be considered a failure when a *task backlog* is created,
 since this means that the current code can't keep up with that particular
 task rate.
 
+A succesful test should be able to keep a maximum `task backlog of 1`
+for a total  of at least `120 seconds`.
+
 ### Factors
 
 - `TASKS_SECOND`: task rate, per second.
