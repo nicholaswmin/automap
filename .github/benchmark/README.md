@@ -78,7 +78,7 @@ when inactive > 1 day.
 
 > note: review apps can take > 10 minutes to prepare when first created.\
 >
-> note: the review "app name" is not the same as the "pipeline name".\
+> note: the "review app name" is *not* the same as the "pipeline name".\
 > A review app name is usually the name of the branch + some random characters,
 > i.e `"my-branch-y45ngb8xyeadcqcxhc"`.
 
