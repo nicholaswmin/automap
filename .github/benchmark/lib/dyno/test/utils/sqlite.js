@@ -1,3 +1,7 @@
+// test utility
+// - the tests can access the task file itself directly, so the tasks create
+//   some output in a SQLITE3 database which we then pickup in the tests
+//   and assert against.
 import { unlinkSync } from 'node:fs'
 import { DatabaseSync } from 'node:sqlite'
 
