@@ -76,9 +76,8 @@ when inactive > 1 day.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
   the run commands, as seen below
 
-> note: review apps can take > 10 minutes to prepare when first created
->
-> note: The review app name is not the same as the pipeline name
+> note: review apps can take > 10 minutes to prepare when first created.\
+> note: The review app name is not the same as the pipeline name.\
 
 ### Provision necessary add-ons
 
