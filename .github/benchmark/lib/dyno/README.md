@@ -112,7 +112,7 @@ const dyno = new Dyno({
       value: 20,
       type: Number,
       configurable: true
-    },
+    }
   }),
 
 
