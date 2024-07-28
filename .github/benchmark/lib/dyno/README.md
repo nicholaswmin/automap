@@ -6,6 +6,14 @@ A multithreaded benchmarker
 
 ## Usage
 
+### Install
+
+```bash
+npm i @nicholaswmin/dyno
+```
+
+### Benchmarking
+
 To run a benchmark you need 2 separate files:
 
 `primary.js`
