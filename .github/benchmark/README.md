@@ -127,7 +127,7 @@ You can find it [here][test-data]
 The benchmark is run using the [`dyno` module][dyno-module], which runs
 specified *tasks* on separate threads at a specified *task rate*.
 
-The test should be considered a failure when a backlog of tasks is created,
+The test should be considered a failure when a *task backlog* is created,
 since this means that the current code can't keep up with that particular
 task rate.
 
