@@ -25,17 +25,36 @@ npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchm
 
 ## Benchmarking on Heroku
 
+### Install prerequisites
+
+Requires the Heroku CLI
+
+MacOS
+
+```bash
+# Install latest Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Add Homebrew to PATH
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/nicholaswmin/.bash_profile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Install Heroku CLI
+brew tap heroku/brew && brew install heroku
+brew install heroku/brew/heroku
+```
+
 ### Fake server
 
 Heroku only allows webservers on it's platform. To run a benchmark on Heroku
 we need to "trick" it into thinking this is actually a web server.
 
-So, to allow benchmarking, we provide a [fake webserver][fake-server]
-to the `npm start` script of the root of the project.
+To do so we provide a [fake webserver][fake-server] to the `npm start`
+script of the root of the project.
 
 ### Use a Pipeline Review app
 
-Don't run this benchmark on a regular Heroku App app.
+Don't run this benchmark on a regular Heroku App app.\
 There is a big risk of forgetting expensive provisioned add-ons (i.e Redis)
 running and thus incurring charges.
 
@@ -55,16 +74,18 @@ when inactive > 1 day.
     the actual dyno is chosen when we run the benchmark but bigger dynos
     require at least a `Standard-1x` on the Review App itself.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
-  the run commands, as seen below:
+  the run commands, as seen below
 
-> review apps can take > 10 minutes to prepare when first created
+> note: review apps can take > 10 minutes to prepare when first created
+>
+> note: The review app name is not the same as the pipeline name
 
 ### Provision necessary add-ons
 
 [Heroku Redis][heroku-redis]:
 
 ```bash
-heroku addons:create heroku-redis:premium-5 --app benchmark
+heroku addons:create heroku-redis:premium-5 --app repro-repro-y45ngb8xyeadcqcxhc
 ```
 
 > provisions a [Heroku Redis, Premium 5][redis-plans] instance

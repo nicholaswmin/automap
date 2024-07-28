@@ -2,6 +2,9 @@ import input from '@inquirer/input'
 
 export default async parameters => {
   for (const key of Object.keys(parameters)) {
+    if (typeof parameters[key] === 'undefined')
+      continue
+
     if (parameters[key].configurable) {
       const answer = await input({
         message: `Enter ${key}:`,
