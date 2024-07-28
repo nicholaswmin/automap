@@ -5,11 +5,10 @@
   "author": "@nicholaswmin",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm --prefix bench install --omit=dev",
+    "postinstall": "npm --prefix lib/dyno install --omit=dev",
     "start": "node primary.js"
   },
   "dependencies": {
-    "ioredis": "^5.4.1",
-    "throttleit": "^2.1.0"
+    "ioredis": "^5.4.1"
   }
 }
