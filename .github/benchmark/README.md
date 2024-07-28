@@ -92,11 +92,6 @@ heroku addons:create heroku-redis:premium-5 --app repro-repro-y45ngb8xyeadcqcxhc
 
 ### Run the benchmark
 
-- Push everything to the `benchmark` branch
-- Make sure all provisioned add-ons are ready
-
-and then:
-
 ```bash
 heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
 ```
