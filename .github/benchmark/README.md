@@ -124,21 +124,21 @@ You can find it [here][test-data]
 
 ### Setup
 
-Tasks are run on separate threads, created as [`fork()`][fork]-ed processes via
-the [`child_process`][child_process] module.
+The benchmark is run using the [`dyno` module][dyno-module], which runs
+specified *tasks* on separate threads.
 
-- The `primary` sends a message to a `worker`
-- A worker then runs the `task` *once* and captures timing information.
+A `TASK_SECOND` parameter is set which sets how many *tasks per second*
+will be scheduled for processing. A thread will then pick up a task and
+run it.
 
-The primary sends messages at a predefined rate.
-This rate is *global* and independent of the number of workers.
-
-Workers are chosen using [*round-robin* scheduling][round-robin]
+The test should be considered a failure when a backlog of tasks is created,
+since this means that the current code can't keep up with that particular
+task rate.
 
 ### Factors
 
-- `TASKS_SECOND`: message rate of the primary
-- `DURATION_SECONDS`: max test duration. If still running, `test=success`
+- `TASKS_SECOND`: task rate, per second.
+- `DURATION_SECONDS`: max test duration.
 - `THREAD_COUNT`: number of concurrent threads processing tasks
 - `PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
 - `MAX_ITEMS`: maximum number of created List Items, per paper
@@ -172,3 +172,4 @@ MIT-0 License
 [redis-plans]: https://elements.heroku.com/addons/heroku-redis#pricing
 [review-app]: https://devcenter.heroku.com/articles/github-integration-review-apps
 [pipeline]: https://devcenter.heroku.com/articles/pipelines
+[dyno-module]: lib/dyno
