@@ -86,12 +86,13 @@ when inactive > 1 day.
 
 [Heroku Redis][heroku-redis]:
 
+This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
+
 ```bash
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> replace `<app-name>` with the Heroku Review App name.\
-> provisions a [Heroku Redis, Premium 5][redis-plans] instance
+> note: replace `<app-name>` with the Heroku Review App name.\
 
 ### Run the benchmark
 
@@ -99,8 +100,9 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
-> replace `<review-app-name>` with the Heroku Review App name.\
-> replace `<dyno-size>` with with the desired dyno size.\
+> note: replace `<review-app-name>` with the Heroku Review App name.\
+>
+> note: replace `<dyno-size>` with with the desired dyno size.\
 > available dyno sizes can be [found here][dynos].
 
 ## Overview
