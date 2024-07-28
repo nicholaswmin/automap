@@ -36,9 +36,10 @@ Benchmarking a [`Fibonacci function`][fib] on 8 threads
 
 #### Task file
 
-The task file declares the "task" that needs to be benchmarked.
+The task file declares the *task* that needs to be benchmarked.
 
-This file runs in its own process `times x THREAD_COUNT`.
+Code declared here runs in its own isolated [V8][v8]
+process `times x THREAD_COUNT`
 
 Within the task file, measures can be taken using
 these [PerformanceMeasurement APIs][perf-api]:
@@ -243,6 +244,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
 [measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
+[v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
 
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
