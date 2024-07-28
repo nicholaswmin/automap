@@ -74,10 +74,13 @@ when inactive > 1 day.
     the actual dyno is chosen when we run the benchmark but bigger dynos
     require at least a `Standard-1x` on the Review App itself.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
-  the run commands, as seen below
+  the run commands.
 
 > note: review apps can take > 10 minutes to prepare when first created.\
+>
 > note: the review "app name" is not the same as the "pipeline name".
+> A review app name is usually the name of the branch + some random characters,
+> i.e `"my-branch-y45ngb8xyeadcqcxhc"`.
 
 ### Provision necessary add-ons
 
@@ -95,7 +98,7 @@ heroku addons:create heroku-redis:premium-5 --app repro-repro-y45ngb8xyeadcqcxhc
 heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app benchmark
 ```
 
-> Replace `<app-name>` with the Heroku Review App `name`.\
+> Replace `<app-name>` with the Heroku Review App name.\
 > Replace `--size=<size>` with with the desired dyno size.\
 > Heroku dyno sizes for the `--size=<size>` parameter can be [found here][dynos].
 
