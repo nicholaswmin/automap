@@ -44,14 +44,15 @@ class Foreman extends EventEmitter {
       return child_process.fork(path, {
         env: {
           ...process.env,
-          BY_PRIMARY: true, parameters
+          BY_PRIMARY: true,
+          parameters
         }
       })
-        .once('spawn', function() { resolve(this) })
-        .once('error', function(err) { reject(err) })
-        .once('exit', function(code, signal) {
-          self.emit('exit', ({ pid: this.pid, code, signal }))
-        })
+      .once('spawn', function() { resolve(this) })
+      .once('error', function(err) { reject(err) })
+      .once('exit', function(code, signal) {
+        self.emit('exit', ({ pid: this.pid, code, signal }))
+      })
     })
   }
 }
