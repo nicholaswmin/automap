@@ -81,7 +81,7 @@ const dyno = new Dyno({
           // - the `performance.measure('sleep')` max duration
           // ... all rounded to the nearest integer
           logged: [
-            ['task.mean'],
+            ['task.mean', 'task (mean/ms)', Math.round],
             ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
             ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
             ['fibonacci.mean', 'fib() average (in ms)', Math.round],
