@@ -30,11 +30,6 @@ thread(async parameters => {
   await save(building)
 
   await ping()
-
-  performance.mark('t1')
-  await new Promise(resolve => setTimeout(resolve, 100))
-  performance.mark('t2')
-  performance.measure('sleep', 't1', 't2')
 }, {
   after: () => redis.disconnect()
 })
