@@ -55,10 +55,12 @@ const dyno = new Dyno({
   // What to include in the report print-out, in this format:
   // [<metric-name>, <human-readable-name>, <transformer-function>]
   //
-  // const fibonacci = n => { ... }
-  // performance.timerify(fibonacci)
+  // Example with performance.timerify:
   //
-  // you need to declare it here in this format:
+  // `const fibonacci = n => { ... }`
+  // `performance.timerify(fibonacci)`
+  //
+  // ... you need to declare it here in this format:
   //
   fields: {
     threads: {
