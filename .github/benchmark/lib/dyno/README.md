@@ -260,7 +260,7 @@ npm test
 ```
 
 > note: tests use the experimental native [`sqlite`][sqlite] module therefore
-> they require `node version >= v22.5.1`
+> they require node version `>= v22.5.1`
 
 > note: these are slow tests
 
