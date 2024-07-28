@@ -104,8 +104,6 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 
 ### Factors
 
-> These might be out of date
-
 - `TASKS_SECOND`: message rate of the primary
 - `DURATION_SECONDS`: max test duration. If still running, `test=success`
 - `THREAD_COUNT`: number of concurrent threads processing tasks
@@ -113,7 +111,9 @@ Workers are chosen using [*round-robin* scheduling][round-robin]
 - `MAX_ITEMS`: maximum number of created List Items, per paper
 - `MAX_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
 
-these constants are user-configurable when the benchmark starts up.
+> note: these constants are user-configurable when the benchmark starts up.
+
+> note these might be out of date.
 
 ## Authors
 
