@@ -18,11 +18,11 @@ To run a benchmark you need 2 separate files:
 
 `primary.js`
 
-> includes test configuration
+> includes test configuration and runs the benchmarked task via the task file
 
 `task.js`
 
-> includes the code under test
+> The task file. Includes the code under test.
 
 then run:
 
@@ -89,7 +89,8 @@ Configure the test parameters and what needs to be logged in the report
 import { Dyno, configure } from '@nicholaswmin/dyno'
 
 const dyno = new Dyno({
-  // path of the task file
+  // path of the task file.
+  // Required.
   task: './task.js',
   parameters: await configure({
     // Required:
@@ -102,12 +103,13 @@ const dyno = new Dyno({
     DURATION_SECONDS: 5,
 
     // Optional:
-    // note: you can access these parameters in your task file
+    // Note: you can access these parameters in your task file
 
     FOO: 50,
     BAR: 25,
     BAZ: {
-      // Optional: Declare a parameter as "user-configurable" on startup.
+      // Optional:
+      // Declare a parameter as user-configurable on startup.
       // You'll be prompted to tweak it when the test starts:
       value: 20,
       type: Number,
