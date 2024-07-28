@@ -138,7 +138,6 @@ const dyno = new Dyno({
         labels: {
           logged: [
             // Log:
-            //
             // - the tasks run by all threads
             // - memory usage average
             // - number of tasks sent but still unprocessed
@@ -157,13 +156,11 @@ const dyno = new Dyno({
         labels: {
           // also include its average duration in the plot
           plotted: [ ['task'], ['fibonacci'] ],
-          // Include/log in the report:
-          //
+          // Log:
           // - the overall task duration
           // - the `fibonacci` `min`/`max`/`mean` durations
           // - the `performance.measure('sleep')` max duration
-          //
-          // all rounded to nearest integer
+          // .. all rounded to nearest integer
           logged: [
             ['task.mean'],
             ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
