@@ -22,9 +22,9 @@ then run:
 node primary.js
 ```
 
-### Configuration
+### Example
 
-An example setup, benchmarking a [`Fibonacci function`][fib] on 8 threads
+Benchmarking a [`Fibonacci function`][fib] on 8 threads
 
 #### Task file
 
