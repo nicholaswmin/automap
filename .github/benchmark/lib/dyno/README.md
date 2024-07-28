@@ -10,7 +10,7 @@ To run a benchmark you need 2 separate files:
 
 `primary.js`
 
-> includes configuration for for the test
+> includes test configuration
 
 `task.js`
 
@@ -30,7 +30,7 @@ const dyno = new Dyno({
   task: './task.js',
   // Test parameters
   parameters: await configure({
-    // required parameters:
+    // required:
 
     // tasks per second across all threads
     TASKS_SECOND: 100,
@@ -39,7 +39,7 @@ const dyno = new Dyno({
     // total test duration
     DURATION_SECONDS: 5,
 
-    // optional paramters:
+    // optional:
 
     FOO_PAMETER: {
       // if value of parameter is in the following format,
@@ -66,8 +66,9 @@ const dyno = new Dyno({
         sortby: 'foo.min',
         labels: {
           logged: [
-            ['fibonacci.min', 'fibonacci minimum: (in ms)', Math.round],
-            ['fibonacci.max', 'fibonacci maximum: (in ms)', Math.round],
+            ['fibonacci.min', 'minimum (in ms)', Math.round],
+            ['fibonacci.max', 'maximum (in ms)', Math.round],
+            ['fibonacci.mean', 'average (in ms)', Math.round],
           ]
         }
       }
@@ -98,8 +99,8 @@ thread(parameters => {
   // can be timerified using native `performance.timerify`
   const timed_fibonacci = timerify(fibonacci)
 
-  timed_fibonacci(10)  // recorded a run
-  timed_fibonacci(10)  // recorded another run
+  timed_fibonacci()  // recorded a run
+  timed_fibonacci()  // recorded another run
 })
 ```
 
@@ -119,7 +120,7 @@ thread(parameters => {
 │ 2       │ '36335' │ 54        │ 10.71            │ 1           │
 └─────────┴─────────┴───────────┴──────────────────┴─────────────┘
 ┌─────────┬─────────┬────────────────┬───────────────────┬─────────────────┬────────────────┐
-│ (index) │ thread  │ task (mean/ms) │ latency (mean/ms) │ fetch (mean/ms) │ save (mean/ms) │
+│ (index) │ thread  │ task (mean/ms) │ minimum (in ms)   │ maximum (in ms) │ average(in ms) │
 ├─────────┼─────────┼────────────────┼───────────────────┼─────────────────┼────────────────┤
 │ 0       │ '36333' │ 3.44           │ 1.11              │ 1.54            │ 1.63           │
 │ 1       │ '36335' │ 3.44           │ 1                 │ 1.72            │ 1.81           │
