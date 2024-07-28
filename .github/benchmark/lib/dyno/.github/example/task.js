@@ -14,7 +14,6 @@ task(async parameters => {
 
   timed_fibonacci(parameters.FOO)
   timed_fibonacci(parameters.BAR)
-  timed_fibonacci(parameters.BAZ)
 
   // Measure something using `performance.measure`
   performance.mark('start')
