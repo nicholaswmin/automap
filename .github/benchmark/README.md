@@ -23,42 +23,56 @@ npm i
 npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start
 ```
 
-
 ## Benchmarking on Heroku
 
 ### Fake server
 
-Heroku only allows webservers on it's platform.
+Heroku only allows webservers on it's platform. To run a benchmark on Heroku
+we need to "trick" it into thinking this is actually a web server.
 
-To allow benchmarking, we provide a [fake webserver][fake-server]
+So, to allow benchmarking, we provide a [fake webserver][fake-server]
 to the `npm start` script of the root of the project.
 
 ### Use a Pipeline Review app
 
 Don't run this benchmark on a regular Heroku App app.
+There is a big risk of forgetting expensive provisioned add-ons (i.e Redis)
+running and thus incurring charges.
 
-There is a big risk of leaving expensive add-ons running.
+Instead, create a [Review App][review-app] which autodestroys itself
+when inactive > 1 day.
 
-Instead create a [Review App][review-app] which autodestroys itself
-on inactivity.
-
-- Create a [Pipeline][pipeline] first, name it `benchmark`
-- Checkout this repo to a branch, i.e `benchmark` and create a Pull Request
+- Go to [Heroku Dashboard][heroku-dash]
+- Create a [Pipeline][pipeline] first, name it i.e: `benchmark`
+- Checkout this repo to a branch, i.e `benchmark`, push all changes
+  and create a Pull Request
   - review apps function best as ephemeral apps of a PR
 - Connect the pipeline to this repo
 - Create a Review App spceifying this repo and branch `benchmark`
-- Mark the Review App to `autodestroy=1day` when stale
+- Configure the Review App to `autodestroy=1day` when stale
 - Provision necessary add:ons (Redis) on the Review App
-  - Choose `Standard 1x` for dynos; the actual  dyno is chosen when we
-    run the benchmark but bigger dynos require at least a `Standard-1x`
-    on the Review App itself.
+  - Choose at least `Standard 1x` as the size of the "webservice" dyno;
+    the actual dyno is chosen when we run the benchmark but bigger dynos
+    require at least a `Standard-1x` on the Review App itself.
 - Use the Review App as `--app` intead of a standard Heroku app when issuing
   the run commands, as seen below:
 
+> review apps can take > 10 minutes to prepare when first created
+
+### Provision necessary add-ons
+
+[Heroku Redis][heroku-redis]:
+
+```bash
+heroku addons:create heroku-redis:premium-5 --app benchmark
+```
+
+> provisions a [Heroku Redis, Premium 5][redis-plans] instance
+
 ### Heroku run
 
-- Push everything in the `benchmark` branch
-- Make sure all add:ons are ready
+- Push everything to the `benchmark` branch
+- Make sure all provisioned addons are ready
 
 and then:
 
@@ -133,5 +147,8 @@ MIT-0 License
 [fake-server]: bench/fake-server.js
 [test-data]: /test/util/model/index.js
 [results]: results/
+[heroku-dash]: https://dashboard.heroku.com/apps
+[heroku-redis]: https://devcenter.heroku.com/articles/heroku-redis
+[redis-plans]: https://elements.heroku.com/addons/heroku-redis#pricing
 [review-app]: https://devcenter.heroku.com/articles/github-integration-review-apps
 [pipeline]: https://devcenter.heroku.com/articles/pipelines
