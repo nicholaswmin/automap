@@ -8,7 +8,4 @@ import { task } from '../../../index.js'
 task(async () => {
   const delay = Math.round(Math.random() * 100)
   await new Promise(resolve => setTimeout(resolve, delay))
-}, {
-  before: () => {},
-  after: () => { }
 })

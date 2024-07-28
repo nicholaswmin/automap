@@ -13,7 +13,4 @@ task(async () => {
 
   await timerified()
   await timerified()
-}, {
-  before: () => {},
-  after: () => { }
 })

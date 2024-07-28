@@ -6,7 +6,4 @@ import { insertDBRow } from '../../utils/sqlite.js'
 
 task(async parameters => {
   insertDBRow(process.pid, parameters.RANDOM_ID, Math.random())
-}, {
-  before: () => {},
-  after: () => { }
 })
