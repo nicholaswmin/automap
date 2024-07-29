@@ -127,7 +127,7 @@ heroku addons:destroy REDIS <review-app-name> --confirm <review-app-name>
 > Note: This only destroys the Heroku Redis add-on.\
 > This command must be run for *every* provisioned add-on.
 
-List Review App add-ons to verify that all addons are destroyed:
+List add-ons to verify none remains:
 
 ```bash
 heroku addons --app <review-app-name>
