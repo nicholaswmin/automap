@@ -1,4 +1,4 @@
-import asciichart from 'asciichart'
+import asciichart from './asciichart.js'
 
 const padRight = text => text ? ` ${text}` : ''
 const linebreak = (count = 1) => '\n'.repeat(count)
