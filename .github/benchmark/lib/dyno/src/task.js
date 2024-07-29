@@ -27,6 +27,8 @@ const task = async (
   }
 
   runner.on('task:run', async runner => {
+    // @NOTE: Custom measures need to be declared in `fields`
+    // to appear in output
     stats.general.task.record(runner.measure.duration)
     stats.general.memory.record(process.memoryUsage().heapUsed)
     stats.general.backlog.record(runner.backlog.length || 1)
