@@ -93,20 +93,20 @@ heroku ps:type standard-1x --app <review-app-name>
 
 #### Provision necessary add-ons
 
-[Heroku Redis][heroku-redis]:
-
 This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 
 ```bash
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
+> Note: Remember to deprovision all provisioned add-ons.
+
 > Note: Replace `<app-name>` with the Heroku Review App name.
 
 #### Run the benchmark
 
 ```bash
-heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev  && npm --prefix .github/benchmark start" --app <review-app-name>
+heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
 > Note: Replace `<review-app-name>` with the Heroku Review App name.\
