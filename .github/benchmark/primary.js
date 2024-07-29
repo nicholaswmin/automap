@@ -31,6 +31,11 @@ const dyno = new Dyno({
       type: Number,
       value: 60
     },
+    MAX_BACKLOG: {
+      configurable: true,
+      type: Number,
+      value: 10
+    },
     MAX_ITEMS: {
       configurable: false,
       type: Number,
@@ -58,6 +63,8 @@ const dyno = new Dyno({
           logged: [
             ['task.count', 'tasks run'],
             ['memory.mean', 'memory (mean/mb)', toMB],
+            ['gc.mean', 'GC duration (mean/ms)', round],
+            ['gc.count', 'GC cycles'],
             ['backlog.max', 'max backlog']
           ]
         }

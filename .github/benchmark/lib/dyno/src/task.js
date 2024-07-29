@@ -23,7 +23,7 @@ const task = async (
   const runner = new TaskRunner()
   const stats = {
     general: new ThreadStatsTracker(['task', 'memory', 'backlog']),
-    measures: new ThreadObservedStatsTracker(['function', 'measure'])
+    measures: new ThreadObservedStatsTracker(['function', 'measure', 'gc'])
   }
 
   runner.on('task:run', async runner => {

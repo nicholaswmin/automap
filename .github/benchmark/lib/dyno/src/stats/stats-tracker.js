@@ -51,11 +51,20 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
     super()
 
     this.observer = new PerformanceObserver(list => {
-      const json = list.getEntries().pop().toJSON()
-      const entry = { ...json, name: json.name.replace('bound ', '').trim() }
+      list.getEntries()
+        .map(entry => entry.toJSON())
+        .map(json => ({
+          ...json,
+          name: json.name.replace('bound ', '').trim()
+        }))
+        .forEach(entry => {
+          this[entry.name] = this[entry.name] || new Histogram(entry)
+          this[entry.name].record(entry.duration)
+        })
 
-      this[entry.name] = this[entry.name] || new Histogram(entry)
-      this[entry.name].record(entry.duration)
+      performance.clearMarks()
+      performance.clearMeasures()
+      performance.clearResourceTimings()
     })
 
     this.observer.observe({ entryTypes })
