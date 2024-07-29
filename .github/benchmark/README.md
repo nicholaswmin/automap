@@ -99,9 +99,9 @@ This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> Note: Remember to deprovision all provisioned add-ons.
-
 > Note: Replace `<app-name>` with the Heroku Review App name.
+>
+> Note: Remember to **deprovision** all provisioned add-ons.
 
 #### Run the benchmark
 
