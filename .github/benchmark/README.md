@@ -114,6 +114,35 @@ heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev
 > Note: Replace `<dyno-size>` with with the desired dyno size.\
 > available dyno sizes can be [found here][dynos].
 
+#### Deprovision add-ons/dynos
+
+Deprovision all add-ons and dynos when done to avoid charges.
+
+Remove add-ons:
+
+```bash
+heroku addons:destroy REDIS <review-app-name> --confirm <review-app-name>
+```
+
+> Note: This only destroys the Heroku Redis add-on.\
+> This command must be run for *every* provisioned add-on.
+
+List Review App add-ons to verify that all addons are destroyed:
+
+```bash
+heroku addons --app <review-app-name>
+```
+
+> must return an empty list or `"no addons for app..."`
+
+Switch to free dynos:
+
+```bash
+heroku ps:type eco --app <review-app-name>
+```
+
+> Note: Replace `<review-app-name>` with the Heroku Review App name.\
+
 ## Overview
 
 This benchmark is designed to measure the [throughput][throughput]
