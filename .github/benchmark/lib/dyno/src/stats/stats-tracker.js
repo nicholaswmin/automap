@@ -62,7 +62,6 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
           this[entry.name].record(entry.duration)
         })
 
-      performance.clearMarks()
       performance.clearMeasures()
       performance.clearResourceTimings()
     })
