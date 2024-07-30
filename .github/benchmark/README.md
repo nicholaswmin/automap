@@ -1,8 +1,10 @@
 # benchmark
 
 > benchmarks the [throughput][throughput] of this module
-
+>
 > Recorded results from previous runs can be [found here][results]
+> [!CAUTION]
+> This benchmark runs a [`FLUSHALL`][flushall] on its connected Redis instance.
 
 ## Install
 
@@ -12,14 +14,11 @@ npm i
 
 ## Run
 
-> [!CAUTION]
-> This benchmark runs a [`FLUSHALL`][flushall] on its connected Redis instance.
-
 ### Locally
 
 
 ```bash
-npm i && npm start
+npm start
 ```
 
 ### on Heroku
