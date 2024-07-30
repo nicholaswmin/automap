@@ -13,18 +13,16 @@
 npm i
 ```
 
-## Run
-
-### Locally
+## Run locally
 
 
 ```bash
 npm start
 ```
 
-### on Heroku
+## Run on Heroku
 
-#### Install prerequisites
+### Install prerequisites
 
 Requires the [Heroku CLI][heroku-cli]
 
@@ -43,7 +41,7 @@ brew tap heroku/brew && brew install heroku
 brew install heroku/brew/heroku
 ```
 
-#### Fake server
+### Fake server
 
 Heroku only allows webservers on it's platform. To run a benchmark on Heroku
 we need to "trick" it into thinking this is actually a web server.
@@ -51,7 +49,7 @@ we need to "trick" it into thinking this is actually a web server.
 To do so we provide a [fake webserver][fake-server] to the `npm start`
 script of the root of the project.
 
-#### Use a Pipeline Review app
+### Use a Pipeline Review app
 
 Don't run this benchmark on a regular Heroku App app.\
 There is a big risk of forgetting expensive provisioned add-ons (i.e Redis)
@@ -77,7 +75,7 @@ when inactive > 1 day.
 > A review app name would is usually: `branch-name + random characters`,\
 > i.e `"mybranch-abc123efg456"`.
 
-#### Set appropriate dyno type
+### Set appropriate dyno type
 
 Heroku requires at least a `Standard 1x` as the type of the "webservice" dyno.
 
@@ -90,7 +88,7 @@ heroku ps:type standard-1x --app <review-app-name>
 
 > Note: Replace `<app-name>` with the Heroku Review App name.
 
-#### Provision necessary add-ons
+### Provision necessary add-ons
 
 This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 
@@ -102,7 +100,7 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 >
 > Note: Remember to **deprovision** all provisioned add-ons.
 
-#### Run the benchmark
+### Run the benchmark
 
 ```bash
 heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start" --app <review-app-name>
@@ -113,7 +111,7 @@ heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev
 > Note: Replace `<dyno-size>` with with the desired dyno size.\
 > available dyno sizes can be [found here][dynos].
 
-#### Deprovision add-ons/dynos
+### Deprovision add-ons/dynos
 
 Deprovision all add-ons and dynos when done to avoid charges.
 
