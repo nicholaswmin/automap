@@ -17,10 +17,9 @@ npm i
 
 ### Locally
 
-> assuming you're in root and this resides in a folder: `.github/benchmmark`
 
 ```bash
-npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start
+npm i && npm start
 ```
 
 ### on Heroku
@@ -99,7 +98,7 @@ This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> Note: Replace `<app-name>` with the Heroku Review App name.
+> Note: Replace `<review-app-name>` with the Heroku Review App name.
 >
 > Note: Remember to **deprovision** all provisioned add-ons.
 
