@@ -15,6 +15,7 @@ npm i
 
 ## Run locally
 
+Spin up a Redis Server locally at: `localhost:6379`, then:
 
 ```bash
 npm start
