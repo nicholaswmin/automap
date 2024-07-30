@@ -41,12 +41,7 @@ const dyno = new Dyno({
       type: Number,
       value: 100
     },
-    PAYLOAD_KB: 5, // its valid, non-configurable
-    MAX_BACKLOG: {
-      configurable: true,
-      type: Number,
-      value: 10
-    }
+    PAYLOAD_KB: 5 // its valid, non-configurable
   }),
 
   fields: {
