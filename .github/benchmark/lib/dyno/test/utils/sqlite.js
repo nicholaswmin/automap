@@ -7,27 +7,30 @@ import { DatabaseSync } from 'node:sqlite'
 
 const path = './test/temp/db.sqlite'
 
-const insertDBRow = (pid, random_id, random_num = Math.random()) => {
+const insertDBRow = async (pid, content = '', alt = '') => {
+  // avoid concurrent inserts to avoid db locked issues
+  await new Promise(resolve => setTimeout(resolve, 0))
+  
   const database = new DatabaseSync(path)
-  const s = 'INSERT INTO threads (pid, random_id, random_num) VALUES (?, ?, ?)'
 
   try {
-      const insert = database.prepare(s)
-      insert.run(pid, random_id, random_num)
-    } catch (err) {
-      // ignore "DB locked" errors because of
-      // concurrent access
-      if (err.errcode !== 5)
-        throw new Error(err)
-    }
+    database
+      .prepare('INSERT INTO lines (pid, content, alt) VALUES (?, ?, ?)')
+      .run(pid, content, alt)
+  } catch (err) {
+    // ignore "DB locked" errors because of
+    // concurrent access
+    if (err.errcode !== 5)
+      throw new Error(err)
+  }
 }
 
-const selectDBRows = randomId => {
+const selectDBRows = content => {
   const database = new DatabaseSync(path)
-  const s = `SELECT * FROM threads WHERE random_id = "${randomId}"`
-  const query = database.prepare(s)
 
-  return query.all()
+  return database
+    .prepare(`SELECT * FROM lines WHERE content = "${content}"`)
+    .all()
 }
 
 const resetDB = () => {
@@ -36,10 +39,10 @@ const resetDB = () => {
   const database = new DatabaseSync(path)
 
   database.exec(`
-    CREATE TABLE IF NOT EXISTS threads (
+    CREATE TABLE IF NOT EXISTS lines (
      	pid INTEGER,
-     	random_id TEXT,
-     	random_num INTEGER
+     	content TEXT,
+     	alt TEXT
     );
   `)
 }

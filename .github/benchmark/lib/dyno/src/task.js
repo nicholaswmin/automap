@@ -20,11 +20,15 @@ const task = async (
     ].join('. '))
 
   const parameters = Object.freeze(JSON.parse(process.env.parameters))
+
   const runner = new TaskRunner()
+
   const stats = {
     general: new ThreadStatsTracker(['task', 'memory', 'backlog']),
     measures: new ThreadObservedStatsTracker(['function', 'measure', 'gc'])
   }
+
+  before ? await before(parameters) : null
 
   runner.on('task:run', async runner => {
     // @NOTE: Custom measures need to be declared in `fields`
@@ -68,8 +72,6 @@ const task = async (
   process.on('error', onError)
   ;['SIGINT', 'SIGTERM', 'disconnect']
     .forEach(signal => process.on(signal, () => shutdown(0)))
-
-  before ? await before(parameters) : null
 
   runner.start(taskFn.bind(this, parameters))
 

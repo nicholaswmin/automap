@@ -69,7 +69,7 @@ class Dyno {
 
     await this.testTimer.start()
     await this.stop(0)
-    await this.log.success('test timer elapsed: success')
+    this.log.success('test timer elapsed: success')
 
     return this.observer.getRows()
   }
@@ -126,11 +126,11 @@ class Dyno {
   }
 
   async #runBeforeHooks() {
-    await this.hooks.before()
+    await this.hooks.before(this.parameters)
   }
 
   async #runAfterHooks() {
-    await this.hooks.after()
+    await this.hooks.after(this.parameters)
   }
 }
 
