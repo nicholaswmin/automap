@@ -14,13 +14,16 @@ npm i https://github.com/nicholaswmin/automap.git
 
 ### Setup
 
-To run a benchmark you need 2 separate files:
+To run a benchmark you need to create 2 separate files:
 
-`primary.js`
+`run.js`
 
-> Includes test configuration and runs the task file
+> The *runner file*  
+> Includes test configuration and runs the task file 
 
 `task.js`
+
+> The *task file*
 
 > Includes the actual code under test
 
