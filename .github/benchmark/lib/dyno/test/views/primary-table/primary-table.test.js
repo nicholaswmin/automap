@@ -23,7 +23,6 @@ test('view: primary-table', async t => {
     })
 
     await t.test('stats is an array', t => {
-      console.log(table.stats)
       t.assert.ok(
         Array.isArray(table.stats), 
         `table.stats is: "${typeof table.stats}", which is not an array`

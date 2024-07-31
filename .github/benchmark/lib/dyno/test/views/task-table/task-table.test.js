@@ -39,7 +39,6 @@ test('view: task-table', async t => {
 
   await t.test('computes stats for each thread', async t => {
     await t.test('threads is an array', t => {
-      console.log(table.threads)
       t.assert.ok(
         Array.isArray(table.threads), 
         `table.threads is: "${typeof table.threads}", which is not an array`
