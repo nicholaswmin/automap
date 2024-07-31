@@ -264,6 +264,12 @@ run unit tests:
 npm test
 ```
 
+log test coverage:
+
+```bash
+npm run test:coverage
+```
+
 > note: tests use the experimental native [`sqlite`][sqlite] module therefore
 > they require node version `>= v22.5.1`
 

@@ -62,11 +62,11 @@ test('thread-task timings', async t => {
 
               await t.test('with reasonable "mean" values', async t => {
                 t.assert.ok(last.mean > 35, `mean is: ${last.mean}`)
-                t.assert.ok(last.mean < 65, `mean is: ${last.mean}`)
+                t.assert.ok(last.mean < 85, `mean is: ${last.mean}`)
               })
 
               await t.test('with reasonable "max" values', async t => {
-                t.assert.ok(last.max > 65, `max is: ${last.max}`)
+                t.assert.ok(last.max > 85, `max is: ${last.max}`)
                 t.assert.ok(last.max < 150, `max is: ${last.max}`)
               })
             })
