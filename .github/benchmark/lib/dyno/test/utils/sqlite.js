@@ -34,7 +34,14 @@ const selectDBRows = content => {
 }
 
 const resetDB = () => {
-  unlinkSync(path)
+  try {
+    unlinkSync(path)    
+  } catch (err) {
+    if (err.code === 'ENOENT')
+      return 
+    
+    throw err
+  }
 
   const database = new DatabaseSync(path)
 
