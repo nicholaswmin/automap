@@ -15,7 +15,14 @@ npm i
 
 ## Run locally
 
-Spin up a Redis Server locally at: `localhost:6379`, then:
+Spin up a local Redis server:
+
+```bash
+brew install redis
+redis-server
+```
+
+run benchmark:
 
 ```bash
 npm start
