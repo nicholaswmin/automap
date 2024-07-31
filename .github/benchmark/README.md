@@ -78,11 +78,15 @@ when inactive > 1 day.
   the run commands.
 
 > Note: Review Apps can take > 10 minutes to prepare when first created.
->
-> Note: A "review app name" is *not* the same as the "pipeline name".\
-> A review app name would is usually: `branch-name + random characters`,\
-> i.e `"mybranch-abc123efg456"`.
 
+> Note: A "review app name" is *not* the same as the "pipeline name". 
+>
+> A review app name would is usually: `branch-name + random characters`, 
+> i.e `"mybranch-abc123efg456"`.
+>
+> The following sections assume you replace `<review-app-name>` with the 
+> actual Review App name.
+ 
 ### Set appropriate dyno type
 
 Heroku requires at least a `Standard 1x` as the type of the "webservice" dyno.
@@ -94,8 +98,6 @@ require at least a `Standard-1x` on the Review App itself.
 heroku ps:type standard-1x --app <review-app-name>
 ```
 
-> Note: Replace `<app-name>` with the Heroku Review App name.
-
 ### Provision necessary add-ons
 
 This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
@@ -104,8 +106,6 @@ This provisions a [Heroku Redis, Premium 5][redis-plans] instance:
 heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ```
 
-> Note: Replace `<review-app-name>` with the Heroku Review App name.
->
 > Note: Remember to **deprovision** all provisioned add-ons.
 
 ### Run the benchmark
@@ -114,9 +114,7 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
-> Note: Replace `<review-app-name>` with the Heroku Review App name.\
->
-> Note: Replace `<dyno-size>` with with the desired dyno size.\
+> Note: Replace `<dyno-size>` with with the desired dyno size.  
 > available dyno sizes can be [found here][dynos].
 
 ### Deprovision add-ons/dynos
@@ -129,7 +127,7 @@ Remove add-ons:
 heroku addons:destroy REDIS <review-app-name> --confirm <review-app-name>
 ```
 
-> Note: This only destroys the Heroku Redis add-on.\
+> Note: This only destroys the Heroku Redis add-on.  
 > This command must be run for *every* provisioned add-on.
 
 List add-ons to verify none remains:
@@ -145,8 +143,6 @@ Switch to free dynos:
 ```bash
 heroku ps:type eco --app <review-app-name>
 ```
-
-> Note: Replace `<review-app-name>` with the Heroku Review App name.\
 
 ## Overview
 
