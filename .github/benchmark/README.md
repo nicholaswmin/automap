@@ -111,11 +111,14 @@ heroku addons:create heroku-redis:premium-5 --app <review-app-name>
 ### Run the benchmark
 
 ```bash
-heroku run --size=<dyno-size> "npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start" --app <review-app-name>
+heroku run --size=performance-l "npm --prefix .github/benchmark install --omit=dev && npm --prefix .github/benchmark start" --app <review-app-name>
 ```
 
-> Note: Replace `<dyno-size>` with with the desired dyno size.  
-> available dyno sizes can be [found here][dynos].
+> Note: Replace `performance-l` with with the desired dyno size, *if needed*.  
+>
+> `performance-l` is a "large-ish", fast dyno with a lot of memory.  
+>
+> Available dyno sizes can be [found here][dynos].
 
 ### Deprovision add-ons/dynos
 

@@ -30,7 +30,7 @@ To run a benchmark you need to create 2 separate files:
 then run:
 
 ```bash
-node runner.js
+node run.js
 ```
 
 ### Example
