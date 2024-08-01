@@ -1,3 +1,5 @@
+/* node:coverage ignore next 134 */
+
 /*
 MIT License
 

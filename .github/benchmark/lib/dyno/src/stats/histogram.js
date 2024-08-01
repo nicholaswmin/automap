@@ -3,7 +3,6 @@ import { createHistogram } from 'node:perf_hooks'
 class Histogram {
   constructor({ name }  = {}) {
     this.name = name
-    this.deltaKeys = {}
     this.percentiles = {}
     this.histogram = createHistogram()
 
@@ -43,25 +42,6 @@ class Histogram {
 
       return result
     }
-  }
-
-  recordDelta(key = 'any') {
-    if (typeof key !== 'string')
-      throw new RangeError('"key" must be a string with length')
-
-    if (!this.deltaKeys[key]) {
-      this.deltaKeys[key] = performance.now()
-
-      return 0
-    }
-
-    const delta = parseInt(performance.now() - this.deltaKeys[key])
-
-    this.record(delta)
-
-    this.deltaKeys[key] = performance.now()
-
-    return delta
   }
 
   tick() {
