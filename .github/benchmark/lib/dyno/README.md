@@ -37,15 +37,9 @@ node run.js
 
 Benchmarking a [`Fibonacci function`][fib] on 8 threads.
 
-You can run this example via:
+A runnable version of this example can be found [here][#running-example]
 
-```bash
-npm run example
-```
-
-it's code is [available here][example-code].
-
-#### Task file
+##### Task file
 
 The task file declares the *task* that needs to be benchmarked.
 
@@ -248,6 +242,16 @@ npm run test:coverage
 > they require node version `>= v22.5.1`
 
 > note: these are slow tests
+
+## Running example
+
+You can run the [Fibonacci example][#example] via:
+
+```bash
+npm run example
+```
+
+it's code is [available here][example-code].
 
 ## Authors
 
