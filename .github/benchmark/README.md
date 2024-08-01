@@ -183,7 +183,6 @@ for a total of at least `120 seconds`.
 - `THREAD_COUNT`: number of concurrent threads processing tasks
 - `PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
 - `MAX_ITEMS`: maximum number of created List Items, per paper
-- `MAX_BACKLOG`: if worker has this many unproccesed tasks, `test=failed`
 
 > Note: These constants are user-configurable when the benchmark starts up.
 

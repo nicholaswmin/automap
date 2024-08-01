@@ -37,12 +37,6 @@ const dyno = new Dyno({
       value: 60
     },
     
-    MAX_BACKLOG: {
-      configurable: true,
-      type: Number,
-      value: 10
-    },
-    
     MAX_ITEMS: {
       configurable: false,
       type: Number,
