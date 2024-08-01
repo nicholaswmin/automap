@@ -64,6 +64,7 @@ const dyno = new Dyno({
         ['redis_ping.mean', 'latency', round],
         ['fetch.mean', 'fetch', round],
         ['save.mean', 'save', round],
+        ['---', '---'],
         ['backlog.max', 'max backlog'],
         ['task.count', 'tasks run'],
         ['memory.mean', 'memory (mb)', toMB],

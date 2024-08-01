@@ -2,7 +2,7 @@ import Table from './src/table.js'
 
 class ThreadTable extends Table {
   compute() {
-    this.hiddenCount = Object.keys(this.rows).length - this.maxRows > 0
+    this.hidden = Object.keys(this.rows).length - this.maxRows > 0
       ? Object.keys(this.rows).length - this.maxRows
       : 0
 
@@ -38,7 +38,9 @@ class ThreadTable extends Table {
 
   render() {
     this.threads ? console.table(this.threads) : 0
-    this.hiddenCount ? console.log(`... + ${this.hiddenCount} hidden rows`) : 0
+    this.hidden ? console.log(
+      `+ ${this.hidden} hidden rows. All sorted by: "${this.fields.sortby}"`
+    ) : 0
 
     this.hiddenCount = 0
     this.threads = []
