@@ -52,25 +52,14 @@ class StatsObserver {
     if (this.stopped || ['test'].includes(process.env.NODE_ENV?.toLowerCase()))
       return false
     
-    this.views.parameters.compute()
-    this.views.runner.compute()
-    this.views.tables.forEach(view => view.compute())
-    this.views.plots.forEach(view => view.compute())
+    this.views.forEach(view => view.compute())
 
     console.clear()
-
-    console.log('\n','Parameters')
-    this.views.parameters.render()
-    console.log('\n','Runner stats')
-    this.views.runner.render()
-    console.log('\n','Thread stats')
-    this.views.tables.forEach(view => view.render())
-
-    console.log('\n')
-
-    this.views.plots.forEach(view => view.render())
-
-    console.log('\n')
+    
+    this.views.forEach(view => {
+      view.render()
+      console.log('\n')
+    })
   }
 
   stop() {

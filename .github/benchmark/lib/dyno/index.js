@@ -88,7 +88,7 @@ class Dyno {
     this.observer.stop()
     this.log.info('stats observer stopped ...')
 
-    await this.firehose.stop()
+    this.firehose.stop()
     this.log.info('firehose stopped ...')
 
     await this.testTimer.stop()

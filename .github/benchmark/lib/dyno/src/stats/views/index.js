@@ -3,10 +3,11 @@ import ThreadTable from './thread-table.js'
 import TaskPlot from './task-plot.js'
 
 export default (rows, fields, additionalRows) => {
-  return {
-    parameters: new RowTable(fields.parameters, additionalRows),
-    runner: new RowTable(fields.runner, rows.runner),
-    tables: [ new ThreadTable(fields.threads, rows.threads) ],
-    plots: [ new TaskPlot(fields.threads, rows.threads) ]
-  }
+  // @TODO this should be defined in the config
+  return [
+    new RowTable(fields.parameters, additionalRows),
+    new RowTable(fields.runner, rows.runner),
+    new ThreadTable(fields.threads, rows.threads),
+    new TaskPlot(fields.threads, rows.threads)
+  ]
 }

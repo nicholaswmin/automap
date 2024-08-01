@@ -64,12 +64,10 @@ const dyno = new Dyno({
         ['redis_ping.mean', 'latency', round],
         ['fetch.mean', 'fetch', round],
         ['save.mean', 'save', round],
-        ['---', '---'],
         ['backlog.max', 'max backlog'],
         ['task.count', 'tasks run'],
         ['memory.mean', 'memory (mb)', toMB],
-        ['gc.mean', 'GC duration', round],
-        ['gc.count', 'GC cycles']
+        ['gc.mean', 'GC duration', round]
       ]
     }
   }
