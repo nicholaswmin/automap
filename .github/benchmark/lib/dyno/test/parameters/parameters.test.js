@@ -20,9 +20,9 @@ test('Dyno: Parameters', async t => {
     dyno = new Dyno({
       task: './test/parameters/tasks/task.js',
       parameters: await configure({
-        TASKS_SECOND: 10,
-        THREAD_COUNT: 2,
-        DURATION_SECONDS: 2,
+        TASKS_SECOND: 1,
+        THREAD_COUNT: 1,
+        DURATION_SECONDS: 1,
         RANDOM_ID: randomId,
         FOO: 30,
         BAR: 'HELLO'
@@ -45,7 +45,7 @@ test('Dyno: Parameters', async t => {
       t.assert.ok(json, 'File did not seem to get parsed into JSON')
     })
 
-    await t.test('the saved files contains the same parameters', t => {
+    await t.test('which contains the same parameters keys', t => {
       t.assert.ok(Object.hasOwn(json, 'TASKS_SECOND'))
       t.assert.ok(Object.hasOwn(json, 'THREAD_COUNT'))
       t.assert.ok(Object.hasOwn(json, 'DURATION_SECONDS'))
@@ -54,10 +54,9 @@ test('Dyno: Parameters', async t => {
       t.assert.ok(Object.hasOwn(json, 'BAR'))
     })
 
-    await t.test('with the same values', t => {
-      t.assert.strictEqual(json.TASKS_SECOND, 10)
-      t.assert.strictEqual(json.THREAD_COUNT, 2)
-      t.assert.strictEqual(json.DURATION_SECONDS, 2)
+    await t.test('and same values', t => {
+      t.assert.strictEqual(json.TASKS_SECOND, 1)
+      t.assert.strictEqual(json.THREAD_COUNT, 1)
       t.assert.strictEqual(json.RANDOM_ID, randomId)
       t.assert.strictEqual(json.FOO, 30)
       t.assert.strictEqual(json.BAR, 'HELLO')

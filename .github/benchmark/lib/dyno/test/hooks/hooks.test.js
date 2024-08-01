@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
-test('Dyno: Before/After Hooks', async t => {
+test('Dyno/Task: before/after hooks', async t => {
   let dyno, randomId = randomUUID()
 
   t.before(async () => {
@@ -13,9 +13,9 @@ test('Dyno: Before/After Hooks', async t => {
     dyno = new Dyno({
       task: './test/hooks/tasks/task.js',
       parameters: await configure({
-        TASKS_SECOND: 10,
+        TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        DURATION_SECONDS: 2,
+        DURATION_SECONDS: 3,
         RANDOM_ID: randomId
       }),
       before: parameters => {

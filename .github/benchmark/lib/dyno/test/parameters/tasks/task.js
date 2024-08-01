@@ -8,8 +8,8 @@ import fs from 'node:fs'
 import { task } from '../../../index.js'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+const filepath = path.join(__dirname, '../temp/params.json')
 
 task(async parameters => {
-  const filepath = path.join(__dirname, '../temp/params.json')
   fs.writeFileSync(filepath, JSON.stringify(parameters), 'utf8')
 })
