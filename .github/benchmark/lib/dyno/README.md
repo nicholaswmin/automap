@@ -39,7 +39,7 @@ Benchmarking a [`Fibonacci function`][fib] on 8 threads.
 
 > A runnable version of this example can be found [here](#running-example)
 
-#### Task file
+### Task file
 
 The task file declares the *task* that needs to be benchmarked.
 
@@ -86,7 +86,7 @@ task(async parameters => {
 > runner file, otherwise they won't appear in the output.\
 > See below:
 
-#### Configuration file
+### Runner file
 
 Configure the test parameters and what should be logged in the output:
 
