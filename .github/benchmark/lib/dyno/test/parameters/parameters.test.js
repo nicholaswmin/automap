@@ -40,12 +40,12 @@ test('Dyno: Parameters', async t => {
       json = file ? JSON.parse(file) : null
     })
 
-    await t.test('which saves them in a file', t => {
+    await t.test('worker saves them in a file', t => {
       t.assert.ok(file, 'File does not seem to exist')
       t.assert.ok(json, 'File did not seem to get parsed into JSON')
     })
 
-    await t.test('which contains the same parameters keys', t => {
+    await t.test('contains the same parameter keys', t => {
       t.assert.ok(Object.hasOwn(json, 'TASKS_SECOND'))
       t.assert.ok(Object.hasOwn(json, 'THREAD_COUNT'))
       t.assert.ok(Object.hasOwn(json, 'DURATION_SECONDS'))
@@ -54,7 +54,7 @@ test('Dyno: Parameters', async t => {
       t.assert.ok(Object.hasOwn(json, 'BAR'))
     })
 
-    await t.test('and same values', t => {
+    await t.test('contains the same parameter values', t => {
       t.assert.strictEqual(json.TASKS_SECOND, 1)
       t.assert.strictEqual(json.THREAD_COUNT, 1)
       t.assert.strictEqual(json.RANDOM_ID, randomId)
