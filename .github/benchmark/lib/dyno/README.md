@@ -18,7 +18,7 @@ To run a benchmark you need to create 2 separate files:
 
 `run.js`
 
-> The *runner file*  
+> The *run file*  
 > Includes test configuration and runs the task file 
 
 `task.js`
@@ -97,7 +97,7 @@ task(async parameters => {
 Configure the test parameters and what should be logged in the output:
 
 ```js
-// runner.js
+// run.js
 
 import { Dyno, configure } from '@nicholaswmin/dyno'
 
