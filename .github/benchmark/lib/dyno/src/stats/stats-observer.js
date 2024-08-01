@@ -6,8 +6,8 @@ class StatsObserver {
   constructor({ fields = null, additionalRows } = {}) {
     this.bufferSize = 100
     this.renderThrottled = throttle(this.render.bind(this), 100)
-    this.fields = fields || { general: {}, primary: [], threads: {} }
-    this.rows = { primary: {}, threads: {} }
+    this.fields = fields || { general: {}, runner: [], threads: {} }
+    this.rows = { runner: {}, threads: {} }
     this.views = views(this.rows, this.fields, additionalRows)
     this.stopped = false
   }
@@ -15,10 +15,10 @@ class StatsObserver {
   start(threads) {
     localbus.on('stats:row:update', row => {
       Object.keys(row).forEach(key => {
-        this.rows.primary[key] = this.rows.primary[key] || []
-        this.rows.primary[key].push(row[key])
-        this.rows.primary[key].length >= this.bufferSize
-          ? this.rows.primary[key].slice(1, this.rows.primary[key].length)
+        this.rows.runner[key] = this.rows.runner[key] || []
+        this.rows.runner[key].push(row[key])
+        this.rows.runner[key].length >= this.bufferSize
+          ? this.rows.runner[key].slice(1, this.rows.runner[key].length)
           : null
       })
 
@@ -53,7 +53,7 @@ class StatsObserver {
       return false
     
     this.views.parameters.compute()
-    this.views.primary.compute()
+    this.views.runner.compute()
     this.views.tables.forEach(view => view.compute())
     this.views.plots.forEach(view => view.compute())
 
@@ -62,7 +62,7 @@ class StatsObserver {
     console.log('\n','Parameters')
     this.views.parameters.render()
     console.log('\n','Runner stats')
-    this.views.primary.render()
+    this.views.runner.render()
     console.log('\n','Thread stats')
     this.views.tables.forEach(view => view.render())
 

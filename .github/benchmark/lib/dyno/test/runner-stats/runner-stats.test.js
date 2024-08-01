@@ -4,14 +4,14 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB } from '../utils/sqlite.js'
 
-test('primary stats', async t => {
+test('runner stats', async t => {
   let dyno = null, result = null, randomId = randomUUID()
 
   t.before(async () => {
     resetDB()
 
     dyno = new Dyno({
-      task: './test/primary-stats/tasks/task.js',
+      task: './test/runner-stats/tasks/task.js',
       parameters: await configure({
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
@@ -29,28 +29,28 @@ test('primary stats', async t => {
     })
 
     await t.test('produces a result with:', async t => {
-      t.assert.ok(Object.hasOwn(result, 'primary'))
+      t.assert.ok(Object.hasOwn(result, 'runner'))
 
       await t.test('the count of tasks sent', async t => {
-        t.assert.ok(Object.hasOwn(result.primary, 'sent'))
-        t.assert.ok(result.primary.sent.length > 5, result.primary.sent.length)
+        t.assert.ok(Object.hasOwn(result.runner, 'sent'))
+        t.assert.ok(result.runner.sent.length > 5, result.runner.sent.length)
 
         await t.test('last count sums up correctly', async t => {
-          const last = result.primary.sent.at(-1)
+          const last = result.runner.sent.at(-1)
 
           t.assert.ok(last.count > 35, `${last.count} is not > 35`)
           t.assert.ok(last.count < 100, `${last.count} is not < 100`)
         })
 
         await t.test('in a histogram format', async t => {
-          const row = result.primary.sent[0]
+          const row = result.runner.sent[0]
           t.assert.ok(Object.hasOwn(row, 'count'))
           t.assert.ok(Object.hasOwn(row, 'min'))
           t.assert.ok(Object.hasOwn(row, 'mean'))
           t.assert.ok(Object.hasOwn(row, 'max'))
 
           await t.test('with valid values', async t => {
-            const last = result.primary.sent.at(-1)
+            const last = result.runner.sent.at(-1)
 
             t.assert.strictEqual(typeof last.count, 'number')
             t.assert.ok(last.count > 0, `count: ${last.count} not > 0`)
@@ -69,25 +69,25 @@ test('primary stats', async t => {
     })
 
     await t.test('the count of replies from the workers', async t => {
-      t.assert.ok(Object.hasOwn(result.primary, 'replies'))
-      t.assert.ok(result.primary.replies.length > 5)
+      t.assert.ok(Object.hasOwn(result.runner, 'replies'))
+      t.assert.ok(result.runner.replies.length > 5)
 
       await t.test('last count sums up correctly', async t => {
-        const last = result.primary.replies.at(-1)
+        const last = result.runner.replies.at(-1)
 
         t.assert.ok(last.count > 35, `${last.count} is not > 35`)
         t.assert.ok(last.count < 100, `${last.count} is not < 100`)
       })
 
       await t.test('in a histogram format', async t => {
-        const last = result.primary.replies.at(-1)
+        const last = result.runner.replies.at(-1)
         t.assert.ok(Object.hasOwn(last, 'count'))
         t.assert.ok(Object.hasOwn(last, 'min'))
         t.assert.ok(Object.hasOwn(last, 'mean'))
         t.assert.ok(Object.hasOwn(last, 'max'))
 
         await t.test('with valid values', async t => {
-          const last = result.primary.replies.at(-1)
+          const last = result.runner.replies.at(-1)
 
           t.assert.strictEqual(typeof last.count, 'number')
           t.assert.ok(last.count > 0, `count: ${last.count} not > 0`)

@@ -5,7 +5,7 @@ import TaskPlot from './task-plot.js'
 export default (rows, fields, additionalRows) => {
   return {
     parameters: new RowTable(fields.parameters, additionalRows),
-    primary: new RowTable(fields.primary, rows.primary),
+    runner: new RowTable(fields.runner, rows.runner),
     tables: [ new ThreadTable(fields.threads, rows.threads) ],
     plots: [ new TaskPlot(fields.threads, rows.threads) ]
   }

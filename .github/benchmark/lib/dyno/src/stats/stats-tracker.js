@@ -1,7 +1,7 @@
 import Histogram from './histogram.js'
 import localbus from './local-bus.js'
 
-class PrimaryStatsTracker {
+class RunnerStatsTracker {
   constructor(keys = []) {
     this.stopped = false
 
@@ -29,7 +29,7 @@ class PrimaryStatsTracker {
   }
 }
 
-class ThreadStatsTracker extends PrimaryStatsTracker {
+class ThreadStatsTracker extends RunnerStatsTracker {
   constructor(...args) {
     super(...args)
   }
@@ -75,4 +75,4 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
   }
 }
 
-export { PrimaryStatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }
+export { RunnerStatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }

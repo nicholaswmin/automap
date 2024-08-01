@@ -23,7 +23,7 @@ const dyno = new Dyno({
       ['parameters.PAYLOAD_KB', 'PAYLOAD_KB']
     ],
 
-    primary: [
+    runner: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
       ['memory.mean', 'memory (mean/mb)', toMB],

@@ -44,7 +44,7 @@ class Foreman extends EventEmitter {
       return child_process.fork(path, {
         env: {
           ...process.env,
-          BY_PRIMARY: true,
+          RUNNER: true,
           parameters
         }
       })

@@ -1,12 +1,12 @@
 import { setTimeout } from 'timers/promises'
-import { PrimaryStatsTracker } from './stats/stats-tracker.js'
+import { RunnerStatsTracker } from './stats/stats-tracker.js'
 
 class TestTimer {
   constructor({ seconds }) {
     this.timer = null
     this.interval = null
     this.seconds = seconds
-    this.stats = new PrimaryStatsTracker(['uptime'])
+    this.stats = new RunnerStatsTracker(['uptime'])
   }
 
   async start() {

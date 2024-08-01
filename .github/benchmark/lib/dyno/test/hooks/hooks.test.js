@@ -19,10 +19,10 @@ test('Passing hook before/after hooks, on 1 thread', async t => {
         RANDOM_ID: randomId
       }),
       before: parameters => {
-        return insertDBRow(process.pid, parameters.RANDOM_ID, 'primary:before')
+        return insertDBRow(process.pid, parameters.RANDOM_ID, 'runner:before')
       },
       after: parameters => {
-        return insertDBRow(process.pid, parameters.RANDOM_ID, 'primary:after')
+        return insertDBRow(process.pid, parameters.RANDOM_ID, 'runner:after')
       }
     })
 
@@ -36,11 +36,11 @@ test('Passing hook before/after hooks, on 1 thread', async t => {
       rows = selectDBRows(randomId)
     })
     
-    await t.test('primary:before', async t => {
-      const result = rows.filter(row => row.alt === 'primary:before')
+    await t.test('runner:before', async t => {
+      const result = rows.filter(row => row.alt === 'runner:before')
 
       await t.test('runs it', t => {
-        t.assert.ok(result.length, 'cannot find a "primary:before" row')
+        t.assert.ok(result.length, 'cannot find a "runner:before" row')
       })
 
       await t.test('runs it, once', t => {
@@ -48,8 +48,8 @@ test('Passing hook before/after hooks, on 1 thread', async t => {
       })
     })
     
-    await t.test('primary:after', async t => {
-      const result = rows.filter(row => row.alt === 'primary:after')
+    await t.test('runner:after', async t => {
+      const result = rows.filter(row => row.alt === 'runner:after')
 
       await t.test('runs it, once', t => {
         t.assert.ok(result.length === 1, `found: ${result.length} rows, is > 1`)
@@ -73,8 +73,8 @@ test('Passing hook before/after hooks, on 1 thread', async t => {
     })
     
     await t.test('runs the hooks in the correct order', async t => {
-      await t.test('runs primary:before hook first', async t => {
-        t.assert.strictEqual(rows[0].alt, 'primary:before')
+      await t.test('runs runner:before hook first', async t => {
+        t.assert.strictEqual(rows[0].alt, 'runner:before')
       })
       
       await t.test('runs task:before hook second', async t => {
@@ -89,8 +89,8 @@ test('Passing hook before/after hooks, on 1 thread', async t => {
         t.assert.strictEqual(rows.at(-2).alt, 'task:after')
       })
       
-      await t.test('runs primary:after, last', async t => {
-        t.assert.strictEqual(rows.at(-1).alt, 'primary:after')
+      await t.test('runs runner:after, last', async t => {
+        t.assert.strictEqual(rows.at(-1).alt, 'runner:after')
       })
     })
   })

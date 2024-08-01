@@ -30,7 +30,7 @@ To run a benchmark you need to create 2 separate files:
 then run:
 
 ```bash
-node primary.js
+node runner.js
 ```
 
 ### Example
@@ -64,7 +64,7 @@ these [PerformanceMeasurement APIs][perf-api]:
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
-  // 'parameters' configured in the primary are available here
+  // 'parameters' configured in the runner are available here
 
   // function under test
   const fibonacci = n => n < 1 ? 0 : n <= 2
@@ -89,7 +89,7 @@ task(async parameters => {
 
 > **note:** measures must also be declared in the
 > `fields.threads.labels.logged` field within the
-> primary file, otherwise they won't appear in the output.\
+> runner file, otherwise they won't appear in the output.\
 > See below:
 
 #### Configuration file
@@ -97,7 +97,7 @@ task(async parameters => {
 Configure the test parameters and what should be logged in the output:
 
 ```js
-// primary.js
+// runner.js
 
 import { Dyno, configure } from '@nicholaswmin/dyno'
 
@@ -148,7 +148,7 @@ const dyno = new Dyno({
     // General test fields
 
     // test statistics:
-    primary: [
+    runner: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
       ['memory.mean', 'memory (mean/mb)'],

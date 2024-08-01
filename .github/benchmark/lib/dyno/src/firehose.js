@@ -1,8 +1,8 @@
-import { PrimaryStatsTracker } from './stats/stats-tracker.js'
+import { RunnerStatsTracker } from './stats/stats-tracker.js'
 
 class Firehose {
   constructor({ tasksPerSecond }) {
-    this.stats = new PrimaryStatsTracker(['sent', 'replies', 'memory'])
+    this.stats = new RunnerStatsTracker(['sent', 'replies', 'memory'])
     this.tasksPerSecond = tasksPerSecond > 0 ? tasksPerSecond : (() => {
       throw new RangeError(`Must be an int > 0. Got: ${tasksPerSecond}`)
     })()

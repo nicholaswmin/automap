@@ -3,7 +3,7 @@
 import { task } from '../../index.js'
 
 task(async parameters => {
-  // 'parameters' configured in the primary are available here
+  // 'parameters' configured in the runner are available here
 
   // function under test
   const fibonacci = n => n < 1 ? 0 : n <= 2

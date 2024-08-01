@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm --prefix lib/dyno install --omit=dev",
-    "start": "node primary.js"
+    "start": "node run.js"
   },
   "dependencies": {
     "ioredis": "^5.4.1"

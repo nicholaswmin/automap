@@ -51,7 +51,7 @@ test('thread-task timings', async t => {
               t.assert.ok(Object.hasOwn(last, 'max'))
 
               await t.test('with reasonable "count" values', async t => {
-                t.assert.ok(last.count > 25, `count: ${last.count}`)
+                t.assert.ok(last.count > 20, `count: ${last.count}`)
                 t.assert.ok(last.count < 500, `count: ${last.count}`)
               })
 

@@ -13,10 +13,10 @@ const task = async (
     before = async () => {},
     after = async () => {}
   } = {}) => {
-  if (!process.env.BY_PRIMARY)
+  if (!process.env.RUNNER)
     throw new Error([
       'Cannot run this file directly',
-      'Set up a primary file which declares this as a task and run that instead'
+      'Set up a runner file which declares this as a task and run that instead'
     ].join('. '))
 
   const parameters = Object.freeze(JSON.parse(process.env.parameters))
@@ -40,7 +40,7 @@ const task = async (
     stats.measures.publish()
   })
 
-  const onPrimaryMessage = message => {
+  const onRunnerMessage = message => {
     if (message.type === 'shutdown')
       return shutdown(0)
 
@@ -75,7 +75,7 @@ const task = async (
 
   runner.start(taskFn.bind(this, parameters))
 
-  process.on('message', onPrimaryMessage)
+  process.on('message', onRunnerMessage)
 }
 
 export default task
