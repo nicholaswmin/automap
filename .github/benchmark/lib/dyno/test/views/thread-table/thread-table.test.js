@@ -3,7 +3,7 @@ import test from 'node:test'
 import ThreadTable from '../../../src/stats/views/thread-table.js'
 import rows from './rows.json' with { type: 'json' }
 
-test('view: task-table', async t => {
+test('View: ThreadTable', async t => {
   let table = null
 
   t.before(async () => {

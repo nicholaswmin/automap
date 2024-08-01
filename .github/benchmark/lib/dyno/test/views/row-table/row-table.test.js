@@ -3,7 +3,7 @@ import test from 'node:test'
 import RowTable from '../../../src/stats/views/row-table.js'
 import rows from './rows.json' with { type: 'json' }
 
-test('view: row-table', async t => {
+test('View: RowTable', async t => {
   let table = null
 
   t.before(async () => {

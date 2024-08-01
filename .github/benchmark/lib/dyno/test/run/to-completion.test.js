@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB, selectDBRows } from '../utils/sqlite.js'
 
-test('start(): runs to completion', async t => {
+test('#Dyno.start()', async t => {
   let dyno, randomId = randomUUID()
 
   t.beforeEach(async () => {

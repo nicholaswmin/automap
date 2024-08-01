@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB } from '../utils/sqlite.js'
 
-test('thread-backlog stats', async t => {
+test('Measures: Thread Backlog', async t => {
   let dyno = null, result = null, randomId = randomUUID()
 
   t.after(() => resetDB())

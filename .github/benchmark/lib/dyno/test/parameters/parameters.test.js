@@ -9,7 +9,7 @@ import { Dyno, configure } from '../../index.js'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const filepath = path.join(__dirname, 'temp/params.json')
 
-test('setting parameters', async t => {
+test('Dyno: Parameters', async t => {
   let dyno, randomId = randomUUID()
 
   t.after(() => {

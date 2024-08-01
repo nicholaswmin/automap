@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, configure } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
-test('Passing hook before/after hooks, on 1 thread', async t => {
+test('Dyno: Before/After Hooks', async t => {
   let dyno, randomId = randomUUID()
 
   t.before(async () => {
