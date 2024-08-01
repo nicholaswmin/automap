@@ -3,13 +3,12 @@ import localbus from './local-bus.js'
 import views from './views/index.js'
 
 class StatsObserver {
-  constructor({ fields = null, extraFields } = {}) {
+  constructor({ fields = null, additionalRows } = {}) {
     this.bufferSize = 100
     this.renderThrottled = throttle(this.render.bind(this), 100)
-    this.extraFields = extraFields
     this.fields = fields || { general: {}, primary: [], threads: {} }
     this.rows = { primary: {}, threads: {} }
-    this.views = views(this.rows, this.fields)
+    this.views = views(this.rows, this.fields, additionalRows)
     this.stopped = false
   }
 
@@ -47,18 +46,24 @@ class StatsObserver {
   }
 
   render() {
-    if (this.stopped || ['test'].includes(process.env.NODE_ENV?.toLowerCase()))
+    if (process.argv.some(a => a.includes('no-render')))
       return false
 
+    if (this.stopped || ['test'].includes(process.env.NODE_ENV?.toLowerCase()))
+      return false
+    
+    this.views.parameters.compute()
     this.views.primary.compute()
     this.views.tables.forEach(view => view.compute())
     this.views.plots.forEach(view => view.compute())
 
-    process.argv.some(a => a.includes('no-console-clear'))
-      ?  null
-      : console.clear()
+    console.clear()
 
+    console.log('\n','Parameters')
+    this.views.parameters.render()
+    console.log('\n','Runner stats')
     this.views.primary.render()
+    console.log('\n','Thread stats')
     this.views.tables.forEach(view => view.render())
 
     console.log('\n')

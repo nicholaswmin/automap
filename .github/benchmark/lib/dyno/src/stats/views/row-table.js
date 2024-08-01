@@ -1,6 +1,6 @@
 import Table from './src/table.js'
 
-class PrimaryTable extends Table {
+class RowTable extends Table {
   compute() {
     this.stats = [
       this.fields.reduce((acc, field) => {
@@ -27,4 +27,4 @@ class PrimaryTable extends Table {
   }
 }
 
-export default PrimaryTable
+export default RowTable

@@ -9,42 +9,53 @@ const redis = ioredis()
 
 const dyno = new Dyno({
   task: './task.js',
+
   before: () => {
     return redis.flushall()
   },
+
   after: () => {
     return redis.disconnect()
   },
+
   parameters: await configure({
     TASKS_SECOND: {
       configurable: true,
       type: Number,
       value: 50
     },
+    
     THREAD_COUNT: {
       configurable: true,
       type: Number,
       value: process.env.WEB_CONCURRENCY || os.availableParallelism()
     },
+    
     DURATION_SECONDS: {
       configurable: true,
       type: Number,
       value: 60
     },
+    
     MAX_BACKLOG: {
       configurable: true,
       type: Number,
       value: 10
     },
+    
     MAX_ITEMS: {
       configurable: false,
       type: Number,
       value: 100
     },
+    
     PAYLOAD_KB: 5 // its valid, non-configurable
   }),
 
   fields: {
+    parameters: [
+      ['parameters.PAYLOAD_KB', 'PAYLOAD_KB']
+    ],
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
@@ -52,30 +63,19 @@ const dyno = new Dyno({
       ['uptime.count', 'uptime seconds']
     ],
     threads: {
-      stats: {
-        sortby: 'backlog.max',
-        labels: {
-          logged: [
-            ['task.count', 'tasks run'],
-            ['memory.mean', 'memory (mean/mb)', toMB],
-            ['gc.mean', 'GC duration (mean/ms)', round],
-            ['gc.count', 'GC cycles'],
-            ['backlog.max', 'max backlog']
-          ]
-        }
-      },
-      measures: {
-        sortby: 'task.mean',
-        labels: {
-          plotted: [ ['task'], ['redis_ping', 'latency'], ['fetch'], ['save'] ],
-          logged: [
-            ['task.mean', 'task (mean/ms)', round],
-            ['redis_ping.mean', 'latency (mean/ms)', round],
-            ['fetch.mean', 'fetch (mean/ms)', round],
-            ['save.mean', 'save (mean/ms)', round]
-          ]
-        }
-      }
+      sortby: 'task.mean',
+      plotted: [ ['task'], ['redis_ping', 'latency'], ['fetch'], ['save'] ],
+      tabular: [
+        ['task.mean', 'task', round],
+        ['redis_ping.mean', 'latency', round],
+        ['fetch.mean', 'fetch', round],
+        ['save.mean', 'save', round],
+        ['backlog.max', 'max backlog'],
+        ['task.count', 'tasks run'],
+        ['memory.mean', 'memory (mb)', toMB],
+        ['gc.mean', 'GC duration', round],
+        ['gc.count', 'GC cycles']
+      ]
     }
   }
 })

@@ -1,5 +1,6 @@
-
 import { Dyno, configure } from '../../index.js'
+
+const toMB = bytes => parseInt(bytes / 1000 / 1000)
 
 const dyno = new Dyno({
   task: '.github/example/task.js',
@@ -18,38 +19,28 @@ const dyno = new Dyno({
   }),
 
   fields: {
+    parameters: [
+      ['parameters.PAYLOAD_KB', 'PAYLOAD_KB']
+    ],
+
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/bytes)'],
+      ['memory.mean', 'memory (mean/mb)', toMB],
       ['uptime.count', 'uptime seconds']
     ],
 
     threads: {
-      stats: {
-        sortby: 'backlog.max',
-        labels: {
-          logged: [
-            ['task.count', 'tasks run'],
-            ['memory.mean', 'memory (mean/bytes)'],
-            ['backlog.max', 'max backlog']
-          ]
-        }
-      },
-
-      measures: {
-        sortby: 'task.mean',
-        labels: {
-          logged: [
-            ['task.mean', 'task (mean/ms)', Math.round],
-            ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
-            ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
-            ['fibonacci.mean', 'fib() average (in ms)', Math.round],
-            ['sleep.max', 'sleep() maximum (in ms)', Math.round]
-          ],
-          plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
-        }
-      }
+      sortby: 'backlog.max',
+      plotted: [ ['task'], ['fibonacci'], ['sleep'] ],
+      tabular: [
+        ['task.mean', 'task (mean/ms)', Math.round],
+        ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
+        ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
+        ['fibonacci.mean', 'fib() average (in ms)', Math.round],
+        ['sleep.max', 'sleep() maximum (in ms)', Math.round],
+        ['backlog.max', 'max backlog']
+      ]
     }
   }
 })

@@ -9,15 +9,15 @@ class TaskPlot extends Plot {
     const fieldAsHeader = field => field[1] || field[0]
     const rows = Object.values(this.rows)
       .map(thread => Object.keys(thread)
-        .filter(key => this.fields.labels.plotted.map(fieldAsKey).includes(key))
+        .filter(key => this.fields.plotted.map(fieldAsKey).includes(key))
           .map(key => Object.values(thread[key])
             .map(row => row.mean)))
 
     this.plots = rows.map(row => this.plot(row, {
       title: 'Task timings (mean/ms)',
-      colors: this.fields.labels.plotted.map(fieldAsHeader).map(randomColor),
-      labels: this.fields.labels.plotted.map(fieldAsHeader).map(colorLabel),
-      height: 10
+      colors: this.fields.plotted.map(fieldAsHeader).map(randomColor),
+      labels: this.fields.plotted.map(fieldAsHeader).map(colorLabel),
+      height: this.height
     }))
   }
 

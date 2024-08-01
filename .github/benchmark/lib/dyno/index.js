@@ -35,12 +35,10 @@ class Dyno {
     this.testTimer = new TestTimer({
       seconds: this.parameters.DURATION_SECONDS
     })
-
+    
     this.observer = new StatsObserver({
-      extraFields: {
-        parameters: this.parameters
-      },
-      fields: this.fields
+      fields: this.fields,
+      additionalRows: { parameters: [parameters] }
     })
 
     this.log = {

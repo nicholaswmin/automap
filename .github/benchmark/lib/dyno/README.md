@@ -136,64 +136,50 @@ const dyno = new Dyno({
   //
   // Note:
   // `<metric-unit>` can by any of: `count`, `min`, `max`, `mean`, `stddev`
+  //
   // Read more: https://nodejs.org/api/perf_hooks.html#class-histogram
   fields: {
+    // Which parameters to log
+    parameters: [
+      ['parameters.PAYLOAD_KB', 'PAYLOAD_KB'],
+      ['parameters.FOO', 'FOO']
+    ],
+
     // General test fields
 
     // test statistics:
     primary: [
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/bytes)'],
+      ['memory.mean', 'memory (mean/mb)'],
       ['uptime.count', 'uptime seconds']
     ],
 
     // Per-task fields
 
     threads: {
-      // task statistics:
+      // thread/task statistics:
 
-      stats: {
-        //  key by which the results are sorted (max value first, descending)
-        sortby: 'backlog.max',
-        labels: {
-          logged: [
-            // Log:
-            // - the tasks run by all threads
-            // - memory usage average
-            // - number of tasks sent but still unprocessed
-            ['task.count', 'tasks run'],
-            ['memory.mean', 'memory (mean/bytes)'],
-            ['backlog.max', 'max backlog']
-          ]
-        }
-      },
-
-      // custom measures:
-      //
-      // any measures taken in the task must be declared here.
-      measures: {
-        //  key by which the results are sorted (max value first, descending)
-        sortby: 'task.mean',
-        labels: {
-          // Log:
-          // - the overall task duration
-          // - the `fibonacci` `min`/`max`/`mean` durations
-          // - the `performance.measure('sleep')` max duration
-          // ... all rounded to the nearest integer
-          logged: [
-            ['task.mean', 'task (mean/ms)', round],
-            ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
-            ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
-            ['fibonacci.mean', 'fib() average (in ms)', Math.round],
-            ['sleep.max', 'sleep() maximum (in ms)', Math.round]
-          ],
-          // include these average durations in the plot
-          // note: the plot only logs the value 'mean' (average) and this
-          // is non-configurable for now
-          plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
-        }
-      }
+      //  key by which the results are sorted (max value first, descending)
+      sortby: 'task.mean',
+      // Log:
+      // - the overall task duration
+      // - the `fibonacci` `min`/`max`/`mean` durations
+      // - the `performance.measure('sleep')` max duration
+      // - number of tasks sent but still unprocessed
+      // ... all rounded to the nearest integer
+      tabular: [
+        ['task.mean', 'task (mean/ms)', round],
+        ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
+        ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
+        ['fibonacci.mean', 'fib() average (in ms)', Math.round],
+        ['sleep.max', 'sleep() maximum (in ms)', Math.round],
+        ['backlog.max', 'max backlog']
+      ],
+      // include these average durations in the plot
+      // note: the plot only logs the value 'mean' (average) and this
+      // is non-configurable for now
+      plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
     }
   }
 })

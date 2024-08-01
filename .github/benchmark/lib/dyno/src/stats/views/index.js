@@ -1,15 +1,12 @@
-import PrimaryTable from './primary-table.js'
-import TaskTable from './task-table.js'
+import RowTable from './row-table.js'
+import ThreadTable from './thread-table.js'
 import TaskPlot from './task-plot.js'
 
-export default (rows, fields) => {
+export default (rows, fields, additionalRows) => {
   return {
-    primary: new PrimaryTable(fields.primary, rows.primary),
-    tables: [
-      new TaskTable(fields.threads, rows.threads)
-    ],
-    plots: [
-      new TaskPlot(fields.threads.measures, rows.threads)
-    ]
+    parameters: new RowTable(fields.parameters, additionalRows),
+    primary: new RowTable(fields.primary, rows.primary),
+    tables: [ new ThreadTable(fields.threads, rows.threads) ],
+    plots: [ new TaskPlot(fields.threads, rows.threads) ]
   }
 }

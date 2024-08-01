@@ -1,13 +1,13 @@
 import test from 'node:test'
 
-import PrimaryTable from '../../../src/stats/views/primary-table.js'
+import RowTable from '../../../src/stats/views/row-table.js'
 import rows from './rows.json' with { type: 'json' }
 
-test('view: primary-table', async t => {
+test('view: row-table', async t => {
   let table = null
 
   t.before(async () => {
-    table = new PrimaryTable([
+    table = new RowTable([
       ['sent.count', 'tasks sent'],
       ['replies.count', 'tasks acked'],
       ['memory.mean', 'memory (mean/mb)'],
