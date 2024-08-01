@@ -130,8 +130,13 @@ const dyno = new Dyno({
   //
   // Note:
   // `<metric-unit>` can by any of: `count`, `min`, `max`, `mean`, `stddev`
-  //
-  // Read more: https://nodejs.org/api/perf_hooks.html#class-histogram
+  // where:
+  // - `count`: number of times ticked
+  // - `min`: minimum recorded value
+  // - `max`: maximum recorder value
+  // - `mean`: average of recorded values
+  // - `stddev`: standard deviation between recorded values
+  // 
   fields: {
     // Which parameters to log
     parameters: [
@@ -149,10 +154,10 @@ const dyno = new Dyno({
       ['uptime.count', 'uptime seconds']
     ],
 
-    // Per-task fields
+    // Per-task/thread fields
 
     threads: {
-      // thread/task statistics:
+      // task/thread statistics:
 
       //  key by which the results are sorted (max value first, descending)
       sortby: 'task.mean',
