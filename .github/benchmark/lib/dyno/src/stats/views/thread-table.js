@@ -38,9 +38,11 @@ class ThreadTable extends Table {
 
   render() {
     this.threads ? console.table(this.threads) : 0
-    this.hidden ? console.log(
-      `+ ${this.hidden} hidden rows. All sorted by: "${this.fields.sortby}"`
-    ) : 0
+    this.hidden ? console.log([
+      `+ ${this.hidden} hidden rows`,
+      'Times in (ms) unless otherwise specified',
+      `"Rows sorted by: "${this.fields.sortby}"`
+      ].join('. ')) : 0
 
     this.hiddenCount = 0
     this.threads = []
