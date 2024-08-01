@@ -33,13 +33,13 @@ then run:
 node run.js
 ```
 
-### Example
+## Example
 
 Benchmarking a [`Fibonacci function`][fib] on 8 threads.
 
-A runnable version of this example can be found [here][#running-example]
+> A runnable version of this example can be found [here](#running-example)
 
-##### Task file
+#### Task file
 
 The task file declares the *task* that needs to be benchmarked.
 
@@ -245,7 +245,7 @@ npm run test:coverage
 
 ## Running example
 
-You can run the [Fibonacci example][#example] via:
+You can run the [Fibonacci example](#example) via:
 
 ```bash
 npm run example
