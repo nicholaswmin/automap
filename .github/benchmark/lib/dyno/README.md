@@ -237,7 +237,7 @@ npm run test:coverage
 ```
 
 > note: tests require node version `>= v22.5.1` because they use the  
-> experimental native [`sqlite`][sqlite] module
+> experimental native [`sqlite`][sqlite] module to test thread output
 >
 > note: due to the benchmarking nature of this module, unit-tests run slow
 
