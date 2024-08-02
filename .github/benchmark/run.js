@@ -1,6 +1,6 @@
 import os from 'node:os'
 
-import { Dyno, configure } from './lib/dyno/index.js'
+import { Dyno, Table, Plot, prompt } from './lib/dyno/index.js'
 import ioredis from './lib/ioredis/index.js'
 
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
@@ -17,8 +17,54 @@ const dyno = new Dyno({
   after: () => {
     return redis.disconnect()
   },
+  
+  render: function({ runner, threads }) {
+    const threadCount = Object.keys(threads).length, maxThreadCount = 5
 
-  parameters: await configure({
+    const views = [
+      new Table()
+        .setHeading(...Object.keys(this.parameters))
+        .addRowMatrix([ Object.values(this.parameters) ]),
+
+      new Table()
+        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (mb)')
+        .addRowMatrix([
+          [ 
+            runner.sent.at(-1).count, 
+            runner.replies.at(-1).count, 
+            toMB(runner.memory.at(-1).mean) 
+          ]
+        ]),
+
+      new Table(`Threads (mean/ms), top ${maxThreadCount} of ${threadCount}`)
+        .setHeading('thread', 'task', 'save', 'fetch', 'latency', 'max backlog')
+        .addRowMatrix(Object.keys(threads).map(thread => {
+          return [
+            thread,
+            round(threads[thread]['task']?.at(-1).mean) || 'no data',
+            round(threads[thread]['save']?.at(-1).mean) || 'no data',
+            round(threads[thread]['fetch']?.at(-1).mean) || 'no data',
+            round(threads[thread]['redis_ping']?.at(-1).mean) || 'no data',
+            round(threads[thread]['backlog']?.at(-1).max) || 'no data',
+          ]
+        })
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, maxThreadCount)),
+    
+      new Plot('Thread timings timeline', {
+          subtitle: 'mean (ms)',
+          properties: ['task', 'save', 'fetch'],
+          unit: 'mean'
+        })
+        .plot(threads[Object.keys(threads).at(-1)])
+    ]
+    
+    console.clear()
+
+    views.forEach(view => console.log(view.toString()))  
+  },
+
+  parameters: await prompt({
     TASKS_SECOND: {
       configurable: true,
       type: Number,
@@ -43,34 +89,8 @@ const dyno = new Dyno({
       value: 100
     },
     
-    PAYLOAD_KB: 5 // its valid, non-configurable
-  }),
-
-  fields: {
-    parameters: [
-      ['parameters.PAYLOAD_KB', 'PAYLOAD_KB']
-    ],
-    runner: [
-      ['sent.count', 'tasks sent'],
-      ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/mb)', toMB],
-      ['uptime.count', 'uptime seconds']
-    ],
-    threads: {
-      sortby: 'task.mean',
-      plotted: [ ['task'], ['redis_ping', 'latency'], ['fetch'], ['save'] ],
-      tabular: [
-        ['task.mean', 'task', round],
-        ['redis_ping.mean', 'latency', round],
-        ['fetch.mean', 'fetch', round],
-        ['save.mean', 'save', round],
-        ['backlog.max', 'max backlog'],
-        ['task.count', 'tasks run'],
-        ['memory.mean', 'memory (mb)', toMB],
-        ['gc.mean', 'GC duration', round]
-      ]
-    }
-  }
+    PAYLOAD_KB: 5
+  })
 })
 
 await dyno.start()

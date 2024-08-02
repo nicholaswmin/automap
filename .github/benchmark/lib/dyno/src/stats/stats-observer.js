@@ -1,15 +1,14 @@
 import throttle from 'throttleit'
 import localbus from './local-bus.js'
-import views from './views/index.js'
 
 class StatsObserver {
-  constructor({ fields = null, additionalRows } = {}) {
+  constructor(ctx, renderFn) {
     this.bufferSize = 100
-    this.renderThrottled = throttle(this.render.bind(this), 100)
-    this.fields = fields || { general: {}, runner: [], threads: {} }
+    this.maxFPS = 30
+    this.maxRate = Math.round(1000 / this.maxFPS)
+
     this.rows = { runner: {}, threads: {} }
-    this.views = views(this.rows, this.fields, additionalRows)
-    this.stopped = false
+    this.renderThrottled = throttle(renderFn.bind(ctx, this.rows), this.maxRate)
   }
 
   start(threads) {
@@ -41,30 +40,14 @@ class StatsObserver {
             ? this.rows.threads[pid][key].splice(1, 1) // keep the 1st
             : null
         })
+        
+        this.renderThrottled()
       })
-    })
-  }
-
-  render() {
-    if (process.argv.some(a => a.includes('no-render')))
-      return false
-
-    if (this.stopped || ['test'].includes(process.env.NODE_ENV?.toLowerCase()))
-      return false
-    
-    this.views.forEach(view => view.compute())
-
-    console.clear()
-    
-    this.views.forEach(view => {
-      view.render()
-      console.log('\n')
     })
   }
 
   stop() {
     localbus.removeAllListeners('stats:row:update')
-    this.stopped = true
   }
 
   getRows() {

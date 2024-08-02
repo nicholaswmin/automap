@@ -4,5 +4,6 @@
   - yes
 - [ ] Warmup period
 - [ ] Event loop stats
-- [ ] Log test constants/parameters
+- [x] Log test constants/parameters
 - [ ] Log to file
+- [ ] Any tests marked as `todo`

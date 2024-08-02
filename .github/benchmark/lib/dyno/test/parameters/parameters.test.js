@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import * as url from 'node:url'
 import path from 'node:path'
 
-import { Dyno, configure } from '../../index.js'
+import { Dyno, prompt } from '../../index.js'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const filepath = path.join(__dirname, 'temp/params.json')
@@ -19,7 +19,7 @@ test('Dyno: Parameters', async t => {
   t.beforeEach(async () => {
     dyno = new Dyno({
       task: './test/parameters/tasks/task.js',
-      parameters: await configure({
+      parameters: await prompt({
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
         DURATION_SECONDS: 1,

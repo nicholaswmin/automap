@@ -1,17 +1,19 @@
 import { styleText } from 'node:util'
-import StatsObserver from './src/stats/stats-observer.js'
-import configure from './src/configure.js'
-import task from './src/task.js'
+import { AsciiTable3 as Table } from 'ascii-table3'
 
+import StatsObserver from './src/stats/stats-observer.js'
+import TestTimer from './src/test-timer.js'
 import Firehose from './src/firehose.js'
 import Foreman from './src/foreman.js'
-import TestTimer from './src/test-timer.js'
+import prompt from './src/prompt.js'
+import Plot from './src/plot.js'
+import task from './src/task.js'
 
 class Dyno {
   constructor({
     task,
     parameters,
-    fields,
+    render = async () => {},
     before = async () => {},
     after = async () => {}
   }) {
@@ -20,7 +22,6 @@ class Dyno {
       : (() => { throw new Error('task must be a valid .js filepath') })()
 
     this.parameters = parameters
-    this.fields = fields
     this.hooks = { before, after }
     this.stopping = false
     this.foreman = new Foreman(this.task, {
@@ -36,10 +37,7 @@ class Dyno {
       seconds: this.parameters.DURATION_SECONDS
     })
     
-    this.observer = new StatsObserver({
-      fields: this.fields,
-      additionalRows: { parameters: [parameters] }
-    })
+    this.observer = new StatsObserver(this, render)
 
     this.log = {
       success: message => process.env.NODE_ENV === 'test' ||
@@ -132,4 +130,4 @@ class Dyno {
   }
 }
 
-export { configure, Dyno, task }
+export { Dyno, Plot, Table, prompt, task }

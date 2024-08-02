@@ -1,7 +1,7 @@
 import test from 'node:test'
 import { randomUUID } from 'node:crypto'
 
-import { Dyno, configure } from '../../index.js'
+import { Dyno, prompt } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
 test('Dyno/Task: before/after hooks', async t => {
@@ -12,7 +12,7 @@ test('Dyno/Task: before/after hooks', async t => {
 
     dyno = new Dyno({
       task: './test/hooks/tasks/task.js',
-      parameters: await configure({
+      parameters: await prompt({
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
         DURATION_SECONDS: 3,

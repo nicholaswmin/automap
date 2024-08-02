@@ -81,106 +81,71 @@ task(async parameters => {
 })
 ```
 
-> **note:** measures must also be declared in the
-> `fields.threads.tabular` field within the
-> runner file, otherwise they won't appear in the output.\
-> See below:
-
 ### Runner file
 
 Configure the test parameters and what should be logged in the output:
 
 ```js
 // run.js
+import { Dyno, Table, Plot, prompt } from '@nicholaswmin/dyno'
 
-import { Dyno, configure } from '@nicholaswmin/dyno'
+// helpers
+const toMB = bytes => parseInt(bytes / 1000 / 1000)
+const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 
 const dyno = new Dyno({
-  // path of the task file.
-  task: './task.js',
-  parameters: await configure({
-    // Test parameters
+  task: '.github/example/task.js',
+  render: function({ runner, threads }) {
+    const views = [
+      new Table()
+        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (mb)')
+        .addRowMatrix([
+          [ 
+            runner.sent.at(-1).count, 
+            runner.replies.at(-1).count, 
+            toMB(runner.memory.at(-1).mean) 
+          ]
+        ]),
 
-    // tasks per second across all threads
+      new Table('Threads (mean/ms)')
+        .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
+        .addRowMatrix(Object.keys(threads).map(thread => {
+          return [
+            thread,
+            round(threads[thread]['task']?.at(-1).mean) || 'no data',
+            round(threads[thread]['fibonacci']?.at(-1).mean) || 'no data',
+            round(threads[thread]['sleep']?.at(-1).mean) || 'no data',
+            round(threads[thread]['backlog']?.at(-1).max) || 'no data'
+          ]
+        })
+        .sort((a, b) => b[1] - a[1])),
+      
+      new Plot('Thread timings timeline', {
+          subtitle: 'mean (ms)',
+          properties: ['task', 'fibonacci', 'sleep'],
+          unit: 'mean'
+        })
+        .plot(threads[Object.keys(threads).at(-1)])
+    ]
+    
+    console.clear()
+
+    views.forEach(view => console.log(view.toString()))
+  },
+
+  parameters: await prompt({
     TASKS_SECOND: 100,
-    // total num of threads, ideally = number of CPU cores
     THREAD_COUNT: 8,
-    // total test duration
     DURATION_SECONDS: 5,
-
-    // Custom parameters
-    //
-    // Note: you can access these parameters in your task file
 
     FOO: 2,
     BAR: 5,
     BAZ: {
-      // Optional:
-      // Declare a parameter as user-configurable on startup.
-      // You'll be prompted to tweak it when the test starts:
       value: 10,
       type: Number,
       configurable: true
     }
-  }),
-
-  // Declare what should be included in the output, in this format:
-  //
-  // `[<metric-name>.<metric.unit>, <human-readable-name>, <transformer-function>]`
-  //
-  // Note:
-  // `<metric-unit>` can by any of: `count`, `min`, `max`, `mean`, `stddev`
-  // where:
-  // - `count`: number of times ticked
-  // - `min`: minimum recorded value
-  // - `max`: maximum recorder value
-  // - `mean`: average of recorded values
-  // - `stddev`: standard deviation between recorded values
-  // 
-  fields: {
-    // Which parameters to log
-    parameters: [
-      ['parameters.PAYLOAD_KB', 'PAYLOAD_KB'],
-      ['parameters.FOO', 'FOO']
-    ],
-
-    // General test fields
-
-    // test statistics:
-    runner: [
-      ['sent.count', 'tasks sent'],
-      ['replies.count', 'tasks acked'],
-      ['memory.mean', 'memory (mean/mb)'],
-      ['uptime.count', 'uptime seconds']
-    ],
-
-    // Per-task/thread fields
-
-    threads: {
-      // task/thread statistics:
-
-      //  key by which the results are sorted (max value first, descending)
-      sortby: 'task.mean',
-      // Log:
-      // - the overall task duration
-      // - the `fibonacci` `min`/`max`/`mean` durations
-      // - the `performance.measure('sleep')` max duration
-      // - number of tasks sent but still unprocessed
-      // ... all rounded to the nearest integer
-      tabular: [
-        ['task.mean', 'task (mean/ms)', round],
-        ['fibonacci.min', 'fib() minimum (in ms)', Math.round],
-        ['fibonacci.max', 'fib() maximum (in ms)', Math.round],
-        ['fibonacci.mean', 'fib() average (in ms)', Math.round],
-        ['sleep.max', 'sleep() maximum (in ms)', Math.round],
-        ['backlog.max', 'max backlog']
-      ],
-      // include these average durations in the plot
-      // note: the plot only logs the value 'mean' (average) and this
-      // is non-configurable for now
-      plotted: [ ['task'], ['fibonacci'], ['sleep'] ]
-    }
-  }
+  })
 })
 
 await dyno.start()

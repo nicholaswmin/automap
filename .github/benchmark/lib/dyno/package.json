@@ -21,6 +21,8 @@
   "license": "MIT",
   "dependencies": {
     "@inquirer/input": "^2.2.4",
+    "ascii-table3": "^0.9.0",
+    "asciichart": "^1.5.25",
     "throttleit": "^2.1.0"
   }
 }
