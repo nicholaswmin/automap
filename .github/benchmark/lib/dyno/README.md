@@ -1,6 +1,6 @@
 [![test-workflow][test-badge]][test-workflow]
 
-# :wrench: dyno
+# :stopwatch: dyno
 
 run a piece of code on separate threads and log runtime measurements
 
