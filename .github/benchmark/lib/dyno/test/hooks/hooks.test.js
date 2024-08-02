@@ -87,15 +87,15 @@ test('Dyno/Task: before/after/render hooks', async t => {
     })
     
     await t.test('runs the hooks in the correct order', async t => {
-      await t.test('runs runner:before hook first', async t => {
+      await t.test('runs "runner:before"', async t => {
         t.assert.strictEqual(rows[0].alt, 'runner:before')
       })
       
-      await t.test('then runs "task:before" hook', async t => {
+      await t.test('then runs "task:before"', async t => {
         t.assert.strictEqual(rows[1].alt, 'task:before')
       })
       
-      await t.test('then runs "runnder:render" hook', async t => {
+      await t.test('then runs "runner:render"', async t => {
         await t.test('after task:before', async t => {
           t.assert.strictEqual(rows[2].alt, 'runner:render')
         })
@@ -105,7 +105,7 @@ test('Dyno/Task: before/after/render hooks', async t => {
         t.assert.strictEqual(rows.at(-2).alt, 'task:after')
       })
       
-      await t.test('runs runner:after, last', async t => {
+      await t.test('runs "runner:after", last', async t => {
         t.assert.strictEqual(rows.at(-1).alt, 'runner:after')
       })
     })
