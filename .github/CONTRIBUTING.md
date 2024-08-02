@@ -37,8 +37,14 @@ npm run checks
 
 *must* pass, without warnings.
 
+## Authors 
+
+[@nicholaswmin][nicholaswmin]
+
 [todos]: ./TODO.md
 [semver]: https://semver.org/
 [conv-comm]: https://www.conventionalcommits.org/en/v1.0.0/#summary
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
 [git-blame]: https://git-scm.com/docs/git-blame
+
+[nicholaswmin]: https://github.com/nicholaswmin
