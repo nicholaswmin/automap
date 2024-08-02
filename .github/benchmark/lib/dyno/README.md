@@ -64,14 +64,14 @@ task(async parameters => {
   const fibonacci = n => n < 1 ? 0 : n <= 2
     ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
 
-  // can be timerified using `performance.timerify`
+  // measure using `performance.timerify`
   const timed_fibonacci = performance.timerify(fibonacci)
 
   timed_fibonacci(parameters.FOO)
   timed_fibonacci(parameters.BAR)
   timed_fibonacci(parameters.BAZ)
 
-  // Measure something using `performance.measure`
+  // measure using `performance.measure`
   performance.mark('start')
 
   await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
