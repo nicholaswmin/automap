@@ -89,20 +89,18 @@ Configure the test parameters and what should be logged in the output:
 // run.js
 import { Dyno, Table, Plot, prompt } from '@nicholaswmin/dyno'
 
-// helpers
-const toMB = bytes => parseInt(bytes / 1000 / 1000)
-const round = num => Math.round((num + Number.EPSILON) * 100) / 100
-
 const dyno = new Dyno({
   // path of task file
   task: '.github/example/task.js',
   
   // Set the test parameters
   parameters: await prompt({
+    // these are required
     TASKS_SECOND: 100,
     THREAD_COUNT: 8,
     DURATION_SECONDS: 5,
-
+    
+    // these are optional 
     FOO: 2,
     BAR: 5,
 
@@ -132,12 +130,12 @@ const dyno = new Dyno({
     const views = [
       // Log general runner stats
       new Table()
-        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (mb)')
+        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (bytes)')
         .addRowMatrix([
           [ 
             runner.sent.at(-1).count, 
             runner.replies.at(-1).count, 
-            toMB(runner.memory.at(-1).mean) 
+            runner.memory.at(-1).mean
           ]
         ]),
 
@@ -147,10 +145,10 @@ const dyno = new Dyno({
         .addRowMatrix(Object.keys(threads).map(thread => {
           return [
             thread,
-            round(threads[thread]['task']?.at(-1).mean) || 'no data',
-            round(threads[thread]['fibonacci']?.at(-1).mean) || 'no data',
-            round(threads[thread]['sleep']?.at(-1).mean) || 'no data',
-            round(threads[thread]['backlog']?.at(-1).max) || 'no data'
+            threads[thread]['task']?.at(-1).mean || 'no data',
+            threads[thread]['fibonacci']?.at(-1).mean || 'no data',
+            threads[thread]['sleep']?.at(-1).mean || 'no data',
+            threads[thread]['backlog']?.at(-1).max || 'no data'
           ]
         })
         // sort threads by 'task' mean duration
