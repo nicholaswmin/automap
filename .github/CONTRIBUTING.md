@@ -24,7 +24,7 @@ follow [GitHub flow][github-flow]
 follow [conventional commits][conv-comm] convention.
 
 The commit messages should be short yet descriptive enough   
-so that `git blame` gives a good approximation of the intent of the change.
+so that [`git blame`][git-blame] describes the original intent
 
 ### before merging to `main`
 
@@ -41,3 +41,4 @@ npm run checks
 [semver]: https://semver.org/
 [conv-comm]: https://www.conventionalcommits.org/en/v1.0.0/#summary
 [github-flow]: https://docs.github.com/en/get-started/using-github/github-flow
+[git-blame]: https://git-scm.com/docs/git-blame
