@@ -30,11 +30,9 @@
     "url": "git+https://github.com/nicholaswmin/automap.git"
   },
   "keywords": [
-    "orm",
-    "object-mapping",
-    "object-relational-mapping",
     "redis",
-    "javascript",
+    "object-mapping",
+    "nodejs",
     "database"
   ],
   "author": "@nicholaswmin",
