@@ -125,7 +125,7 @@ const dyno = new Dyno({
     console.log('test ended')
   },
   
-  // called stat update (max 30 fps)
+  // called on measurement update (max 30 fps)
   render: function({ runner, threads }) {
     // Use provided `Table` & `Plot` to build an output
 
