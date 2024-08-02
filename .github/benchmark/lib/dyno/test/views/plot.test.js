@@ -2,7 +2,7 @@ import test from 'node:test'
 
 import { Plot } from '../../index.js'
 
-test('View: Plot', async t => {
+test('Views: Plot', async t => {
   const obj = {
     foo: [
       { count: 4, min: 1, mean: 4, max: 10, stddev: 1 },
@@ -22,7 +22,7 @@ test('View: Plot', async t => {
   let plot
 
   t.beforeEach(async () => {
-    plot = new Plot('Foo Plot', {
+    plot = new Plot('Foo', {
       // intentionally skip 'baz'
       properties: ['foo', 'bar', 'bax'],
       subtitle: 'hello world'
@@ -75,11 +75,11 @@ test('View: Plot', async t => {
       })
   
       await t.test('contains the passed title', t => {
-        t.assert.ok(result.includes('Foo Plot'), 'cannot find title')
+        t.assert.ok(result.includes('Foo'), 'cannot find "Foo Plot"')
       })
 
       await t.test('contains the passed subtitle', t => {
-        t.assert.ok(result.includes('hello world'), 'cannot find subtitle')
+        t.assert.ok(result.includes('hello world'), 'cannot find "hello world"')
       })
       
       await t.test('contains the properties as plot labels', t => {

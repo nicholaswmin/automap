@@ -1,12 +1,12 @@
 import { styleText } from 'node:util'
-import { AsciiTable3 as Table } from 'ascii-table3'
 
 import StatsObserver from './src/stats/stats-observer.js'
 import TestTimer from './src/test-timer.js'
 import Firehose from './src/firehose.js'
 import Foreman from './src/foreman.js'
 import prompt from './src/prompt.js'
-import Plot from './src/plot.js'
+import Table from './src/views/table.js'
+import Plot from './src/views/plot.js'
 import task from './src/task.js'
 
 class Dyno {
