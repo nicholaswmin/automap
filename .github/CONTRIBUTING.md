@@ -21,7 +21,10 @@ follows [GitHub flow][github-flow]
 
 ### commit messages
 
-follows [conventional commits][conv-comm]
+follow [conventional commits][conv-comm] convention.
+
+The commit messages should be short yet descriptive enough 
+so that `git blame` gives a good approximation of the intent of the change.
 
 ### before merging to `main`
 
