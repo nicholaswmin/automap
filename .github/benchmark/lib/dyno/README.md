@@ -2,7 +2,7 @@
 
 # :wrench: dyno
 
-runs code/tasks on separate threads and logs runtime measurements
+run a piece of code on separate threads and log runtime measurements
 
 ## Usage
 
