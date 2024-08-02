@@ -5,6 +5,29 @@ const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 
 const dyno = new Dyno({
   task: '.github/example/task.js',
+  
+  parameters: await prompt({
+    TASKS_SECOND: 100,
+    THREAD_COUNT: 8,
+    DURATION_SECONDS: 5,
+
+    FOO: 2,
+    BAR: 5,
+    BAZ: {
+      value: 10,
+      type: Number,
+      configurable: true
+    }
+  }),
+  
+  before: () => {
+    console.log('test starting ...')
+  },
+
+  after: () => {
+    console.log('test ended')
+  },
+  
   render: function({ runner, threads }) {
     const views = [
       new Table()
@@ -41,21 +64,7 @@ const dyno = new Dyno({
     console.clear()
 
     views.forEach(view => console.log(view.toString()))
-  },
-
-  parameters: await prompt({
-    TASKS_SECOND: 100,
-    THREAD_COUNT: 8,
-    DURATION_SECONDS: 5,
-
-    FOO: 2,
-    BAR: 5,
-    BAZ: {
-      value: 10,
-      type: Number,
-      configurable: true
-    }
-  })
+  }
 })
 
 await dyno.start()

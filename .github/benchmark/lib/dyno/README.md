@@ -94,9 +94,43 @@ const toMB = bytes => parseInt(bytes / 1000 / 1000)
 const round = num => Math.round((num + Number.EPSILON) * 100) / 100
 
 const dyno = new Dyno({
+  // path of task file
   task: '.github/example/task.js',
+  
+  // Set the test parameters
+  parameters: await prompt({
+    TASKS_SECOND: 100,
+    THREAD_COUNT: 8,
+    DURATION_SECONDS: 5,
+
+    FOO: 2,
+    BAR: 5,
+
+    // this parameter is user configurable
+    // you'll be prompted to enter its value when the test starts
+    BAZ: {
+      // default value
+      value: 10,
+      type: Number,
+      configurable: true
+    }
+  }),
+  
+  // before/after hooks
+  before: () => {
+    console.log('test starting ...')
+  },
+
+  after: () => {
+    console.log('test ended')
+  },
+  
+  // called stat update (max 30 fps)
   render: function({ runner, threads }) {
+    // Use provided `Table` & `Plot` to build an output
+
     const views = [
+      // Log general runner stats
       new Table()
         .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (mb)')
         .addRowMatrix([
@@ -107,6 +141,7 @@ const dyno = new Dyno({
           ]
         ]),
 
+      // Log last stat for each thread
       new Table('Threads (mean/ms)')
         .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
         .addRowMatrix(Object.keys(threads).map(thread => {
@@ -118,8 +153,10 @@ const dyno = new Dyno({
             round(threads[thread]['backlog']?.at(-1).max) || 'no data'
           ]
         })
+        // sort threads by 'task' mean duration
         .sort((a, b) => b[1] - a[1])),
       
+      // Plot the mean durations of the last thread
       new Plot('Thread timings timeline', {
           subtitle: 'mean (ms)',
           properties: ['task', 'fibonacci', 'sleep'],
@@ -131,21 +168,7 @@ const dyno = new Dyno({
     console.clear()
 
     views.forEach(view => console.log(view.toString()))
-  },
-
-  parameters: await prompt({
-    TASKS_SECOND: 100,
-    THREAD_COUNT: 8,
-    DURATION_SECONDS: 5,
-
-    FOO: 2,
-    BAR: 5,
-    BAZ: {
-      value: 10,
-      type: Number,
-      configurable: true
-    }
-  })
+  }
 })
 
 await dyno.start()
@@ -154,38 +177,43 @@ await dyno.start()
 ### Example output
 
 ```js
++------------+-------------+-------------+
+|        276 |         276 |           8 |
++------------+-------------+-------------+
 
-Runner stats
-┌─────────┬────────────┬─────────────┬──────────────────┬────────────────┐
-│ (index) │ tasks sent │ tasks acked │ memory (mean/mb) │ uptime seconds │
-├─────────┼────────────┼─────────────┼──────────────────┼────────────────┤
-│ 0       │ 459        │ 459         │ 9                │ 4              │
-└─────────┴────────────┴─────────────┴──────────────────┴────────────────┘
-
-Thread stats
-┌─────────┬─────────┬────────────────┬───────────────────────┬───────────────────────┬───────────────────────┬─────────────────────────┬─────────────┐
-│ (index) │ thread  │ task (mean/ms) │ fib() minimum (in ms) │ fib() maximum (in ms) │ fib() average (in ms) │ sleep() maximum (in ms) │ max backlog │
-├─────────┼─────────┼────────────────┼───────────────────────┼───────────────────────┼───────────────────────┼─────────────────────────┼─────────────┤
-│ 0       │ '44195' │ 6              │ 1                     │ 1                     │ 1                     │ 12                      │ 2           │
-│ 1       │ '44200' │ 7              │ 1                     │ 1                     │ 1                     │ 12                      │ 2           │
-│ 2       │ '44196' │ 6              │ 1                     │ 1                     │ 1                     │ 11                      │ 1           │
-└─────────┴─────────┴────────────────┴───────────────────────┴───────────────────────┴───────────────────────┴─────────────────────────┴─────────────┘
-... + 5 hidden rows
++-------------------------------------------------+
+|                Threads (mean/ms)                |
++--------+------+-----------+-------+-------------+
+| thread | task | fibonacci | sleep | max backlog |
++--------+------+-----------+-------+-------------+
+|  76553 | 7.35 |         1 |  7.37 |           1 |
+|  76555 | 6.91 |         1 |     7 |           1 |
+|  76557 | 6.91 |         1 |  6.81 |           1 |
+|  76554 | 6.39 |         1 |   6.3 |           1 |
+|  76558 | 6.33 |         1 |  6.27 |           1 |
+|  76556 | 6.18 |         1 |  5.76 |           1 |
+|  76551 |  5.3 |         1 |  5.23 |           2 |
+|  76552 | 4.93 |         1 |     5 |           1 |
++--------+------+-----------+-------+-------------+
 
 
+  Thread timings timeline
 
-Task timings (mean/ms)
+  --task  --fibonacci  --sleep
 
-Legend: task, fibonacci, sleep
+  11.00 ┼╮                                             
+  10.00 ┼╮                                             
+   9.00 ┤│                                             
+   8.00 ┤│╮                                            
+   7.00 ┤╰───────────────╮────────╮                    
+   6.00 ┤                ╰──────────────────────────╮─ 
+   5.00 ┤                                           ╰  
+   4.00 ┤                                              
+   3.00 ┤                                              
+   2.00 ┤                                              
+   1.00 ┼───────────────────────────────────────────── 
 
-  9.00 ┼╮                                                           
-  7.86 ┤│                                                           
-  6.71 ┤│ ╭╮                                                        
-  5.57 ┤╰─╯╰─╮╭╮╭────────────────────────────────────────────────── 
-  4.43 ┤     ╰╯╰╯                                                   
-  3.29 ┤                                                            
-  2.14 ┤                                                            
-  1.00 ┼─────────────────────────────────────────────────────────── 
+  mean (ms)
 ```
 
 ## Tests

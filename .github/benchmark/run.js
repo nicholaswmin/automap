@@ -9,6 +9,34 @@ const redis = ioredis()
 
 const dyno = new Dyno({
   task: './task.js',
+  
+  parameters: await prompt({
+    TASKS_SECOND: {
+      configurable: true,
+      type: Number,
+      value: 50
+    },
+    
+    THREAD_COUNT: {
+      configurable: true,
+      type: Number,
+      value: process.env.WEB_CONCURRENCY || os.availableParallelism()
+    },
+    
+    DURATION_SECONDS: {
+      configurable: true,
+      type: Number,
+      value: 60
+    },
+    
+    MAX_ITEMS: {
+      configurable: false,
+      type: Number,
+      value: 100
+    },
+    
+    PAYLOAD_KB: 5
+  }),
 
   before: () => {
     return redis.flushall()
@@ -62,35 +90,7 @@ const dyno = new Dyno({
     console.clear()
 
     views.forEach(view => console.log(view.toString()))  
-  },
-
-  parameters: await prompt({
-    TASKS_SECOND: {
-      configurable: true,
-      type: Number,
-      value: 50
-    },
-    
-    THREAD_COUNT: {
-      configurable: true,
-      type: Number,
-      value: process.env.WEB_CONCURRENCY || os.availableParallelism()
-    },
-    
-    DURATION_SECONDS: {
-      configurable: true,
-      type: Number,
-      value: 60
-    },
-    
-    MAX_ITEMS: {
-      configurable: false,
-      type: Number,
-      value: 100
-    },
-    
-    PAYLOAD_KB: 5
-  })
+  }
 })
 
 await dyno.start()
