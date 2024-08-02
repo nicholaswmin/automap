@@ -5,10 +5,9 @@ class Plot {
   constructor(title = 'Plot', { 
     height = 10, 
     subtitle = '', 
-    unit = 'mean', 
     properties = [] 
   } = {}) {
-    this.unit = unit
+    this.unit = 'mean'
     this.properties = properties
     this.colors = [
       'magenta', 'blue', 'cyan', 'green', 'yellow', 
@@ -18,6 +17,9 @@ class Plot {
     this.config = { subtitle, height, padding: '       ' }
     this.padding = ' '.repeat(this.config.padding.length - 5)
     this.chart = `\n${this.padding}${title}\n\n`
+    
+    if (!properties.length)
+      throw new RangeError('must specify at least 1 property')
 
     return this
   }
@@ -33,6 +35,7 @@ class Plot {
     const labels = keys.map((key, i) => styleText([cols[i]], `-- ${key}`))
     const arrays = keys
       .map(key => obj[key].map(hgram => hgram[this.unit]).sort((a, b) => b - a))
+      .filter(array => array.length)
     
     try {
       this.chart += labels.reduce((acc, label) => acc += `  ${label}`, '') + br
