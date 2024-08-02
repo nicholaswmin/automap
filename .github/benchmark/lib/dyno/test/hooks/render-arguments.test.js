@@ -2,7 +2,7 @@ import test from 'node:test'
 
 import { Dyno, prompt } from '../../index.js'
 
-test('Dyno: #render() hook', async t => {
+test('Dyno: #render() hook arguments', async t => {
   let dyno, renderFnMock = t.mock.fn(() => {})
 
   t.before(async () => {
@@ -21,7 +21,7 @@ test('Dyno: #render() hook', async t => {
   })
 
   await t.test('is called', async t => {
-    t.assert.ok(renderFnMock.mock.calls.length > 1, 'renderFnMock wasnt called')
+    t.assert.ok(renderFnMock.mock.calls.length > 0, 'renderFnMock() not called')
   })
   
   await t.test('with arguments', async t => {
