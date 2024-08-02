@@ -201,7 +201,7 @@ await dyno.start()
 
   Thread timings timeline
 
-  --task  --fibonacci  --sleep
+  -- task  -- fibonacci  -- sleep
 
   11.00 ┼╮                                             
   10.00 ┼╮                                             

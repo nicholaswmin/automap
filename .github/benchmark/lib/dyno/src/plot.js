@@ -30,7 +30,7 @@ class Plot {
     const keys = Object.keys(obj).filter(key =>this.properties.includes(key))
     const cols = keys.map((_, i) => this.colors[i])
     const colors = cols.map(color => asciichart[color])
-    const labels = keys.map((key, i) => styleText([cols[i]], `--${key}`))
+    const labels = keys.map((key, i) => styleText([cols[i]], `-- ${key}`))
     const arrays = keys
       .map(key => obj[key].map(hgram => hgram[this.unit]).sort((a, b) => b - a))
     
