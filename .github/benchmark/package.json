@@ -1,0 +1,14 @@
+{
+  "name": "@nicholaswmin/benchmark",
+  "type": "module",
+  "version": "0.1.0",
+  "author": "@nicholaswmin",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "npm --prefix lib/dyno install --omit=dev",
+    "start": "node run.js"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  }
+}
