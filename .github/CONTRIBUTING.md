@@ -17,13 +17,13 @@ follows [Semantic Versioning][semver]
 
 ## Code changes
 
-follows [GitHub flow][github-flow]
+follow [GitHub flow][github-flow]
 
 ### commit messages
 
 follow [conventional commits][conv-comm] convention.
 
-The commit messages should be short yet descriptive enough 
+The commit messages should be short yet descriptive enough   
 so that `git blame` gives a good approximation of the intent of the change.
 
 ### before merging to `main`
