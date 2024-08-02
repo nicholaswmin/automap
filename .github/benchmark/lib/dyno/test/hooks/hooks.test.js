@@ -4,12 +4,12 @@ import { randomUUID } from 'node:crypto'
 import { Dyno, prompt } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
-test('Dyno/Task: before/after hooks', async t => {
+test('Dyno/Task: before/after/render hooks', async t => {
   let dyno, randomId = randomUUID()
 
   t.before(async () => {
     resetDB()
-
+    
     dyno = new Dyno({
       task: './test/hooks/tasks/task.js',
       parameters: await prompt({
@@ -18,11 +18,17 @@ test('Dyno/Task: before/after hooks', async t => {
         DURATION_SECONDS: 3,
         RANDOM_ID: randomId
       }),
-      before: parameters => {
-        return insertDBRow(process.pid, parameters.RANDOM_ID, 'runner:before')
+
+      before: () => {
+        return insertDBRow(process.pid, randomId, 'runner:before')
       },
-      after: parameters => {
-        return insertDBRow(process.pid, parameters.RANDOM_ID, 'runner:after')
+
+      after: () => {
+        return insertDBRow(process.pid, randomId, 'runner:after')
+      },
+
+      render: () => {
+        return insertDBRow(process.pid, randomId, 'runner:render')
       }
     })
 
@@ -56,6 +62,14 @@ test('Dyno/Task: before/after hooks', async t => {
       })
     })
     
+    await t.test('runner:render', async t => {
+      const result = rows.filter(row => row.alt === 'runner:render')
+
+      await t.test('runs it more than once', t => {
+        t.assert.ok(result.length > 1, `found: ${result.length} rows, not > 1`)
+      })
+    })
+    
     await t.test('task:before', async t => {
       const result = rows.filter(row => row.alt === 'task:before')
 
@@ -77,12 +91,14 @@ test('Dyno/Task: before/after hooks', async t => {
         t.assert.strictEqual(rows[0].alt, 'runner:before')
       })
       
-      await t.test('runs task:before hook second', async t => {
+      await t.test('then runs "task:before" hook', async t => {
         t.assert.strictEqual(rows[1].alt, 'task:before')
       })
       
-      await t.test('runs the task', async t => {
-        t.assert.strictEqual(rows[3].alt, 'task')
+      await t.test('then runs "runnder:render" hook', async t => {
+        await t.test('after task:before', async t => {
+          t.assert.strictEqual(rows[2].alt, 'runner:render')
+        })
       })
       
       await t.test('runs the task:after second from last', async t => {
