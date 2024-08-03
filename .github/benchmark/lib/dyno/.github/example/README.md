@@ -1,6 +1,4 @@
-# Fibonnaci Benchmark
-
-Benchmarking example using the `dyno` module
+# Fibonnaci benchmark
 
 ## Run 
 
