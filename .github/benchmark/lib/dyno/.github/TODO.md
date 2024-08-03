@@ -17,6 +17,10 @@
 - [x] log test constants/parameters
 - [ ] log to file
 
+## refactor 
+
+- [ ] there is no need for a `Dyno` class. Export a simple function instead.
+
 ## test
 
 - [ ] fix/implement tests marked as `todo`
