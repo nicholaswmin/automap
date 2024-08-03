@@ -69,6 +69,7 @@ the following [Performance Measurement APIs][perf-api]:
 > Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function
 
 ```js
+// task.js
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
@@ -110,6 +111,7 @@ In [`node:cluster` module][cluster] terminology, it's akin to the
 [`primary` process][cluster-primary].
 
 ```js
+// run.js
 import { join } from 'node:path'
 import { availableParallelism } from 'node:os'
 import { Dyno, Table, Plot } from '@nicholaswmin/dyno'
