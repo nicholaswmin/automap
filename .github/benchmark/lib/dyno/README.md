@@ -66,7 +66,7 @@ A benchmark is comprised of 2 files:
 >
 > Declares the *code under test*.  
 
-> The [Advanced Example][#advanced-example] includes detailed code comments
+> The [Advanced Example](#advanced-example) includes detailed code comments
 > on configuration, parameters, output etc ...
 
 ## Simple example
