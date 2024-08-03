@@ -8,4 +8,5 @@
 - [x] Log test constants/parameters
 - [ ] Log to file
 - [ ] Any tests marked as `todo`
+- [ ] Split unit tests & integration tests, ensure unit-tests run fast
 - [ ] fix `npx init` command in docs after publishing
