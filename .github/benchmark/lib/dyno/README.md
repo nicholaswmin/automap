@@ -1,4 +1,4 @@
-[![test-workflow][test-badge]][test-workflow]
+[![test-workflow][test-badge]][test-workflow] [![codeql-workflow][codeql-badge]][codeql-workflow]
 
 # :stopwatch: dyno
 
@@ -322,6 +322,9 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 
 [test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml
+
+[codeql-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/codeql.yml/badge.svg
+[codeql-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/codeql.yml
 
 <!--- General -->
 
