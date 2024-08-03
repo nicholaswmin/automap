@@ -5,8 +5,8 @@
 run multithreaded benchmarks
 
 * [Install](#install)
-* [Setup](#setup)
-* [Configuration](#configuration-files)
+* [Quickstart](#quickstart)
+* [Configuration](#configuration)
 * [Simple example](#simple-example)
   + [Run file](#run-file)
   + [Task file](#task-file)
@@ -26,7 +26,7 @@ run multithreaded benchmarks
 npm i https://github.com/nicholaswmin/automap.git
 ```
 
-## Setup
+## Quickstart
 
 Create a sample, runnable benchmark
 
@@ -44,13 +44,13 @@ npx init
 cd benchmark
 ```
 
-> run the benchmark:
+> run it:
 
 ```bash
 node run.js
 ```
 
-## Configuration files
+## Configuration
 
 A benchmark is comprised of 2 files:
 
