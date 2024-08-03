@@ -4,6 +4,22 @@
 
 run multithreaded benchmarks
 
+* [Install](#install)
+* [Setup](#setup)
+* [Configuration](#configuration-files)
+* [Simple example](#simple-example)
+  + [Run file](#run-file)
+  + [Task file](#task-file)
+  + [Output](#output)
+* [Advanced example](#advanced-example)
+  + [Run file](#run-file-1)
+  + [Task file](#task-file-1)
+  + [Output](#output-1)
+* [Tests](#tests)
+* [Runnable example](#runnable-example)
+* [Authors](#authors)
+* [License](#license)
+
 ## Install
 
 ```bash
