@@ -18,8 +18,23 @@ Create a sample, runnable benchmark
 npx init
 ```
 
-> Use the sample benchmark as a starting point  
-> edit: `run.js` & `task.js`
+> Use the sample benchmark as a starting point by editing `run.js` & `task.js`
+
+### Run
+
+> navigate into the created `benchmark` folder:
+
+```bash
+cd benchmark
+```
+
+> run the benchmark:
+
+```bash
+node run.js
+```
+
+## Configuration files
 
 A benchmark is comprised of 2 files:
 
@@ -36,20 +51,6 @@ A benchmark is comprised of 2 files:
 >
 > Declares the *code under test*.  
 > Edit this file with your own task/code
-
-### Run
-
-> navigate into the created `benchmark` folder:
-
-```bash
-cd benchmark
-```
-
-> start the benchmark:
-
-```bash
-node run.js
-```
 
 > Read below sections for configuration guidance
 
