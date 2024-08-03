@@ -2,7 +2,7 @@
 
 # :stopwatch: dyno
 
-run benchmarks on separate threads and log runtime measurements
+run multithreaded benchmarks
 
 ## Usage
 
