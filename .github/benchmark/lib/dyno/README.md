@@ -54,6 +54,8 @@ node run.js
 
 ### Simple 
 
+> Benchmark a `sleep()` function using [`performance.timerify`][timerify]
+
 #### Runner file
 
 Declares: 
@@ -63,9 +65,6 @@ Declares:
 
 This file is run once.   
 Sets up the benchmark & internally controls the spawned threads.
-
-> **Example:**   
-> Benchmark a `sleep()` function using [`performance.timerify`][timerify]
 
 ```js
 // run.js
