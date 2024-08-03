@@ -1,5 +1,4 @@
 import input from '@inquirer/input'
-import confirm from './utils/confirm.js'
 
 const types = {
   'string': String,
@@ -63,21 +62,6 @@ export default async parameters => {
 
     parameters[key] = types[typeof value](answer)
   }
-  
-  const frozen = Object.freeze(flatten(parameters, 'configurable'))
-  
-  
-  if (!['test'].includes(process.env.NODE_ENV))
-    if (!process.argv.includes('--no-confirm')) {
-      console.log('\n')
-      console.log(frozen)
-      
-      if (!await confirm('are these parameters correct?'))
-        process.exit(1)
-    }
 
-
-  console.clear()
-
-  return frozen
+  return Object.freeze(flatten(parameters))
 }

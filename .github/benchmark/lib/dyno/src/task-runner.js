@@ -47,7 +47,7 @@ class TaskRunner extends EventEmitter {
       detail: task.detail, start: 't-0', end: 't-1'
     })
 
-    this.emit('task:run', this)
+    this.emit('task:finish', this)
 
     this.state.running = false
 
@@ -72,7 +72,7 @@ class TaskRunner extends EventEmitter {
   stop() {
     this.state.stopped = new Date()
 
-    return this.removeAllListeners('task:run')
+    return this.removeAllListeners('task:finish')
   }
 }
 

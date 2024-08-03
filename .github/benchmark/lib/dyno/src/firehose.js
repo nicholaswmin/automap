@@ -1,10 +1,16 @@
-import { RunnerStatsTracker } from './stats/stats-tracker.js'
+import { StatsTracker } from './stats/stats-tracker.js'
 
 class Firehose {
   constructor() {
-    this.stats = new RunnerStatsTracker(['sent', 'acked', 'memory'])
-    this.tasksSecond = 1
+    this.stats = new StatsTracker([
+      'sent', 
+      'acked', 
+      'finished', 
+      'backlog', 
+      'memory'
+    ])
 
+    this.tasksSecond = 1
     this.threads = []
     this.taskTimer = null
   }
@@ -17,11 +23,22 @@ class Firehose {
 
     Object.values(threads).forEach(thread => {
       thread.on('message', message => {
-        if (message.type === 'ack') {
+        if (!message.type.startsWith('task:'))
+          return
+
+        if (message.type === 'task:ack')
           this.stats.acked.tick()
-          this.stats.memory.record(process.memoryUsage().heapUsed)
-          this.stats.publish()
+        
+        if (message.type === 'task:finish') {
+          this.stats.finished.tick()
+          this.stats.backlog.record(
+            this.stats.sent.count - 
+            this.stats.finished.count
+          )
         }
+        
+        this.stats.memory.record(process.memoryUsage().heapUsed)
+        this.stats.publish()
       })
     })
 
@@ -45,7 +62,7 @@ class Firehose {
       const random = threads[Math.floor(Math.random() * threads.length)]
 
       random && random.connected ? random.send({
-        type: 'task:execute',
+        type: 'task:start',
         task: this.stats.sent.count + 1
       }) : null
 

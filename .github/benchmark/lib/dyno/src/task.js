@@ -18,31 +18,38 @@ const task = async (
   const runner = new TaskRunner()
 
   const stats = {
-    general: new ThreadStatsTracker(['task', 'memory', 'backlog']),
+    general: new ThreadStatsTracker([
+      'task', 'memory', 'acked', 'finished', 'backlog'
+    ]),
     measures: new ThreadObservedStatsTracker(['function', 'measure', 'gc'])
   }
 
   before ? await before(parameters) : null
 
-  runner.on('task:run', async runner => {
-    // @NOTE: Custom measures need to be declared in `fields`
-    // to appear in output
+  runner.on('task:finish', async runner => {
     stats.general.task.record(runner.measure.duration)
     stats.general.memory.record(process.memoryUsage().heapUsed)
-    stats.general.backlog.record(runner.backlog.length || 1)
+    stats.general.backlog.record(runner.backlog.length)
+    stats.general.finished.tick()
+
     stats.general.publish()
     stats.measures.publish()
+    
+    if (process.connected)
+      return process.send({ type: 'task:finish' })
   })
 
   const onRunnerMessage = message => {
     if (message.type === 'shutdown')
       return shutdown(0)
 
-    if (message.type === 'task:execute') {
+    if (message.type === 'task:start') {
+      stats.general.acked.tick()
+
       runner.enqueue(message.task)
 
       if (process.connected)
-        return process.send({ type: 'ack' }, null, { keepOpen: true })
+        return process.send({ type: 'task:ack' }, null, { keepOpen: true })
     }
 
     throw new Error(`Unknown type. Got: ${JSON.stringify(message)}`)
@@ -52,7 +59,7 @@ const task = async (
     runner.removeAllListeners('task:run')
     runner.stop()
     Object.values(stats).forEach(stat => stat.stop())
-    await setTimeout(500)
+    await setTimeout(100)
     after ? await after(parameters) : null
     return process.exit(code)
   }

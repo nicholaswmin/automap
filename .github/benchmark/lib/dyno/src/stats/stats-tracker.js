@@ -1,7 +1,7 @@
 import Histogram from './histogram.js'
 import localbus from './local-bus.js'
 
-class RunnerStatsTracker {
+class StatsTracker {
   constructor(keys = []) {
     this.stopped = false
 
@@ -15,7 +15,7 @@ class RunnerStatsTracker {
       .filter(val => val instanceof Histogram)
       .reduce((acc, member) => {
         return {
-          ...acc, [member.name]: member.histogram.toJSON()
+          ...acc, [member.name]: member.toJSON()
         }
     }, {})
   }
@@ -29,7 +29,7 @@ class RunnerStatsTracker {
   }
 }
 
-class ThreadStatsTracker extends RunnerStatsTracker {
+class ThreadStatsTracker extends StatsTracker {
   constructor(...args) {
     super(...args)
   }
@@ -39,7 +39,6 @@ class ThreadStatsTracker extends RunnerStatsTracker {
       ? process.send({ type: 'stats:row:update', row: this.getRow() })
       : null
   }
-
 
   stop() {
     // noop
@@ -75,4 +74,4 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
   }
 }
 
-export { RunnerStatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }
+export { StatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }

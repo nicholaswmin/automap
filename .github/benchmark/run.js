@@ -34,26 +34,41 @@ const dyno = new Dyno({
       .setHeading(...Object.keys(this.parameters))
       .addRowMatrix([ Object.values(this.parameters) ]),
 
-      new Table()
-      .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (mb)')
+      new Table('Runner Tasks')
+      .setHeading('sent', 'acked', 'finished', 'backlog', 'mem. (mb)')
       .addRowMatrix([
         [ 
           runner.sent.at(-1).count, 
           runner.acked.at(-1).count, 
+          runner.finished.at(-1).count, 
+          runner.backlog.at(-1).last, 
           utils.bytesToMB(runner.memory.at(-1).mean) 
         ]
       ]),
 
-      new Table(`Threads (mean/ms), top ${maxThreadCount} of ${threadCount}`)
-      .setHeading('thread', 'task', 'save', 'fetch', 'latency', 'max backlog')
+      new Table(`Threads, top ${maxThreadCount} of ${threadCount}`)
+      .setHeading(
+        'thread id', 
+        'task (mean/ms)', 
+        'save (mean/ms)', 
+        'fetch (mean/ms)', 
+        'latency (mean/ms)', 
+
+        'acked', 
+        'finished', 
+        'backlog'
+      )
       .addRowMatrix(Object.keys(threads).map(thread => {
         return [
           thread,
-          utils.round(threads[thread]['task']?.at(-1).mean),
-          utils.round(threads[thread]['save']?.at(-1).mean) || 'no data',
-          utils.round(threads[thread]['fetch']?.at(-1).mean) || 'no data',
+          utils.round(threads[thread]['task']?.at(-1).mean)       || 'no data',
+          utils.round(threads[thread]['save']?.at(-1).mean)       || 'no data',
+          utils.round(threads[thread]['fetch']?.at(-1).mean)      || 'no data',
           utils.round(threads[thread]['redis_ping']?.at(-1).mean) || 'no data',
-          utils.round(threads[thread]['backlog']?.at(-1).max) || 'no data',
+
+          utils.round(threads[thread]['acked']?.at(-1).count)     || 'no data',
+          utils.round(threads[thread]['finished']?.at(-1).count)  || 'no data',
+          utils.round(threads[thread]['backlog']?.at(-1).last)    || 'no data'
         ]
       })
       .sort((a, b) => b[1] - a[1])

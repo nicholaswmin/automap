@@ -77,12 +77,12 @@ class Dyno {
     this.stopping = true
 
     this.log.info('shutting down ...')
+    
+    this.observer.stop()
+    this.log.info('stats observer stopped ...')
 
     await this.foreman.stop()
     this.log.info('threads shutdown ...')
-
-    this.observer.stop()
-    this.log.info('stats observer stopped ...')
 
     this.firehose.stop()
     this.log.info('firehose stopped ...')

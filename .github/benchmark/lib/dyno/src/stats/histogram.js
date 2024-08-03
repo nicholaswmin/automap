@@ -4,6 +4,7 @@ class Histogram {
   constructor({ name }  = {}) {
     this.name = name
     this.percentiles = {}
+    this.last = 0
     this.histogram = createHistogram()
 
     ;[
@@ -38,7 +39,10 @@ class Histogram {
 
     this.histogramRecord = this.histogram.record.bind(this.histogram)
     this.histogram.record = val => {
-      const result = this.histogramRecord(Math.ceil(val))
+      const rounded = Math.round(val)
+      const result = rounded > 0 ? this.histogramRecord(rounded) : null
+      
+      this.last = rounded
 
       return result
     }
@@ -54,6 +58,13 @@ class Histogram {
 
   reset() {
     return this.histogram.reset()
+  }
+  
+  toJSON() {
+    return {
+      last: this.last,
+      ...this.histogram.toJSON()
+    }
   }
 }
 
