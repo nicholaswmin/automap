@@ -12,11 +12,14 @@ npm i https://github.com/nicholaswmin/automap.git
 
 ## Setup
 
+Create a sample, runnable benchmark
+
 ```bash 
 npx init
 ```
 
-> creates a `./benchmark` folder which contains a runnable, sample benchmark.
+> Use the sample benchmark as a starting point  
+> edit: `run.js` & `task.js`
 
 A benchmark is comprised of 2 files:
 
