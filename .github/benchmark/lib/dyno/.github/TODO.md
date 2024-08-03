@@ -20,6 +20,9 @@
 ## refactor 
 
 - [ ] there is no need for a `Dyno` class. Export a simple function instead.
+- [ ] `npx init` should generate the bare-minimum benchmark that includes 
+      reasonable features (i.e plot etc)
+- [ ] unify all the code examples
 
 ## test
 
