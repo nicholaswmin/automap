@@ -1,7 +1,7 @@
 import test from 'node:test'
 import { randomUUID } from 'node:crypto'
 
-import { Dyno, prompt } from '../../index.js'
+import { Dyno } from '../../index.js'
 import { resetDB } from '../utils/sqlite.js'
 
 test('Measures: Runner stats', async t => {
@@ -12,12 +12,12 @@ test('Measures: Runner stats', async t => {
 
     dyno = new Dyno({
       task: './test/runner-stats/tasks/task.js',
-      parameters: await prompt({
+      parameters: {
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
         DURATION_SECONDS: 2,
         RANDOM_ID: randomId
-      })
+      }
     })
 
     result = await dyno.start()

@@ -1,4 +1,6 @@
-import './parameters/parameters.test.js'
+import './bin/index.test.js'
+
+import './parameters/index.test.js'
 import './hooks/index.test.js'
 import './views/index.test.js'
 

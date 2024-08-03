@@ -17,26 +17,14 @@ class Dyno {
     before = async () => {},
     after = async () => {}
   }) {
-    this.task = typeof task === 'string' && task.length && task.endsWith('.js')
-      ? task
-      : (() => { throw new Error('task must be a valid .js filepath') })()
-
-    this.parameters = parameters
-    this.hooks = { before, after }
+    this._parameters = parameters
+    this.parameters = null
     this.stopping = false
-    this.foreman = new Foreman(this.task, {
-      count: this.parameters.THREAD_COUNT,
-      parameters: this.parameters
-    })
+    this.hooks = { before, after }
 
-    this.firehose = new Firehose({
-      tasksPerSecond: this.parameters.TASKS_SECOND
-    })
-
-    this.testTimer = new TestTimer({
-      seconds: this.parameters.DURATION_SECONDS
-    })
-    
+    this.foreman = new Foreman(task)
+    this.firehose = new Firehose()
+    this.testTimer = new TestTimer()
     this.observer = new StatsObserver(this, render)
 
     this.log = {
@@ -51,20 +39,26 @@ class Dyno {
 
   async start() {
     this.log.info('starting up ...')
+    this.parameters = await prompt(this._parameters)
 
     process.once('SIGTERM', this.#onSIGTERM.bind(this))
     process.once('SIGINT', this.#onSIGINT.bind(this))
+
     this.foreman.once('exit', this.#onThreadExit.bind(this))
 
-    const threads = await this.foreman.start()
+    const threads = await this.foreman.start({ 
+      count: this.parameters.THREAD_COUNT,
+      parameters: this.parameters
+    })
 
     await this.#runBeforeHooks()
 
-    this.firehose.start(threads)
+    this.firehose.start({ threads, tasksSecond: this.parameters.TASKS_SECOND })
     this.observer.start(threads)
 
-    await this.testTimer.start()
+    await this.testTimer.start(this.parameters.DURATION_SECONDS)
     await this.stop(0)
+
     this.log.success('test timer elapsed: success')
 
     return this.observer.getRows()
@@ -130,4 +124,4 @@ class Dyno {
   }
 }
 
-export { Dyno, Plot, Table, prompt, task }
+export { Dyno, Plot, Table, task }

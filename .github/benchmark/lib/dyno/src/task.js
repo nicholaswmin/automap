@@ -13,14 +13,8 @@ const task = async (
     before = async () => {},
     after = async () => {}
   } = {}) => {
-  if (!process.env.RUNNER)
-    throw new Error([
-      'Cannot run this file directly',
-      'Set up a runner file which declares this as a task and run that instead'
-    ].join('. '))
-
-  const parameters = Object.freeze(JSON.parse(process.env.parameters))
-
+  const parameters = Object.freeze(JSON.parse(process.env.PARAMETERS))
+  
   const runner = new TaskRunner()
 
   const stats = {

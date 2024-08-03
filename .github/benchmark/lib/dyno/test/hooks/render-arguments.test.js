@@ -1,6 +1,6 @@
 import test from 'node:test'
 
-import { Dyno, prompt } from '../../index.js'
+import { Dyno } from '../../index.js'
 
 test('Dyno: #render() hook arguments', async t => {
   let dyno, renderFnMock = t.mock.fn(() => {})
@@ -8,11 +8,11 @@ test('Dyno: #render() hook arguments', async t => {
   t.before(async () => {
     dyno = new Dyno({
       task: './test/hooks/tasks/task.js',
-      parameters: await prompt({
+      parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
         DURATION_SECONDS: 3
-      }),
+      },
 
       render: renderFnMock
     })

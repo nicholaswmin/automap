@@ -14,47 +14,62 @@ npm i https://github.com/nicholaswmin/automap.git
 
 ### Setup
 
-To run a benchmark you need to create 2 separate files:
+```bash 
+npx init
+```
+
+> creates a `./benchmark` folder which contains a runnable, sample benchmark.
+
+A benchmark is comprised of 2 files:
 
 [`run.js`](#runner-file)
 
-> The *runner file*  
-> Includes test configuration and runs the task file 
+> The [runner file](#runner-file)
+>
+> Declares *test configuration*   
+> Edit this file with your own test configuration
 
 [`task.js`](#task-file)
 
-> The *task file*
+> The [task file](#task-file)
+>
+> Declares the *code under test*.  
+> Edit this file with your own task/code
 
-> Includes the actual code under test
+#### Run the benchmark
 
-then run:
+> navigate into the created `benchmark` folder:
+
+```bash
+cd benchmark
+```
+
+> run the benchmark:
 
 ```bash
 node run.js
 ```
 
-## Example
-
-Benchmarking a [`Fibonacci function`][fib] on 8 threads.
-
-> A runnable version of this example can be found [here](#running-example)
+## Configuration
 
 ### Task file
 
-The task file declares the *task* that needs to be benchmarked.
+The task file declares the benchmarked *code/task*.
 
-Code declared here runs in its own isolated [V8][v8]
-process `times x THREAD_COUNT`.
+Code declared here runs in its own isolated [V8][v8] process 
+`times x THREAD_COUNT`.
 
-Within the task file, measures can be taken using
+Within the task file, custom measures can be taken using
 these [PerformanceMeasurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
 
+> **Example:**   
+> Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function
+
 ```js
 // task.js
-
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
@@ -83,88 +98,124 @@ task(async parameters => {
 
 ### Runner file
 
-Configure the test parameters and what should be logged in the output:
+Declares: 
+
+- test parameters
+- what should be logged in the output
 
 ```js
 // run.js
-import { Dyno, Table, Plot, prompt } from '@nicholaswmin/dyno'
+
+import { join } from 'node:path'
+import { availableParallelism } from 'node:os'
+import { Dyno, Table, Plot } from '@nicholaswmin/dyno'
 
 const dyno = new Dyno({
-  // path of task file
-  task: '.github/example/task.js',
-  
-  // Set the test parameters
-  parameters: await prompt({
-    // these are required
-    TASKS_SECOND: 100,
-    THREAD_COUNT: 8,
-    DURATION_SECONDS: 5,
-    
-    // these are optional 
-    FOO: 2,
-    BAR: 5,
+  // task file path
+  task: join(import.meta.dirname, 'task.js'),
 
-    // this parameter is user configurable
-    // you'll be prompted to enter its value when the test starts
-    BAZ: {
-      // default value
-      value: 10,
-      type: Number,
-      configurable: true
-    }
-  }),
-  
-  // before/after hooks
-  before: () => {
-    console.log('test starting ...')
-  },
-
-  after: () => {
-    console.log('test ended')
-  },
-  
-  // called on measurement update (max 30 fps)
-  render: function({ runner, threads }) {
-    // Use provided `Table` & `Plot` to build an output
-
-    const views = [
-      // Log general runner stats
-      new Table()
-        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (bytes)')
-        .addRowMatrix([
-          [ 
-            runner.sent.at(-1).count, 
-            runner.replies.at(-1).count, 
-            runner.memory.at(-1).mean
-          ]
-        ]),
-
-      // Log last stat for each thread
-      new Table('Threads (mean/ms)')
-        .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
-        .addRowMatrix(Object.keys(threads).map(thread => {
-          return [
-            thread,
-            threads[thread]['task']?.at(-1).mean || 'no data',
-            threads[thread]['fibonacci']?.at(-1).mean || 'no data',
-            threads[thread]['sleep']?.at(-1).mean || 'no data',
-            threads[thread]['backlog']?.at(-1).max || 'no data'
-          ]
-        })
-        // sort threads by 'task' mean duration
-        .sort((a, b) => b[1] - a[1])),
+  // Test Parameters
+  //
+  // All `key`/`value` pairs declared here are available in the task file
+  parameters: {
+    // user-configurable parameters: 
+    // you'll be prompted to edit these on startup, if needed
+    configurable: {
+      // required:
+      TASKS_SECOND: 100,
+      THREAD_COUNT: availableParallelism(),
+      DURATION_SECONDS: 5,
       
-      // Plot the mean durations of the last thread
+      // optional:
+      FOO: 10,
+      BAR: 20
+    },
+    
+    // non-configurable
+    // optional:
+    BAZ: 30
+  },
+  
+  // hooks
+
+  before: async parameters => {
+    // runs before the benchmark starts
+  },
+
+  after: async parameters => {
+    // runs after the benchmark ends
+  },
+  
+  // Build and log an output
+  //
+  // `render` is called on every measurement capture,
+  //  @ max-rate: `~ 15 fps`:
+  render: function({ runner, threads }) {
+    // Use `Table` & `Plot` to build an output from:
+    //
+    // - `runner` : last 100 Histograms of the main process per measure
+    // - `threads`: last 100 Histograms of each thread per measure, 
+    //              i.e: the task itself
+    // 
+    // Read: https://nodejs.org/api/perf_hooks.html#class-histogram  
+    // for a list of available `Histogram` properties
+    const views = [
+      // Log last Histogram of specific measures, of main/runner
+      // 
+      // `runner` contains these default measures:
+      //
+      // - `sent`   : total count of tasks sent to a (random) thread
+      // - `acked`  : total count of tasks acknowledged as received
+      // - `memory` : `process.memoryUsage().heapUsed` values
+      new Table()
+      .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (bytes)')
+      .addRowMatrix([
+        [ 
+          runner.sent.at(-1).count, 
+          runner.acked.at(-1).count, 
+          runner.memory.at(-1).mean
+        ]
+      ]),
+
+      // Log last Histogram of specific measures, for each thread
+      // 
+      // Each `threads[<pid>]` contains the last 100 Histograms 
+      // for each of these default measures:
+      //
+      // - `task`   : thread's overall task execution duration
+      // - `backlog`: thread's backlog of queued tasks, 
+      //              sent to the thread but yet to be executed
+      // - `memory` : thread's `process.memoryUsage().heapUsed` values
+      // - `gc`     : thread's Garbage Collection cycles durations/count
+      // 
+      // ... plus any user-captured measures from the task file, 
+      //     i.e: `performance.timerify()`, `performance.measure()` etc ...
+      new Table('Threads (mean/ms)')
+      .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
+      .addRowMatrix(Object.keys(threads).map(thread => {
+        return [
+          thread,
+          threads[thread]['task']?.at(-1).mean      || 'no data',
+          threads[thread]['fibonacci']?.at(-1).mean || 'no data',
+          threads[thread]['sleep']?.at(-1).mean     || 'no data',
+          threads[thread]['backlog']?.at(-1).max    || 'no data'
+        ]
+      })
+      // sort threads by their 'task.mean' value
+      .sort((a, b) => b[1] - a[1])),
+      
+      // Plot a random threads `histogram.mean` values
       new Plot('Thread timings timeline', {
-          subtitle: 'mean (ms)',
-          properties: ['task', 'fibonacci', 'sleep'],
-          unit: 'mean'
-        })
-        .plot(threads[Object.keys(threads).at(-1)])
+        subtitle: 'mean (ms)',
+        properties: ['task', 'fibonacci', 'sleep'],
+        unit: 'mean'
+      })
+      .plot(threads[Object.keys(threads).at(-1)])
     ]
     
-    console.clear()
+    // log/render the output 
 
+    console.clear()
     views.forEach(view => console.log(view.toString()))
   }
 })
@@ -224,7 +275,7 @@ install deps:
 npm ci
 ```
 
-run unit tests:
+run tests:
 
 ```bash
 npm test
@@ -236,14 +287,14 @@ log test coverage:
 npm run test:coverage
 ```
 
-> note: tests require node version `>= v22.5.1` because they use the  
-> experimental native [`sqlite`][sqlite] module to test thread output
->
-> note: due to the benchmarking nature of this module, unit-tests run slow
+> note: tests require node `>= v22.5.1` because they use the 
+> experimental [`sqlite`][sqlite] module
+
+> note: due to the benchmarking nature of this module, tests run slow
 
 ## Running example
 
-You can run the [Fibonacci example](#example) via:
+You can run the [fibonacci benchmark](#configuration), using:
 
 ```bash
 npm run example
@@ -264,7 +315,7 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml
 
-<!--- General Refs -->
+<!--- General -->
 
 [perf-api]: https://nodejs.org/api/perf_hooks.html#performance-measurement-apis
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options

@@ -1,45 +1,83 @@
 import input from '@inquirer/input'
+import confirm from './utils/confirm.js'
+
+const types = {
+  'string': String,
+  'number': Number,
+  'boolean': Boolean
+}
+
+const flatten = obj => Object.assign(
+  {}, ...function _flatten(o) { 
+    return [].concat(...Object.keys(o)
+      .map(k => 
+        typeof o[k] === 'object' && !Array.isArray(o[k]) ?
+          _flatten(o[k]) : 
+          ({[k]: o[k]})
+      )
+    );
+  }(obj)
+)
+
+const validateTypes = (obj, types) => {
+  for (const key of Object.keys(obj)) {
+    const t = typeof obj[key]
+
+    if (!types[t])
+      throw new TypeError(
+        `Expected: ${key} to be: ${Object.keys(types).join(' or ')}, got: ${t}`
+      )
+  }
+}
 
 export default async parameters => {
-  for (const key of Object.keys(parameters)) {
-    if (typeof parameters[key] === 'undefined')
-      continue
+  validateTypes(flatten(parameters), types)
 
-    if (parameters[key].configurable) {
-      const answer = await input({
-        message: `Enter ${key}:`,
-        default: parameters[key].value,
-        validate: answer => {
-          switch (parameters[key].type) {
-            case Number:
-              return !Number.isInteger(+answer) || +answer <= 0
-                ? `${key} must be a positive, non-zero number`
-                : true
+  for (const key of Object.keys(parameters.configurable || {})) {
+    const value = parameters.configurable[key]
 
-            case String:
-              return typeof answer !== 'string' || answer.length < 1
-                ? `${key} must be a string with some length`
-                : true
+    const answer = await input({
+      message: `Enter a value for: ${key}`,
 
-            case Boolean:
-              return answer === true || answer === false
-                ? `${key} must be either true or false`
-                : true
-            default:
-              true
-          }
+      default: value,
+
+      validate: answer => {
+        switch (typeof value) {
+          case 'number':
+            return Number.isInteger(+answer) && +answer > 0
+              ? true : `${key} must be a positive integer`
+
+          case 'string':
+            return typeof answer === 'string' && answer.length > 0
+              ? true : `${key} must be a string with length: > 0`
+
+          case 'boolean':
+            return !['true', 'false', true, false].includes(answer) 
+              ? true : `${key} must be either "true" or "false"`
+
+          default:
+            throw new TypeError(`${key} has an invalid type: ${typeof value}`)
         }
-      })
+      }
+    })
 
-      parameters[key] = parameters[key].type
-        ? parameters[key].type(answer)
-        : answer
-    } else {
-      parameters[key] = parameters[key].type
-        ? parameters[key].type(parameters[key].value)
-        : parameters[key].value || parameters[key]
-    }
+    parameters[key] = types[typeof value](answer)
   }
+  
+  const frozen = Object.freeze(flatten(parameters, 'configurable'))
+  
+  
+  if (!['test'].includes(process.env.NODE_ENV))
+    if (!process.argv.includes('--no-confirm')) {
+      console.log('\n')
+      console.log(frozen)
+      
+      if (!await confirm('are these parameters correct?'))
+        process.exit(1)
+    }
 
-  return Object.freeze(parameters)
+
+  console.clear()
+
+  return frozen
 }

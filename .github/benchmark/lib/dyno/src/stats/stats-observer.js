@@ -4,7 +4,7 @@ import localbus from './local-bus.js'
 class StatsObserver {
   constructor(ctx, renderFn) {
     this.bufferSize = 100
-    this.maxFPS = 30
+    this.maxFPS = 15
     this.maxRate = Math.round(1000 / this.maxFPS)
 
     this.rows = { runner: {}, threads: {} }

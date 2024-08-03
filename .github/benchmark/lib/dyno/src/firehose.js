@@ -1,18 +1,19 @@
 import { RunnerStatsTracker } from './stats/stats-tracker.js'
 
 class Firehose {
-  constructor({ tasksPerSecond }) {
+  constructor() {
     this.stats = new RunnerStatsTracker(['sent', 'replies', 'memory'])
-    this.tasksPerSecond = tasksPerSecond > 0 ? tasksPerSecond : (() => {
-      throw new RangeError(`Must be an int > 0. Got: ${tasksPerSecond}`)
-    })()
+    this.tasksSecond = 1
 
     this.threads = []
     this.taskTimer = null
   }
 
-  start(threads) {
+  start({ threads, tasksSecond = 50 }) {
     this.threads = threads
+    this.tasksSecond = tasksSecond > 0 ? tasksSecond : (() => {
+      throw new RangeError(`Must be an int > 0. Got: ${tasksSecond}`)
+    })()
 
     Object.values(threads).forEach(thread => {
       thread.on('message', message => {
@@ -26,7 +27,7 @@ class Firehose {
 
     this.taskTimer = setInterval(
       this.sendToRandom.bind(this),
-       Math.round(1000 / this.tasksPerSecond)
+       Math.round(1000 / this.tasksSecond)
     )
   }
 
@@ -36,7 +37,7 @@ class Firehose {
   }
 
   sendToRandom() {
-    const interval = Math.round(1000 / this.tasksPerSecond)
+    const interval = Math.round(1000 / this.tasksSecond)
     const cycles = interval < 1 ? 1 / interval : 1
 
     for (let i = 0; i < cycles; i++) {
