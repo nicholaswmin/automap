@@ -1,12 +1,13 @@
 import test from 'node:test'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { createHistogram } from 'node:perf_hooks'
 
 import { Dyno } from '../../index.js'
 import { resetDB, selectDBRows } from '../utils/sqlite.js'
 
 test('#Dyno.start()', async t => {
-  let dyno, duration, rows = null 
+  let dyno, histogram = createHistogram(), rows = null 
 
   t.before(async () => {
     resetDB()
@@ -21,16 +22,20 @@ test('#Dyno.start()', async t => {
       }
     })
 
-    const start = performance.now()
-    await dyno.start()
+    await performance.timerify(dyno.start.bind(dyno), { histogram })()
 
-    duration = performance.now() - start, 
-    rows = await selectDBRows(dyno.parameters.RANDOM_ID)
+    rows = selectDBRows(dyno.parameters.RANDOM_ID)
+  })
+  
+  await t.test('runs once', t => {
+    t.assert.strictEqual(histogram.count, 1)
   })
 
-  await t.test('runs for the specified duration', async t => {
-    t.assert.ok(duration > 1500, `duration: ${duration} is not > 1500`)
-    t.assert.ok(duration < 4000, `duration: ${duration} is not < 4000`)
+  await t.test('for the specified duration', async t => {
+    const durationMS = Math.round(histogram.mean / 1000000)
+
+    t.assert.ok(durationMS > 1500, `duration: ${durationMS} is not > 1500`)
+    t.assert.ok(durationMS < 4000, `duration: ${durationMS} is not < 4000`)
   })
 
   await t.test('task/thread output', async t => {
