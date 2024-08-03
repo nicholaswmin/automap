@@ -34,7 +34,7 @@ const dyno = new Dyno({
       .addRowMatrix([
         [ 
           runner.sent.at(-1).count, 
-          runner.replies.at(-1).count, 
+          runner.acked.at(-1).count, 
           Math.round(runner.memory.at(-1).mean / 1000 / 1000)
         ]
       ]),

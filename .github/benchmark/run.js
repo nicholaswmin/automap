@@ -39,7 +39,7 @@ const dyno = new Dyno({
       .addRowMatrix([
         [ 
           runner.sent.at(-1).count, 
-          runner.replies.at(-1).count, 
+          runner.acked.at(-1).count, 
           utils.bytesToMB(runner.memory.at(-1).mean) 
         ]
       ]),

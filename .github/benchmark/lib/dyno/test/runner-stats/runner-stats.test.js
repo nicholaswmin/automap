@@ -68,26 +68,26 @@ test('Measures: Runner stats', async t => {
       })
     })
 
-    await t.test('the count of replies from the workers', async t => {
-      t.assert.ok(Object.hasOwn(result.runner, 'replies'))
-      t.assert.ok(result.runner.replies.length > 5)
+    await t.test('the count of acked from the workers', async t => {
+      t.assert.ok(Object.hasOwn(result.runner, 'acked'))
+      t.assert.ok(result.runner.acked.length > 5)
 
       await t.test('last count sums up correctly', async t => {
-        const last = result.runner.replies.at(-1)
+        const last = result.runner.acked.at(-1)
 
         t.assert.ok(last.count > 35, `${last.count} is not > 35`)
         t.assert.ok(last.count < 100, `${last.count} is not < 100`)
       })
 
       await t.test('in a histogram format', async t => {
-        const last = result.runner.replies.at(-1)
+        const last = result.runner.acked.at(-1)
         t.assert.ok(Object.hasOwn(last, 'count'))
         t.assert.ok(Object.hasOwn(last, 'min'))
         t.assert.ok(Object.hasOwn(last, 'mean'))
         t.assert.ok(Object.hasOwn(last, 'max'))
 
         await t.test('with valid values', async t => {
-          const last = result.runner.replies.at(-1)
+          const last = result.runner.acked.at(-1)
 
           t.assert.strictEqual(typeof last.count, 'number')
           t.assert.ok(last.count > 0, `count: ${last.count} not > 0`)

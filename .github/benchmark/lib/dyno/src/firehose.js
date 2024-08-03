@@ -2,7 +2,7 @@ import { RunnerStatsTracker } from './stats/stats-tracker.js'
 
 class Firehose {
   constructor() {
-    this.stats = new RunnerStatsTracker(['sent', 'replies', 'memory'])
+    this.stats = new RunnerStatsTracker(['sent', 'acked', 'memory'])
     this.tasksSecond = 1
 
     this.threads = []
@@ -18,7 +18,7 @@ class Firehose {
     Object.values(threads).forEach(thread => {
       thread.on('message', message => {
         if (message.type === 'ack') {
-          this.stats.replies.tick()
+          this.stats.acked.tick()
           this.stats.memory.record(process.memoryUsage().heapUsed)
           this.stats.publish()
         }
