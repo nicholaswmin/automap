@@ -11,6 +11,7 @@
 
 - [ ] warmup period
 - [ ] event loop measures for each thread
+- [ ] `tasks run` and `backlog` should ideally be tracked on the `runner`
 - [x] log test constants/parameters
 - [ ] log to file
 
