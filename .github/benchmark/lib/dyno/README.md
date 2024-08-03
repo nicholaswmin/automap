@@ -150,9 +150,210 @@ task(async parameters => {
 +--------+------+-------+-------------+-------------------+
 ```
 
-## Advanced
+### Advanced
 
-`@TODO`
+> **Example:**   
+> Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function  
+>
+> Include detailed timing measurements and a timeline plot
+
+#### Runner file
+
+```js
+// run.js
+import { join } from 'node:path'
+import { availableParallelism } from 'node:os'
+import { Dyno, Table, Plot } from '@nicholaswmin/dyno'
+
+const dyno = new Dyno({
+  // task file path
+  task: join(import.meta.dirname, 'task.js'),
+
+  // Test Parameters
+  //
+  // All `key`/`value` pairs declared here 
+  // are available in the task file
+  parameters: {
+    // user-configurable: 
+    // you'll be prompted to edit these 
+    // on startup, if needed
+    configurable: {
+      // required:
+      TASKS_SECOND: 100,
+      THREAD_COUNT: availableParallelism(),
+      TEST_SECONDS: 5,
+      
+      // optional:
+      FOO: 10,
+      BAR: 20
+    },
+    
+    // non-configurable,
+    // optional:
+    BAZ: 30
+  },
+  
+  // hooks
+
+  before: async parameters => {
+    // runs before the benchmark starts
+  },
+
+  after: async parameters => {
+    // runs after the benchmark ends
+  },
+  
+  // Build and log an output
+  //
+  // `render` is called on every measurement capture,
+  //  @ max-rate: `~ 15 fps`:
+  render: function({ runner, threads }) {
+    // Use `Table` & `Plot` to build an output from:
+    //
+    // - `runner` : last 100 Histograms of the main process per measure
+    // - `threads`: last 100 Histograms of each thread per measure, 
+    //              i.e: the task itself
+    // 
+    // Read: https://nodejs.org/api/perf_hooks.html#class-histogram  
+    // for a list of available `Histogram` properties
+    const views = [
+      // Log last Histogram of specific measures, of main/runner
+      // 
+      // `runner` contains these default measures:
+      //
+      // - `sent`   : total count of tasks sent to a (random) thread
+      // - `acked`  : total count of tasks acknowledged as received
+      // - `memory` : `process.memoryUsage().heapUsed` values
+      new Table()
+      .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (bytes)')
+      .addRowMatrix([
+        [ 
+          runner.sent.at(-1).count, 
+          runner.acked.at(-1).count, 
+          runner.memory.at(-1).mean
+        ]
+      ]),
+
+      // Log last Histogram of specific measures, for each thread
+      // 
+      // Each `threads[<pid>]` contains the last 100 Histograms 
+      // for each of these default measures:
+      //
+      // - `task`   : thread's overall task execution duration
+      // - `backlog`: thread's backlog of queued tasks, 
+      //              sent to the thread but yet to be executed
+      // - `memory` : thread's `process.memoryUsage().heapUsed` values
+      // - `gc`     : thread's Garbage Collection cycles durations/count
+      // 
+      // ... plus any user-captured measures from the task file, 
+      //     i.e: `performance.timerify()`, `performance.measure()` etc ...
+      new Table('Threads (mean/ms)')
+      .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
+      .addRowMatrix(Object.keys(threads).map(thread => {
+        return [
+          thread,
+          threads[thread]['task']?.at(-1).mean      || 'no data',
+          threads[thread]['fibonacci']?.at(-1).mean || 'no data',
+          threads[thread]['sleep']?.at(-1).mean     || 'no data',
+          threads[thread]['backlog']?.at(-1).max    || 'no data'
+        ]
+      })
+      // sort threads by their 'task.mean' value
+      .sort((a, b) => b[1] - a[1])),
+      
+      // Plot a random threads `histogram.mean` values
+      new Plot('Thread timings timeline', {
+        subtitle: 'mean (ms)',
+        properties: ['task', 'fibonacci', 'sleep'],
+        unit: 'mean'
+      })
+      .plot(threads[Object.keys(threads).at(-1)])
+    ]
+    
+    // log/render the output 
+
+    console.clear()
+    views.forEach(view => console.log(view.toString()))
+  }
+})
+
+await dyno.start()
+```
+
+#### Task file 
+
+```js
+// task.js
+import { task } from '@nicholaswmin/dyno'
+
+task(async parameters => {
+  // 'parameters' configured in the runner 
+  // are available here
+
+  // function under test
+  const fibonacci = n => n < 1 ? 0 : n <= 2
+    ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
+
+  // use `performance.timerify`
+  const timed_fibonacci = performance.timerify(fibonacci)
+
+  timed_fibonacci(parameters.FOO)
+  timed_fibonacci(parameters.BAR)
+  timed_fibonacci(parameters.BAZ)
+
+  // use `performance.measure`
+  performance.mark('start')
+
+  await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
+
+  performance.mark('end')
+  performance.measure('sleep', 'start', 'end')
+})
+```
+
+### Example output
+
+```js
++------------+-------------+-------------+
+| Tasks Sent | Tasks Acked | Memory (mb) |
++------------+-------------+-------------+
+|        308 |         308 |           9 |
++------------+-------------+-------------+
+
++-------------------------------------------------+
+|                Threads (mean/ms)                |
++--------+------+-----------+-------+-------------+
+| thread | task | fibonacci | sleep | max backlog |
++--------+------+-----------+-------+-------------+
+|  76553 | 7.35 |         1 |  7.37 |           1 |
+|  76555 | 6.91 |         1 |     7 |           1 |
+|  76557 | 6.91 |         1 |  6.81 |           1 |
+|  76554 | 6.39 |         1 |   6.3 |           1 |
+|  76558 | 6.33 |         1 |  6.27 |           1 |
+|  76556 | 6.18 |         1 |  5.76 |           1 |
+|  76551 |  5.3 |         1 |  5.23 |           2 |
+|  76552 | 4.93 |         1 |     5 |           1 |
++--------+------+-----------+-------+-------------+
+
+
+  Thread timings timeline
+
+  -- task  -- fibonacci  -- sleep
+
+  11.00 ┼╮                                             
+  10.00 ┼╮                                             
+   9.00 ┤│                                             
+   8.00 ┤│╮                                            
+   7.00 ┤╰───────────────╮────────╮                    
+   6.00 ┤                ╰──────────────────────────╮─ 
+   5.00 ┤                                           ╰  
+   4.00 ┤                                              
+   3.00 ┤                                              
+   2.00 ┤                                              
+   1.00 ┼───────────────────────────────────────────── 
+
+  mean (ms)
+```
 
 ## Tests
 
