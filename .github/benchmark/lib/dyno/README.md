@@ -2,7 +2,7 @@
 
 # :stopwatch: dyno
 
-run a piece of code on separate threads and log runtime measurements
+run benchmarks on separate threads and log runtime measurements
 
 ## Usage
 
@@ -36,7 +36,7 @@ A benchmark is comprised of 2 files:
 > Declares the *code under test*.  
 > Edit this file with your own task/code
 
-#### Run the benchmark
+#### Run
 
 > navigate into the created `benchmark` folder:
 
@@ -44,23 +44,23 @@ A benchmark is comprised of 2 files:
 cd benchmark
 ```
 
-> run the benchmark:
+> start the benchmark:
 
 ```bash
 node run.js
 ```
 
-## Configuration
+#### Task file
 
-### Task file
+Declares: 
 
-The task file declares the benchmarked *code/task*.
+- The benchmarked *code/task*
 
-Code declared here runs in its own isolated [V8][v8] process 
-`times x THREAD_COUNT`.
+The task file is run in its own isolated [V8 process][v8] 
+`times x THREAD_COUNT`, concurrently, on separate threads.
 
 Within the task file, custom measures can be taken using
-these [PerformanceMeasurement APIs][perf-api]:
+the following [Performance Measurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
@@ -69,24 +69,24 @@ these [PerformanceMeasurement APIs][perf-api]:
 > Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function
 
 ```js
-// task.js
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
-  // 'parameters' configured in the runner are available here
+  // 'parameters' configured in the runner 
+  // are available here
 
   // function under test
   const fibonacci = n => n < 1 ? 0 : n <= 2
     ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
 
-  // measure using `performance.timerify`
+  // use `performance.timerify`
   const timed_fibonacci = performance.timerify(fibonacci)
 
   timed_fibonacci(parameters.FOO)
   timed_fibonacci(parameters.BAR)
   timed_fibonacci(parameters.BAZ)
 
-  // measure using `performance.measure`
+  // use `performance.measure`
   performance.mark('start')
 
   await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
@@ -96,16 +96,20 @@ task(async parameters => {
 })
 ```
 
-### Runner file
+#### Runner file
 
 Declares: 
 
-- test parameters
-- what should be logged in the output
+- test parameters  
+- what measurements should be logged and how
+
+This file is run once.   
+It sets up the benchmark and internally controls the spawned threads.
+
+In [`node:cluster` module][cluster] terminology, it's akin to the 
+[`primary` process][cluster-primary].
 
 ```js
-// run.js
-
 import { join } from 'node:path'
 import { availableParallelism } from 'node:os'
 import { Dyno, Table, Plot } from '@nicholaswmin/dyno'
@@ -116,10 +120,12 @@ const dyno = new Dyno({
 
   // Test Parameters
   //
-  // All `key`/`value` pairs declared here are available in the task file
+  // All `key`/`value` pairs declared here 
+  // are available in the task file
   parameters: {
-    // user-configurable parameters: 
-    // you'll be prompted to edit these on startup, if needed
+    // user-configurable: 
+    // you'll be prompted to edit these 
+    // on startup, if needed
     configurable: {
       // required:
       TASKS_SECOND: 100,
@@ -131,7 +137,7 @@ const dyno = new Dyno({
       BAR: 20
     },
     
-    // non-configurable
+    // non-configurable,
     // optional:
     BAZ: 30
   },
@@ -321,9 +327,10 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
 [measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
-[v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
+[v8]: https://v8.dev/
 [sqlite]: https://nodejs.org/api/sqlite.html
-
+[cluster]: https://nodejs.org/api/cluster.html#cluster
+[cluster-primary]: https://nodejs.org/api/cluster.html#how-it-works
 [example-code]: .github/example
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE
