@@ -15,8 +15,8 @@ run multithreaded benchmarks
   + [Run file](#run-file-1)
   + [Task file](#task-file-1)
   + [Output](#output-1)
-* [Tests](#tests)
 * [Runnable example](#runnable-example)
+* [Tests](#tests)
 * [Authors](#authors)
 * [License](#license)
 
@@ -377,6 +377,16 @@ task(async parameters => {
   mean (ms)
 ```
 
+## Runnable example
+
+Run the [fibonacci benchmark](#advanced-example):
+
+```bash
+npm run example
+```
+
+it's code is [available here][example-code].
+
 ## Tests
 
 install deps:
@@ -401,16 +411,6 @@ npm run test:coverage
 > experimental [`sqlite`][sqlite] module
 
 > note: due to the benchmarking nature of this module, tests run slow
-
-## Runnable example
-
-Run the [fibonacci benchmark](#advanced-example):
-
-```bash
-npm run example
-```
-
-it's code is [available here][example-code].
 
 ## Authors
 
