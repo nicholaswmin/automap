@@ -15,7 +15,7 @@ run multithreaded benchmarks
   + [Run file](#run-file-1)
   + [Task file](#task-file-1)
   + [Output](#output-1)
-* [Runnable example](#runnable-example)
+  + [Run this example](#runnable-example)
 * [Tests](#tests)
 * [Authors](#authors)
 * [License](#license)
@@ -376,15 +376,13 @@ task(async parameters => {
   mean (ms)
 ```
 
-## Runnable example
-
-Run the [fibonacci benchmark](#advanced-example):
+### Run this example
 
 ```bash
 npm run example
 ```
 
-it's code is [available here][example-code].
+The code for this example is [available here][example-code].
 
 ## Tests
 
