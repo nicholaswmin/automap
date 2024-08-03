@@ -22,9 +22,9 @@ npx init
 
 A benchmark is comprised of 2 files:
 
-[`run.js`](#runner-file)
+[`run.js`](#run-file)
 
-> The [runner file](#runner-file)
+> The [run file](#run-file)
 >
 > Declares *test configuration*   
 > Edit this file with your own test configuration
@@ -50,13 +50,11 @@ cd benchmark
 node run.js
 ```
 
-## Examples 
-
-### Simple 
+## Simple example
 
 > Benchmark a `sleep()` function using [`performance.timerify`][timerify]
 
-#### Runner file
+### Run file
 
 Declares: 
 
@@ -106,7 +104,7 @@ const dyno = new Dyno({
 await dyno.start()
 ```
 
-#### Task file
+### Task file
 
 Declares: 
 
@@ -126,7 +124,7 @@ the following [Performance Measurement APIs][perf-api]:
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
-  // parameters are specified in the runner file
+  // parameters are specified in the run file
   const sleep = ms => new Promise(res => setTimeout(res, ms))
   const timerified_sleep = performance.timerify(sleep)
   
@@ -135,7 +133,7 @@ task(async parameters => {
 })
 ```
 
-### Example output
+### Output
 
 ```js
 +---------------------------------------------------------+
@@ -150,14 +148,14 @@ task(async parameters => {
 +--------+------+-------+-------------+-------------------+
 ```
 
-### Advanced
+## Advanced example
 
 > **Example:**   
 > Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function  
 >
 > Include detailed timing measurements and a timeline plot
 
-#### Runner file
+### Run file
 
 ```js
 // run.js
@@ -280,14 +278,14 @@ const dyno = new Dyno({
 await dyno.start()
 ```
 
-#### Task file 
+### Task file 
 
 ```js
 // task.js
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
-  // 'parameters' configured in the runner 
+  // 'parameters' are configured in the run file 
   // are available here
 
   // function under test
@@ -311,7 +309,7 @@ task(async parameters => {
 })
 ```
 
-### Example output
+### Output
 
 ```js
 +------------+-------------+-------------+
@@ -380,9 +378,9 @@ npm run test:coverage
 
 > note: due to the benchmarking nature of this module, tests run slow
 
-## Running example
+## Runnable example
 
-You can run the [fibonacci benchmark](#advanced), using:
+Run the [fibonacci benchmark](#advanced-example):
 
 ```bash
 npm run example
