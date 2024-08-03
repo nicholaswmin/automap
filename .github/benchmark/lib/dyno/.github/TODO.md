@@ -2,8 +2,9 @@
 
 ## fix
 
-- [ ] simple example in `README` incorrectly logs a `task.mean: 1`
+- [x] simple example in `README` incorrectly logs a `task.mean: 1`
   - its `sleep` function takes `~50 ms` to it should log a mean of `> 50`.
+  - works ok, just didn't `await timerifiedFn()` in the `task`
 - [ ] finish, error logs are sometimes hidden by `render() console.clear()`
   - `runner` errors must be correctly logged
   - `thread` errors must be correctly logged
@@ -13,7 +14,9 @@
 
 - [ ] warmup period
 - [ ] event loop measures for each thread
-- [ ] `tasks run` and `backlog` should ideally be tracked on the `runner`
+- [ ] implement max backlog limit
+- [x] `tasks:run` and `backlog` should ideally be tracked on the `runner`
+  - now tracking `finished` and `backlog` on the primary
 - [x] log test constants/parameters
 - [ ] log to file
 
@@ -33,7 +36,7 @@
 - [ ] split unit tests & integration tests
 - [ ] ensure unit-tests run fast
   - use `mock` timers from `node:test` runner where possible
-- [ ] setup CodeQL workflow
+- [x] setup CodeQL workflow
 
 ## build
 
