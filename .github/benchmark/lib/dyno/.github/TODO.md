@@ -23,6 +23,8 @@
 - [ ] `npx init` should generate the bare-minimum benchmark that includes 
       reasonable features (i.e plot etc)
 - [ ] unify all the code examples
+- [ ] `runner` and `task` are state machines, think about implementing them
+      as such
 
 ## test
 
