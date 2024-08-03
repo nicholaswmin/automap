@@ -5,7 +5,7 @@ import TestTimer from './src/test-timer.js'
 import Firehose from './src/firehose.js'
 import Foreman from './src/foreman.js'
 import prompt from './src/prompt.js'
-import Table from './src/views/table.js'
+import { Table, TableAlignment } from './src/views/table.js'
 import Plot from './src/views/plot.js'
 import task from './src/task.js'
 
@@ -152,4 +152,4 @@ class Dyno {
   }
 }
 
-export { Dyno, Plot, Table, task }
+export { Dyno, task, Table, TableAlignment, Plot }

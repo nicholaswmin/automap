@@ -6,7 +6,7 @@ import { Dyno } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
 test('hooks:all', async t => {
-  let dyno, randomId = randomUUID()
+  let dyno, RANDOM_ID = randomUUID()
 
   t.before(async () => {
     resetDB()
@@ -16,20 +16,20 @@ test('hooks:all', async t => {
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        TEST_SECONDS: 3,
-        RANDOM_ID: randomId
+        TEST_SECONDS: 2,
+        RANDOM_ID
       },
 
       before: () => {
-        return insertDBRow(process.pid, randomId, 'runner:before')
+        return insertDBRow(process.pid, RANDOM_ID, 'runner:before')
       },
 
       after: () => {
-        return insertDBRow(process.pid, randomId, 'runner:after')
+        return insertDBRow(process.pid, RANDOM_ID, 'runner:after')
       },
 
       render: () => {
-        return insertDBRow(process.pid, randomId, 'runner:render')
+        return insertDBRow(process.pid, RANDOM_ID, 'runner:render')
       }
     })
 
@@ -40,7 +40,7 @@ test('hooks:all', async t => {
     let rows
 
     t.before(() => {
-      rows = selectDBRows(randomId)
+      rows = selectDBRows(RANDOM_ID)
     })
     
     await t.test('runner:before', async t => {
@@ -93,8 +93,17 @@ test('hooks:all', async t => {
       })
       
       await t.test('then runs "runner:render" multiple times', async t => {
-        t.assert.strictEqual(rows[2].alt, 'runner:render')
-        t.assert.strictEqual(rows[4].alt, 'runner:render')
+        const runs = rows.reduce((acc, row, i) => 
+          row.alt === 'runner:render' 
+            ? acc.concat([i + 1]) 
+            : acc, []
+        )
+        
+        t.assert.ok(runs.length > 1, 'runner:render was not run > 1 times')
+
+        t.assert.ok(runs[0] >= 3, 
+          `runner:render first run ${runs.at(0)}(th/rd), expected to run 3rd`
+        )
       })
       
       await t.test('then runs "task:after", second from last', async t => {

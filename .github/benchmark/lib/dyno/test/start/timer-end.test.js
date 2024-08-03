@@ -6,7 +6,7 @@ import { Dyno } from '../../index.js'
 import { resetDB, selectDBRows } from '../utils/sqlite.js'
 
 test('#Dyno.start()', async t => {
-  let dyno, randomId = randomUUID()
+  let dyno, RANDOM_ID = randomUUID()
 
   t.beforeEach(async () => {
     resetDB()
@@ -17,7 +17,7 @@ test('#Dyno.start()', async t => {
         TASKS_SECOND: 50,
         THREAD_COUNT: 5,
         TEST_SECONDS: 2,
-        RANDOM_ID: randomId
+        RANDOM_ID
       }
     })
   })
@@ -45,7 +45,7 @@ test('#Dyno.start()', async t => {
     t.before(async () => {
       await dyno.start()
 
-      rows = await selectDBRows(randomId)
+      rows = await selectDBRows(RANDOM_ID)
     })
 
     await t.test('each thread creates some output', async t => {

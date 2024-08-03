@@ -1,3 +1,3 @@
-import { AsciiTable3 } from 'ascii-table3'
+import { AsciiTable3, AlignmentEnum } from 'ascii-table3'
 
-export default AsciiTable3
+export { AsciiTable3 as Table, AlignmentEnum as TableAlignment }

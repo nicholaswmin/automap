@@ -3,8 +3,8 @@ import { setTimeout } from 'timers/promises'
 import { TaskRunner } from './task-runner.js'
 
 import {
-  ThreadStatsTracker,
-  ThreadObservedStatsTracker
+  RemoteStatsTracker,
+  PerformanceRemoteStatsTracker
 } from './stats/stats-tracker.js'
 
 const task = async (
@@ -18,10 +18,12 @@ const task = async (
   const runner = new TaskRunner()
 
   const stats = {
-    general: new ThreadStatsTracker([
+    general: new RemoteStatsTracker([
       'task', 'memory', 'acked', 'finished', 'backlog'
     ]),
-    measures: new ThreadObservedStatsTracker(['function', 'measure', 'gc'])
+    measures: new PerformanceRemoteStatsTracker([
+      'function', 'measure', 'gc'
+    ])
   }
 
   before ? await before(parameters) : null
@@ -60,17 +62,21 @@ const task = async (
     runner.stop()
     Object.values(stats).forEach(stat => stat.stop())
     await setTimeout(100)
+
     after ? await after(parameters) : null
+
     return process.exit(code)
   }
 
   const onError = async error => {
     console.log(c(['red'], `error:thread:${process.pid}`))
     console.error(error)
+
     await shutdown(1)
   }
 
   process.on('error', onError)
+  
   ;['SIGINT', 'SIGTERM', 'disconnect']
     .forEach(signal => process.on(signal, () => shutdown(0)))
 

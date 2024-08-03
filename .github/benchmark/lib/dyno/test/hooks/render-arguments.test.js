@@ -11,7 +11,7 @@ test('hooks:#render()', async t => {
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        TEST_SECONDS: 3
+        TEST_SECONDS: 1
       },
 
       render: renderFnMock

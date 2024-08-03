@@ -6,7 +6,7 @@ import { Dyno } from '../../../index.js'
 import { resetDB } from '../../utils/sqlite.js'
 
 test('Measures: Runner', async t => {
-  let dyno = null, result = null, randomId = randomUUID()
+  let dyno, result = null
 
   t.before(async () => {
     resetDB()
@@ -17,7 +17,7 @@ test('Measures: Runner', async t => {
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
         TEST_SECONDS: 2,
-        RANDOM_ID: randomId
+        RANDOM_ID: randomUUID()
       }
     })
 

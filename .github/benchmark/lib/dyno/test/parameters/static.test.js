@@ -7,7 +7,7 @@ import { Dyno } from '../../index.js'
 const filepath = join(import.meta.dirname, 'temp/params.json')
 
 test('Dyno: parameters:static', async t => {
-  let dyno, randomId = randomUUID()
+  let dyno, RANDOM_ID = randomUUID()
 
   t.after(() => {
     fs.unlinkSync(filepath)
@@ -20,7 +20,7 @@ test('Dyno: parameters:static', async t => {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
         TEST_SECONDS: 1,
-        RANDOM_ID: randomId,
+        RANDOM_ID,
         FOO: 30,
         BAR: 'HELLO'
       }
@@ -60,7 +60,7 @@ test('Dyno: parameters:static', async t => {
     await t.test('with correct values', t => {
       t.assert.strictEqual(json.TASKS_SECOND, 1)
       t.assert.strictEqual(json.THREAD_COUNT, 1)
-      t.assert.strictEqual(json.RANDOM_ID, randomId)
+      t.assert.strictEqual(json.RANDOM_ID, RANDOM_ID)
       t.assert.strictEqual(json.FOO, 30)
       t.assert.strictEqual(json.BAR, 'HELLO')
     })

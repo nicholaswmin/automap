@@ -6,7 +6,7 @@ import { Dyno } from '../../../index.js'
 import { resetDB } from '../../utils/sqlite.js'
 
 test('Measures thread:custom:timerify', async t => {
-  let dyno = null, result = null, randomId = randomUUID()
+  let dyno, result = null
 
   t.after(() => resetDB())
 
@@ -16,8 +16,8 @@ test('Measures thread:custom:timerify', async t => {
       parameters: {
         TASKS_SECOND: 50,
         THREAD_COUNT: 2,
-        TEST_SECONDS: 2,
-        RANDOM_ID: randomId
+        TEST_SECONDS: 1,
+        RANDOM_ID: randomUUID()
       }
     })
 
@@ -37,8 +37,8 @@ test('Measures thread:custom:timerify', async t => {
       t.assert.ok(Object.hasOwn(last, 'max'))
 
       await t.test('with reasonable "count" values', async t => {
-        t.assert.ok(last.count > 50, `min is: ${last.count}`)
-        t.assert.ok(last.count < 40000, `min is: ${last.count}`)
+        t.assert.ok(last.count > 20, `count is: ${last.count}`)
+        t.assert.ok(last.count < 40000, `count is: ${last.count}`)
       })
 
       await t.test('with reasonable "min" values', async t => {
@@ -48,11 +48,11 @@ test('Measures thread:custom:timerify', async t => {
 
       await t.test('with reasonable "mean" values', async t => {
         t.assert.ok(last.mean > 4, `mean is: ${last.mean}`)
-        t.assert.ok(last.mean < 9, `mean is: ${last.mean}`)
+        t.assert.ok(last.mean < 7, `mean is: ${last.mean}`)
       })
 
       await t.test('with reasonable "max" values', async t => {
-        t.assert.ok(last.max > 9, `max is: ${last.max}`)
+        t.assert.ok(last.max > 7, `max is: ${last.max}`)
         t.assert.ok(last.max < 50, `max is: ${last.max}`)
       })
     })

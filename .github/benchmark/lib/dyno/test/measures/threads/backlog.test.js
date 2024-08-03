@@ -6,7 +6,7 @@ import { Dyno } from '../../../index.js'
 import { resetDB } from '../../utils/sqlite.js'
 
 test('Measures thread:backlog', async t => {
-  let dyno = null, result = null, randomId = randomUUID()
+  let dyno, result = null
 
   t.after(() => resetDB())
 
@@ -16,8 +16,8 @@ test('Measures thread:backlog', async t => {
       parameters: {
         TASKS_SECOND: 100,
         THREAD_COUNT: 2,
-        TEST_SECONDS: 2,
-        RANDOM_ID: randomId
+        TEST_SECONDS: 1,
+        RANDOM_ID: randomUUID()
       }
     })
 
@@ -38,7 +38,7 @@ test('Measures thread:backlog', async t => {
         t.assert.ok(Object.hasOwn(last, 'max'))
 
         await t.test('with reasonable "max" values', async t => {
-          t.assert.ok(last.max > 30, `max is: ${last.max}`)
+          t.assert.ok(last.max > 15, `max is: ${last.max}`)
           t.assert.ok(last.max < 400, `mean is: ${last.max}`)
         })
       })

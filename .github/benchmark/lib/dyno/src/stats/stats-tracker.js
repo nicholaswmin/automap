@@ -29,7 +29,7 @@ class StatsTracker {
   }
 }
 
-class ThreadStatsTracker extends StatsTracker {
+class RemoteStatsTracker extends StatsTracker {
   constructor(...args) {
     super(...args)
   }
@@ -45,7 +45,7 @@ class ThreadStatsTracker extends StatsTracker {
   }
 }
 
-class ThreadObservedStatsTracker extends ThreadStatsTracker {
+class PerformanceRemoteStatsTracker extends RemoteStatsTracker {
   constructor(entryTypes) {
     super()
 
@@ -74,4 +74,4 @@ class ThreadObservedStatsTracker extends ThreadStatsTracker {
   }
 }
 
-export { StatsTracker, ThreadStatsTracker, ThreadObservedStatsTracker }
+export { StatsTracker, RemoteStatsTracker, PerformanceRemoteStatsTracker }

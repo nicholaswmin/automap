@@ -1,11 +1,11 @@
 import os from 'node:os'
 
-import { Dyno, Table, Plot } from './lib/dyno/index.js'
+import { Dyno, Table, TableAlignment, Plot } from './lib/dyno/index.js'
 import ioredis from './lib/ioredis/index.js'
 
 const redis = ioredis()
 const utils = {
-  round: num => (Math.round((num + Number.EPSILON) * 100) / 100) || 'no data',
+  round: num => (Math.round((num + Number.EPSILON) * 100) / 100) || 'n/a',
   bytesToMB: bytes => Math.ceil(bytes / 1000 / 1000)
 }
 
@@ -56,19 +56,19 @@ const dyno = new Dyno({
 
         'acked', 
         'finished', 
-        'backlog'
+        'max backlog'
       )
       .addRowMatrix(Object.keys(threads).map(thread => {
         return [
           thread,
-          utils.round(threads[thread]['task']?.at(-1).mean)       || 'no data',
-          utils.round(threads[thread]['save']?.at(-1).mean)       || 'no data',
-          utils.round(threads[thread]['fetch']?.at(-1).mean)      || 'no data',
-          utils.round(threads[thread]['redis_ping']?.at(-1).mean) || 'no data',
+          utils.round(threads[thread]['task']?.at(-1).mean),
+          utils.round(threads[thread]['save']?.at(-1).mean),
+          utils.round(threads[thread]['fetch']?.at(-1).mean),
+          utils.round(threads[thread]['redis_ping']?.at(-1).mean),
 
-          utils.round(threads[thread]['acked']?.at(-1).count)     || 'no data',
-          utils.round(threads[thread]['finished']?.at(-1).count)  || 'no data',
-          utils.round(threads[thread]['backlog']?.at(-1).last)    || 'no data'
+          utils.round(threads[thread]['acked']?.at(-1).count),
+          utils.round(threads[thread]['finished']?.at(-1).count),
+          utils.round(threads[thread]['backlog']?.at(-1).max)
         ]
       })
       .sort((a, b) => b[1] - a[1])
