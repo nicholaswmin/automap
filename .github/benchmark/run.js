@@ -15,8 +15,8 @@ const dyno = new Dyno({
   parameters: {
     configurable: {
       TASKS_SECOND: 100,
+      TEST_SECONDS: 10,
       THREAD_COUNT: +process.env.WEB_CONCURRENCY || os.availableParallelism(),
-      DURATION_SECONDS: 10,
       
       MAX_ITEMS: 100,
       PAYLOAD_KB: 5

@@ -2,16 +2,16 @@ import test from 'node:test'
 import { join } from 'node:path'
 import { Dyno } from '../../index.js'
 
-test('Dyno: #render() hook arguments', async t => {
+test('hooks:#render()', async t => {
   let dyno, renderFnMock = t.mock.fn(() => {})
 
   t.before(async () => {
     dyno = new Dyno({
-      task: join(import.meta.dirname, 'tasks/task.js'),
+      task: join(import.meta.dirname, 'tasks/add-db-rows.js'),
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        DURATION_SECONDS: 3
+        TEST_SECONDS: 3
       },
 
       render: renderFnMock

@@ -132,7 +132,7 @@ const dyno = new Dyno({
       // required:
       TASKS_SECOND: 100,
       THREAD_COUNT: availableParallelism(),
-      DURATION_SECONDS: 5,
+      TEST_SECONDS: 5,
       
       // optional:
       FOO: 10,

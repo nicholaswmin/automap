@@ -2,21 +2,21 @@ import test from 'node:test'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
-import { Dyno } from '../../index.js'
-import { resetDB } from '../utils/sqlite.js'
+import { Dyno } from '../../../index.js'
+import { resetDB } from '../../utils/sqlite.js'
 
-test('Measures: Runner stats', async t => {
+test('Measures: Runner', async t => {
   let dyno = null, result = null, randomId = randomUUID()
 
   t.before(async () => {
     resetDB()
 
     dyno = new Dyno({
-      task: join(import.meta.dirname, 'tasks/task.js'),
+      task: join(import.meta.dirname, 'tasks/add-db-row.js'),
       parameters: {
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,
-        DURATION_SECONDS: 2,
+        TEST_SECONDS: 2,
         RANDOM_ID: randomId
       }
     })

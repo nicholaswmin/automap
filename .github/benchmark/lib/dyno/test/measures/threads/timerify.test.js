@@ -2,10 +2,10 @@ import test from 'node:test'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
-import { Dyno } from '../../index.js'
-import { resetDB } from '../utils/sqlite.js'
+import { Dyno } from '../../../index.js'
+import { resetDB } from '../../utils/sqlite.js'
 
-test('Measures: performance.timerify', async t => {
+test('Measures thread:custom:timerify', async t => {
   let dyno = null, result = null, randomId = randomUUID()
 
   t.after(() => resetDB())
@@ -16,7 +16,7 @@ test('Measures: performance.timerify', async t => {
       parameters: {
         TASKS_SECOND: 50,
         THREAD_COUNT: 2,
-        DURATION_SECONDS: 2,
+        TEST_SECONDS: 2,
         RANDOM_ID: randomId
       }
     })

@@ -5,18 +5,18 @@ import { randomUUID } from 'node:crypto'
 import { Dyno } from '../../index.js'
 import { resetDB, insertDBRow, selectDBRows } from '../utils/sqlite.js'
 
-test('Dyno/Task: hooks', async t => {
+test('hooks:all', async t => {
   let dyno, randomId = randomUUID()
 
   t.before(async () => {
     resetDB()
     
     dyno = new Dyno({
-      task: join(import.meta.dirname, 'tasks/task.js'),
+      task: join(import.meta.dirname, 'tasks/add-db-rows.js'),
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        DURATION_SECONDS: 3,
+        TEST_SECONDS: 3,
         RANDOM_ID: randomId
       },
 

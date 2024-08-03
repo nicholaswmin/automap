@@ -20,7 +20,7 @@ const dyno = new Dyno({
   parameters: {
     configurable: {
       TASKS_SECOND: 100,
-      DURATION_SECONDS: 10,
+      TEST_SECONDS: 10,
       THREAD_COUNT: availableParallelism(),
       FOO: 10
     },

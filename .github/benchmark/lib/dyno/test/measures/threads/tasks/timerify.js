@@ -1,6 +1,6 @@
 // Task file with `performance.timerify`-wrapped function
 
-import { task } from '../../../index.js'
+import { task } from '../../../../index.js'
 
 task(async () => {
   const foo = () => new Promise(resolve => setTimeout(

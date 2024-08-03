@@ -39,7 +39,11 @@ class Dyno {
 
   async start() {
     this.log.info('starting up ...')
-    this.parameters = await prompt(this._parameters)
+    this.parameters = this.#validateKeys(await prompt(this._parameters), [
+      {  key: 'TASKS_SECOND', type: 'number', min: 1, max: 9999 },
+      {  key: 'TEST_SECONDS', type: 'number', min: 1, max: 9999 },
+      {  key: 'THREAD_COUNT', type: 'number', min: 1, max: 1000 }
+    ])
 
     process.once('SIGTERM', this.#onSIGTERM.bind(this))
     process.once('SIGINT', this.#onSIGINT.bind(this))
@@ -56,7 +60,7 @@ class Dyno {
     this.firehose.start({ threads, tasksSecond: this.parameters.TASKS_SECOND })
     this.observer.start(threads)
 
-    await this.testTimer.start(this.parameters.DURATION_SECONDS)
+    await this.testTimer.start(this.parameters.TEST_SECONDS)
     await this.stop(0)
 
     this.log.success('test timer elapsed: success')
@@ -121,6 +125,30 @@ class Dyno {
 
   async #runAfterHooks() {
     await this.hooks.after(this.parameters)
+  }
+  
+  #validateKeys(obj, required) {
+    required.forEach(req => {
+      if (!Object.hasOwn(obj, req.key))
+        throw new TypeError(`required key: ${req.key} not found`)
+      
+      const k = req.key, v = obj[req.key], t = typeof obj[req.key]
+      
+      if (req.type !== t)
+        throw new TypeError(`expected: ${k} to be a: ${req.type}, got: ${t}`)
+
+      if (req.type === 'number')
+        if (!Number.isInteger(v))
+          throw new TypeError(`expected: ${k} to be an integer, got: ${t}`)
+      
+      if ((req.min || req.min === 0) && v < req.min)
+        throw new RangeError(`${k}: ${v} is below min range of: ${req.min}`)
+      
+      if ((req.max || req.max === 0) && v > req.max)
+        throw new RangeError(`${k}: ${v} is above max range of: ${req.max}`)
+    })
+    
+    return obj
   }
 }
 

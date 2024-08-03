@@ -15,11 +15,11 @@ test('Dyno: parameters:static', async t => {
 
   t.beforeEach(async () => {
     dyno = new Dyno({
-      task: join(import.meta.dirname, 'tasks/task.js'),
+      task: join(import.meta.dirname, 'tasks/params-to-file.js'),
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        DURATION_SECONDS: 1,
+        TEST_SECONDS: 1,
         RANDOM_ID: randomId,
         FOO: 30,
         BAR: 'HELLO'
@@ -51,7 +51,7 @@ test('Dyno: parameters:static', async t => {
     await t.test('with correct keys', t => {
       t.assert.ok(Object.hasOwn(json, 'TASKS_SECOND'))
       t.assert.ok(Object.hasOwn(json, 'THREAD_COUNT'))
-      t.assert.ok(Object.hasOwn(json, 'DURATION_SECONDS'))
+      t.assert.ok(Object.hasOwn(json, 'TEST_SECONDS'))
       t.assert.ok(Object.hasOwn(json, 'RANDOM_ID'))
       t.assert.ok(Object.hasOwn(json, 'FOO'))
       t.assert.ok(Object.hasOwn(json, 'BAR'))

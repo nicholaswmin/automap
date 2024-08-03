@@ -12,11 +12,11 @@ test('#Dyno.start()', async t => {
     resetDB()
 
     dyno = new Dyno({
-      task: join(import.meta.dirname, 'tasks/task.js'),
+      task: join(import.meta.dirname, 'tasks/add-db-rows.js'),
       parameters: {
         TASKS_SECOND: 50,
         THREAD_COUNT: 5,
-        DURATION_SECONDS: 2,
+        TEST_SECONDS: 2,
         RANDOM_ID: randomId
       }
     })
@@ -26,7 +26,7 @@ test('#Dyno.start()', async t => {
     t.assert.ok(dyno)
   })
 
-  await t.test('runs for specified amount of time', {
+  await t.test('runs for the specified duration', {
     timeout: 5000
   }, async t => {
     const start = performance.now()
@@ -37,7 +37,7 @@ test('#Dyno.start()', async t => {
     t.assert.ok(duration < 4000, `duration: ${duration} is not < 4000`)
   })
 
-  await t.test('task saves rows into an SQLite DB', {
+  await t.test('task/thread output', {
     timeout: 5000
   }, async t => {
     let rows
@@ -48,16 +48,16 @@ test('#Dyno.start()', async t => {
       rows = await selectDBRows(randomId)
     })
 
-    await t.test('DB rows are inserted', async t => {
+    await t.test('each thread creates some output', async t => {
       t.assert.ok(rows)
     })
 
-    await t.test('row count is proportional to parameters', async t => {
+    await t.test('proportional to specified parameters', async t => {
       t.assert.ok(rows.length > 60, `line count: ${rows.length}, not > 60`)
       t.assert.ok(rows.length < 500, `line count: ${rows.length}, not < 500`)
     })
 
-    await t.test('are written by X number of separate threads', async t => {
+    await t.test('created by separate thread', async t => {
       const pids = Object.groupBy(rows, ({ pid }) => pid)
 
       t.assert.strictEqual(Object.keys(pids).length, 5)
