@@ -32,6 +32,12 @@
       rethought; what is a `stat`, what is a `measure`, why is it called 
       `tracker`? 
       Must get a simple, non-convoluted domain language about it.
+- [ ] the stats tracking can be vastly simplified:
+    - only have an `emitter` and an `observer`. Emitters are the same locally 
+      or remote. They use a single `Bus` which emits both locally and 
+      `process.send`.
+      No distinction should be made between primary/runner or thread. The primary
+      is a thread in and by itself.
 
 ## test
 
