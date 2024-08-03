@@ -101,22 +101,25 @@ const dyno = new Dyno({
       THREAD_COUNT: 4,
       
       // optional
-      FOO: 20,
-      BAR: 50
+      // don't set these too high, 
+      // or each thread  will take too long to execute  
+      // & immediately build a massive backlog
+      SLEEP_CYCLES: 5,
+      SLEEP_DURATION_MS: 4
     }
   },
   
   // render measurement output
   render: function({ runner, threads }) {
     const table = new Table('Threads (mean/ms)')
-      .setHeading('thread', 'task', 'sleep', 'max backlog', 'memory use (KB)')
+      .setHeading('thread', 'task', 'sleep', 'memory use (KB)', 'max backlog')
       .addRowMatrix(Object.keys(threads).map(thread => {
         return [
           thread,
-          Math.round(threads[thread]['task']?.at(-1).mean) || 'n/a',
-          Math.round(threads[thread]['sleep']?.at(-1).mean) || 'n/a',
-          Math.round(threads[thread]['backlog']?.at(-1).max) || 'n/a',
-          Math.round(threads[thread]['memory']?.at(-1).mean / 1000) || 'n/a'
+          Math.round(threads[thread]['task']?.at(-1).mean)          || 'n/a',
+          Math.round(threads[thread]['sleep']?.at(-1).mean)         || 'n/a',
+          Math.round(threads[thread]['memory']?.at(-1).mean / 1000) || 'n/a',
+          Math.round(threads[thread]['backlog']?.at(-1).max)        || 'n/a'
         ]
       }))
 
@@ -151,24 +154,24 @@ task(async parameters => {
   const sleep = ms => new Promise(res => setTimeout(res, ms))
   const timerified_sleep = performance.timerify(sleep)
   
-  for (let i = 0; i < parameters.FOO; i++)
-    timerified_sleep(parameters.BAR)
+  for (let i = 0; i < parameters.SLEEP_CYCLES; i++)
+    await timerified_sleep(parameters.SLEEP_DURATION_MS)
 })
 ```
 
 ### Output
 
 ```js
-+---------------------------------------------------------+
-|                    Threads (mean/ms)                    |
-+--------+------+-------+-------------+-------------------+
-| thread | task | sleep | max backlog | memory usage (KB) |
-+--------+------+-------+-------------+-------------------+
-|   7218 |   59 |    52 |           6 |              6871 |
-|   7219 |   54 |    52 |           4 |              6935 |
-|   7220 |   54 |    52 |           1 |              6870 |
-|   7221 |   53 |    51 |           3 |              6888 |
-+--------+------+-------+-------------+-------------------+
++--------------------------------------------------------+
+|                   Threads (mean/ms)                    |
++--------+------+-------+------------------+-------------+
+| thread | task | sleep | used memory (KB) | max backlog |
++--------+------+-------+------------------+-------------+
+|   9605 |   23 |     5 |             6677 |           3 |
+|   9606 |   23 |     5 |             6672 |           4 |
+|   9607 |   23 |     5 |             6653 |           5 |
+|   9608 |   23 |     5 |             6500 |           1 |
++--------+------+-------+------------------+-------------+
 ```
 
 ## Advanced example
