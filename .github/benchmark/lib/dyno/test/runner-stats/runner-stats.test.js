@@ -1,4 +1,5 @@
 import test from 'node:test'
+import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import { Dyno } from '../../index.js'
@@ -11,7 +12,7 @@ test('Measures: Runner stats', async t => {
     resetDB()
 
     dyno = new Dyno({
-      task: './test/runner-stats/tasks/task.js',
+      task: join(import.meta.dirname, 'tasks/task.js'),
       parameters: {
         TASKS_SECOND: 20,
         THREAD_COUNT: 2,

@@ -1,10 +1,10 @@
 import test from 'node:test'
-import path from 'node:path'
 import fs from 'node:fs'
+import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { Dyno } from '../../index.js'
 
-const filepath = path.join(import.meta.dirname, 'temp/params.json')
+const filepath = join(import.meta.dirname, 'temp/params.json')
 
 test('Dyno: parameters:static', async t => {
   let dyno, randomId = randomUUID()
@@ -15,7 +15,7 @@ test('Dyno: parameters:static', async t => {
 
   t.beforeEach(async () => {
     dyno = new Dyno({
-      task: './test/parameters/tasks/task.js',
+      task: join(import.meta.dirname, 'tasks/task.js'),
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,

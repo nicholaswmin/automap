@@ -1,5 +1,5 @@
 import test from 'node:test'
-
+import { join } from 'node:path'
 import { Dyno } from '../../index.js'
 
 test('Dyno: #render() hook arguments', async t => {
@@ -7,7 +7,7 @@ test('Dyno: #render() hook arguments', async t => {
 
   t.before(async () => {
     dyno = new Dyno({
-      task: './test/hooks/tasks/task.js',
+      task: join(import.meta.dirname, 'tasks/task.js'),
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,

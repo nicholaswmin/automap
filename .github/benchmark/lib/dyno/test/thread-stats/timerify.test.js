@@ -1,4 +1,5 @@
 import test from 'node:test'
+import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import { Dyno } from '../../index.js'
@@ -11,7 +12,7 @@ test('Measures: performance.timerify', async t => {
 
   t.before(async () => {
     dyno = new Dyno({
-      task: './test/thread-stats/tasks/task-timerify.js',
+      task: join(import.meta.dirname, 'tasks/timerify.js'),
       parameters: {
         TASKS_SECOND: 50,
         THREAD_COUNT: 2,

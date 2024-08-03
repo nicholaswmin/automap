@@ -1,4 +1,5 @@
 import test from 'node:test'
+import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import { Dyno } from '../../index.js'
