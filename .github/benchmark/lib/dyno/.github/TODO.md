@@ -34,10 +34,17 @@
       Must get a simple, non-convoluted domain language about it.
 - [ ] the stats tracking can be vastly simplified:
     - only have an `emitter` and an `observer`. Emitters are the same locally 
-      or remote. They use a single `Bus` which emits both locally and 
-      `process.send`.
-      No distinction should be made between primary/runner or thread. The primary
+      or remote. 
+    - They should use a single `Bus` which emits both locally and `process.send`.
+    - No distinction should be made between primary/runner or thread. The primary
       is a thread in and by itself.
+    - no need for `emitter.publish()`. The `histogram` can emit/signal to 
+      its parent `emitter` that a value was recorded in which case it would
+      send the value via the `Bus`.
+    - consider using a singleton/factory so that all stats tracking for a
+      process can be batched/accumulated in a single-point. 
+      A process can have many emitters that publish to a single-point which
+      then publishes on a single bus.
 
 ## test
 
