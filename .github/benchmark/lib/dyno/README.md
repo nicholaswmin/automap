@@ -15,7 +15,6 @@ run multithreaded benchmarks
   + [Run file](#run-file-1)
   + [Task file](#task-file-1)
   + [Output](#output-1)
-  + [Run example](#run-example)
 * [Tests](#tests)
 * [Authors](#authors)
 * [License](#license)
@@ -378,8 +377,6 @@ task(async parameters => {
 
   mean (ms)
 ```
-
-### Run example
 
 The above example can be run by:
 
