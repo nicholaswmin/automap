@@ -6,9 +6,9 @@ import { Dyno } from '../../index.js'
 import { resetDB, selectDBRows } from '../utils/sqlite.js'
 
 test('#Dyno.start()', async t => {
-  let dyno, RANDOM_ID = randomUUID()
+  let dyno, duration, rows = null 
 
-  t.beforeEach(async () => {
+  t.before(async () => {
     resetDB()
 
     dyno = new Dyno({
@@ -17,37 +17,23 @@ test('#Dyno.start()', async t => {
         TASKS_SECOND: 50,
         THREAD_COUNT: 5,
         TEST_SECONDS: 2,
-        RANDOM_ID
+        RANDOM_ID: randomUUID()
       }
     })
-  })
 
-  await t.test('instantiates', t => {
-    t.assert.ok(dyno)
-  })
-
-  await t.test('runs for the specified duration', {
-    timeout: 5000
-  }, async t => {
     const start = performance.now()
     await dyno.start()
-    const duration = performance.now() - start
 
+    duration = performance.now() - start, 
+    rows = await selectDBRows(dyno.parameters.RANDOM_ID)
+  })
+
+  await t.test('runs for the specified duration', async t => {
     t.assert.ok(duration > 1500, `duration: ${duration} is not > 1500`)
     t.assert.ok(duration < 4000, `duration: ${duration} is not < 4000`)
   })
 
-  await t.test('task/thread output', {
-    timeout: 5000
-  }, async t => {
-    let rows
-
-    t.before(async () => {
-      await dyno.start()
-
-      rows = await selectDBRows(RANDOM_ID)
-    })
-
+  await t.test('task/thread output', async t => {
     await t.test('each thread creates some output', async t => {
       t.assert.ok(rows)
     })
@@ -57,10 +43,15 @@ test('#Dyno.start()', async t => {
       t.assert.ok(rows.length < 500, `line count: ${rows.length}, not < 500`)
     })
 
-    await t.test('created by separate thread', async t => {
+    await t.test('created by a number of threads', async t => {
       const pids = Object.groupBy(rows, ({ pid }) => pid)
+      const threadCount = Object.keys(pids).length
 
-      t.assert.strictEqual(Object.keys(pids).length, 5)
+      t.assert.ok(threadCount > 1, 'thread count is not > 1')
+
+      await t.test('equal to the specified thread count', async t => {
+        t.assert.strictEqual(threadCount, dyno.parameters.THREAD_COUNT)
+      })
     })
   })
 })

@@ -24,7 +24,7 @@ test('#Dyno.start()', async t => {
   })
   
   await t.test('required parameter is missing', async t => {
-    t.beforeEach(() => {  
+    t.before(() => {  
       dyno = new Dyno({
         task: join(import.meta.dirname, 'tasks/do-nothing.js'),
         parameters: {
@@ -41,7 +41,7 @@ test('#Dyno.start()', async t => {
   })
   
   await t.test('required parameter is of wrong type', async t => {
-    t.beforeEach(() => {  
+    t.before(() => {  
       dyno = new Dyno({
         task: join(import.meta.dirname, 'tasks/do-nothing.js'),
         parameters: {
@@ -58,7 +58,7 @@ test('#Dyno.start()', async t => {
   })
   
   await t.test('required parameter is less than minimum range', async t => {
-    t.beforeEach(() => {  
+    t.before(() => {  
       dyno = new Dyno({
         task: join(import.meta.dirname, 'tasks/do-nothing.js'),
         parameters: {
@@ -75,7 +75,7 @@ test('#Dyno.start()', async t => {
   })
   
   await t.test('required parameter is more than maximum range', async t => {
-    t.beforeEach(async () => {  
+    t.before(async () => {  
       dyno = new Dyno({
         task: join(import.meta.dirname, 'tasks/do-nothing.js'),
         parameters: {

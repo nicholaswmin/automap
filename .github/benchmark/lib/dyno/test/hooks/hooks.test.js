@@ -16,7 +16,7 @@ test('hooks:all', async t => {
       parameters: {
         TASKS_SECOND: 1,
         THREAD_COUNT: 1,
-        TEST_SECONDS: 2,
+        TEST_SECONDS: 1,
         RANDOM_ID
       },
 

@@ -13,7 +13,7 @@ test('Dyno: parameters:static', async t => {
     fs.unlinkSync(filepath)
   })
 
-  t.beforeEach(async () => {
+  t.before(async () => {
     dyno = new Dyno({
       task: join(import.meta.dirname, 'tasks/params-to-file.js'),
       parameters: {

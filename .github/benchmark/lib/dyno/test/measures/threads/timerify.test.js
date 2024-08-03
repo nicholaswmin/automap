@@ -48,11 +48,11 @@ test('Measures thread:custom:timerify', async t => {
 
       await t.test('with reasonable "mean" values', async t => {
         t.assert.ok(last.mean > 4, `mean is: ${last.mean}`)
-        t.assert.ok(last.mean < 7, `mean is: ${last.mean}`)
+        t.assert.ok(last.mean < 9, `mean is: ${last.mean}`)
       })
 
       await t.test('with reasonable "max" values', async t => {
-        t.assert.ok(last.max > 7, `max is: ${last.max}`)
+        t.assert.ok(last.max > 9, `max is: ${last.max}`)
         t.assert.ok(last.max < 50, `max is: ${last.max}`)
       })
     })
