@@ -23,7 +23,7 @@ run multithreaded benchmarks
 ## Install
 
 ```bash
-npm i https://github.com/nicholaswmin/automap.git
+npm i @nicholaswmin/dyno
 ```
 
 ## Quickstart
@@ -59,14 +59,12 @@ A benchmark is comprised of 2 files:
 > The [run file](#run-file-1)
 >
 > Declares *test configuration*   
-> Edit this file with your own test configuration
 
 [`task.js`](#task-file-1)
 
 > The [task file](#task-file-1)
 >
 > Declares the *code under test*.  
-> Edit this file with your own task/code
 
 > Read below sections for configuration guidance
 
@@ -81,7 +79,6 @@ Declares:
 - test parameters  
 - what measurements should be logged and how
 
-This file is run once.   
 Sets up the benchmark & internally controls the spawned threads.
 
 ```js
@@ -138,8 +135,8 @@ Declares:
 The task file is run in its own isolated [V8 process][v8] 
 `times x THREAD_COUNT`, concurrently, on separate threads.
 
-Custom measurements can be taken using the f
-ollowing [Performance Measurement APIs][perf-api]:
+Custom measurements can be taken using the following 
+[Performance Measurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
