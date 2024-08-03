@@ -28,6 +28,10 @@
 - [ ] unify all the code examples
 - [ ] `runner` and `task` are state machines, think about implementing them
       as such
+- [ ] The entire `stats` `tracking`/`observer` infra/language needs to be 
+      rethought; what is a `stat`, what is a `measure`, why is it called 
+      `tracker`? 
+      Must get a simple, non-convoluted domain language about it.
 
 ## test
 
