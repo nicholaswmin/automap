@@ -22,16 +22,16 @@ npx init
 
 A benchmark is comprised of 2 files:
 
-[`run.js`](#run-file)
+[`run.js`](#run-file-1)
 
-> The [run file](#run-file)
+> The [run file](#run-file-1)
 >
 > Declares *test configuration*   
 > Edit this file with your own test configuration
 
-[`task.js`](#task-file)
+[`task.js`](#task-file-1)
 
-> The [task file](#task-file)
+> The [task file](#task-file-1)
 >
 > Declares the *code under test*.  
 > Edit this file with your own task/code
