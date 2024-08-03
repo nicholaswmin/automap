@@ -4,15 +4,13 @@
 
 run multithreaded benchmarks
 
-## Usage
-
-### Install
+## Install
 
 ```bash
 npm i https://github.com/nicholaswmin/automap.git
 ```
 
-### Setup
+## Setup
 
 ```bash 
 npx init
@@ -36,7 +34,7 @@ A benchmark is comprised of 2 files:
 > Declares the *code under test*.  
 > Edit this file with your own task/code
 
-#### Run
+### Run
 
 > navigate into the created `benchmark` folder:
 
@@ -49,6 +47,8 @@ cd benchmark
 ```bash
 node run.js
 ```
+
+> Read below sections for configuration guidance
 
 ## Simple example
 
@@ -70,19 +70,24 @@ import { join } from 'node:path'
 import { Dyno, Table } from '@nicholaswmin/dyno'
 
 const dyno = new Dyno({
+  // declare the task file
   task: join(import.meta.dirname, 'task.js'),
-
+  
+  // declare the test parameters
   parameters: {
+    // required
     configurable: {
       TASKS_SECOND: 100,
       THREAD_COUNT: 4,
       TEST_SECONDS: 5,
-
+      
+      // optional
       FOO: 20,
       BAR: 50
     }
   },
-
+  
+  // render measurement output
   render: function({ runner, threads }) {
     const table = new Table('Threads (mean/ms)')
       .setHeading('thread', 'task', 'sleep', 'max backlog', 'memory use (KB)')
@@ -113,8 +118,8 @@ Declares:
 The task file is run in its own isolated [V8 process][v8] 
 `times x THREAD_COUNT`, concurrently, on separate threads.
 
-Within the task file, custom measurements can be taken using
-the following [Performance Measurement APIs][perf-api]:
+Custom measurements can be taken using the f
+ollowing [Performance Measurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
@@ -124,7 +129,6 @@ the following [Performance Measurement APIs][perf-api]:
 import { task } from '@nicholaswmin/dyno'
 
 task(async parameters => {
-  // parameters are specified in the run file
   const sleep = ms => new Promise(res => setTimeout(res, ms))
   const timerified_sleep = performance.timerify(sleep)
   
