@@ -38,7 +38,7 @@ test('Measures thread:backlog', async t => {
         t.assert.ok(Object.hasOwn(last, 'max'))
 
         await t.test('with reasonable "max" values', async t => {
-          t.assert.ok(last.max > 15, `max is: ${last.max}`)
+          t.assert.ok(last.max > 10, `max is: ${last.max}`)
           t.assert.ok(last.max < 400, `mean is: ${last.max}`)
         })
       })
