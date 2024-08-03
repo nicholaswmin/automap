@@ -8,3 +8,4 @@
 - [x] Log test constants/parameters
 - [ ] Log to file
 - [ ] Any tests marked as `todo`
+- [ ] fix `npx init` command in docs after publishing
