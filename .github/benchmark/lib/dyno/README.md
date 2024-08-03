@@ -70,7 +70,8 @@ A benchmark is comprised of 2 files:
 
 ## Simple example
 
-> Benchmark a `sleep()` function using [`performance.timerify`][timerify]
+> Benchmark a `sleep()` function using [`performance.timerify`][timerify] on 
+> 4 threads
 
 ### Run file
 
