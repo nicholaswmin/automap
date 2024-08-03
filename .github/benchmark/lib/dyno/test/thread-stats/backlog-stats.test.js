@@ -12,7 +12,7 @@ test('Measures: Thread Backlog', async t => {
 
   t.before(async () => {
     dyno = new Dyno({
-      task: './test/thread-stats/tasks/task.js',
+      task: join(import.meta.dirname, 'tasks/task.js'),
       parameters: {
         TASKS_SECOND: 100,
         THREAD_COUNT: 2,

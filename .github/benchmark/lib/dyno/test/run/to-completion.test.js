@@ -42,7 +42,7 @@ test('#Dyno.start()', async t => {
   }, async t => {
     let rows
 
-    await t.before(async () => {
+    t.before(async () => {
       await dyno.start()
 
       rows = await selectDBRows(randomId)
