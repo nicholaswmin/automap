@@ -96,8 +96,8 @@ const dyno = new Dyno({
     // required
     configurable: {
       TASKS_SECOND: 100,
+      TEST_SECONDS: 10,
       THREAD_COUNT: 4,
-      TEST_SECONDS: 5,
       
       // optional
       FOO: 20,
@@ -200,9 +200,9 @@ const dyno = new Dyno({
     configurable: {
       // required:
       TASKS_SECOND: 100,
-      THREAD_COUNT: availableParallelism(),
       TEST_SECONDS: 5,
-      
+      THREAD_COUNT: availableParallelism(),
+
       // optional:
       FOO: 10,
       BAR: 20
