@@ -1,7 +1,9 @@
 # Todo
 
-## fixes
+## fix
 
+- [ ] simple example in `README` incorrectly logs a `task.mean: 1`
+  - its `sleep` function takes `~50 ms` to it should log a mean of `> 50`.
 - [ ] finish, error logs are sometimes hidden by `render() console.clear()`
   - `runner` errors must be correctly logged
   - `thread` errors must be correctly logged

@@ -66,7 +66,8 @@ A benchmark is comprised of 2 files:
 >
 > Declares the *code under test*.  
 
-> Read below sections for configuration guidance
+> The [Advanced Example][#advanced-example] includes detailed code comments
+> on configuration, parameters, output etc ...
 
 ## Simple example
 
@@ -93,8 +94,8 @@ const dyno = new Dyno({
   
   // declare the test parameters
   parameters: {
-    // required
     configurable: {
+      // required
       TASKS_SECOND: 100,
       TEST_SECONDS: 10,
       THREAD_COUNT: 4,
