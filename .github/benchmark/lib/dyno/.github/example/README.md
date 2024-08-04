@@ -1,4 +1,4 @@
-# Fibonnaci benchmark
+# benchmark example
 
 ## Run 
 
