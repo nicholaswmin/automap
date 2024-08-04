@@ -12,7 +12,6 @@ const run = async (taskFn, {
   await before(parameters)
 
   const parameters = Object.freeze(JSON.parse(process.env.parameters))
-  
   const loopObserver = new LoopDelayObserver(histogram('evt_loop').record)
   const perfObserver = new PerformanceObserver(mapToEntries(entry => {
     return histogram(entry.name).record(entry.duration)
