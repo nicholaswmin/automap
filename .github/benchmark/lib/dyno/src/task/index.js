@@ -9,12 +9,13 @@ const run = async (taskFn, {
   before = async () => {},
   after =  async () => {}
 } = {}) => {
+  const parameters = Object.freeze(JSON.parse(process.env.parameters))
+
   await before(parameters)
 
-  const parameters = Object.freeze(JSON.parse(process.env.parameters))
   const loopObserver = new LoopDelayObserver(histogram('evt_loop').record)
   const perfObserver = new PerformanceObserver(mapToEntries(entry => {
-    return histogram(entry.name).record(entry.duration)
+    histogram(entry.name).record(entry.duration)
   }))
   
   const timed_task = performance.timerify(taskFn.bind(this))
@@ -31,11 +32,9 @@ const run = async (taskFn, {
     process.disconnect()
   })
   
-  process.on('task:start', () => {
-    taskRunner(parameters)
-      .then(() => process.send({ 
-        name: 'task:finished' 
-      }))
+  process.on('task:start', async () => {
+    await taskRunner(parameters)
+    process.send({ name: 'task:finished' })
   }) 
   
   loopObserver.observe()

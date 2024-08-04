@@ -13,7 +13,7 @@ await dyno({
   render: function(measures) {
     console.clear()
 
-    console.dir(measures[process.pid]['uptime'], { depth: 3 })
+    console.dir(measures[process.pid]['uptime'].histogram.count, { depth: 3 })
   }
 })
 
