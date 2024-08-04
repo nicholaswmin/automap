@@ -17,8 +17,9 @@
 ## feat 
 
 - [ ] warmup period
-- [ ] event loop measures for each thread
+- [x] event loop measures for each thread
 - [ ] implement max backlog limit
+- [ ] implement last value on `histogram` (actual ones in collector)
 - [x] `tasks:run` and `backlog` should ideally be tracked on the `runner`
   - now tracking `finished` and `backlog` on the primary
 - [x] log test constants/parameters
