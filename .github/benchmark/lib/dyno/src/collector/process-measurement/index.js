@@ -3,12 +3,12 @@ import RingBuffer from '../ring-buffer/index.js'
 
 class ProcessMeasurement {
   constructor({ name, value }) {
-    this.createHistoricalHistogram({ name, value })
+    this.createTimelinedHistogram({ name, value })
   }
   
-  createHistoricalHistogram({ name, value }) {
+  createTimelinedHistogram({ name, value }) {
     Object.defineProperty(this, name, {
-      value: new HistoricalHistogram({ initial: value }),
+      value: new TimelinedHistogram({ initial: value }),
       configurable: false,
       enumerable: true,
       writable: false
@@ -16,7 +16,7 @@ class ProcessMeasurement {
   }
 }
 
-class HistoricalHistogram {
+class TimelinedHistogram {
   constructor({ initial = null }) {
     Object.defineProperties(this, {
       histogram: {

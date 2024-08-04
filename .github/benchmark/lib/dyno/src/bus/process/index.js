@@ -23,7 +23,7 @@ process._on_original('message', data => {
   if (!on) return console.warn('warning: received IPC msg on a stopped bus')
 
   // monkey-patching `subprocess.send()` to verify payload shape
-  // is impractical, so we at-least verify it here, on the receiving end
+  // is impractical, so we at least verify it here, on the receiving end
   data = validateIPCPayload(Object.freeze(data))
 
   const cbs = listeners[data.name]

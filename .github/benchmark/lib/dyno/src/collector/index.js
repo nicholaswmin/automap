@@ -25,17 +25,14 @@ class Collector {
   
   #record({ pid, name, value }) {
     // @REVIEW, 
-    // - `measurement` is not a good name for this
-    // - too many things going on, split in methods
-    // - use classes for `trackedMeasure`
-    // - `task.snapshots` should use a fixed-size circular buffer 
-    // - seal/freeze where appropriate
+    // - `measurement` is not a good name for this, 
+    //   too long to carry around in userland when building views
 
     if (!this.measurements[pid])
       return this.measurements[pid] = new ProcessMeasurement({ name, value })
     
     if (!this.measurements[pid][name])
-      return this.measurements[pid].addTaskMeasurement({ name, value })
+      return this.measurements[pid].createTimelinedHistogram({ name, value })
 
     this.measurements[pid][name].record(value)
   }

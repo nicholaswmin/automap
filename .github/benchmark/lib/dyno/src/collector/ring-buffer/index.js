@@ -1,7 +1,7 @@
 class RingBuffer extends Array {
   #size = 0
 
-  constructor({ size = 10 } = {}) {
+  constructor({ size = 100 } = {}) {
     super()
     this.#size = size
   }
