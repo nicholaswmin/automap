@@ -6,10 +6,12 @@
 //   instead of `1000 tasks`. 
 
 import { validatePositiveInteger } from './validators.js'
+import histogram from '../histogram/index.js'
 
 let taskno = 0
+let threads = {}
 
-const sendToRandom = async (threads, tasksSecond) => {
+const sendToRandom = async (vthreads, tasksSecond) => {
   // - If calculated `interval < 1ms`, which is the minimum possible 
   //   `setInterval()` duration, we create additional synthetic/filler 
   //    `process.send` calls to match the desired send rate.
@@ -21,12 +23,12 @@ const sendToRandom = async (threads, tasksSecond) => {
   const fillerCycles = Math.ceil(1 / fracInterval)
 
   for (let i = 0; i < fillerCycles; i++) {
-    const vthreads = Object.values(threads)
-    const random = vthreads[Math.floor(Math.random() * vthreads.length)]
+    const threads = Object.values(vthreads)
+    const random = threads[Math.floor(Math.random() * threads.length)]
 
     random && random.connected 
       ? random.send({ name: 'task:start', taskno: ++taskno }) 
-        ? true
+        ? histogram('sent').record(1)
         : (() => {
           throw new Error('Task IPC oversaturated. Set lower: "tasksSecond"')
         })
@@ -35,11 +37,22 @@ const sendToRandom = async (threads, tasksSecond) => {
 }
 
 const scheduler = () => {
+  const recordTaskFinish = ({ name }) => (['task:finished'].includes(name)) 
+    ?  histogram('finished').record(1) 
+    : 0
+
+  let threads = []
   let timer = null 
   
   return {
-    start: function(threads, tasksSecond) {
+    start: function(vthreads, tasksSecond) {
       tasksSecond = validatePositiveInteger(tasksSecond, 'tasksSecond')
+
+      threads = Object.values(vthreads).map(thread => {
+        thread.on('message', recordTaskFinish)
+
+        return thread
+      })
 
       if (tasksSecond > 10000)
         throw new RangeError(`tasksSecond must be <= 10000, is: ${tasksSecond}`)
@@ -54,7 +67,7 @@ const scheduler = () => {
             throw new TypeError('cannot start() an already running Scheduler')
           })()
         : timer = setInterval(
-            sendToRandom.bind(null, threads, tasksSecond),
+            sendToRandom.bind(null, vthreads, tasksSecond),
             Math.round(1000 / tasksSecond)
           )
     },
@@ -62,7 +75,13 @@ const scheduler = () => {
     stop: function() {
       return timer 
         ? (() => {
+            process.stop()
+
+            threads.forEach(thread => 
+              thread.off('task:finished', recordTaskFinish))
+
             clearInterval(timer)
+
             timer = null
           })()
         : (() => {

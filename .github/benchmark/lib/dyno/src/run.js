@@ -4,14 +4,16 @@ import { dyno } from './index.js'
 await dyno({
   task: join(import.meta.dirname, 'task.js'),
   parameters: {
-    TASKS_SECOND: 5,
-    THREAD_COUNT: 4,
-    TEST_SECONDS: 5,
-    RAND_FACTOR: 10
+    TASKS_SECOND: 10,
+    THREAD_COUNT: 2,
+    TEST_SECONDS: 10,
+    RAND_FACTOR: 5
   },
 
   render: function(measures) {
-    console.dir(measures[Object.keys(measures).at(-1)], { depth: 4 })
+    console.clear()
+
+    console.dir(measures[process.pid]['uptime'], { depth: 3 })
   }
 })
 

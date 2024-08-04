@@ -3,7 +3,7 @@ import input from '@inquirer/input'
 const types = {
   'string': String,
   'number': Number,
-  'boolean': Boolean
+  'boolean': JSON.parse
 }
 
 const validateTypes = (obj, types) => {
@@ -39,7 +39,7 @@ export default async parameters => {
               ? true : `${key} must be a string with length: > 0`
 
           case 'boolean':
-            return !['true', 'false', true, false].includes(answer) 
+            return ['true', 'false', true, false].includes(answer) 
               ? true : `${key} must be either "true" or "false"`
 
           default:
