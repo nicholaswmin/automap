@@ -1,1 +1,1 @@
-console.log('@TODO')
+import './bin/index.test.js'
