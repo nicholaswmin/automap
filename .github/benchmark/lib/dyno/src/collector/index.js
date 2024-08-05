@@ -19,8 +19,12 @@ class Collector {
   }
   
   stop() {
+    const json = JSON.stringify(this.stats)
+    
     this.on = false
     this.bus.stop()
+    
+    return json
   }
   
   #record({ pid, name, value }) {

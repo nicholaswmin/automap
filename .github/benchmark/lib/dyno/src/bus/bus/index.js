@@ -31,8 +31,7 @@ class Bus {
 
   emit(object) {
     if (!this.on) 
-      return process.env.NODE_NO_WARNINGS === 1
-        ? 0 : console.warn('warning: attempted to emit() on a stopped Bus')
+      return console.warn('warning: attempted to emit() on a stopped Bus')
     
     const json = JSON.stringify(object)
 

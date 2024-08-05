@@ -24,6 +24,7 @@ const dyno = async ({ task, parameters, render = () => {} }) => {
     parameters: parameters
   })
   
+  process.start()
   collector.start(threads, render.bind(this))
   scheduler.start(threads)
   uptimer.start()
@@ -41,7 +42,7 @@ const dyno = async ({ task, parameters, render = () => {} }) => {
 
     await threader.disconnect(threads)
   }
-  
+
   return collector.stats
 }
 

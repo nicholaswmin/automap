@@ -51,4 +51,9 @@ process.stop = () => {
   listeners = []
 }
 
+process.start = () => {
+  on = true
+  listeners = []
+}
+
 export default process
