@@ -33,11 +33,11 @@ await dyno({
       .setHeading('sent', 'done', 'backlog', 'uptime (secs)')
       .addRowMatrix([
         [
-          main.sent?.count        || 'n/a',
-          main.done?.count        || 'n/a',
+          main.sent?.count    || 'n/a',
+          main.done?.count    || 'n/a',
           (main.sent?.count 
-          - main.finished?.count) || 'n/a',
-          main.uptime?.count      || 'n/a'
+          - main.done?.count) || 0,
+          main.uptime?.count  || 'n/a'
         ]
       ]),
 

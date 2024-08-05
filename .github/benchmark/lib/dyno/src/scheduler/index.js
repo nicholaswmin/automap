@@ -12,7 +12,7 @@ class Scheduler {
   
   start(threads) {
     this.#throwIfRunning()
-    this.#addTaskFinishedListeners(threads)
+    this.#addTaskDoneListeners(threads)
 
     this.timer = setInterval(
       this.#scheduleOnRandom.bind(this, threads),
@@ -25,7 +25,7 @@ class Scheduler {
 
     this.on = false
     this.#stopTaskScheduling()
-    this.#removeTaskFinishedListeners()
+    this.#removeTaskDoneListeners()
     process.stop()
   }
   
@@ -34,13 +34,13 @@ class Scheduler {
     this.timer = null
   }
 
-  #addTaskFinishedListeners(threads) {
+  #addTaskDoneListeners(threads) {
     Object.values(threads).forEach(thread => {
       const listener = {
         thread: thread,
-        handler: function measureFinished({ name }) {
+        handler: function measureDone({ name }) {
           if (['task:done'].includes(name))
-            histogram('finished').record(1)
+            histogram('done').record(1)
         }
       }
 
@@ -49,7 +49,7 @@ class Scheduler {
     })
   }
 
-  #removeTaskFinishedListeners() {
+  #removeTaskDoneListeners() {
     this.listeners.forEach(listener => 
       listener.thread.off('message', listener.handler))
     
