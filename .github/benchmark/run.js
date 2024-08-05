@@ -23,13 +23,13 @@ await dyno({
   },
 
   render: function(threads) {
-    const threadcount = Object.keys(threads).length
-    const ownPid = process.pid.toString()
-    const primary = threads[ownPid]
+    const tcount  = Object.keys(threads).length
+    const myPID   = process.pid.toString()
+    const primary = threads[myPID]
 
     const views = [
       new Table('Tasks')
-      .setHeading('sent', 'finished', 'backlog')
+      .setHeading('sent', 'finished', 'backlog', 'uptime (secs)')
       .addRowMatrix([
         [
           primary.sent?.count                            || 'n/a',
@@ -39,17 +39,17 @@ await dyno({
         ]
       ]),
 
-      new Table(`Threads (top 5 of ${threadcount}, sorted by: task (mean/ms))`)
+      new Table(`Threads (top 5 of ${tcount}, sorted by: task mean.)`)
         .setHeading(
           'thread id', 
-          'task (mean/ms)', 
-          'save (mean/ms)', 
-          'fetch (mean/ms)', 
-          'ping (mean/ms)',
-          'evt. loop (mean/ms)'
+          'task (ms)', 
+          'save (ms)', 
+          'fetch (ms)', 
+          'ping (ms)',
+          'evt. loop (ms)'
         ).addRowMatrix(
         Object.keys(threads)
-        .filter(pid => pid !== ownPid)
+        .filter(pid => pid !== myPID)
         .map(pid => {
           return [
             pid,
