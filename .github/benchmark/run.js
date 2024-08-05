@@ -51,7 +51,8 @@ await dyno({
           'evt.loop (ms)'
         ).addRowMatrix(
 
-        pids.filter(_pid => _pid !== pid)
+        Object.keys(threads)
+        .filter(_pid => _pid !== pid)
         .map(pid => {
           return [
             pid,
