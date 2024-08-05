@@ -5,7 +5,7 @@ import ioredis from './lib/ioredis/index.js'
 const redis = ioredis()
 const utils = {
   round: num => (Math.round((num + Number.EPSILON) * 100) / 100) || 'n/a',
-  nsToMs: num => parseFloat((num / 1000000).toFixed(2)),
+  ns_ms: num => parseFloat((num / 1000000).toFixed(2)),
   bytesToMB: bytes => Math.ceil(bytes / 1000 / 1000)
 }
 
@@ -23,8 +23,8 @@ await dyno({
   },
 
   render: function(threads) {
-    const tcount  = Object.keys(threads).length
     const myPID   = process.pid.toString()
+    const tcount  = Object.keys(threads).length
     const primary = threads[myPID]
 
     const views = [
@@ -57,7 +57,7 @@ await dyno({
             utils.round(threads[pid]['save']?.mean)  || 'n/a',
             utils.round(threads[pid]['fetch']?.mean) || 'n/a',
             utils.round(threads[pid]['rping']?.mean) || 'n/a',
-            utils.nsToMs(threads[pid]['evt_loop']?.mean) || 'n/a'
+            utils.ns_ms(threads[pid]['eloop']?.mean) || 'n/a'
           ]
       })
       .sort((a, b) => b[1] - a[1])
