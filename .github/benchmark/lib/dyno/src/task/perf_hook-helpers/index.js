@@ -4,7 +4,7 @@
 import { monitorEventLoopDelay } from 'node:perf_hooks'
 
 class LoopDelayObserver {
-  constructor (cb, interval = 1000) {
+  constructor (cb, interval = 250) {
     this.cb = cb
     this.timer = null
     this.interval = interval

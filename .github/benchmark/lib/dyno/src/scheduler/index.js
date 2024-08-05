@@ -39,7 +39,7 @@ class Scheduler {
       const listener = {
         thread: thread,
         handler: function measureFinished({ name }) {
-          if (['task:finished'].includes(name))
+          if (['task:done'].includes(name))
             histogram('finished').record(1)
         }
       }

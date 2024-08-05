@@ -1,3 +1,4 @@
+import { availableParallelism } from 'node:os'
 import { join } from 'node:path'
 import { dyno, Table } from './lib/dyno/index.js'
 import ioredis from './lib/ioredis/index.js'
@@ -16,37 +17,38 @@ await dyno({
   parameters: {
     TASKS_PER_SECOND: 10,
     TEST_SECONDS: 5,
-    THREAD_COUNT: 5,
+    THREAD_COUNT: availableParallelism(),
 
     MAX_ITEMS: 20,
     PAYLOAD_KB: 5
   },
 
   render: function(threads) {
-    const pids    = Object.keys(threads)
-    const pid     = process.pid.toString()
-    const primary = threads[pid]
+    const pid  = process.pid.toString()
+    const pids = Object.keys(threads)
+    const main = threads[pid]
 
     const views = [
       new Table('Tasks')
-      .setHeading('sent', 'finished', 'backlog', 'uptime (secs)')
+      .setHeading('sent', 'done', 'backlog', 'uptime (secs)')
       .addRowMatrix([
         [
-          primary.sent?.count                            || 'n/a',
-          primary.finished?.count                        || 'n/a',
-          primary.sent?.count - primary.finished?.count  || 'n/a',
-          primary.uptime?.count                          || 'n/a'
+          main.sent?.count        || 'n/a',
+          main.done?.count        || 'n/a',
+          (main.sent?.count 
+          - main.finished?.count) || 'n/a',
+          main.uptime?.count      || 'n/a'
         ]
       ]),
 
-      new Table(`Threads (top 5 of ${pids.length}, sorted by: task mean.)`)
+      new Table(`Threads, top 5 of ${pids.length - 1}, sorted by: 'task.mean'`)
         .setHeading(
           'thread id', 
           'task (ms)', 
           'save (ms)', 
           'fetch (ms)', 
           'ping (ms)',
-          'evt. loop (ms)'
+          'evt.loop (ms)'
         ).addRowMatrix(
 
         pids.filter(_pid => _pid !== pid)
