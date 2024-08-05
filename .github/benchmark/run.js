@@ -23,9 +23,9 @@ await dyno({
   },
 
   render: function(threads) {
-    const myPID   = process.pid.toString()
-    const tcount  = Object.keys(threads).length
-    const primary = threads[myPID]
+    const pids    = Object.keys(threads)
+    const pid     = process.pid.toString()
+    const primary = threads[pid]
 
     const views = [
       new Table('Tasks')
@@ -39,7 +39,7 @@ await dyno({
         ]
       ]),
 
-      new Table(`Threads (top 5 of ${tcount}, sorted by: task mean.)`)
+      new Table(`Threads (top 5 of ${pids.length}, sorted by: task mean.)`)
         .setHeading(
           'thread id', 
           'task (ms)', 
@@ -48,8 +48,8 @@ await dyno({
           'ping (ms)',
           'evt. loop (ms)'
         ).addRowMatrix(
-        Object.keys(threads)
-        .filter(pid => pid !== myPID)
+
+        pids.filter(_pid => _pid !== pid)
         .map(pid => {
           return [
             pid,
