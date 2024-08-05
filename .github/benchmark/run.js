@@ -1,90 +1,74 @@
-import os from 'node:os'
-
-import { Dyno, Table, TableAlignment, Plot } from './lib/dyno/index.js'
+import { join } from 'node:path'
+import { dyno, Table } from './lib/dyno/index.js'
 import ioredis from './lib/ioredis/index.js'
 
 const redis = ioredis()
 const utils = {
   round: num => (Math.round((num + Number.EPSILON) * 100) / 100) || 'n/a',
+  nsToMs: num => parseFloat((num / 1000000).toFixed(2)),
   bytesToMB: bytes => Math.ceil(bytes / 1000 / 1000)
 }
 
-const dyno = new Dyno({
-  task: './task.js',
-  
+await redis.flushall()
+
+await dyno({
+  task: join(import.meta.dirname, 'task.js'),
   parameters: {
-    configurable: {
-      TASKS_SECOND: 100,
-      TEST_SECONDS: 10,
-      THREAD_COUNT: +process.env.WEB_CONCURRENCY || os.availableParallelism(),
-      
-      MAX_ITEMS: 100,
-      PAYLOAD_KB: 5
-    }
+    TASKS_PER_SECOND: 10,
+    TEST_SECONDS: 5,
+    THREAD_COUNT: 5,
+
+    MAX_ITEMS: 20,
+    PAYLOAD_KB: 5
   },
 
-  before: () => redis.flushall(),
-  after: () => redis.disconnect(),
-  
-  render: function({ runner, threads }) {
-    const threadCount = Object.keys(threads).length, maxThreadCount = 5
+  render: function(threads) {
+    const threadcount = Object.keys(threads).length
+    const ownPid = process.pid.toString()
+    const primary = threads[ownPid]
 
     const views = [
-      new Table()
-      .setHeading(...Object.keys(this.parameters))
-      .addRowMatrix([ Object.values(this.parameters) ]),
-
-      new Table('Runner Tasks')
-      .setHeading('sent', 'acked', 'finished', 'backlog', 'mem. (mb)')
+      new Table('Tasks')
+      .setHeading('sent', 'finished', 'backlog')
       .addRowMatrix([
-        [ 
-          runner.sent.at(-1).count, 
-          runner.acked.at(-1).count, 
-          runner.finished.at(-1).count, 
-          runner.backlog.at(-1).last, 
-          utils.bytesToMB(runner.memory.at(-1).mean) 
+        [
+          primary.sent?.count                            || 'n/a',
+          primary.finished?.count                        || 'n/a',
+          primary.sent?.count - primary.finished?.count  || 'n/a',
+          primary.uptime?.count                          || 'n/a'
         ]
       ]),
 
-      new Table(`Threads, top ${maxThreadCount} of ${threadCount}`)
-      .setHeading(
-        'thread id', 
-        'task (mean/ms)', 
-        'save (mean/ms)', 
-        'fetch (mean/ms)', 
-        'latency (mean/ms)', 
-
-        'acked', 
-        'finished', 
-        'max backlog'
-      )
-      .addRowMatrix(Object.keys(threads).map(thread => {
-        return [
-          thread,
-          utils.round(threads[thread]['task']?.at(-1).mean),
-          utils.round(threads[thread]['save']?.at(-1).mean),
-          utils.round(threads[thread]['fetch']?.at(-1).mean),
-          utils.round(threads[thread]['redis_ping']?.at(-1).mean),
-
-          utils.round(threads[thread]['acked']?.at(-1).count),
-          utils.round(threads[thread]['finished']?.at(-1).count),
-          utils.round(threads[thread]['backlog']?.at(-1).max)
-        ]
+      new Table(`Threads (top 5 of ${threadcount}, sorted by: task (mean/ms))`)
+        .setHeading(
+          'thread id', 
+          'task (mean/ms)', 
+          'save (mean/ms)', 
+          'fetch (mean/ms)', 
+          'ping (mean/ms)',
+          'evt. loop (mean/ms)'
+        ).addRowMatrix(
+        Object.keys(threads)
+        .filter(pid => pid !== ownPid)
+        .map(pid => {
+          return [
+            pid,
+            utils.round(threads[pid]['task']?.mean)  || 'n/a',
+            utils.round(threads[pid]['save']?.mean)  || 'n/a',
+            utils.round(threads[pid]['fetch']?.mean) || 'n/a',
+            utils.round(threads[pid]['rping']?.mean) || 'n/a',
+            utils.nsToMs(threads[pid]['evt_loop']?.mean) || 'n/a'
+          ]
       })
       .sort((a, b) => b[1] - a[1])
-      .slice(0, maxThreadCount)),
-    
-      new Plot('Thread timings timeline', {
-        properties: ['task', 'save', 'fetch'],
-        subtitle: 'mean (ms)',
-        unit: 'mean'
-      })
-      .plot(threads[Object.keys(threads).at(-1)])
+      .slice(0, 5))
     ]
     
-    process.argv.includes('--no-console-clear') ? 0 : console.clear()
+    process.argv.some(f => f.includes('no-clear')) ? 0 : console.clear()
     views.forEach(view => console.log(view.toString()))  
   }
 })
 
-await dyno.start()
+console.log('dyno() exited with: 0')
+
+redis.disconnect()

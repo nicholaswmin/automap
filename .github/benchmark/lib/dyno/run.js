@@ -4,7 +4,7 @@ import { dyno } from './index.js'
 await dyno({
   task: join(import.meta.dirname, 'task.js'),
   parameters: {
-    TASKS_SECOND: 10,
+    TASKS_PER_SECOND: 10,
     THREAD_COUNT: 2,
     TEST_SECONDS: 10,
     RAND_FACTOR: 5

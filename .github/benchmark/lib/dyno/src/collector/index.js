@@ -32,7 +32,7 @@ class Collector {
       return this.measurements[pid] = new ProcessMeasurement({ name, value })
     
     if (!this.measurements[pid][name])
-      return this.measurements[pid].createTimelinedHistogram({ name, value })
+      return this.measurements[pid].createTimeseriesHistogram({ name, value })
 
     this.measurements[pid][name].record(value)
   }

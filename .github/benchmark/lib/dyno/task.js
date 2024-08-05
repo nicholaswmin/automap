@@ -1,4 +1,4 @@
-import run from './task/index.js'
+import { run } from './index.js'
 
 run(async function task(parameters) {
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))

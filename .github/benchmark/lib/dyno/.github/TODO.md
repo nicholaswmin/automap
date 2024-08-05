@@ -2,6 +2,11 @@
 
 ## fix
 
+- [ ] wait for `queue drain`-type of event before resolving `bus.stop` or 
+      `process.stop`, otherwise race conditions occur.
+      - theres now a problem on >5k tasks per second and the `task:after` 
+        hook which runs `redis.disconnect()` then the backlog `taskFn` 
+        attempting to save something to Redis.
 - [x] simple example in `README` incorrectly logs a `task.mean: 1`
   - its `sleep` function takes `~50 ms` to it should log a mean of `> 50`.
   - works ok, just didn't `await timerifiedFn()` in the `task`

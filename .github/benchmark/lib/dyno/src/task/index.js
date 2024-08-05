@@ -10,25 +10,22 @@ const run = async (taskFn, {
   after =  async () => {}
 } = {}) => {
   const parameters = Object.freeze(JSON.parse(process.env.parameters))
-
   await before(parameters)
 
+  const timed_task = performance.timerify(taskFn.bind(this))
+  const taskRunner = parameters => timed_task(parameters)
   const loopObserver = new LoopDelayObserver(histogram('evt_loop').record)
   const perfObserver = new PerformanceObserver(mapToEntries(entry => {
     histogram(entry.name).record(entry.duration)
   }))
   
-  const timed_task = performance.timerify(taskFn.bind(this))
-  const taskRunner = parameters => timed_task(parameters)
-  
   process.on('process:disconnect', async () => {
-    await after(parameters)
-
     loopObserver.disconnect()
     perfObserver.disconnect()
     histogram().stop()
 
     process.stop()
+    await after(parameters)
     process.disconnect()
   })
   

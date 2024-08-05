@@ -178,7 +178,7 @@ for a total of at least `120 seconds`.
 
 ### Constants
 
-- `TASKS_SECOND`: task rate, per second.
+- `TASKS_PER_SECOND`: task rate, per second.
 - `TEST_SECONDS`: max test duration.
 - `THREAD_COUNT`: number of concurrent threads processing tasks
 - `PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
