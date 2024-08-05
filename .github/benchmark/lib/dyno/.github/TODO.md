@@ -81,3 +81,6 @@
   - `.github/example/` 
   - `README` docs example 
   - `npx init` sample
+- [ ] document the architecture in a small paragraph
+    - include a sentence within each module, explaining at least what 
+      it's supposed to be.

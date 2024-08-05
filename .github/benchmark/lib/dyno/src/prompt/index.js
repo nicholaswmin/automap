@@ -19,6 +19,9 @@ const validateTypes = (obj, types) => {
 
 export default async parameters => {
   validateTypes(parameters, types)
+  
+  if (['test'].includes(process.env.NODE_ENV?.toLowerCase()))
+    return Object.freeze(parameters)
 
   for (const key of Object.keys(parameters || {})) {
     const value = parameters[key]

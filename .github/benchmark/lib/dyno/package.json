@@ -8,8 +8,8 @@
     "init": "bin/init.js"
   },
   "scripts": {
-    "test": "NODE_NO_WARNINGS=1 NODE_ENV=test node --test --experimental-sqlite --test-reporter=spec test/index.test.js",
-    "test:coverage": "NODE_NO_WARNINGS=1 NODE_ENV=test node --test --experimental-sqlite --experimental-test-coverage test/index.test.js",
+    "test": "NODE_ENV=test node --test --test-reporter=spec test/index.test.js",
+    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.test.js",
     "example": "node .github/example/run.js"
   },
   "engines": {

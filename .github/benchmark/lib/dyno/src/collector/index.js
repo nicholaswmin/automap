@@ -1,19 +1,19 @@
 import { Bus } from '../bus/index.js'
-import { ProcessMeasurement } from './process-measurement/index.js'
+import { ProcessStat } from './process-stat/index.js'
 
 class Collector {
   constructor() {
     this.on = true
     this.bus = Bus()
 
-    this.measurements = {}
+    this.stats = {}
   }
   
   start(threads, cb) {
-    this.bus.listen(threads, measurement => {
+    this.bus.listen(threads, stat => {
       return this.on ? (() => {
-        this.#record(measurement)
-        cb(this.measurements) 
+        this.#record(stat)
+        cb(this.stats) 
       })() : null
     })
   }
@@ -25,16 +25,16 @@ class Collector {
   
   #record({ pid, name, value }) {
     // @REVIEW, 
-    // - `measurement` is not a good name for this, 
+    // - `stats` is not a good name for this, 
     //   too long to carry around in userland when building views
 
-    if (!this.measurements[pid])
-      return this.measurements[pid] = new ProcessMeasurement({ name, value })
+    if (!this.stats[pid])
+      return this.stats[pid] = new ProcessStat({ name, value })
     
-    if (!this.measurements[pid][name])
-      return this.measurements[pid].createTimeseriesHistogram({ name, value })
+    if (!this.stats[pid][name])
+      return this.stats[pid].createTimeseriesHistogram({ name, value })
 
-    this.measurements[pid][name].record(value)
+    this.stats[pid][name].record(value)
   }
 }
 

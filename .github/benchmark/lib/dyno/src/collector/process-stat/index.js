@@ -1,7 +1,7 @@
 import { createHistogram } from 'node:perf_hooks'
 import RingBuffer from '../ring-buffer/index.js'
 
-class ProcessMeasurement {
+class ProcessStat {
   constructor({ name, value }) {
     this.createTimeseriesHistogram({ name, value })
   }
@@ -80,4 +80,4 @@ class TimeseriesHistogram extends RecordableHistogram {
   }
 }
 
-export { ProcessMeasurement }
+export { ProcessStat }

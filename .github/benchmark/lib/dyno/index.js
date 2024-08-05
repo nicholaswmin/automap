@@ -10,7 +10,6 @@ import threader from './src/threader/index.js'
 import Collector from './src/collector/index.js'
 import Scheduler from './src/scheduler/index.js'
 
-
 const dyno = async ({ task, parameters, render = () => {} }) => {
   parameters = await prompt(parameters)
 
@@ -40,6 +39,8 @@ const dyno = async ({ task, parameters, render = () => {} }) => {
 
     await threader.disconnect(threads)
   }
+  
+  return collector.stats
 }
 
 export { dyno, run, Table, Plot }
