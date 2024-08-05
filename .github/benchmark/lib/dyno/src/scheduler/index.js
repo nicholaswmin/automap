@@ -1,12 +1,12 @@
-// Sends task run/end commands to separate threads
+// Sends task run/end commands to sepacyclesPerSecond threads
 import { validatePositiveInteger } from './validators.js'
 import histogram from '../histogram/index.js'
 
 class Scheduler {
-  constructor({ perSecond }) {
+  constructor({ cyclesPerSecond }) {
     this.on = true
     this.timer = null
-    this.perSecond = this.#validatePerSecond(perSecond)
+    this.cyclesPerSecond = this.#validateRate(cyclesPerSecond)
     this.listeners = []
   }
   
@@ -16,7 +16,7 @@ class Scheduler {
 
     this.timer = setInterval(
       this.#scheduleOnRandom.bind(this, threads),
-        Math.round(1000 / this.perSecond)
+        Math.round(1000 / this.cyclesPerSecond)
     )
   }
   
@@ -59,15 +59,15 @@ class Scheduler {
   #scheduleOnRandom(threads) {
     // - If calculated `interval < 1ms`, which is the minimum possible 
     //   `setInterval()` duration, we create additional synthetic/filler 
-    //    `process.send` calls to match the desired send rate.
+    //    `process.send` calls to match the desired send cycle rate.
     //
     // - If calculated `interval < 1ms`, which is the minimum possible 
     //   `setInterval()` duration, we create additional synthetic/filler 
-    //    `process.send` calls to match the desired send rate.
+    //    `process.send` calls to match the desired send cyclesPerSecond.
     // @WARNING: 
-    // - If `perSecond > 1000`, it has to be set as multiples of  `1000`, 
+    // - If `cyclesPerSecond > 1000`, it has to be set as multiples of  `1000`, 
     //   otherwise `fillerCycles` won't be able to correctly fill the remainder.       
-    const fracInterval = 1000 / this.perSecond
+    const fracInterval = 1000 / this.cyclesPerSecond
     const fillerCycles = Math.ceil(1 / fracInterval)
   
     for (let i = 0; i < fillerCycles; i++) {
@@ -78,7 +78,7 @@ class Scheduler {
         ? random.send({ name: 'task:start' }) 
           ? histogram('sent').record(1)
           : (() => {
-            throw new Error('IPC oversaturated. Set lower: "perSecond"')
+            throw new Error('IPC oversaturated. Set "cyclesPerSecond" lower')
           })
         : false
     }
@@ -94,15 +94,15 @@ class Scheduler {
       throw new TypeError('Scheduler is already running')
   }
   
-  #validatePerSecond(arg) {
-    validatePositiveInteger(arg, 'perSecond')
+  #validateRate(arg) {
+    validatePositiveInteger(arg, 'cyclesPerSecond')
 
     if (arg > 10000)
-      throw new RangeError(`perSecond must be <= 10000, is: ${arg}`)
+      throw new RangeError(`"cyclesPerSecond" must be <= 10000, is: ${arg}`)
 
     if (arg > 1000 && arg % 1000 > 0)
       throw new RangeError(
-        `perSecond must be in multiples of 1000 when > 1000, got: ${arg}`
+        `"cyclesPerSecond" must be in multiples of 1000 when > 1000, got: ${arg}`
       )
     
     return arg

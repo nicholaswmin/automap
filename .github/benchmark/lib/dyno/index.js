@@ -15,21 +15,23 @@ const dyno = async ({ task, parameters, render = () => {} }) => {
 
   const abortctrl = new AbortController()
   const collector = new Collector()
-  const scheduler = new Scheduler({ perSecond: parameters.TASKS_PER_SECOND })
   const uptimer = new Uptimer()
+  const scheduler = new Scheduler({ 
+    cyclesPerSecond: parameters.CYCLES_PER_SECOND 
+  })
   const threads = await threader.fork(task, { 
-    count: parameters.THREAD_COUNT,
-    parameters
+    concurrency: parameters.CONCURRENCY,
+    parameters: parameters
   })
   
   collector.start(threads, render.bind(this))
-  scheduler.start(threads, parameters.TASKS_PER_SECOND)
+  scheduler.start(threads)
   uptimer.start()
 
   try {
     await Promise.race([
       threader.watch(threads, abortctrl),
-      timer.setTimeout(parameters.TEST_SECONDS * 1000, null, abortctrl)
+      timer.setTimeout(parameters.DURATION_MS, null, abortctrl)
     ])
   } finally {
     abortctrl.abort()

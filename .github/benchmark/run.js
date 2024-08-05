@@ -15,9 +15,9 @@ await redis.flushall()
 await dyno({
   task: join(import.meta.dirname, 'task.js'),
   parameters: {
-    TASKS_PER_SECOND: 10,
-    TEST_SECONDS: 5,
-    THREAD_COUNT: availableParallelism(),
+    CYCLES_PER_SECOND: 10, 
+    CONCURRENCY: availableParallelism(), 
+    DURATION_MS: 5 * 1000, 
 
     MAX_ITEMS: 20,
     PAYLOAD_KB: 5

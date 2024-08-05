@@ -12,9 +12,10 @@ const forkProcess = (task, { parameters }) => new Promise((resolve, reject) => {
   .once('spawn', onSpawn).once('error', onError)
 })
 
-const fork = async (task, { parameters, count = availableParallelism() }) => {
+const fork = async (task, { parameters, concurrency = 4 }) => {
   const threads = await Promise.all(
-      Array.from({ length: count }, () => forkProcess(task, { parameters }))
+      Array.from({ length: concurrency }, 
+        () => forkProcess(task, { parameters }))
     )
     .then(threads => threads.reduce((acc, thread) => ({ 
       ...acc, [thread.pid]: thread 
@@ -57,7 +58,7 @@ const disconnect = async threads => {
     }))
   
   let sigkilled = setTimeout(() => {
-    console.warn('process:disconnect timed-out. Sending SIGKILL ...')
+    console.warn('process:disconnect timed-out. Sending SIGKILL to threads')
     Object.values(threads).forEach(thread => thread.kill('SIGKILL'))
     sigkilled = true
   }, timeout)
@@ -70,8 +71,8 @@ const disconnect = async threads => {
 
   return Promise.all(deaths)
     .then(() => sigkilled === true ? (() => {
-      throw new Error('threads had to be SIGKILLED')
-    })() : console.log('threads exited normally'))
+      throw new Error('some threads timed-out on exit & had to be SIGKILLED')
+    })() : console.log(`${alive.length} thread(s) exited cleanly`))
     .then(() => clearTimeout(sigkilled))
     .then(() => alive.length)
     
