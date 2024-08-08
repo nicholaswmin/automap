@@ -1,4 +1,3 @@
-// Sends task run/end commands to sepacyclesPerSecond threads
 import { validatePositiveInteger } from './validators.js'
 import histogram from '../histogram/index.js'
 
@@ -102,7 +101,7 @@ class Scheduler {
 
     if (arg > 1000 && arg % 1000 > 0)
       throw new RangeError(
-        `"cyclesPerSecond" must be in multiples of 1000 when > 1000, got: ${arg}`
+        `"cyclesPerSecond" must be multiples of 1000 when > 1000, got: ${arg}`
       )
     
     return arg

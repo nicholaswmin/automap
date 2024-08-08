@@ -30,8 +30,8 @@ class Bus {
   }
 
   emit(object) {
-    if (!this.on) 
-      return console.warn('warning: attempted to emit() on a stopped Bus')
+    if (!this.on)
+      return process.emitWarning('attempted to emit() on a stopped Bus')
     
     const json = JSON.stringify(object)
 
@@ -40,11 +40,16 @@ class Bus {
     process.send({ name: this.event, json })
   }
   
+  start() {
+    this.on = true
+  }
+  
   stop() {
     this.on = false
     this.ee.removeAllListeners(this.event)
     Object.values(this.threads)
       .forEach(thread => thread.removeAllListeners(this.event))
+    this.threads = {}
   }
 }
 

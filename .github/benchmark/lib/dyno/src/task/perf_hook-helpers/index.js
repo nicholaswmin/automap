@@ -11,7 +11,7 @@ class LoopDelayObserver {
     this.histogram = monitorEventLoopDelay()
   }
   
-  enable() { this.histogram.enable() }
+  enable()  { this.histogram.enable () }
   disable() { this.histogram.disable() }
 
   observe() {

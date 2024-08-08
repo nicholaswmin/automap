@@ -8,7 +8,7 @@
     "init": "bin/init.js"
   },
   "scripts": {
-    "test": "NODE_ENV=test node --test --test-reporter=spec test/index.test.js",
+    "test": "NODE_ENV=test node --test test/index.test.js",
     "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.test.js",
     "example": "node .github/example/run.js"
   },

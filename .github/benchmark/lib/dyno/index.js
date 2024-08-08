@@ -11,7 +11,9 @@ import Collector from './src/collector/index.js'
 import Scheduler from './src/scheduler/index.js'
 
 const dyno = async ({ task, parameters, render = () => {} }) => {
-  parameters = await prompt(parameters)
+  parameters = await prompt(parameters, {
+    skipUserInput: ['test'].includes(process.env.NODE_ENV)
+  })
 
   const abortctrl = new AbortController()
   const collector = new Collector()

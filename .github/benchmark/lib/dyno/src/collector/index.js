@@ -3,13 +3,14 @@ import { ProcessStat } from './process-stat/index.js'
 
 class Collector {
   constructor() {
-    this.on = true
-    this.bus = Bus()
-
+    this.on = true    
     this.stats = {}
+    
+    this.bus = Bus()
   }
   
   start(threads, cb) {
+    this.bus.start()
     this.bus.listen(threads, stat => {
       return this.on ? (() => {
         this.#record(stat)

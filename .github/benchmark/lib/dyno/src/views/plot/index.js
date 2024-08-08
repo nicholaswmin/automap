@@ -29,7 +29,7 @@ class Plot {
       return this
     
     const br = '\n'.repeat(2)
-    const keys = Object.keys(obj).filter(key =>this.properties.includes(key))
+    const keys = Object.keys(obj).filter(key => this.properties.includes(key))
     const cols = keys.map((_, i) => this.colors[i])
     const colors = cols.map(color => asciichart[color])
     const labels = keys.map((key, i) => styleText([cols[i]], `-- ${key}`))

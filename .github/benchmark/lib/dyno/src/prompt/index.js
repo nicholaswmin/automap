@@ -17,18 +17,16 @@ const validateTypes = (obj, types) => {
   }
 }
 
-export default async parameters => {
+export default async (parameters, { skipUserInput = false } = {}) => {
   validateTypes(parameters, types)
   
-  if (['test'].includes(process.env.NODE_ENV?.toLowerCase()))
-    return Object.freeze(parameters)
-
   for (const key of Object.keys(parameters || {})) {
     const value = parameters[key]
 
-    const answer = await input({
-      message: `Enter a value for: ${key}`,
+    const answer = skipUserInput 
+      ? value : await input({
 
+      message: `Enter a value for: ${key}`,
       default: value,
 
       validate: answer => {
