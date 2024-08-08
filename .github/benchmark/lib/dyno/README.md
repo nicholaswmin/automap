@@ -147,13 +147,13 @@ install deps:
 npm ci
 ```
 
-run tests:
+unit & integration tests:
 
 ```bash
 npm test
 ```
 
-log test coverage:
+test coverage:
 
 ```bash
 npm run test:coverage
