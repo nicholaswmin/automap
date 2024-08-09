@@ -12,4 +12,4 @@ http.createServer((req, res) => {
   res.write('\nEnv vars:\n')
   res.write(JSON.stringify(process.env, null, 2))
   res.end()
-}).listen(port, console.log(`Success! Running on port: ${port}`))
+}).listen(port, console.log(`Success! Mock server running on port: ${port}`))
