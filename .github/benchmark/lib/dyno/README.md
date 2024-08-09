@@ -248,19 +248,15 @@ test coverage:
 npm run test:coverage
 ```
 
-## Scripts 
-
-create runnable example:
-
-```bash
-npx init
-```
+## Maintenance 
 
 insert/update README example:
 
 ```bash
 npm run example:update:readme
 ```
+
+The example files are in `/bin/example`
 
 ## Authors
 
