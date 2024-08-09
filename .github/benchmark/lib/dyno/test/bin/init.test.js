@@ -2,7 +2,7 @@ import test from 'node:test'
 import path from 'node:path'
 import util from 'node:util'
 import child_process from 'node:child_process'
-import fs from 'node:fs/promises'
+import fs, { readFile } from 'node:fs/promises'
 
 const folderpaths = {
   test: path.join(import.meta.dirname, './temp/test'),
@@ -48,24 +48,51 @@ test('npx init', async t => {
     })
     
     await t.test('creates a run.js file', async t => {
-      t.assert.ok(
-        await fileExists(path.join(folderpaths.benchmark, 'run.js')), 
-        'cannot find benchmark/run.js file'
-      )
+      await t.test('creates file', async t => {
+        t.assert.ok(
+          await fileExists(path.join(folderpaths.benchmark, 'run.js')), 
+          'cannot find benchmark/run.js file'
+        )
+      })
+      
+      await t.test('with content', async t => {
+        t.assert.ok(
+          await readFile(path.join(folderpaths.benchmark, 'run.js'), 'utf8'), 
+          'run.js file has no content'
+        )
+      })
     })
     
     await t.test('creates a task.js file', async t => {
-      t.assert.ok(
-        await fileExists(path.join(folderpaths.benchmark, 'task.js')), 
-        'cannot find benchmark/task.js file'
-      )
+      await t.test('creates file', async t => {
+        t.assert.ok(
+          await fileExists(path.join(folderpaths.benchmark, 'README.md')), 
+          'cannot find benchmark/README.md file'
+        )
+      })
+      
+      await t.test('with content', async t => {
+        t.assert.ok(
+          await readFile(path.join(folderpaths.benchmark, 'task.js'), 'utf8'), 
+          'task.js file has no content'
+        )
+      })
     })
     
     await t.test('creates a README.md file', async t => {
-      t.assert.ok(
-        await fileExists(path.join(folderpaths.benchmark, 'README.md')), 
-        'cannot find benchmark/README.md file'
-      )
+      await t.test('creates file', async t => {
+        t.assert.ok(
+          await fileExists(path.join(folderpaths.benchmark, 'README.md')), 
+          'cannot find benchmark/README.md file'
+        )
+      })
+      
+      await t.test('with content', async t => {
+        t.assert.ok(
+          await readFile(path.join(folderpaths.benchmark, 'README.md'), 'utf8'), 
+          'README.md file has no content'
+        )
+      })
     })
     
     await t.test('runs the example', async t => {
