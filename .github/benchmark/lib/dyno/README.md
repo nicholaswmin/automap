@@ -99,8 +99,7 @@ await dyno({
     //
     // - 1 of the threads is the 
     //   primary/main process
-    //   which contains general about
-    //   test stats
+    //   which contains general test stats
     // 
     const pid  = process.pid.toString()
     const main = threads[pid]
