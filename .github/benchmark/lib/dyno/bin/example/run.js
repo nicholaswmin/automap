@@ -40,7 +40,7 @@ await dyno({
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
-      new Table('Tasks', [{
+      new Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
@@ -69,12 +69,12 @@ await dyno({
       .filter(_pid => _pid !== pid)
       .map(pid => ({
         'thread id': pid,
-        'task (mean/ms)': Math.round(threads[pid].task?.mean),
+        'cycle (mean/ms)': Math.round(threads[pid].cycle?.mean),
         'fibonacci (mean/ms)': Math.round(threads[pid].fibonacci?.mean)
       })))
     ]
     // display only the top 5 threads, 
-    // sorted by mean task duration
+    // sorted by mean cycle duration
     .sort((a, b) => b[1] - a[1]).slice(0, 5)
     // render the tables
     console.clear()

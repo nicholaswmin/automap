@@ -11,7 +11,7 @@ class Scheduler {
   
   start(threads) {
     this.#throwIfRunning()
-    this.#addTaskDoneListeners(threads)
+    this.#addCycleDoneListeners(threads)
 
     this.timer = setInterval(
       this.#scheduleOnRandom.bind(this, threads),
@@ -24,7 +24,7 @@ class Scheduler {
 
     this.on = false
     this.#stopTaskScheduling()
-    this.#removeTaskDoneListeners()
+    this.#removeCycleDoneListeners()
     process.stop()
   }
   
@@ -33,12 +33,12 @@ class Scheduler {
     this.timer = null
   }
 
-  #addTaskDoneListeners(threads) {
+  #addCycleDoneListeners(threads) {
     Object.values(threads).forEach(thread => {
       const listener = {
         thread: thread,
         handler: function measureDone({ name }) {
-          if (['task:done'].includes(name))
+          if (['cycle:done'].includes(name))
             histogram('done').record(1)
         }
       }
@@ -48,7 +48,7 @@ class Scheduler {
     })
   }
 
-  #removeTaskDoneListeners() {
+  #removeCycleDoneListeners() {
     this.listeners.forEach(listener => 
       listener.thread.off('message', listener.handler))
     
@@ -74,7 +74,7 @@ class Scheduler {
       const random = _threads[Math.floor(Math.random() * _threads.length)]
   
       random && random.connected && this.on
-        ? random.send({ name: 'task:start' }) 
+        ? random.send({ name: 'cycle:start' }) 
           ? histogram('sent').record(1)
           : (() => {
             throw new Error('IPC oversaturated. Set "cyclesPerSecond" lower')

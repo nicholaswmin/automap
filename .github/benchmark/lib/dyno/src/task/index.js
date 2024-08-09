@@ -29,9 +29,9 @@ const run = async (taskFn, {
     process.disconnect()
   })
   
-  process.on('task:start', async () => {
+  process.on('cycle:start', async () => {
     await taskRunner(parameters)
-    process.send({ name: 'task:done' })
+    process.send({ name: 'cycle:done' })
   }) 
   
   loopObserver.observe()

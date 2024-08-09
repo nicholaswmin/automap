@@ -50,7 +50,7 @@ test('#dyno():threads cycles in x amount of threads', async t => {
         })
       })
         
-      // this test is too flaky, probably because task scheduling happens
+      // this test is too flaky, probably because cycle scheduling happens
       // on a random thread rather than true round-robin
       t.todo('threads run an approximately equal number of cycles', t => {
         const diff = Math.abs(t1.bar.count - t2.bar.count)

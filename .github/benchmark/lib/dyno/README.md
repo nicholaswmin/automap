@@ -6,6 +6,8 @@ run multithreaded benchmarks
 
 * [Install](#install)
 * [Quickstart](#quickstart)
+  + [Overview](#overview)
+  + [Generate a sample benchmark](#generate-sample-benchmark)
 * [Configuration](#configuration)
 * [Example](#example)
   + [Run file](#run-file)
@@ -24,7 +26,17 @@ npm i @nicholaswmin/dyno
 
 ## Quickstart
 
-Create a runnable sample benchmark
+### Overview 
+
+To run a benchmark you declare some test configuration in `run.js` 
+which runs multiple *cycles* of a *task*.
+
+The *task* is the piece of code that needs to be benchmarked,
+which is declared in `task.js`.
+
+### Generate sample benchmark
+
+Create a runnable sample benchmark:
 
 ```bash 
 npx init
@@ -44,6 +56,7 @@ cd benchmark
 
 ```bash
 npm run benchmark
+# ... or node run.js
 ```
 
 ## Configuration
@@ -99,7 +112,7 @@ await dyno({
   render: function(threads) {
     // `threads` contains: 
     // - histograms & histogram snapshots,
-    //   per task, per thread
+    //   per cycle, per thread
     // Logging the output in table format ...
     const pid  = process.pid.toString()
     const main = threads[pid]
@@ -113,7 +126,7 @@ await dyno({
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
-      new Table('Tasks', [{
+      new Table('Cycles', [{
         'sent': main?.sent?.count,
         'done': main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
@@ -128,7 +141,7 @@ await dyno({
       //   `performance.timerify`
       // 
       // Available measures:
-      // - 'task', time duration of a cycle/task
+      // - 'task', time duration of a cycle
       // 
       // Custom measurements can be recorded 
       // in `task.js` using the following 
@@ -147,7 +160,7 @@ await dyno({
       })))
     ]
     // display only the top 5 threads, 
-    // sorted by mean task duration
+    // sorted by mean cycle duration
     .sort((a, b) => b[1] - a[1]).slice(0, 5)
     // render the tables
     console.clear()
