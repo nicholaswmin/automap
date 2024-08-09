@@ -5,7 +5,7 @@ import { styleText } from 'node:util'
 import { replaceTokensInFile } from './builder/index.js'
 
 await replaceTokensInFile({
-  srcFolder: './example',
+  srcfolder: './example',
   filepath: path.join(import.meta.dirname, '../README.md'),
   entrypath: '@nicholaswmin/dyno',
   fragments: [

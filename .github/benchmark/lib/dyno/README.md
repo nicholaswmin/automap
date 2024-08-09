@@ -98,11 +98,10 @@ await dyno({
 
   render: function(threads) {
     // `threads` contains: 
-    // - histograms & snapshots of the histograms,
-    //   per task, per thread
+    // - histograms & snapshots 
+    //   of the histograms, per task, per thread
     
     // We'll log output in table format
-    
     const pid  = process.pid.toString()
     
     // Primary output: 
@@ -184,7 +183,7 @@ Custom measurements can be taken using the following
 
 ```js
  // task.js
-import { run } from '@nicholaswmin/dyno'
+import { run } from '{{entryFile}}'
 
 run(async function task(parameters) {
   // parameters set in `run.js` 
