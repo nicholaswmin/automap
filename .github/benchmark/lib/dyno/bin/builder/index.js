@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import path from 'node:path'
 import * as fs from 'node:fs/promises'
 
@@ -14,10 +12,11 @@ const replaceTokensInFile = async ({ srcFolder, filepath, fragments }) => {
     const n1 = existing.indexOf(fragment.startToken)
     const n2 = existing.indexOf(fragment.endToken, n1)
     const rm = existing.slice(0, n1) + existing.slice(n2)
-    const cr = rm.slice(0, n1) + fragment.startToken + '\n' 
-      + contents + rm.slice(n1)
 
-    await fs.writeFile(filepath, cr)
+    await fs.writeFile(
+      filepath, 
+      `${rm.slice(0, n1)} ${fragment.startToken} \n ${contents} ${rm.slice(n1)}`
+    )
   }
 }
 
