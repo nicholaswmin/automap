@@ -6,6 +6,7 @@ class Scheduler {
     this.on = true
     this.timer = null
     this.cyclesPerSecond = this.#validateRate(cyclesPerSecond)
+    this.lastThreadIndex = 0
     this.listeners = []
   }
   
@@ -14,7 +15,7 @@ class Scheduler {
     this.#addCycleDoneListeners(threads)
 
     this.timer = setInterval(
-      this.#scheduleOnRandom.bind(this, threads),
+      this.#scheduleOnNextThread.bind(this, threads),
         Math.round(1000 / this.cyclesPerSecond)
     )
   }
@@ -55,7 +56,7 @@ class Scheduler {
     this.listeners = []
   }
   
-  #scheduleOnRandom(threads) {
+  #scheduleOnNextThread(threads) {
     // - If calculated `interval < 1ms`, which is the minimum possible 
     //   `setInterval()` duration, we create additional synthetic/filler 
     //    `process.send` calls to match the desired send cycle rate.
@@ -71,10 +72,15 @@ class Scheduler {
   
     for (let i = 0; i < fillerCycles; i++) {
       const _threads = Object.values(threads)
-      const random = _threads[Math.floor(Math.random() * _threads.length)]
+      
+      this.lastThreadIndex = this.lastThreadIndex < _threads.length - 1 
+        ? ++this.lastThreadIndex
+        : 0
+      
+      const thread = _threads[this.lastThreadIndex]
   
-      random && random.connected && this.on
-        ? random.send({ name: 'cycle:start' }) 
+      thread && thread.connected && this.on
+        ? thread.send({ name: 'cycle:start' }) 
           ? histogram('sent').record(1)
           : (() => {
             throw new Error('IPC oversaturated. Set "cyclesPerSecond" lower')

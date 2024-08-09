@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { dyno, views } from '{{entrypath}}'
+import { dyno, view } from '{{entrypath}}'
 
 await dyno({
   // location of task file
@@ -41,7 +41,7 @@ await dyno({
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       // 
-      new views.Table('Cycles', [{
+      new view.Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
@@ -61,11 +61,11 @@ await dyno({
       // Custom measurements can also be 
       // recorded in `task.js`
       //
-      new views.Table('Task durations', Object.keys(threads)
+      new view.Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
         'thread id': pid,
-        'cycle (mean/ms)': Math.round(threads[pid].cycle?.mean),
+        'cycle (mean/ms)': Math.round(threads[pid].task?.mean),
         'fibonacci (mean/ms)': Math.round(threads[pid].fibonacci?.mean)
       })))
     ]

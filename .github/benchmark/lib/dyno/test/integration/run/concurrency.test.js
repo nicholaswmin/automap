@@ -47,14 +47,11 @@ test('#dyno():threads cycles in x amount of threads', async t => {
         })
       })
         
-      // this test is too flaky, probably because cycle scheduling happens
-      // on a random thread rather than true round-robin
-      t.todo('threads run an approximately equal number of cycles', t => {
+      await t.test('threads run an approximately equal number of cycles', t => {
         const diff = Math.abs(t1.bar.count - t2.bar.count)
-        
-        t.diagnostic(`t1-t2 cycle count difference is: ${diff}`)
+        const maxdiff = 20
 
-        t.assert.ok(diff < 30, 'child threads call-count diff. is > 30') 
+        t.assert.ok(diff < maxdiff, `threads call-count diff. is > ${maxdiff}`) 
       })
     })
   })
