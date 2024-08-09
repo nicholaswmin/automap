@@ -98,13 +98,15 @@ await dyno({
     //   per task, per thread
     //
     // - 1 of the threads is the 
-    //   primary/main process
-    //   which contains general test stats
+    //   primary/main process which 
+    //   contains general test stats
     // 
     const pid  = process.pid.toString()
     const main = threads[pid]
     const views = [
       // Log main output: 
+      // general test stats, 
+      // cycles sent/finished, backlog etc..
       // 
       // Available measures:
       // 
@@ -112,6 +114,7 @@ await dyno({
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
+      // 
       new Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
@@ -120,15 +123,18 @@ await dyno({
       }]),
       // Log task output:
       //
-      // Available measures:
-      //
-      // - 'task', duration of a cycle/task
-      // - Custom measurements can be recorded 
-      //   in `task.js` using:
-      //  - `performance.timerify(fn)`
-      //  - `performance.measure('foo', mark1, mark2)`
+      // - Per thread measurements from 'task.js'
+      // - Custom measurements can be recorded here
+      // - e.g the 'fibonacci' measurement is a 
+      //   custom measurement recorded using 
+      //   `performance.timerify`
       // 
-      // Read more: https://nodejs.org/api/perf_hooks.html
+      // Available measures:
+      // - 'task', duration of a cycle/task
+      // 
+      // Custom measurements can also be 
+      // recorded in `task.js`
+      //
       new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
