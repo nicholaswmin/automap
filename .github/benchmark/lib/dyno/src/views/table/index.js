@@ -18,15 +18,12 @@ class Table extends View {
     return this
   }
   
-  render(shouldRender = true) {
+  render(shouldRender) {
     const output = this.rows.length 
       ? this.table.toString() 
       : 'no rows'
     
-    if (shouldRender)
-      console.log(output)
-    
-    return output
+    return super.render(shouldRender, output)
   }
 }
 
