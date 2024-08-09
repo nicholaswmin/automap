@@ -10,7 +10,7 @@ test('#view:Table', async t => {
     let stdout 
 
     t.before(() => {
-      console.log = t.mock.fn(console.log)
+      console.log = t.mock.fn(console.log, () => {})
     })
 
     await t.test('rows are empty', async t => {

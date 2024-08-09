@@ -53,7 +53,7 @@ test('#view:Plot', async t => {
     let stdout
 
     t.beforeEach(t => {
-      console.log = t.mock.fn(console.log)
+      console.log = t.mock.fn(console.log, () => {})
 
       plot.plot(input).render()
       
