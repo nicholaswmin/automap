@@ -121,6 +121,7 @@ await dyno({
       // Log task output:
       //
       // Available measures:
+      //
       // - 'task', duration of a cycle/task
       // - Custom measurements can be recorded 
       //   in `task.js` using:
