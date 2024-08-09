@@ -7,15 +7,12 @@ run multithreaded benchmarks
 * [Install](#install)
 * [Quickstart](#quickstart)
 * [Configuration](#configuration)
-* [Simple example](#simple-example)
+* [Example](#example)
   + [Run file](#run-file)
   + [Task file](#task-file)
   + [Output](#output)
-* [Advanced example](#advanced-example)
-  + [Run file](#run-file-1)
-  + [Task file](#task-file-1)
-  + [Output](#output-1)
 * [Tests](#tests)
+* [Scripts](#scripts)
 * [Authors](#authors)
 * [License](#license)
 
@@ -65,13 +62,10 @@ A benchmark is comprised of 2 files:
 >
 > Declares the *code under test*.  
 
-> The [Advanced Example](#advanced-example) includes detailed code comments
-> on configuration, parameters, output etc ...
+## Example
 
-## Simple example
-
-> Benchmark a `sleep()` function using [`performance.timerify`][timerify] on 
-> 4 threads
+> Benchmark a `fibonnacci()` function using [`performance.timerify`][timerify] 
+> on 4 threads
 
 ### Run file
 
@@ -84,7 +78,72 @@ Sets up the benchmark & internally controls the spawned threads.
 
 ```js
 // run.js
-// @TODO
+import { join } from 'node:path'
+import { dyno, Table } from '{{entryFile}}'
+
+await dyno({
+  task: join(import.meta.dirname, 'task.js'),
+  parameters: {
+    // required test parameters
+    CYCLES_PER_SECOND: 10, 
+    CONCURRENCY: 4, 
+    DURATION_MS: 5 * 1000,
+    
+    // custom parameters,
+    // passed on to 'task.js'
+    FIB_NUMBER: 35,
+    ITERATIONS: 3
+  },
+
+  render: function(threads) {
+    // render output in table format
+    const pid  = process.pid.toString()
+    const pids = Object.keys(threads)
+    
+    // primary output, mainly logs stats on cycles sent/finished etc..
+    // 'sent', 'done', 'backlog', 'uptime' are provided by default
+    const main = threads[pid]
+      const views = [
+        new Table('Tasks')
+        .setHeading('sent', 'done', 'backlog', 'uptime (secs)')
+        .addRowMatrix([
+          [
+            main.sent?.count                      || 'n/a',
+            main.done?.count                      || 'n/a',
+            (main.sent?.count - main.done?.count) || 0,
+            main.uptime?.count                    || 'n/a'
+          ]
+        ]),
+        
+        // task output, logs stats and user-taken measurements from 'task.js' 
+        // on task durations etc ...
+        new Table('Task')
+        .setHeading(
+          'thread id', 
+          'task (ms)', 
+          'fibonacci (ms)'
+        ).addRowMatrix(
+        
+        // - 'task' is provided by default
+        // - 'fibonacci' is a custom measurement taken in 'task.js'
+        Object.keys(threads)
+        .filter(_pid => _pid !== pid)
+        .map(pid => {
+          return [
+            pid,
+            Math.round(threads[pid]['task']?.mean)       || 'n/a',
+            Math.round(threads[pid]['fibonacci']?.mean)  || 'n/a'
+          ]
+      })
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5))
+    ]
+      
+    // render the table
+    console.clear()
+    views.forEach(view => console.log(view.toString()))  
+  }
+})
 ```
 
 ### Task file
@@ -104,39 +163,45 @@ Custom measurements can be taken using the following
 
 ```js
 // task.js
-// @TODO
+import { run } from '{{entryFile}}'
+
+// use 'performance.timerify' to time a fibonnaci function
+run(async function task(parameters) {
+  function fibonacci(n) {
+    return n < 1 ? 0
+          : n <= 2 ? 1
+          : fibonacci(n - 1) + fibonacci(n - 2)
+  }
+  
+  const timed_fibonacci = performance.timerify(fibonacci)
+  
+  // set in parameters in run.js
+  for (let i = 0; i < parameters.ITERATIONS; i++)
+    timed_fibonacci(parameters.FIB_NUMBER)
+})
 ```
 
 ### Output
 
 ```js
-// @TODO
-```
++---------------------------------------+
+|                 Tasks                 |
++------+------+---------+---------------+
+| sent | done | backlog | uptime (secs) |
++------+------+---------+---------------+
+|   66 |   59 |       7 |             7 |
++------+------+---------+---------------+
 
-## Advanced example
-
-> **Example:**   
-> Benchmark a [`fibonacci()` function][fib] and an `async sleep()` function  
-> with detailed timing measurements and a timeline plot
-
-### Run file
-
-```js
-// run.js
-// @TODO
-```
-
-### Task file 
-
-```js
-// task.js
-// @TODO
-```
-
-### Output
-
-```js
-// @TODO
++----------------------------------------+
+|                  Task                  |
++-----------+-----------+----------------+
+| thread id | task (ms) | fibonacci (ms) |
++-----------+-----------+----------------+
+|     27991 |       303 |             52 |
+|     27990 |       299 |             52 |
+|     27988 |       275 |             52 |
+|     27989 |       259 |             52 |
++-----------+-----------+----------------+
 ```
 
 ## Tests
@@ -157,6 +222,20 @@ test coverage:
 
 ```bash
 npm run test:coverage
+```
+
+## Scripts 
+
+create runnable example:
+
+```bash
+npx init
+```
+
+insert/update README example:
+
+```bash
+npm run example:update:readme
 ```
 
 ## Authors
