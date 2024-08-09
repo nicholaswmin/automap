@@ -1,12 +1,16 @@
 import { styleText } from 'node:util'
 import asciichart from 'asciichart'
 
-class Plot {
+import View from '../view/index.js'
+
+class Plot extends View {
   constructor(title = 'Plot', { 
     height = 10, 
     subtitle = '', 
     properties = [] 
   } = {}) {
+    super()
+
     this.unit = 'mean'
     this.properties = properties
     this.colors = [

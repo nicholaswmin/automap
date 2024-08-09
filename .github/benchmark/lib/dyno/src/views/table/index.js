@@ -1,7 +1,11 @@
 import { AsciiTable3 } from 'ascii-table3'
 
-class Table {
+import View from '../view/index.js'
+
+class Table extends View {
   constructor(title, rows = []) {
+    super()
+
     this.table = new AsciiTable3(title)
     this.rows = Array.isArray(rows) ? rows : [rows]
     this.values = this.rows.map(row => Object.values(row)
