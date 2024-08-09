@@ -18,28 +18,35 @@ await dyno({
 
   render: function(threads) {
     // `threads` contains: 
+    //
     // - histograms & histogram snapshots,
     //   per task, per thread
-    // Logging the output in table format ...
+    //
+    // - 1 of the threads is the 
+    //   primary/main process
+    //   which contains general about
+    //   test stats
+    // 
     const pid  = process.pid.toString()
     const main = threads[pid]
     const views = [
       // Log main output: 
-      // - general test stats, 
-      //   cycles sent/finished, backlog etc..
+      // general test stats, 
+      // cycles sent/finished, backlog etc..
       // 
       // Available measures:
+      // 
       // - 'sent', number of issued cycles 
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       new Table('Tasks', [{
-        'sent': main?.sent?.count,
-        'done': main?.done?.count,
+        'issued':    main?.sent?.count,
+        '':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
-        'uptime': main?.uptime?.count
+        'uptime':  main?.uptime?.count
       }]),
-      // Log per-task/thread output:
+      // Log task output:
       //
       // - Per thread measurements from 'task.js'
       // - Custom measurements can be recorded here
@@ -48,7 +55,7 @@ await dyno({
       //   `performance.timerify`
       // 
       // Available measures:
-      // - 'task', time duration of a cycle/task
+      // - 'task', duration of a cycle/task
       // 
       // Custom measurements can be recorded 
       // in `task.js` using the following 
