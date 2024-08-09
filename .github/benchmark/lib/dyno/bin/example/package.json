@@ -5,7 +5,7 @@
   "description": "A benchmark using the dyno module",
   "scripts": {
     "benchmark": "node run.js",
-    "start": "node mock-server.js"
+    "start": "node bind.js"
   },
   "author": "unspecified",
   "license": "ISC"

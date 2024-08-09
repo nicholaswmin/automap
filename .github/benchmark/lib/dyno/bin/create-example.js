@@ -11,7 +11,7 @@ await createExample({
   fragments: [
     { target: 'run.js'         },
     { target: 'task.js'        },
-    { target: 'mock-server.js' },
+    { target: 'bind.js'        },
     { target: 'package.json'   },
     { target: 'README.md'      }
   ]
