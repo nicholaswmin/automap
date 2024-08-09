@@ -28,7 +28,7 @@
 - [x] `tasks:run` and `backlog` should ideally be tracked on the `runner`
   - now tracking `done` and `backlog` on the primary
 - [x] log test constants/parameters
-- [ ] log to file
+- [ ] log to file?
 
 ## refactor 
 
@@ -62,21 +62,22 @@
 
 ## test
 
-- [ ] replace old tests with new tests on the rewrite
-- [ ] split unit tests & integration tests
-- [ ] ensure unit-tests run fast
-  - use `mock` timers from `node:test` runner where possible
+- [x] replace old tests with new tests on the rewrite
+- [x] split unit tests & integration tests
+- [x] ensure unit-tests run fast
+  - ~~use `mock` timers from `node:test` runner where possible~~
+  not doable, threads need time to spin up
 - [x] setup CodeQL workflow
 
 ## build
 
-- [ ] "pull" this into its own project/repository
+- [x] "pull" this into its own project/repository
 - [ ] publish to `npm`
 
 ## docs
 
 - [ ] fix `npx init` docs after publishing
-- [ ] Check if possible to DRY up example code via an `npx` script. 
+- [x] Check if possible to DRY up example code via an `npx` script. 
   Right now theres 3 different & separate code examples:
   - `.github/example/` 
   - `README` docs example 
