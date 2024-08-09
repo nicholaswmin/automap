@@ -19,11 +19,9 @@ class Table extends View {
   }
   
   render(shouldRender) {
-    const output = this.rows.length 
+    return super.render(shouldRender, this.rows.length 
       ? this.table.toString() 
-      : 'no rows'
-    
-    return super.render(shouldRender, output)
+      : 'no rows')
   }
 }
 
