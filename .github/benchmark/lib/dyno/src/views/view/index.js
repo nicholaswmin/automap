@@ -1,7 +1,7 @@
 class View {
-  render(shouldRender, output) {
+  render(shouldRender = true, output) {
     if (shouldRender)
-      console.log(out)
+      console.log(output)
     
     return output
   }
