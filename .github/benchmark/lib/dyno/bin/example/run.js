@@ -23,8 +23,8 @@ await dyno({
     //   per task, per thread
     //
     // - 1 of the threads is the 
-    //   primary/main process
-    //   which contains general test stats
+    //   primary/main process which 
+    //   contains general test stats
     // 
     const pid  = process.pid.toString()
     const main = threads[pid]
@@ -39,6 +39,7 @@ await dyno({
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
+      // 
       new Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
@@ -56,14 +57,9 @@ await dyno({
       // Available measures:
       // - 'task', duration of a cycle/task
       // 
-      // Custom measurements can be recorded 
-      // in `task.js` using the following 
-      // PerformanceMeasurement APIs:
+      // Custom measurements can also be 
+      // recorded in `task.js`
       //
-      // - `performance.timerify(fn)`
-      // - `performance.measure('foo', mark1, mark2)`
-      // 
-      // Read more: https://nodejs.org/api/perf_hooks.html
       new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
