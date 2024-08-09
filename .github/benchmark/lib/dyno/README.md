@@ -32,7 +32,7 @@ To run a benchmark:
 - Create a `run.js` file and set the test configuration
 - Create a `task.js` file and add the benchmarked code
 
-`run.js` runs multiple *cycles* of `task.js`, in multiple-threads.
+`run.js` runs multiple *cycles* of `task.js`, in multiple threads.
 
 Some timings are included by default.  
 
