@@ -257,6 +257,7 @@ insert/update README example:
 ```bash
 npm run example:update:readme
 ```
+> note: only updates code samples, not the output
 
 The example files are in [`/bin/example`](./bin/example)
 
