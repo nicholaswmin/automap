@@ -37,7 +37,7 @@ const createExample = async ({
     await fs.mkdir(targetfolder)
     
     console.log('created:', targetfolder)
-  
+
     for (const fragment of fragments) {
       const srcpath = path.join(dirname, `../${srcfolder}/${fragment.target}`)
       const contents = await fs.readFile(srcpath, 'utf8')

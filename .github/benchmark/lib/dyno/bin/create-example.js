@@ -7,7 +7,7 @@ import { styleText } from 'node:util'
 await createExample({
   srcfolder: './example',
   targetfolder: './benchmark',
-  entrypath: path.resolve(import.meta.dirname, '../index.js'),
+  entrypath: path.relative(process.cwd(), '../index.js'),
   fragments: [
     { target: 'run.js'    },
     { target: 'task.js'   },

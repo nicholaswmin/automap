@@ -1,4 +1,4 @@
-import { run } from '{{entryFile}}'
+import { run } from '{{entrypath}}'
 
 run(async function task(parameters) {
   // parameters set in `run.js` 
