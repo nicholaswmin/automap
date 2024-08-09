@@ -13,7 +13,7 @@ run multithreaded benchmarks
   + [Task file](#task-file)
   + [Output](#output)
 * [Tests](#tests)
-* [Scripts](#scripts)
+* [Misc. scripts](#misc-scripts)
 * [Authors](#authors)
 * [License](#license)
 
@@ -246,7 +246,9 @@ test coverage:
 npm run test:coverage
 ```
 
-## Maintenance 
+## Misc scripts
+
+> maintenance scripts for contributors
 
 insert/update README example:
 
