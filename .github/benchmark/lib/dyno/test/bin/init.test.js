@@ -30,7 +30,7 @@ const execQuick = (cmd, { cwd }) => {
 }
 
 test('npx init', async t => {
-  t.beforeEach(async () => {
+  t.before(async () => {
     await fs.rm(folderpaths.benchmark, { recursive: true, force: true })
     await exec('npx init', { cwd: folderpaths.test })
   })
