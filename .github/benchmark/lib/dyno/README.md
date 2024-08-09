@@ -256,7 +256,7 @@ insert/update README example:
 npm run example:update:readme
 ```
 
-The example files are in `/bin/example`
+The example files are in [`/bin/example`](./bin/example)
 
 ## Authors
 
