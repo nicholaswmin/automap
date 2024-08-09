@@ -8,7 +8,6 @@ run multithreaded benchmarks
 * [Quickstart](#quickstart)
   + [Overview](#overview)
   + [Generate a sample benchmark](#generate-sample-benchmark)
-* [Configuration](#configuration)
 * [Example](#example)
   + [Run file](#run-file)
   + [Task file](#task-file)
@@ -28,19 +27,31 @@ npm i @nicholaswmin/dyno
 
 ### Overview 
 
-To run a benchmark you declare some test configuration in `run.js` 
-which runs multiple *cycles* of a *task*.
+To run a benchmark:
 
-The *task* is the piece of code that needs to be benchmarked,
-which is declared in `task.js`.
+- Create a `run.js` file and set the test configuration
+- Create a `task.js` file and add the benchmarked code
+
+`run.js` runs multiple *cycles* of `task.js`, in multiple-threads.
+
+Some timings are included by default.  
+Custom timings can be recorded using:
+
+- [`performance.timerify`][timerify] 
+- [`performance.measure`][measure]
+
+View the [example](#example) below for guidance on configuration.
 
 ### Generate sample benchmark
+
+Quickly generate preconfigured `run.js` & `task.js`:
 
 ```bash 
 npx init
 ```
 
-> Use the sample benchmark as a starting point by editing `run.js` & `task.js`
+> Use the sample benchmark as a starting point 
+> by editing `run.js` & `task.js`
 
 ### Run it
 
@@ -55,23 +66,7 @@ cd benchmark
 ```bash
 npm run benchmark
 # or just: node run.js
-```
-
-## Configuration
-
-A benchmark is comprised of 2 files:
-
-[`run.js`](#run-file-1)
-
-> The [run file](#run-file-1)
->
-> Declares *test configuration*   
-
-[`task.js`](#task-file-1)
-
-> The [task file](#task-file-1)
->
-> Declares the *code under test*.  
+``` 
 
 ## Example
 
