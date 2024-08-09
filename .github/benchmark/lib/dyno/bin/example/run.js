@@ -58,12 +58,12 @@ await dyno({
       // - `performance.measure('foo', mark1, mark2)`
       // 
       // Read more: https://nodejs.org/api/perf_hooks.html
-      new Table('Threads', Object.keys(threads)
+      new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
-        'thread': pid,
-        'task': Math.round(threads[pid].task?.mean),
-        'fibonacci': Math.round(threads[pid].fibonacci?.mean)
+        'thread id': pid,
+        'task (mean/ms)': Math.round(threads[pid].task?.mean),
+        'fibonacci (mean/ms)': Math.round(threads[pid].fibonacci?.mean)
       })))
     ]
     // display only the top 5 threads, 
