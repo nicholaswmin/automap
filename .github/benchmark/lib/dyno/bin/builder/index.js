@@ -4,15 +4,15 @@ import * as fs from 'node:fs/promises'
 const dirname = import.meta.dirname
 
 const replaceTokensInFile = async ({ 
-  srcFolder, 
+  srcfolder, 
   filepath, 
   entrypath,
   fragments 
 }) => {    
   for (const fragment of fragments) {
-    const srcpath = path.join(dirname, `../${srcFolder}/${fragment.target}`)
+    const srcpath = path.join(dirname, `../${srcfolder}/${fragment.target}`)
     const contents = await fs.readFile(srcpath, 'utf8')
-    const processed = contents.replaceAll('{{entryFile}}', entrypath)
+    const processed = contents.replaceAll('{{entrypath}}', entrypath)
     const existing = await fs.readFile(filepath, 'utf8')
 
     const n1 = existing.indexOf(fragment.startToken)
@@ -27,28 +27,28 @@ const replaceTokensInFile = async ({
 }
 
 const createExample = async ({ 
-  srcFolder, 
-  targetFolder, 
+  srcfolder, 
+  targetfolder, 
   entrypath, 
   fragments 
 }) => {
   try {
-    await fs.rm(targetFolder, { recursive: true, force: true })
-    await fs.mkdir(targetFolder)
+    await fs.rm(targetfolder, { recursive: true, force: true })
+    await fs.mkdir(targetfolder)
     
-    console.log('created:', targetFolder)
+    console.log('created:', targetfolder)
   
     for (const fragment of fragments) {
-      const srcpath = path.join(dirname, `../${srcFolder}/${fragment.target}`)
+      const srcpath = path.join(dirname, `../${srcfolder}/${fragment.target}`)
       const contents = await fs.readFile(srcpath, 'utf8')
-      const processed = contents.replaceAll('{{entryFile}}', entrypath).trim()
+      const processed = contents.replaceAll('{{entrypath}}', entrypath).trim()
 
-      await fs.writeFile(`${targetFolder}/${fragment.target}`, processed)
+      await fs.writeFile(`${targetfolder}/${fragment.target}`, processed)
     }    
   } catch (err) {
     console.log('An error occured.', 'cleaning up ...')
     
-    await fs.rm(targetFolder, { recursive: true, force: true })
+    await fs.rm(targetfolder, { recursive: true, force: true })
     
     throw err 
   }

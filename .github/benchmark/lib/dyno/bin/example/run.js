@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { dyno, Table } from '{{entryFile}}'
+import { dyno, Table } from '{{entrypath}}'
 
 await dyno({
   // location of task file
@@ -18,11 +18,10 @@ await dyno({
 
   render: function(threads) {
     // `threads` contains: 
-    // - histograms & snapshots of the histograms,
-    //   per task, per thread
+    // - histograms & snapshots 
+    //   of the histograms, per task, per thread
     
     // We'll log output in table format
-    
     const pid  = process.pid.toString()
     
     // Primary output: 
