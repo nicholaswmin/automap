@@ -56,8 +56,8 @@ class Plot extends View {
     return this
   }
   
-  render(shouldRender) {
-    return super.render(shouldRender, this.chart.toString())
+  render() {
+    return super.render(this.chart.toString())
   }
 }
 

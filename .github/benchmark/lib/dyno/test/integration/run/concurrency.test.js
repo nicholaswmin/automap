@@ -5,14 +5,11 @@ import { dyno } from '../../../index.js'
 
 test('#dyno():threads cycles in x amount of threads', async t => {
   let result = null
-  const parameters = { 
-    CYCLES_PER_SECOND: 500, CONCURRENCY: 2, DURATION_MS: 750 
-  }
-
+  
   t.before(async () => {
     result = await dyno({
       task: join(import.meta.dirname, 'tasks/records-bar.js'),
-      parameters
+      parameters: {  CYCLES_PER_SECOND: 500, CONCURRENCY: 2, DURATION_MS: 750 }
     })
   })
 
@@ -32,7 +29,7 @@ test('#dyno():threads cycles in x amount of threads', async t => {
     
     await t.test('with child thread measurements', async t => {
       await t.test('spawns specified number of threads', async t => {
-        t.assert.strictEqual(pids.length, parameters.CONCURRENCY + 1)
+        t.assert.strictEqual(pids.length, 2 + 1)
       })
 
       await t.test('each thread runs at least 1 cycle', t => {

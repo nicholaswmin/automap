@@ -18,10 +18,8 @@ class Table extends View {
     return this
   }
   
-  render(shouldRender) {
-    return super.render(shouldRender, this.rows.length 
-      ? this.table.toString() 
-      : 'no rows')
+  render() {
+    return super.render(this.rows.length ? this.table.toString() : 'no rows')
   }
 }
 

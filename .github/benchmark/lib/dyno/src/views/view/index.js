@@ -1,9 +1,6 @@
 class View {
-  render(shouldRender = true, output) {
-    if (shouldRender)
-      console.log(output)
-    
-    return output
+  render(output) {
+    console.log(output)
   }
 }
 

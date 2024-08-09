@@ -30,15 +30,9 @@ const watch = (threads, { signal }) => {
 
   return alive.length 
     ? Promise.all(alive.map(thread => new Promise((resolve, reject) => {
-      const _handleThreadExit = code => !code
-        ? resolve() 
-        : disconnect(threads)
-          .then(deaths => reject(
-            new Error(
-              `A thread exited with: ${code}. ${deaths} threads disconnected`
-            )
-          ))
-          .catch(reject)
+        const _handleThreadExit = code => !code 
+          ? resolve() 
+          : reject(new Error(`A thread exited with code: ${code}.`))
       
         thread.once('exit', _handleThreadExit).once('error', reject)
         
@@ -76,7 +70,6 @@ const disconnect = async threads => {
     .then(() => sigkilled === true ? (() => {
       throw new Error('process:disconnect timeout. Exited with:SIGKILL')
     })() : clearTimeout(sigkilled))
-    .then(() => deaths.length)
 }
 
 export default { fork, disconnect, watch }
