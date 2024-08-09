@@ -3,10 +3,16 @@ import * as fs from 'node:fs/promises'
 
 const dirname = import.meta.dirname
 
-const replaceTokensInFile = async ({ srcFolder, filepath, fragments }) => {    
+const replaceTokensInFile = async ({ 
+  srcFolder, 
+  filepath, 
+  entrypath,
+  fragments 
+}) => {    
   for (const fragment of fragments) {
     const srcpath = path.join(dirname, `../${srcFolder}/${fragment.target}`)
     const contents = await fs.readFile(srcpath, 'utf8')
+    const processed = contents.replaceAll('{{entryFile}}', entrypath)
     const existing = await fs.readFile(filepath, 'utf8')
 
     const n1 = existing.indexOf(fragment.startToken)
@@ -15,7 +21,7 @@ const replaceTokensInFile = async ({ srcFolder, filepath, fragments }) => {
 
     await fs.writeFile(
       filepath, 
-      `${rm.slice(0, n1)} ${fragment.startToken} \n ${contents} ${rm.slice(n1)}`
+      `${rm.slice(0, n1)}${fragment.startToken}\n${processed}${rm.slice(n1)}`
     )
   }
 }
