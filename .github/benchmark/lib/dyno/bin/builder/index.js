@@ -12,7 +12,10 @@ const replaceTokensInFile = async ({
   for (const fragment of fragments) {
     const srcpath = path.join(dirname, `../${srcfolder}/${fragment.target}`)
     const contents = await fs.readFile(srcpath, 'utf8')
-    const processed = contents.replaceAll('{{entrypath}}', entrypath)
+    const processed = contents
+      .replaceAll('{{entrypath}}', entrypath)
+      .replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'')
+
     const existing = await fs.readFile(filepath, 'utf8')
 
     const n1 = existing.indexOf(fragment.startToken)

@@ -13,7 +13,7 @@ run multithreaded benchmarks
   + [Task file](#task-file)
   + [Output](#output)
 * [Tests](#tests)
-* [Misc.](#misc-scripts)
+* [Misc.](#misc)
 * [Authors](#authors)
 * [License](#license)
 
@@ -60,7 +60,7 @@ npm run benchmark
 
 ## Example
 
-> Benchmark a `fibonnacci()` function, 
+> The following example benchmark  a `fibonnacci()` function, 
 > using [`performance.timerify`][timerify] to record timings
 
 ### Run file
@@ -70,7 +70,7 @@ Sets up the benchmark & internally controls the spawned threads.
 ```js
  // run.js
 import { join } from 'node:path'
-import { dyno, views } from '@nicholaswmin/dyno'
+import { dyno, Table } from '@nicholaswmin/dyno'
 
 await dyno({
   // location of task file
@@ -87,7 +87,7 @@ await dyno({
     ITERATIONS: 3
   },
   
-  // render live test logs
+  // render live test output
   render: function(threads) {
     // `threads` contains: 
     //
@@ -112,27 +112,20 @@ await dyno({
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       // 
-      new views.Table('Cycles', [{
+      new Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
         'uptime':  main?.uptime?.count
       }]),
       // Log task output:
+      // Per thread measurements from 'task.js'
       //
-      // - Per thread measurements from 'task.js'
-      // - Custom measurements can be recorded here
-      // - e.g the 'fibonacci' measurement is a 
-      //   custom measurement recorded using 
-      //   `performance.timerify`
-      // 
       // Available measures:
       // - 'task', duration of a cycle/task
-      // 
-      // Custom measurements can also be 
-      // recorded in `task.js`
+      // - any custom measurement, recorded in `task.js`
       //
-      new views.Table('Task durations', Object.keys(threads)
+      new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
         'thread id': pid,
