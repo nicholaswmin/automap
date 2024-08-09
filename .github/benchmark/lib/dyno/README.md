@@ -105,8 +105,6 @@ await dyno({
     const main = threads[pid]
     const views = [
       // Log main output: 
-      // general test stats, 
-      // cycles sent/finished, backlog etc..
       // 
       // Available measures:
       // 
@@ -122,21 +120,12 @@ await dyno({
       }]),
       // Log task output:
       //
-      // - Per thread measurements from 'task.js'
-      // - Custom measurements can be recorded here
-      // - e.g the 'fibonacci' measurement is a 
-      //   custom measurement recorded using 
-      //   `performance.timerify`
-      // 
       // Available measures:
       // - 'task', duration of a cycle/task
-      // 
-      // Custom measurements can be recorded 
-      // in `task.js` using the following 
-      // PerformanceMeasurement APIs:
-      //
-      // - `performance.timerify(fn)`
-      // - `performance.measure('foo', mark1, mark2)`
+      // - Custom measurements can be recorded 
+      //   in `task.js` using:
+      //  - `performance.timerify(fn)`
+      //  - `performance.measure('foo', mark1, mark2)`
       // 
       // Read more: https://nodejs.org/api/perf_hooks.html
       new Table('Task durations', Object.keys(threads)
