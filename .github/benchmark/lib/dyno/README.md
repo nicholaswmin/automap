@@ -34,13 +34,6 @@ To run a benchmark:
 
 `run.js` runs multiple *cycles* of `task.js`, in multiple threads.
 
-Some timings are included by default.  
-
-Custom timings can be recorded using:
-
-- [`performance.timerify`][timerify] 
-- [`performance.measure`][measure]
-
 View the [example](#example) below for guidance on configuration.
 
 ### Generate sample benchmark
@@ -76,11 +69,6 @@ npm run benchmark
 
 ### Run file
 
-Declares: 
-
-- test parameters  
-- what measurements should be logged and how
-
 Sets up the benchmark & internally controls the spawned threads.
 
 ```js
@@ -105,28 +93,35 @@ await dyno({
 
   render: function(threads) {
     // `threads` contains: 
+    //
     // - histograms & histogram snapshots,
-    //   per cycle, per thread
-    // Logging the output in table format ...
+    //   per task, per thread
+    //
+    // - 1 of the threads is the 
+    //   primary/main process
+    //   which contains general about
+    //   test stats
+    // 
     const pid  = process.pid.toString()
     const main = threads[pid]
     const views = [
       // Log main output: 
-      // - general test stats, 
-      //   cycles sent/finished, backlog etc..
+      // general test stats, 
+      // cycles sent/finished, backlog etc..
       // 
       // Available measures:
+      // 
       // - 'sent', number of issued cycles 
       // - 'done', number of completed cycles 
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       new Table('Cycles', [{
-        'sent': main?.sent?.count,
-        'done': main?.done?.count,
+        'sent':    main?.sent?.count,
+        'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
-        'uptime': main?.uptime?.count
+        'uptime':  main?.uptime?.count
       }]),
-      // Log per-task/thread output:
+      // Log task output:
       //
       // - Per thread measurements from 'task.js'
       // - Custom measurements can be recorded here
@@ -135,7 +130,7 @@ await dyno({
       //   `performance.timerify`
       // 
       // Available measures:
-      // - 'task', time duration of a cycle
+      // - 'task', duration of a cycle/task
       // 
       // Custom measurements can be recorded 
       // in `task.js` using the following 
@@ -145,12 +140,12 @@ await dyno({
       // - `performance.measure('foo', mark1, mark2)`
       // 
       // Read more: https://nodejs.org/api/perf_hooks.html
-      new Table('Threads', Object.keys(threads)
+      new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
-        'thread': pid,
-        'task': Math.round(threads[pid].task?.mean),
-        'fibonacci': Math.round(threads[pid].fibonacci?.mean)
+        'thread id': pid,
+        'cycle (mean/ms)': Math.round(threads[pid].cycle?.mean),
+        'fibonacci (mean/ms)': Math.round(threads[pid].fibonacci?.mean)
       })))
     ]
     // display only the top 5 threads, 
@@ -166,10 +161,6 @@ console.log('test ended succesfully!')
 ```
 
 ### Task file
-
-Declares: 
-
-- The benchmarked *code/task*
 
 The task file is run in its own isolated [V8 process][v8] 
 `times x THREAD_COUNT`, concurrently, on separate threads.
