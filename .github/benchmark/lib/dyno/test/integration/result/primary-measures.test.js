@@ -17,7 +17,7 @@ test('#dyno():results value recorded in primary', async t => {
     primary = result[process.pid]
   })
 
-  await t.test('tracks measurements on issued/executed cycles', async t => {
+  await t.test('tracks cycle measurements', async t => {
     t.assert.ok(Object.hasOwn(primary, 'sent'), 
       'Cannot find tracked measurement "sent" on primary thread'
     )
