@@ -35,6 +35,7 @@ To run a benchmark:
 `run.js` runs multiple *cycles* of `task.js`, in multiple-threads.
 
 Some timings are included by default.  
+
 Custom timings can be recorded using:
 
 - [`performance.timerify`][timerify] 
