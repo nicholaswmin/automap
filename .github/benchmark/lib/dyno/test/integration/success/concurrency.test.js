@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { dyno } from '../../../index.js'
 
-test('#dyno():threads cycles in x amount of threads', async t => {
+test('#dyno():concurrency cycles in x amount of threads', async t => {
   let result = null
   
   t.before(async () => {

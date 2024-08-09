@@ -5,11 +5,7 @@ test('#prompt()', async t => {
   let result
   
   t.beforeEach(async () => {
-    result = await prompt({
-      FOO: 30,
-      BAR: 'BAR',
-      BAZ: false
-    }, {
+    result = await prompt({ FOO: 30, BAR: 'BAR', BAZ: false }, {
       skipUserInput: true
     }) 
   })
@@ -93,7 +89,7 @@ test('#prompt()', async t => {
     })
   })
   
-  await t.test('result does not allow property overwrite', async t => {
+  await t.test('result does not allow property overwrites', async t => {
     t.assert.throws(() => {
       result.BAR = 3
     }, { 

@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { dyno } from '../../../index.js'
 
-test('#dyno():measurements value recorded in task', async t => {
+test('#dyno():results value recorded in task', async t => {
   let result = null, task, parameters = { 
     CYCLES_PER_SECOND: 200, CONCURRENCY: 2, DURATION_MS: 1000 
   }
