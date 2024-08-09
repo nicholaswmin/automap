@@ -90,7 +90,8 @@ await dyno({
     FIB_NUMBER: 35,
     ITERATIONS: 3
   },
-
+  
+  // render llive test output
   render: function(threads) {
     // `threads` contains: 
     //
@@ -122,18 +123,11 @@ await dyno({
         'uptime':  main?.uptime?.count
       }]),
       // Log task output:
+      // Per thread measurements from 'task.js'
       //
-      // - Per thread measurements from 'task.js'
-      // - Custom measurements can be recorded here
-      // - e.g the 'fibonacci' measurement is a 
-      //   custom measurement recorded using 
-      //   `performance.timerify`
-      // 
       // Available measures:
       // - 'task', duration of a cycle/task
-      // 
-      // Custom measurements can also be 
-      // recorded in `task.js`
+      // - any custom measurement, recorded in `task.js`
       //
       new Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
