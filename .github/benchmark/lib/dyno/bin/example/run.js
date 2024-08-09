@@ -41,8 +41,8 @@ await dyno({
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       new Table('Tasks', [{
-        'issued':    main?.sent?.count,
-        '':    main?.done?.count,
+        'sent':    main?.sent?.count,
+        'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
         'uptime':  main?.uptime?.count
       }]),
