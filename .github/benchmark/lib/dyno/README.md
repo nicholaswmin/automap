@@ -13,7 +13,7 @@ run multithreaded benchmarks
   + [Task file](#task-file)
   + [Output](#output)
 * [Tests](#tests)
-* [Misc. scripts](#misc-scripts)
+* [Misc.](#misc-scripts)
 * [Authors](#authors)
 * [License](#license)
 
@@ -27,8 +27,6 @@ npm i @nicholaswmin/dyno
 
 ### Overview 
 
-To run a benchmark:
-
 - Create a `run.js` file and set the test configuration
 - Create a `task.js` file and add the benchmarked code
 
@@ -37,8 +35,6 @@ To run a benchmark:
 View the [example](#example) below for guidance on configuration.
 
 ### Generate sample benchmark
-
-Quickly generate preconfigured `run.js` & `task.js`:
 
 ```bash 
 npx init
@@ -55,7 +51,7 @@ npx init
 cd benchmark
 ```
 
-> run it:
+then:
 
 ```bash
 npm run benchmark
@@ -226,7 +222,7 @@ test coverage:
 npm run test:coverage
 ```
 
-## Misc scripts
+## Misc
 
 > insert/update README example:
 
