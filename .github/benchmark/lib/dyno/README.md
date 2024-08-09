@@ -36,15 +36,13 @@ which is declared in `task.js`.
 
 ### Generate sample benchmark
 
-Create a runnable sample benchmark:
-
 ```bash 
 npx init
 ```
 
 > Use the sample benchmark as a starting point by editing `run.js` & `task.js`
 
-### Run
+### Run it
 
 > navigate into the created `benchmark` folder:
 
