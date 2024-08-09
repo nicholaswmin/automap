@@ -52,7 +52,10 @@ class Plot {
     return this
   }
   
-  toString() {
+  render(shouldRender = true) {
+    if (shouldRender)
+      console.log(this.chart)
+
     return this.chart
   }
 }

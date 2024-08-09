@@ -4,23 +4,23 @@ import Plot from '../index.js'
 
 test('#view:Plot', async t => {
   let plot = null,
-      histogramSnapshots = {
-        foo: [
-          { min: 2, mean: 3, max: 4, count: 2 },
-          { min: 4, mean: 5, max: 6, count: 4 },
-          { min: 6, mean: 7, max: 8, count: 9 },
-        ],
-        bar: [
-          { min: 1, mean: 2, max: 3, count: 1 },
-          { min: 3, mean: 4, max: 5, count: 3 },
-          { min: 5, mean: 6, max: 7, count: 5 },
-          { min: 7, mean: 8, max: 9, count: 7 }
-        ],
-        baz: [
-          { min: 2, mean: 2.5, max: 3, count: 4 },
-          { min: 6, mean: 8, max: 10, count: 4  }
-        ]
-      }
+  histogramSnapshots = {
+    foo: [
+      { min: 0, mean: 3, max: 4, count: 2 },
+      { min: 4, mean: 5, max: 6, count: 4 },
+      { min: 6, mean: 7, max: 8, count: 9 },
+    ],
+    bar: [
+      { min: 1, mean: 2, max: 3, count: 1 },
+      { min: 3, mean: 4, max: 5, count: 3 },
+      { min: 5, mean: 6, max: 7, count: 5 },
+      { min: 7, mean: 8, max: 9, count: 7 }
+    ],
+    baz: [
+      { min: 2, mean: 2.5, max: 3, count: 4 },
+      { min: 6, mean: 8, max: 10, count: 4  }
+    ]
+  }
 
   t.beforeEach(async () => {
     plot = new Plot('Plot', { 
@@ -76,9 +76,14 @@ test('#view:Plot', async t => {
     })
   })
   
-  await t.test('#toString', async t => {
-    await t.test('returns the ASCII chart', async t => {
-      t.assert.strictEqual(plot.toString(), plot.chart)
+  await t.test('#render', async t => {    
+    await t.test('returns an ASCII chart', async t => {
+      t.assert.strictEqual(typeof plot.render(false), 'string')
+      t.assert.strictEqual(plot.render(false), plot.chart)
+    })
+    
+    t.todo('renders an ASCII chart in stdout', async t => {
+      // a bit tricky to test stdout output, ignoring for now
     })
   })
 })
