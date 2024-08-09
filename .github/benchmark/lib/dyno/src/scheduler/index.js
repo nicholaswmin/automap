@@ -64,7 +64,7 @@ class Scheduler {
     //   `setInterval()` duration, we create additional synthetic/filler 
     //    `process.send` calls to match the desired send cyclesPerSecond.
     // @WARNING: 
-    // - If `cyclesPerSecond > 1000`, it has to be set as multiples of  `1000`, 
+    // - If `cyclesPerSecond > 1000`, it has to be set as multiples of `1000`, 
     //   otherwise `fillerCycles` won't be able to correctly fill the remainder.       
     const fracInterval = 1000 / this.cyclesPerSecond
     const fillerCycles = Math.ceil(1 / fracInterval)
