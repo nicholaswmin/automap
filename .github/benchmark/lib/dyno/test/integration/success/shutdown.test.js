@@ -16,7 +16,7 @@ test('#dyno():shutdown exits gracefully', async t => {
     })
   })
   
-  await t.test('no thread has exitCode > 0', async t => {
+  await t.test('no thread has exit code > 0', async t => {
     const exitCodes = {
       zero: cp.fork.mock.calls.map(c => c.result).filter(t => !t.exitCode),
       nonZero: cp.fork.mock.calls.map(c => c.result).filter(t => t.exitCode > 0)
