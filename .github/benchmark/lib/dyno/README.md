@@ -1,219 +1,205 @@
-[![test-workflow][test-badge]][test-workflow]
+[![test-workflow][test-badge]][test-workflow] [![codeql-workflow][codeql-badge]][codeql-workflow]
 
 # :stopwatch: dyno
 
-run a piece of code on separate threads and log runtime measurements
+run multithreaded benchmarks
 
-## Usage
+* [Install](#install)
+* [Quickstart](#quickstart)
+  + [Overview](#overview)
+  + [Generate a sample benchmark](#generate-sample-benchmark)
+* [Example](#example)
+  + [Run file](#run-file)
+  + [Task file](#task-file)
+  + [Output](#output)
+* [Tests](#tests)
+* [Misc.](#misc)
+* [Authors](#authors)
+* [License](#license)
 
-### Install
-
-```bash
-npm i https://github.com/nicholaswmin/automap.git
-```
-
-### Setup
-
-To run a benchmark you need to create 2 separate files:
-
-[`run.js`](#runner-file)
-
-> The *runner file*  
-> Includes test configuration and runs the task file 
-
-[`task.js`](#task-file)
-
-> The *task file*
-
-> Includes the actual code under test
-
-then run:
+## Install
 
 ```bash
-node run.js
+npm i @nicholaswmin/dyno
 ```
+
+## Quickstart
+
+### Overview 
+
+- Create a `run.js` file and set the test configuration
+- Create a `task.js` file and add the benchmarked code
+
+`run.js` runs multiple *cycles* of `task.js`, in multiple threads.
+
+View the [example](#example) below for guidance on configuration.
+
+### Generate sample benchmark
+
+```bash 
+npx init
+```
+
+> Use the sample benchmark as a starting point 
+> by editing `run.js` & `task.js`
+
+### Run it
+
+> navigate into the created `benchmark` folder:
+
+```bash
+cd benchmark
+```
+
+then:
+
+```bash
+npm run benchmark
+# or just: node run.js
+``` 
 
 ## Example
 
-Benchmarking a [`Fibonacci function`][fib] on 8 threads.
+> The following example benchmark  a `fibonnacci()` function, 
+> using [`performance.timerify`][timerify] to record timings
 
-> A runnable version of this example can be found [here](#running-example)
+### Run file
+
+Sets up the benchmark & internally controls the spawned threads.
+
+```js
+ // run.js
+import { join } from 'node:path'
+import { dyno, Table } from '@nicholaswmin/dyno'
+
+await dyno({
+  // location of task file
+  task: join(import.meta.dirname, 'task.js'),
+  parameters: {
+    // required test parameters
+    CYCLES_PER_SECOND: 10, 
+    CONCURRENCY: 4, 
+    DURATION_MS: 5 * 1000,
+    
+    // custom parameters,
+    // passed on to 'task.js'
+    FIB_NUMBER: 35,
+    ITERATIONS: 3
+  },
+  
+  // render live test output
+  render: function(threads) {
+    // `threads` contains: 
+    //
+    // - histograms & histogram snapshots,
+    //   per task, per thread
+    //
+    // - 1 of the threads is the 
+    //   primary/main process which 
+    //   contains general test stats
+    // 
+    const pid  = process.pid.toString()
+    const main = threads[pid]
+    const views = [
+      // Log main output: 
+      // general test stats, 
+      // cycles sent/finished, backlog etc..
+      // 
+      // Available measures:
+      // 
+      // - 'sent', number of issued cycles 
+      // - 'done', number of completed cycles 
+      // - 'backlog', backlog of issued yet uncompleted cycles
+      // - 'uptime', current test duration
+      // 
+      new Table('Cycles', [{
+        'sent':    main?.sent?.count,
+        'done':    main?.done?.count,
+        'backlog': main?.sent?.count - main?.done?.count,
+        'uptime':  main?.uptime?.count
+      }]),
+      // Log task output:
+      // Per thread measurements from 'task.js'
+      //
+      // Available measures:
+      // - 'task', duration of a cycle/task
+      // - any custom measurement, recorded in `task.js`
+      //
+      new Table('Task durations', Object.keys(threads)
+      .filter(_pid => _pid !== pid)
+      .map(pid => ({
+        'thread id': pid,
+        'cycle (mean/ms)': Math.round(threads[pid].cycle?.mean),
+        'fibonacci (mean/ms)': Math.round(threads[pid].fibonacci?.mean)
+      })))
+    ]
+    // display only the top 5 threads, 
+    // sorted by mean cycle duration
+    .sort((a, b) => b[1] - a[1]).slice(0, 5)
+    // render the tables
+    console.clear()
+    views.forEach(view => view.render())  
+  }
+})
+
+console.log('test ended succesfully!')
+```
 
 ### Task file
 
-The task file declares the *task* that needs to be benchmarked.
+The task file is run in its own isolated [V8 process][v8] 
+`times x THREAD_COUNT`, concurrently, on separate threads.
 
-Code declared here runs in its own isolated [V8][v8]
-process `times x THREAD_COUNT`.
-
-Within the task file, measures can be taken using
-these [PerformanceMeasurement APIs][perf-api]:
+Custom measurements can be taken using the following 
+[Performance Measurement APIs][perf-api]:
 
 - [`performance.timerify`][timerify]
 - [`performance.measure`][measure]
 
 ```js
-// task.js
+ // task.js
+import { run } from '@nicholaswmin/dyno'
 
-import { task } from '@nicholaswmin/dyno'
-
-task(async parameters => {
-  // 'parameters' configured in the runner are available here
+run(async function task(parameters) {
+  // parameters set in `run.js` 
+  // are available here
 
   // function under test
-  const fibonacci = n => n < 1 ? 0 : n <= 2
-    ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
-
-  // measure using `performance.timerify`
-  const timed_fibonacci = performance.timerify(fibonacci)
-
-  timed_fibonacci(parameters.FOO)
-  timed_fibonacci(parameters.BAR)
-  timed_fibonacci(parameters.BAZ)
-
-  // measure using `performance.measure`
-  performance.mark('start')
-
-  await new Promise(res => setTimeout(res, Math.round(Math.random() * 10) ))
-
-  performance.mark('end')
-  performance.measure('sleep', 'start', 'end')
-})
-```
-
-### Runner file
-
-Configure the test parameters and what should be logged in the output:
-
-```js
-// run.js
-import { Dyno, Table, Plot, prompt } from '@nicholaswmin/dyno'
-
-const dyno = new Dyno({
-  // path of task file
-  task: '.github/example/task.js',
-  
-  // Set the test parameters
-  parameters: await prompt({
-    // these are required
-    TASKS_SECOND: 100,
-    THREAD_COUNT: 8,
-    DURATION_SECONDS: 5,
-    
-    // these are optional 
-    FOO: 2,
-    BAR: 5,
-
-    // this parameter is user configurable
-    // you'll be prompted to enter its value when the test starts
-    BAZ: {
-      // default value
-      value: 10,
-      type: Number,
-      configurable: true
-    }
-  }),
-  
-  // before/after hooks
-  before: () => {
-    console.log('test starting ...')
-  },
-
-  after: () => {
-    console.log('test ended')
-  },
-  
-  // called on measurement update (max 30 fps)
-  render: function({ runner, threads }) {
-    // Use provided `Table` & `Plot` to build an output
-
-    const views = [
-      // Log general runner stats
-      new Table()
-        .setHeading('Tasks Sent', 'Tasks Acked', 'Memory (bytes)')
-        .addRowMatrix([
-          [ 
-            runner.sent.at(-1).count, 
-            runner.replies.at(-1).count, 
-            runner.memory.at(-1).mean
-          ]
-        ]),
-
-      // Log last stat for each thread
-      new Table('Threads (mean/ms)')
-        .setHeading('thread', 'task', 'fibonacci', 'sleep', 'max backlog')
-        .addRowMatrix(Object.keys(threads).map(thread => {
-          return [
-            thread,
-            threads[thread]['task']?.at(-1).mean || 'no data',
-            threads[thread]['fibonacci']?.at(-1).mean || 'no data',
-            threads[thread]['sleep']?.at(-1).mean || 'no data',
-            threads[thread]['backlog']?.at(-1).max || 'no data'
-          ]
-        })
-        // sort threads by 'task' mean duration
-        .sort((a, b) => b[1] - a[1])),
-      
-      // Plot the mean durations of the last thread
-      new Plot('Thread timings timeline', {
-          subtitle: 'mean (ms)',
-          properties: ['task', 'fibonacci', 'sleep'],
-          unit: 'mean'
-        })
-        .plot(threads[Object.keys(threads).at(-1)])
-    ]
-    
-    console.clear()
-
-    views.forEach(view => console.log(view.toString()))
+  function fibonacci(n) {
+    return n < 1 ? 0
+          : n <= 2 ? 1
+          : fibonacci(n - 1) + fibonacci(n - 2)
   }
+  
+  // record measurements using `performance.timerify`
+  const timed_fibonacci = performance.timerify(fibonacci)
+  
+  for (let i = 0; i < parameters.ITERATIONS; i++)
+    timed_fibonacci(parameters.FIB_NUMBER)
 })
-
-await dyno.start()
 ```
 
-### Example output
+### Output
 
 ```js
-+------------+-------------+-------------+
-| Tasks Sent | Tasks Acked | Memory (mb) |
-+------------+-------------+-------------+
-|        308 |         308 |           9 |
-+------------+-------------+-------------+
++--------------------------------+
+|             Tasks              |
++------+------+---------+--------+
+| sent | done | backlog | uptime |
++------+------+---------+--------+
+|   49 |   48 |       1 |      5 |
++------+------+---------+--------+
 
-+-------------------------------------------------+
-|                Threads (mean/ms)                |
-+--------+------+-----------+-------+-------------+
-| thread | task | fibonacci | sleep | max backlog |
-+--------+------+-----------+-------+-------------+
-|  76553 | 7.35 |         1 |  7.37 |           1 |
-|  76555 | 6.91 |         1 |     7 |           1 |
-|  76557 | 6.91 |         1 |  6.81 |           1 |
-|  76554 | 6.39 |         1 |   6.3 |           1 |
-|  76558 | 6.33 |         1 |  6.27 |           1 |
-|  76556 | 6.18 |         1 |  5.76 |           1 |
-|  76551 |  5.3 |         1 |  5.23 |           2 |
-|  76552 | 4.93 |         1 |     5 |           1 |
-+--------+------+-----------+-------+-------------+
-
-
-  Thread timings timeline
-
-  -- task  -- fibonacci  -- sleep
-
-  11.00 ┼╮                                             
-  10.00 ┼╮                                             
-   9.00 ┤│                                             
-   8.00 ┤│╮                                            
-   7.00 ┤╰───────────────╮────────╮                    
-   6.00 ┤                ╰──────────────────────────╮─ 
-   5.00 ┤                                           ╰  
-   4.00 ┤                                              
-   3.00 ┤                                              
-   2.00 ┤                                              
-   1.00 ┼───────────────────────────────────────────── 
-
-  mean (ms)
++--------------------------------------------------+
+|                  Task durations                  |
++-----------+----------------+---------------------+
+| thread id | task (mean/ms) | fibonacci (mean/ms) |
++-----------+----------------+---------------------+
+|     63511 |            157 |                  53 |
+|     63512 |            159 |                  53 |
+|     63513 |            174 |                  53 |
+|     63514 |            160 |                  54 |
++-----------+----------------+---------------------+
 ```
 
 ## Tests
@@ -224,36 +210,32 @@ install deps:
 npm ci
 ```
 
-run unit tests:
+unit & integration tests:
 
 ```bash
 npm test
 ```
 
-log test coverage:
+test coverage:
 
 ```bash
 npm run test:coverage
 ```
 
-> note: tests require node version `>= v22.5.1` because they use the  
-> experimental native [`sqlite`][sqlite] module to test thread output
->
-> note: due to the benchmarking nature of this module, unit-tests run slow
+## Misc
 
-## Running example
-
-You can run the [Fibonacci example](#example) via:
+> insert/update README example:
 
 ```bash
-npm run example
+npm run example:update:readme
 ```
+> note: only updates code samples, not the output
 
-it's code is [available here][example-code].
+The example files are in [`/bin/example`](./bin/example)
 
 ## Authors
 
-Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
+[@nicholaswmin][nicholaswmin]
 
 ## License
 
@@ -264,15 +246,18 @@ Nicholas Kyriakides, [@nicholaswmin][nicholaswmin]
 [test-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/test.yml/badge.svg
 [test-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/test:unit.yml
 
-<!--- General Refs -->
+[codeql-badge]: https://github.com/nicholaswmin/dyno/actions/workflows/codeql.yml/badge.svg
+[codeql-workflow]: https://github.com/nicholaswmin/dyno/actions/workflows/codeql.yml
+
+<!--- Content -->
 
 [perf-api]: https://nodejs.org/api/perf_hooks.html#performance-measurement-apis
 [timerify]: https://nodejs.org/api/perf_hooks.html#performancetimerifyfn-options
 [measure]: https://nodejs.org/api/perf_hooks.html#class-performancemeasure
 [fib]: https://en.wikipedia.org/wiki/Fibonacci_sequence
-[v8]: https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine
-[sqlite]: https://nodejs.org/api/sqlite.html
+[v8]: https://v8.dev/
 
-[example-code]: .github/example
+<!--- Basic -->
+
 [nicholaswmin]: https://github.com/nicholaswmin
 [license]: ./LICENSE

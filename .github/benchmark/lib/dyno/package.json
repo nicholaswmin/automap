@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "description": "runs code on separate threads and logs runtime measurements",
   "main": "index.js",
+  "bin": {
+    "init": "bin/create-example.js"
+  },
   "scripts": {
-    "test": "NODE_NO_WARNINGS=1 NODE_ENV=test node --test --experimental-sqlite --test-reporter=spec test/index.test.js",
-    "test:coverage": "NODE_NO_WARNINGS=1 NODE_ENV=test node --test --experimental-sqlite --experimental-test-coverage test/index.test.js",
-    "example": "node .github/example/run.js"
+    "test": "NODE_ENV=test node --test test/index.test.js",
+    "test:coverage": "NODE_ENV=test node --test --experimental-test-coverage test/index.test.js",
+    "example:update:readme": "bin/replace-readme-example.js"
   },
   "engines": {
     "node": ">=22.5.1"
@@ -22,7 +25,6 @@
   "dependencies": {
     "@inquirer/input": "^2.2.4",
     "ascii-table3": "^0.9.0",
-    "asciichart": "^1.5.25",
-    "throttleit": "^2.1.0"
+    "asciichart": "^1.5.25"
   }
 }
