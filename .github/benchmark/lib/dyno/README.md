@@ -91,7 +91,7 @@ await dyno({
     ITERATIONS: 3
   },
   
-  // render llive test output
+  // render live test output
   render: function(threads) {
     // `threads` contains: 
     //
@@ -228,9 +228,7 @@ npm run test:coverage
 
 ## Misc scripts
 
-> maintenance scripts for contributors
-
-insert/update README example:
+> insert/update README example:
 
 ```bash
 npm run example:update:readme
