@@ -18,22 +18,22 @@ await dyno({
 
   render: function(threads) {
     // `threads` contains: 
-    // - histograms & snapshots 
-    //   of the histograms, per task, per thread
+    // - histograms & histogram snapshots,
+    //   per task, per thread
     
-    // We'll log output in table format
-    const pid  = process.pid.toString()
+    // Logging the output in table format ...
     
     // Primary output: 
-    // Logs generic test information, 
-    // cycles sent/finished etc..
+    // - Generic test information, 
+    //   cycles sent/finished etc..
+    // - Cannot log custom measures here
     // 
     // available measures:
     // - 'sent', number of issued cycles 
     // - 'done', number of completed cycles 
     // - 'backlog', backlog of issued yet uncompleted cycles
     // - 'uptime', current test duration
-    const main = threads[pid]
+    const main = threads[process.pid.toString()]
       const views = [
         new Table('Tasks')
         .setHeading('sent', 'done', 'backlog', 'uptime (secs)')
@@ -47,7 +47,9 @@ await dyno({
         ]),
         
         // Task/Thread output:
-        // Per thread, logs custom measurements from 'task.js'
+        // - Per thread, 
+        //   logs custom measurements from 'task.js'
+        // - Custom measures can be recorded here
         new Table('Threads')
           .setHeading(
             'thread id', 
@@ -59,13 +61,14 @@ await dyno({
         // - 'fibonacci' is a custom measurement 
         //    taken using `performance.timerify`
         // 
-        // Custom measurements can be taken in `task.js` via:
+        // Custom measurements can be recorded 
+        // in `task.js` using:
         // - `performance.timerify(fn)`
         // - `performance.measure('foo', mark1, mark2)`
         // 
         // Read more: https://nodejs.org/api/perf_hooks.html
         Object.keys(threads)
-        .filter(_pid => _pid !== pid)
+        .filter(pid => pid !== process.pid.toString())
         .map(pid => {
           return [
             pid,
