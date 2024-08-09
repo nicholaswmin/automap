@@ -70,7 +70,7 @@ Sets up the benchmark & internally controls the spawned threads.
 ```js
  // run.js
 import { join } from 'node:path'
-import { dyno, Table } from '@nicholaswmin/dyno'
+import { dyno, views } from '@nicholaswmin/dyno'
 
 await dyno({
   // location of task file
@@ -87,7 +87,7 @@ await dyno({
     ITERATIONS: 3
   },
   
-  // render live test output
+  // render live test logs
   render: function(threads) {
     // `threads` contains: 
     //
@@ -112,20 +112,27 @@ await dyno({
       // - 'backlog', backlog of issued yet uncompleted cycles
       // - 'uptime', current test duration
       // 
-      new Table('Cycles', [{
+      new views.Table('Cycles', [{
         'sent':    main?.sent?.count,
         'done':    main?.done?.count,
         'backlog': main?.sent?.count - main?.done?.count,
         'uptime':  main?.uptime?.count
       }]),
       // Log task output:
-      // Per thread measurements from 'task.js'
       //
+      // - Per thread measurements from 'task.js'
+      // - Custom measurements can be recorded here
+      // - e.g the 'fibonacci' measurement is a 
+      //   custom measurement recorded using 
+      //   `performance.timerify`
+      // 
       // Available measures:
       // - 'task', duration of a cycle/task
-      // - any custom measurement, recorded in `task.js`
+      // 
+      // Custom measurements can also be 
+      // recorded in `task.js`
       //
-      new Table('Task durations', Object.keys(threads)
+      new views.Table('Task durations', Object.keys(threads)
       .filter(_pid => _pid !== pid)
       .map(pid => ({
         'thread id': pid,

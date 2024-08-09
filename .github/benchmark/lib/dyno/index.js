@@ -48,4 +48,6 @@ const dyno = async ({ task, parameters, render = () => {} }) => {
   return collector.stats
 }
 
-export { dyno, run, Table, Plot }
+const views = { Table, Plot }
+
+export { dyno, run, views }
