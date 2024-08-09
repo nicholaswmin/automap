@@ -8,7 +8,7 @@
     "init": "bin/create-example.js"
   },
   "scripts": {
-    "test": "NODE_ENV=test node --test --no-warnings test/index.test.js",
+    "test": "NODE_ENV=test node --test --test-reporter=@voxpelli/node-test-pretty-reporter --no-warnings test/index.test.js",
     "test:coverage": "NODE_ENV=test node --test --no-warnings --experimental-test-coverage test/index.test.js",
     "example:update:readme": "bin/replace-readme-example.js"
   },
@@ -26,5 +26,8 @@
     "@inquirer/input": "^2.2.4",
     "ascii-table3": "^0.9.0",
     "asciichart": "^1.5.25"
+  },
+  "devDependencies": {
+    "@voxpelli/node-test-pretty-reporter": "^1.1.2"
   }
 }

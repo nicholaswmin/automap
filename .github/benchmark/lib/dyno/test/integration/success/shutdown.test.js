@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { dyno } from '../../../index.js'
 
-test('#dyno():shutdown exits gracefully', async t => {
+test('#dyno() exits gracefully', async t => {
   t.beforeEach(() => t.mock.reset())
 
   t.before(() => {

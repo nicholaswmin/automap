@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { dyno } from '../../../index.js'
 
-test('#dyno():errors force kills non-exiting threads', async t => {
+test('#dyno() force kills non-exiting threads', async t => {
   await t.test('test duration elapses', async t => {
     await t.test('rejects', t => {
       return t.assert.rejects(async () => {
