@@ -54,7 +54,7 @@ cd benchmark
 
 ```bash
 npm run benchmark
-# ... or node run.js
+# or just: node run.js
 ```
 
 ## Configuration
