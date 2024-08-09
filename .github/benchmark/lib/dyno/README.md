@@ -43,7 +43,7 @@ cd benchmark
 > run it:
 
 ```bash
-node run.js
+npm run benchmark
 ```
 
 ## Configuration
