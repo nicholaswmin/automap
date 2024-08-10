@@ -7,7 +7,7 @@ run multithreaded benchmarks
 * [Install](#install)
 * [Quickstart](#quickstart)
   + [Overview](#overview)
-  + [Generate a sample benchmark](#generate-sample-benchmark)
+  + [Generate benchmark](#generate-sample-benchmark)
 * [Example](#example)
   + [Run file](#run-file)
   + [Task file](#task-file)
