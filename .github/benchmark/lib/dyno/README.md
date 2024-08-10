@@ -236,7 +236,7 @@ The example files are in [`/bin/example`](./bin/example)
 
 ## Authors
 
-[@nicholaswmin][nicholaswmin]
+[Nik Kyriakides, @nicholaswmin][nicholaswmin]
 
 ## License
 
