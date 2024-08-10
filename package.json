@@ -10,7 +10,7 @@
     "test:integration": "NODE_ENV=test node --test --test-reporter=spec test/integration/index.test.js",
     "test:performance": "NODE_ENV=test node --test --test-reporter=spec test/performance/index.test.js",
     "checks": "npx eslint && npm audit && npx size-limit",
-    "start": "node .github/benchmark/fake-server.js"
+    "start": "node .github/benchmark/bind.js"
   },
   "size-limit": [
     {
@@ -30,11 +30,9 @@
     "url": "git+https://github.com/nicholaswmin/automap.git"
   },
   "keywords": [
-    "orm",
-    "object-mapping",
-    "object-relational-mapping",
     "redis",
-    "javascript",
+    "object-mapping",
+    "nodejs",
     "database"
   ],
   "author": "@nicholaswmin",
@@ -44,7 +42,6 @@
   },
   "homepage": "https://github.com/nicholaswmin/automap#readme",
   "dependencies": {
-    "@nicholaswmin/recordable": "github:nicholaswmin/recordable#plot-b",
     "dot-object": "^2.1.5",
     "object-traversal": "^1.0.1",
     "pathval": "^2.0.0"

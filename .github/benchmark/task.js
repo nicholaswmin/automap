@@ -1,4 +1,4 @@
-import { task } from './lib/dyno/index.js'
+import { run } from '@nicholaswmin/dyno'
 import ioredis from './lib/ioredis/index.js'
 
 import { randomId, payloadKB } from '../../test/util/index.js'
@@ -6,15 +6,14 @@ import { Building, Flat } from '../../test/util/model/index.js'
 import { Repository } from '../../index.js'
 
 const redis = ioredis()
-
 const id = process.pid.toString()
-const redis_ping = () => redis.ping()
+const rping = () => redis.ping()
 const repo  = new Repository(Building, redis)
 const fetch = performance.timerify(repo.fetch.bind(repo))
 const save  = performance.timerify(repo.save.bind(repo))
-const ping  = performance.timerify(redis_ping)
+const ping  = performance.timerify(rping)
 
-task(async parameters => {
+run(async function task(parameters) {
   const building = await fetch(id) || new Building({ id })
   const randIndex = Math.floor(Math.random() * building.flats.length)
 
@@ -28,8 +27,9 @@ task(async parameters => {
   })
 
   await save(building)
-
   await ping()
 }, {
-  after: () => redis.disconnect()
+  after: () => {
+    setTimeout(() => redis.disconnect(), 10)
+  }
 })
