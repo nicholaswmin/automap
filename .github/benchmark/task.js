@@ -1,4 +1,4 @@
-import { run } from './lib/dyno/index.js'
+import { run } from '@nicholaswmin/dyno'
 import ioredis from './lib/ioredis/index.js'
 
 import { randomId, payloadKB } from '../../test/util/index.js'

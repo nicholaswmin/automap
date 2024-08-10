@@ -9,6 +9,7 @@
     "start": "node run.js"
   },
   "dependencies": {
+    "@nicholaswmin/dyno": "^0.1.3",
     "ioredis": "^5.4.1"
   }
 }

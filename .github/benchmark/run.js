@@ -1,6 +1,6 @@
 import { availableParallelism } from 'node:os'
 import { join } from 'node:path'
-import { dyno, Table } from './lib/dyno/index.js'
+import { dyno, view } from '@nicholaswmin/dyno'
 import ioredis from './lib/ioredis/index.js'
 
 const redis = ioredis()
@@ -23,55 +23,40 @@ await dyno({
     PAYLOAD_KB: 5
   },
 
-  render: function(threads) {
-    const pid  = process.pid.toString()
-    const pids = Object.keys(threads)
-    const main = threads[pid]
-
+  render: function({ main, threads, thread }) {
     const views = [
-      new Table('Tasks')
-      .setHeading('sent', 'done', 'backlog', 'uptime (secs)')
-      .addRowMatrix([
-        [
-          main.sent?.count    || 'n/a',
-          main.done?.count    || 'n/a',
-          (main.sent?.count 
-          - main.done?.count) || 0,
-          main.uptime?.count  || 'n/a'
-        ]
-      ]),
+      new view.Table('General', [{
+        'sent'   : main?.sent?.count,
+        'done'   : main?.done?.count,
+        'backlog': main?.sent?.count - main?.done?.count,
+        'uptime' : main?.uptime?.count
+      }]),
 
-      new Table(`Threads, top 5 of ${pids.length - 1}, sorted by: 'task.mean'`)
-        .setHeading(
-          'thread id', 
-          'task (ms)', 
-          'save (ms)', 
-          'fetch (ms)', 
-          'ping (ms)',
-          'evt.loop (ms)'
-        ).addRowMatrix(
-
+      new view.Table(
+        'Cycles', 
         Object.keys(threads)
-        .filter(_pid => _pid !== pid)
-        .map(pid => {
-          return [
-            pid,
-            utils.round(threads[pid]['task']?.mean)  || 'n/a',
-            utils.round(threads[pid]['save']?.mean)  || 'n/a',
-            utils.round(threads[pid]['fetch']?.mean) || 'n/a',
-            utils.round(threads[pid]['rping']?.mean) || 'n/a',
-            utils.ns_ms(threads[pid]['eloop']?.mean) || 'n/a'
-          ]
+        .map(pid => ({
+          'thread id'     : pid,
+          'cycle (ms)'    : utils.round(threads[pid].task?.mean),
+          'save (ms)'     : utils.round(threads[pid].save?.mean),
+          'fetch (ms)'    : utils.round(threads[pid].fetch?.mean),
+          'ping (ms)'     : utils.round(threads[pid].rping?.mean),
+          'evt.loop (ns)' : utils.round(threads[pid].eloop?.mean),
+
+        })).sort((a, b) => b[1] - a[1]).slice(0, 5)
+      ),
+
+      new view.Plot('mean/ms timings', thread, { 
+        exclude: ['eloop']
       })
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5))
     ]
     
-    process.argv.some(f => f.includes('no-clear')) ? 0 : console.clear()
-    views.forEach(view => console.log(view.toString()))  
+    // Render the views in the terminal
+    console.clear()
+    views.forEach(view => view.render())  
   }
 })
 
-console.log('dyno() exited with: 0')
+console.log('dyno() exited normally. Test success!')
 
 redis.disconnect()

@@ -173,14 +173,14 @@ The test should be considered a failure when a *task backlog* is created,
 since this means that the current code can't keep up with that particular
 task rate.
 
-A succesful test should be able to keep a maximum `task backlog <= 1`
+A succesful test should be able to keep a maximum `cycle/task backlog <= 1`
 for a total of at least `120 seconds`.
 
 ### Constants
 
-- `TASKS_PER_SECOND`: task rate, per second.
-- `TEST_SECONDS`: max test duration.
-- `THREAD_COUNT`: number of concurrent threads processing tasks
+- `CYCLES_PER_SECOND`: cycles rate, per second.
+- `DURATION_MS`: max test duration, in millisecond.
+- `CONCURRENCY`: number of concurrent threads processing tasks
 - `PAYLOAD_KB`: each task adds this payload to 1 `AppendList`, in kilobytes
 - `MAX_ITEMS`: maximum number of created List Items, per paper
 
@@ -203,7 +203,7 @@ MIT-0 License
 [flushall]: https://redis.io/docs/latest/commands/flushall/
 [throughput]: https://en.wikipedia.org/wiki/Network_throughput
 [dynos]: https://devcenter.heroku.com/articles/limits#dynos
-[fake-server]: bench/fake-server.js
+[fake-server]: bench/bind.js
 [test-data]: /test/util/model/index.js
 [results]: results/
 [heroku-cli]: https://devcenter.heroku.com/articles/heroku-cli
