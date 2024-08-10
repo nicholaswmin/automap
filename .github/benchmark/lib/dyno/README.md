@@ -224,12 +224,12 @@ npm run test:coverage
 
 ## Misc
 
-> for contributors:  
-> insert/update README example:
+> for contributors
 
 ```bash
-npm run example:update:readme
+npm run maintenance:update:readme
 ```
+> insert/update example snippets in README  
 > note: only updates code samples, not the output
 
 The example files are in [`/bin/example`](./bin/example)
