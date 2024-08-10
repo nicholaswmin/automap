@@ -230,9 +230,9 @@ npm run test:coverage
 npm run maintenance:update:readme
 ```
 > insert/update example snippets in README  
-> note: only updates code samples, not the output
+> note: does not update the "output" section
 
-The example files are in [`/bin/example`](./bin/example)
+Example code snippets are located in: [`/bin/example`](./bin/example)
 
 ## Authors
 
