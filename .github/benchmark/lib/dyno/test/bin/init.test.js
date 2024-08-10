@@ -29,7 +29,7 @@ const execQuick = (cmd, { cwd }) => {
   })
 }
 
-test('npx init', async t => {
+test('$ npx init: creates sample benchmark', async t => {
   t.before(async () => {
     await fs.rm(folderpaths.benchmark, { recursive: true, force: true })
     await exec('npx init', { cwd: folderpaths.test })
@@ -39,15 +39,15 @@ test('npx init', async t => {
     await fs.rm(folderpaths.benchmark, { recursive: true, force: true })
   })
     
-  await t.test('creates a runnable example', async t => {
-    await t.test('creates a benchmark folder', async t => {
+  await t.test('creates files & folders', async t => {
+    await t.test('a benchmark folder', async t => {
       t.assert.ok(
         await fileExists(folderpaths.benchmark), 
         'cannot find /benchmark folder'
       )
     })
     
-    await t.test('creates a run.js file', async t => {
+    await t.test('a run.js', async t => {
       await t.test('creates file', async t => {
         t.assert.ok(
           await fileExists(path.join(folderpaths.benchmark, 'run.js')), 
@@ -63,7 +63,7 @@ test('npx init', async t => {
       })
     })
     
-    await t.test('creates a task.js file', async t => {
+    await t.test('a task.js', async t => {
       await t.test('creates file', async t => {
         t.assert.ok(
           await fileExists(path.join(folderpaths.benchmark, 'README.md')), 
@@ -79,7 +79,7 @@ test('npx init', async t => {
       })
     })
     
-    await t.test('creates a README.md file', async t => {
+    await t.test('a README.md', async t => {
       await t.test('creates file', async t => {
         t.assert.ok(
           await fileExists(path.join(folderpaths.benchmark, 'README.md')), 
@@ -95,7 +95,7 @@ test('npx init', async t => {
       })
     })
     
-    await t.test('creates a bind.js file', async t => {
+    await t.test('a bind.js', async t => {
       await t.test('creates file', async t => {
         t.assert.ok(
           await fileExists(path.join(folderpaths.benchmark, 'bind.js')), 
@@ -112,7 +112,7 @@ test('npx init', async t => {
       })
     })
     
-    await t.test('creates a package.json file', async t => {
+    await t.test('creates a package.json', async t => {
       await t.test('creates file', async t => {
         t.assert.ok(
           await fileExists(path.join(folderpaths.benchmark, 'package.json')), 
@@ -130,8 +130,7 @@ test('npx init', async t => {
     })
     
     // @FIXME
-    // issues with `npm link` create files with wrong `../index.js` main
-    // entry
+    // issues with `npm link` create files with wrong `../index.js` main entry
     t.todo('runs the example', async t => {
       await t.test('logs some meaningful output', async t => {
         const out = await execQuick('NODE_ENV=test node run.js', { 

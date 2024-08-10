@@ -6,7 +6,7 @@ run(async function task() {
 
   for (let i = 0; i < 10; i++) {
     performance.mark('start')
-    await sleep(Math.round(Math.random() * 20))
+    await sleep(Math.round(Math.random() * 5))
     performance.mark('end')
 
     performance.measure('sleep', 'start', 'end')

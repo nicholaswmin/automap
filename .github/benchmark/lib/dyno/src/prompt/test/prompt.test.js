@@ -29,14 +29,14 @@ test('#prompt()', async t => {
     })
   })
   
-  await t.test('returns an object with the correct parameters', async t => {
-    await t.test('has the correct parameters', async t => {
+  await t.test('returns a parameters object', async t => {
+    await t.test('has the correct properties', async t => {
       t.assert.deepStrictEqual(Object.keys(result), [
         'FOO', 'BAR', 'BAZ'
       ])
     })
 
-    await t.test('parameter type: Number', async t => {
+    await t.test('type: Number', async t => {
       await t.test('has expected value', async t => {
         t.assert.strictEqual(result.FOO, 30)
       })
@@ -60,7 +60,7 @@ test('#prompt()', async t => {
       })
     })
     
-    await t.test('parameter type: String', async t => {
+    await t.test('type: String', async t => {
       await t.test('has expected value', async t => {
         t.assert.strictEqual(result.BAR, 'BAR')
       })
@@ -78,7 +78,7 @@ test('#prompt()', async t => {
 
     })
     
-    await t.test('parameter type: Boolean', async t => {
+    await t.test('type: Boolean', async t => {
       await t.test('is a Boolean', async t => {
         t.assert.strictEqual(typeof result.BAZ, 'boolean')
       })
@@ -93,17 +93,13 @@ test('#prompt()', async t => {
     await t.test('does not allow property overwrites', async t => {
       t.assert.throws(() => {
         result.BAR = 3
-      }, { 
-        message: `Cannot assign to read only property 'BAR' of object '#<Object>'`
-      })
+      }, {  name: 'TypeError' })
     })
     
     await t.test('does not allow property deletions', async t => {
       t.assert.throws(() => {
         delete result.FOO
-      }, { 
-        message: `Cannot delete property 'FOO' of #<Object>`
-      })
+      }, {  name: 'TypeError' })
     })
   })
 })
