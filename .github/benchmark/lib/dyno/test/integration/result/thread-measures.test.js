@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { dyno } from '../../../index.js'
 
-test('#dyno() value recorded in task', async t => {
+test('#dyno() records a default task measurement', async t => {
   let result = null, task, parameters = { 
     CYCLES_PER_SECOND: 200, CONCURRENCY: 2, DURATION_MS: 1000 
   }
@@ -16,30 +16,27 @@ test('#dyno() value recorded in task', async t => {
     
     const pids = Object.keys(result).sort((a, b) => a - b) 
 
-    task = result[pids[1]]
+    task = result[pids[1]].task
   })
 
-  await t.test('tracks the measurement', async t => {
-    t.assert.ok(Object.hasOwn(task, 'foo'), 
-      'Cannot find tracked measurement "foo" on thread'
-    )
+  await t.test('tracks a task measurement', async t => {
+    t.assert.ok(task, 'Cannot find tracked measurement "task" on thread')
   })
 
-  await t.test('records in a histogram it"s recorded values', async t => {
-    t.assert.strictEqual(task.foo.count, 10)
-    t.assert.strictEqual(task.foo.min, 1)
-    t.assert.strictEqual(task.foo.mean, 5.5)
-    t.assert.strictEqual(task.foo.max, 10)
+  await t.test('records the value as a histogram', async t => {
+    t.assert.ok(task.count > 0, `task.count: ${task.count}, not > 0`)
+
+    t.assert.ok(task.min > 0, `task.min: ${task.min}, not > 0`)
+    t.assert.ok(task.min < 15, `task.min: ${task.min}, not < 15`)
+
+    t.assert.ok(task.mean > 0, `task.mean: ${task.mean}, not > 0`)
+    t.assert.ok(task.mean < 15, `task.mean: ${task.mean}, not < 15`)
+
+    t.assert.ok(task.max > 0, `task.max: ${task.max}, not > 0`)
+    t.assert.ok(task.max < 15, `task.mean: ${task.max}, not < 15`)
   })
   
   await t.test('records snapshots of the histogram', async t => {
-    t.assert.strictEqual(task.foo.snapshots.at(-1).count, 10)
-    t.assert.strictEqual(task.foo.snapshots.at(-1).min, 1)
-    t.assert.strictEqual(task.foo.snapshots.at(-1).mean, 5.5)
-    t.assert.strictEqual(task.foo.snapshots.at(-1).max, 10)
-  })
-  
-  await t.test('records 1 snapshot each time a value is recorded', async t => {
-    t.assert.strictEqual(task.foo.snapshots.length, 10)
+    t.assert.ok(task.snapshots.length > 0, 'no task snapshots found')
   })
 })

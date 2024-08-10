@@ -224,6 +224,7 @@ npm run test:coverage
 
 ## Misc
 
+> for contributors:  
 > insert/update README example:
 
 ```bash

@@ -36,7 +36,7 @@ const run = async (taskFn, {
   
   loopObserver.observe()
   perfObserver.observe({ 
-    entryTypes: ['function'] 
+    entryTypes: ['function', 'measure'] 
   })
 }
 

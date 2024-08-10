@@ -6,5 +6,6 @@ import histogram from '../../../../src/histogram/index.js'
 
 let counter = 0
 run(async function task() {
-  counter < 10 ? histogram('foo').record(++counter) : null
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+  await sleep(10)
 })

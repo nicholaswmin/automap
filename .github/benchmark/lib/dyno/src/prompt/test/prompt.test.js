@@ -89,19 +89,21 @@ test('#prompt()', async t => {
     })
   })
   
-  await t.test('result does not allow property overwrites', async t => {
-    t.assert.throws(() => {
-      result.BAR = 3
-    }, { 
-      message: `Cannot assign to read only property 'BAR' of object '#<Object>'`
+  await t.test('returns an immutable result', async t => {
+    await t.test('does not allow property overwrites', async t => {
+      t.assert.throws(() => {
+        result.BAR = 3
+      }, { 
+        message: `Cannot assign to read only property 'BAR' of object '#<Object>'`
+      })
     })
-  })
-  
-  await t.test('result does not allow property deletions', async t => {
-    t.assert.throws(() => {
-      delete result.FOO
-    }, { 
-      message: `Cannot delete property 'FOO' of #<Object>`
+    
+    await t.test('does not allow property deletions', async t => {
+      t.assert.throws(() => {
+        delete result.FOO
+      }, { 
+        message: `Cannot delete property 'FOO' of #<Object>`
+      })
     })
   })
 })
